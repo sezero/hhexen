@@ -1,4 +1,4 @@
-// $Id: i_sound.c,v 1.1.1.1 2000-04-11 17:38:04 theoddone33 Exp $
+// $Id: i_sound.c,v 1.2 2000-07-25 22:27:08 theoddone33 Exp $
 
 
 #include <stdio.h>

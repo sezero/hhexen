@@ -4,8 +4,8 @@
 //** st_start.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: st_start.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2000-04-18 16:11:12 $
+//** $Revision: 1.3 $
+//** $Date: 2000-07-25 22:27:08 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -274,13 +274,8 @@ void ST_Message(char *message, ...)
 	char buffer[80];
 
 	va_start(argptr, message);
-	vsprintf(buffer, message, argptr);
+	vsnprintf(buffer, 80, message, argptr);
 	va_end(argptr);
-
-	if ( strlen(buffer) >= 80 )
-	{
-		I_Error("Long debug message has overwritten memory");
-	}
 
 	printf(buffer); 
 }
@@ -297,13 +292,8 @@ void ST_RealMessage(char *message, ...)
 	char buffer[80];
 
 	va_start(argptr, message);
-	vsprintf(buffer, message, argptr);
+	vsnprintf(buffer, 80, message, argptr);
 	va_end(argptr);
-
-	if ( strlen(buffer) >= 80 )
-	{
-		I_Error("Long debug message has overwritten memory\n");
-	}
 
 	printf(buffer);		// Always print these messages
 }

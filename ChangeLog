@@ -2,6 +2,7 @@ HHexen ChangeLog
 
 v1.4
  - Configs and savegames stored in ~/.hhexen/
+ - SDL and SDL/GL support
 
 v1.3
  - OpenGL support

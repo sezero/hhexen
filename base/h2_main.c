@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2000-05-05 02:04:59 $
+//** $Revision: 1.4 $
+//** $Date: 2000-07-25 22:27:08 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -91,7 +91,7 @@ extern boolean askforquit;
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
 char *basePath; 
-char base[121];
+char base[128];
 boolean DevMaps;			// true = Map development mode
 char *DevMapsDir = "";		// development maps directory
 boolean shareware;			// true if only episode 1 present
@@ -409,7 +409,7 @@ static void ExecOptionPLAYDEMO(char **args, int tag)
 {
 	char file[256];
 
-	sprintf(file, "%s.lmp", args[1]);
+	snprintf(file, 256, "%s.lmp", args[1]);
 	AddWADFile(file);
 	ST_Message("Playing demo %s.lmp.\n", args[1]);
 }
@@ -516,7 +516,7 @@ void H2_GameLoop(void)
 	if(M_CheckParm("-debugfile"))
 	{
 		char filename[20];
-		sprintf(filename, "debug%i.txt", consoleplayer);
+		snprintf(filename, 20, "debug%i.txt", consoleplayer);
 		debugfile = fopen(filename,"w");
 	}
 	I_InitGraphics();
@@ -903,7 +903,7 @@ fixed_t FixedDiv(fixed_t a, fixed_t b)
 
 void CreateBasePath(void)
 {
-	sprintf(base,"%s/.hhexen/",getenv("HOME"));
+	snprintf(base, 128, "%s/.hhexen/", getenv("HOME"));
 	basePath = base;
 	mkdir( base, S_IRWXU|S_IRWXG|S_IRWXO );
 }

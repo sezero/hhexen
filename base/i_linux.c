@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.1.1.1 2000-04-11 17:38:04 theoddone33 Exp $
+//** $Id: i_linux.c,v 1.2 2000-07-25 22:27:08 theoddone33 Exp $
 //**
 //**************************************************************************
 
@@ -177,7 +177,7 @@ void S_StartSong(int song, boolean loop)
 		if(UseSndScript)
 		{
 			char name[128];
-			sprintf(name, "%s%s.lmp", ArchivePath, songLump);
+			snprintf(name, 128, "%s%s.lmp", ArchivePath, songLump);
 			M_ReadFile(name, (byte **)&Mus_SndPtr);
 		}
 		else
@@ -274,7 +274,7 @@ void S_StartSongName(char *songLump, boolean loop)
 		if(UseSndScript)
 		{
 			char name[128];
-			sprintf(name, "%s%s.lmp", ArchivePath, songLump);
+			snprintf(name, 128, "%s%s.lmp", ArchivePath, songLump);
 			M_ReadFile(name, (byte **)&Mus_SndPtr);
 		}
 		else
@@ -455,7 +455,7 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 		if(UseSndScript)
 		{
 			char name[128];
-			sprintf(name, "%s%s.lmp", ArchivePath, S_sfx[sound_id].lumpname);
+			snprintf(name, 128, "%s%s.lmp", ArchivePath, S_sfx[sound_id].lumpname);
 			M_ReadFile(name, (byte **)&S_sfx[sound_id].snd_ptr);
 		}
 		else
@@ -640,7 +640,7 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 		if(UseSndScript)
 		{
 			char name[128];
-			sprintf(name, "%s%s.lmp", ArchivePath, S_sfx[sound_id].lumpname);
+			snprintf(name, 128, "%s%s.lmp", ArchivePath, S_sfx[sound_id].lumpname);
 			M_ReadFile(name, (byte **)&S_sfx[sound_id].snd_ptr);
 		}
 		else

@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2000-04-18 16:11:12 $
+//** $Revision: 1.4 $
+//** $Date: 2000-07-25 22:27:08 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -1044,7 +1044,7 @@ void MN_LoadSlotText(void)
 {
 	int slot;
 	FILE *fp;
-	char name[100];
+	char name[256];
 	char versionText[HXS_VERSION_TEXT_LENGTH];
 	char description[HXS_DESCRIPTION_LENGTH];
 	boolean found;
@@ -1052,7 +1052,7 @@ void MN_LoadSlotText(void)
 	for(slot = 0; slot < 6; slot++)
 	{
 		found = false;
-		sprintf(name, "%shex%d.hxs", basePath, slot);
+		snprintf(name, 256, "%ssavegames/hex%d.hxs", basePath, slot);
 		fp = fopen(name, "rb");
 		if(fp)
 		{
@@ -1115,7 +1115,8 @@ static void DrawFileSlots(Menu_t *menu)
 
 static void DrawOptionsMenu(void)
 {
-char num[5];
+	char num[5];
+
 	if(messageson)
 	{
 		MN_DrTextB("ON", 196, 50);
@@ -1126,8 +1127,8 @@ char num[5];
 	}
 	MN_DrTextB(mlooktext[mouselook], 208, 110);
 
-	sprintf(num,"%d",mouseSensitivity);
-	MN_DrTextB(num,265, 71); 
+	snprintf(num, 5, "%d", mouseSensitivity);
+	MN_DrTextB(num, 265, 71); 
 
 	if(alwaysrun)
 	{

@@ -1,6 +1,7 @@
 # This Makefile understands the following targets:
 #
 # x11 (default):	build X11 version
+# sdl			build SDL (software) version
 # svgalib:		build SVGALib version
 # opengl		build OpenGL version
 # clean:		remove all intermediate files
@@ -27,8 +28,11 @@ LDFLAGS = @LDFLAGS@
 BLIBS = @BASELIBS@
 XLIBS = $(BLIBS) @LIBS@
 SVGALIBS = $(BLIBS) @SVGALIBS@
-
+GLLIBS = @GLLIBS@ -lGL -lGLU
+SDLLIBS = @SDL_LIBS@ 
+SDLFLAGS = @SDL_CFLAGS@
 GLHEXEN = @GLHEXEN@
+HAVE_SDL = @HAVESDL@
 
 # Directories
 
@@ -52,9 +56,12 @@ X11OBJS = \
 SVGAOBJS = \
 	svgalib/i_svgalib.o
 
+SDLOBJS = \
+	sdl/i_sdl.o
+
+GLBASE = @GLBASE@
+
 GLOBJS = \
-	opengl/i_gl.o \
-	x11/x11window.o \
 	opengl/ogl_clip.o \
 	opengl/ogl_draw.o \
 	opengl/ogl_font.o \
@@ -122,29 +129,20 @@ BASEOBJS = \
 	base/w_wad.o \
 	base/z_zone.o
 
-ifeq ($(GLHEXEN),true)
-opengl: $(GLOBJS) $(BASEOBJS)
-	$(CC) -o HHexenGL $(GLOBJS) $(BASEOBJS) $(XLIBS)
-
-x11:
-	echo "You are trying to compile the X11 version after enabling OpenGL."
-	echo "Please type './configure' before you try this again."
-
-svgalib:
-	echo "You are trying to compile the SVGALib version after enabling OpenGL."
-	echo "Please type './configure' before you try this again."
+ifeq "$(GLHEXEN)" "true"
+opengl: $(GLBASE) $(GLOBJS) $(BASEOBJS)
+	$(CC) -o hhexen-gl $(GLBASE) $(GLOBJS) $(BASEOBJS) $(GLLIBS) $(SDLLIBS)
+else
+ifeq "$(HAVE_SDL)" "yes"
+sdl: $(SDLOBJS) $(BASEOBJS)
+	$(CC) -o hhexen-sdl $(SDLOBJS) $(BASEOBJS) $(SDLLIBS)
 endif
-
-ifeq ($(GLHEXEN),false)
 x11: 	$(X11OBJS) $(BASEOBJS)
-	$(CC) -o HHexenX  $(X11OBJS) $(BASEOBJS) $(XLIBS)
+	$(CC) -o hhexen-x11  $(X11OBJS) $(BASEOBJS) $(XLIBS)
 
 svgalib: $(SVGAOBJS) $(BASEOBJS)
-	$(CC) -o HHexenS $(SVGAOBJS) $(BASEOBJS) $(SVGALIBS)
+	$(CC) -o hhexen-vga $(SVGAOBJS) $(BASEOBJS) $(SVGALIBS)
 
-opengl:
-	echo "You have not enabled GL.  Please type './configure --enable-gl-mesa'"
-	echo "or './configure --enable-gl-tnt' to enable OpenGL mode."
 endif
 
 clean:
@@ -152,6 +150,7 @@ clean:
 	$(RM) x11/*.o
 	$(RM) svgalib/*.o
 	$(RM) opengl/*.o
+	$(RM) sdl/*.o
 
 %.o: %.c
 	$(CC) $< -o $@ -c $(CFLAGS) 

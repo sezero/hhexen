@@ -1,7 +1,7 @@
 HHexen v1.3 README
 
 	HHexen is an enhanced Linux source port of the game Hexen by Raven
-Software.  Its main purpose right now is to incorperate the assassin character
+Software.  Its main purpose right now is to incorporate the assassin character
 class from Hexen 2 into the original Hexen.  Also, some minor enhancements are
 planned for later versions.  HHexen is not made or supported by Activision.
 
@@ -23,9 +23,7 @@ Installation:
   OpenGL:
 	To compile for OpenGL, just run configure with the --enable-gl switch.
   It will automatically check for the libGL.so and libGLU.so files, and if it
-  doesn't find them, it will use the MesaGL and MesaGLU libraries instead.  
-  If you want to use the MesaGL and MesaGLU libraries by default, run 
-  configure with the switch --enable-gl-mesa instead of --enable-gl.
+  doesn't find them, it will use the MesaGL and MesaGLU libraries instead.
 
 	It is very important that you run a "make clean" before compiling for
   OpenGL if you have previously compiled for X11.  The same is true when 

@@ -4,8 +4,8 @@
 //** p_spec.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_spec.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:12 $
+//** $Revision: 1.2 $
+//** $Date: 2000-07-25 22:27:08 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -407,7 +407,7 @@ static boolean CheckedLockedDoor(mobj_t *mo, byte lock)
 	}
 	if(!(mo->player->keys&(1<<(lock-1))))
 	{
-		sprintf(LockedBuffer, "YOU NEED THE %s\n", 
+		snprintf(LockedBuffer, 80, "YOU NEED THE %s\n", 
 			TextKeyMessages[lock-1]);
 		P_SetMessage(mo->player, LockedBuffer, true);
 		S_StartSound(mo, SFX_DOOR_LOCKED);

@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2000-05-08 19:35:48 $
+//** $Revision: 1.6 $
+//** $Date: 2000-07-25 22:27:08 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -131,7 +131,7 @@ void W_AddFile(char *filename)
 	filelump_t *freeFileInfo;
 
 	// Check in HHWADDIR
-	sprintf (path, "%s/%s", getenv("HHWADDIR"), filename);
+	snprintf (path, 128, "%s/%s", getenv("HHWADDIR"), filename);
 	if((handle = open(path, O_RDONLY|O_BINARY)) == -1)
 	{	
 		//not in HHWADDIR, so try .
