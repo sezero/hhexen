@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:17 $
+//** $Revision: 1.2 $
+//** $Date: 2000-04-15 00:23:25 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -47,15 +47,15 @@
 //#define VERSIONTEXT "FINAL 1.0 (10 13 95)" // Just an update for Romero
 #ifdef __linux
 #ifdef RANGECHECK
-#define VERSIONTEXT "Version 1.3 +R "__DATE__" (BCP)"
+#define VERSIONTEXT "Version 1.4 +R "__DATE__" (BCP)"
 #else
-#define VERSIONTEXT "Version 1.3 "__DATE__" (BCP)"
+#define VERSIONTEXT "Version 1.4 "__DATE__" (BCP)"
 #endif
 #else
 #ifdef RANGECHECK
-#define VERSIONTEXT "Version 1.3 +R "__DATE__" ("VER_ID")"
+#define VERSIONTEXT "Version 1.4 +R "__DATE__" ("VER_ID")"
 #else
-#define VERSIONTEXT "Version 1.3 "__DATE__" ("VER_ID")"
+#define VERSIONTEXT "Version 1.4 "__DATE__" ("VER_ID")"
 #endif
 #endif
 

@@ -1,5 +1,8 @@
 HHexen ChangeLog
 
+v1.4
+ - Configs and savegames stored in ~/.hhexen/
+
 v1.3
  - OpenGL support
  - Key configuration menu

@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_x11.cpp,v 1.1.1.1 2000-04-11 17:38:20 theoddone33 Exp $
+//** $Id: i_x11.cpp,v 1.2 2000-04-15 00:23:25 theoddone33 Exp $
 //**
 //**************************************************************************
 
@@ -469,7 +469,7 @@ HexenWindow::HexenWindow()
     _buttons = 0;
     _prevX = _prevY = 0; 
 
-    setTitle( "HHexen v1.3" );
+    setTitle( "HHexen v1.4" );
     setSizeHints( SCREENWIDTH, SCREENHEIGHT, SCREENWIDTH*2, SCREENHEIGHT*2 );
     setIconName( "HEXEN" );
 
