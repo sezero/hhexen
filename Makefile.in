@@ -40,7 +40,7 @@ MODULE    = none
 
 INCSUBDIR = include
 
-CPPFLAGS += -I./include
+CPPFLAGS += -I./include -I/usr/X11R6/include
 
 # Objects to build
 
