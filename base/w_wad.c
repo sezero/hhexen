@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2000-05-05 02:04:59 $
+//** $Revision: 1.5 $
+//** $Date: 2000-05-08 19:35:48 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -657,8 +657,8 @@ void W_CheckForOldFiles (void)
 	ST_Message ("without a Version 1.1 wadfile can cause many problems. Please download the\n");
 	ST_Message ("wadfile patch from http://www.raven-games.com/hhexen\n");
 	ST_Message ("Press <ENTER> to continue.\n");
-	}
 	getchar();
+	}
 }	
 
 //==========================================================================
