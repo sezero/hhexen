@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:15 $
+//** $Revision: 1.2 $
+//** $Date: 2000-04-14 23:18:32 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -135,7 +135,7 @@ extern acsInfo_t *ACSInfo;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
-char *SavePath;
+extern char *basePath;
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
@@ -259,7 +259,7 @@ void SV_SaveGame(int slot, char *description)
 	char versionText[HXS_VERSION_TEXT_LENGTH];
 
 	// Open the output file
-	sprintf(fileName, "%shex6.hxs", SavePath);
+	sprintf(fileName, "%shex6.hxs", basePath);
 	OpenStreamOut(fileName);
 
 	// Write game save description
@@ -312,7 +312,7 @@ void SV_SaveMap(boolean savePlayers)
 	SavingPlayers = savePlayers;
 
 	// Open the output file
-	sprintf(fileName, "%shex6%02d.hxs", SavePath, gamemap);
+	sprintf(fileName, "%shex6%02d.hxs", basePath, gamemap);
 	OpenStreamOut(fileName);
 
 	// Place a header marker
@@ -360,7 +360,7 @@ void SV_LoadGame(int slot)
 	}
 
 	// Create the name
-	sprintf(fileName, "%shex6.hxs", SavePath);
+	sprintf(fileName, "%shex6.hxs", basePath);
 
 	// Load the file
 	M_ReadFile(fileName, &SaveBuffer);
@@ -498,7 +498,7 @@ void SV_MapTeleport(int map, int position)
 	TargetPlayerAddrs = NULL;
 
 	gamemap = map;
-	sprintf(fileName, "%shex6%02d.hxs", SavePath, gamemap);
+	sprintf(fileName, "%shex6%02d.hxs", basePath, gamemap);
 	if(!deathmatch && ExistingFile(fileName))
 	{ // Unarchive map
 		SV_LoadMap();
@@ -648,7 +648,7 @@ boolean SV_RebornSlotAvailable(void)
 {
 	char fileName[100];
 
-	sprintf(fileName, "%shex%d.hxs", SavePath, REBORN_SLOT);
+	sprintf(fileName, "%shex%d.hxs", basePath, REBORN_SLOT);
 	return ExistingFile(fileName);
 }
 
@@ -669,7 +669,7 @@ void SV_LoadMap(void)
 	RemoveAllThinkers();
 
 	// Create the name
-	sprintf(fileName, "%shex6%02d.hxs", SavePath, gamemap);
+	sprintf(fileName, "%shex6%02d.hxs", basePath, gamemap);
 
 	// Load the file
 	M_ReadFile(fileName, &SaveBuffer);
@@ -1611,10 +1611,10 @@ static void ClearSaveSlot(int slot)
 
 	for(i = 0; i < MAX_MAPS; i++)
 	{
-		sprintf(fileName, "%shex%d%02d.hxs", SavePath, slot, i);
+		sprintf(fileName, "%shex%d%02d.hxs", basePath, slot, i);
 		remove(fileName);
 	}
-	sprintf(fileName, "%shex%d.hxs", SavePath, slot);
+	sprintf(fileName, "%shex%d.hxs", basePath, slot);
 	remove(fileName);
 }
 
@@ -1634,17 +1634,17 @@ static void CopySaveSlot(int sourceSlot, int destSlot)
 
 	for(i = 0; i < MAX_MAPS; i++)
 	{
-		sprintf(sourceName, "%shex%d%02d.hxs", SavePath, sourceSlot, i);
+		sprintf(sourceName, "%shex%d%02d.hxs", basePath, sourceSlot, i);
 		if(ExistingFile(sourceName))
 		{
-			sprintf(destName, "%shex%d%02d.hxs", SavePath, destSlot, i);
+			sprintf(destName, "%shex%d%02d.hxs", basePath, destSlot, i);
 			CopyFile(sourceName, destName);
 		}
 	}
-	sprintf(sourceName, "%shex%d.hxs", SavePath, sourceSlot);
+	sprintf(sourceName, "%shex%d.hxs", basePath, sourceSlot);
 	if(ExistingFile(sourceName))
 	{
-		sprintf(destName, "%shex%d.hxs", SavePath, destSlot);
+		sprintf(destName, "%shex%d.hxs", basePath, destSlot);
 		CopyFile(sourceName, destName);
 	}
 }

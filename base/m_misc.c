@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:07 $
+//** $Revision: 1.2 $
+//** $Date: 2000-04-14 23:18:32 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -40,7 +40,8 @@ extern void OGL_GrabScreen();
 static int ReadFile(char const *name, byte **buffer, int mallocType);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
-extern char *SavePath;
+
+extern char *basePath;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
@@ -501,11 +502,6 @@ default_t defaults[] =
 	{ "snd_mport", &snd_Mport, -1 },
 
 	{ "usegamma", &usegamma, 0 },
-
-	#define DEFAULT_SAVEPATH		"hexndata/"
-
-	{ "savedir", (int *) &SavePath, (int) DEFAULT_SAVEPATH },
-
 	{ "messageson", (int *) &messageson, 1 },
 
 	{ "chatmacro0", (int *) &chat_macros[0], (int) HUSTR_CHATMACRO0 },
@@ -593,13 +589,9 @@ void M_LoadDefaults(char *fileName)
 		strcpy(defaultfile, myargv[i+1]);
 		ST_Message("config file: %s\n", defaultfile);
 	}
-	else if(cdrom)
-	{
-		sprintf(defaultfile, "c:\\hexndata\\%s", fileName);
-	}
 	else
 	{
-		strcpy(defaultfile, fileName);
+		strcpy(defaultfile, strcat(basePath,fileName));
 	}
 
 	// Scan the config file

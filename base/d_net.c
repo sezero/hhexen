@@ -4,8 +4,8 @@
 //** d_net.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: d_net.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:02 $
+//** $Revision: 1.2 $
+//** $Date: 2000-04-14 23:18:32 $
 //** $Author: theoddone33 $
 //**
 //** This version has the fixed ticdup code.
@@ -823,11 +823,8 @@ if (debugfile)
 
 	if (!demoplayback)
 	{
-	//=============================================================================
-	//
 	//      ideally nettics[0] should be 1 - 3 tics above lowtic
 	//      if we are consistantly slower, speed up time
-	//
 		for (i=0 ; i<MAXPLAYERS ; i++)
 			if (playeringame[i])
 				break;
@@ -839,17 +836,14 @@ if (debugfile)
 			if (nettics[0] <= nettics[nodeforplayer[i]])
 			{
 				gametime--;
-	//                      printf ("-");
 			}
 			frameskip[frameon&3] = (oldnettics > nettics[nodeforplayer[i]]);
 			oldnettics = nettics[0];
 			if (frameskip[0] && frameskip[1] && frameskip[2] && frameskip[3])
 			{
 				skiptics = 1;
-	//                      printf ("+");
 			}
 		}
-	//=============================================================================
 	}       // demoplayback
 
 	//

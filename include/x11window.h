@@ -2,7 +2,7 @@
 #define X11WINDOW_H
 //============================================================================
 //
-// $Id: x11window.h,v 1.1.1.1 2000-04-11 17:38:18 theoddone33 Exp $
+// $Id: x11window.h,v 1.2 2000-04-14 23:18:32 theoddone33 Exp $
 //
 // X11 Pixel Port class
 //
@@ -11,7 +11,7 @@
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include <X11/xpm.h>
+//#include <X11/xpm.h>
 
 
 const long X11WindowDefaultInput = KeyPressMask | KeyReleaseMask |

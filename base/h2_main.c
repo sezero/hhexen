@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:03 $
+//** $Revision: 1.2 $
+//** $Date: 2000-04-14 23:18:32 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -32,7 +32,6 @@
 
 // MACROS ------------------------------------------------------------------
 
-#define CONFIG_FILE_NAME "hhexen.cfg"
 #define MAXWADFILES 20
 
 // TYPES -------------------------------------------------------------------
@@ -79,7 +78,7 @@ static void ExecOptionDEVMAPS(char **args, int tag);
 static void ExecOptionSKILL(char **args, int tag);
 static void ExecOptionPLAYDEMO(char **args, int tag);
 static void ExecOptionMAXZONE(char **args, int tag);
-static void CreateSavePath(void);
+static void CreateBasePath(void);
 static void WarpCheck(void);
 
 
@@ -88,10 +87,11 @@ static void WarpCheck(void);
 extern boolean automapactive;
 extern boolean MenuActive;
 extern boolean askforquit;
-extern char *SavePath;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
+char *basePath; 
+char base[121];
 boolean DevMaps;			// true = Map development mode
 char *DevMapsDir = "";		// development maps directory
 boolean shareware;			// true if only episode 1 present
@@ -179,12 +179,11 @@ void H2_Main(void)
 	ST_Message("V_Init: allocate screens.\n");
 	V_Init();
 
+        CreateBasePath();
+	
 	// Load defaults before initing other systems
 	ST_Message("M_LoadDefaults: Load system defaults.\n");
-	M_LoadDefaults(CONFIG_FILE_NAME);
-
-	// Now that the savedir is loaded from .CFG, make sure it exists
-	CreateSavePath();
+	M_LoadDefaults("hhexen.cfg");
 
 	// HEXEN MODIFICATION:
 	// There is a realloc() in W_AddFile() that might fail if the zone
@@ -897,24 +896,13 @@ fixed_t FixedDiv(fixed_t a, fixed_t b)
 
 //==========================================================================
 //
-// CreateSavePath
+// CreateBasePath 
 //
 //==========================================================================
 
-static void CreateSavePath(void)
+void CreateBasePath(void)
 {
-	char creationPath[121];
-	int len;
-
-	if(cdrom == true)
-	{
-		SavePath = "c:\\hexndata\\";
-	}
-	len = strlen(SavePath);
-	if (len >= 120) I_Error("Save path too long\n");
-	strcpy(creationPath, SavePath);
-#ifdef __linux
-	creationPath[len-1] = 0;
-	mkdir( creationPath, S_IRWXU|S_IRWXG|S_IRWXO );
-#endif
-} 
+	sprintf(base,"%s/.hhexen/",getenv("HOME"));
+	basePath = base;
+	mkdir( base, S_IRWXU|S_IRWXG|S_IRWXO );
+}
