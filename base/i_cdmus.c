@@ -16,7 +16,9 @@
 #include <string.h>
 #include <time.h>
 #include <errno.h>
+#ifdef HAVE_LINUX_CDROM_H 
 #include <linux/cdrom.h>
+#endif
 #include "h2def.h"
 #include "i_sound.h"
 

@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.2 $
-//** $Date: 2000-04-15 00:23:25 $
+//** $Revision: 1.3 $
+//** $Date: 2000-04-18 16:11:12 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -146,10 +146,6 @@ extern byte *destview, *destscreen;	// PC direct to screen pointers
 #define	FRACBITS		16
 #define	FRACUNIT		(1<<FRACBITS)
 typedef int fixed_t;
-
-#ifndef __linux
-typedef unsigned int uint;
-#endif
 
 //#define ANGLE_1		0x01000000
 #define ANGLE_45	0x20000000
@@ -1072,9 +1068,8 @@ void I_EndRead (void);
 byte	*I_AllocLow (int length);
 // allocates from low memory under dos, just mallocs under unix
 
-void I_Tactile (int on, int off, int total);
+//void I_Tactile (int on, int off, int total);
 
-#if defined(__linux)
 extern boolean useexterndriver;
 
 #define EBT_FIRE			1
@@ -1103,7 +1098,6 @@ typedef struct
 	signed char flyDirection; // flyheight (+1/-1)
 	unsigned short buttons; // EBT_* flags
 } externdata_t;
-#endif
 
 //----
 //GAME

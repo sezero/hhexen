@@ -4,8 +4,8 @@
 //** p_inter.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_inter.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:10 $
+//** $Revision: 1.2 $
+//** $Date: 2000-04-18 16:11:12 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -54,7 +54,7 @@ static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass,
 
 /* jim Linux needs this too */
 /*  #ifdef __NeXT__ */
-#if defined(__NeXT__) || defined(__linux)
+#if defined(__NeXT__) || defined(__linux) || defined(__FreeBSD__)
 extern void strupr(char *s);
 #endif
 
@@ -2027,7 +2027,7 @@ void P_DamageMobj
 		temp = damage < 100 ? damage : 100;
 		if(player == &players[consoleplayer])
 		{
-			I_Tactile(40, 10, 40+temp*2);
+			//I_Tactile(40, 10, 40+temp*2);
 			SB_PaletteFlash(false);
 		}
 	}

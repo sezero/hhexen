@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_svgalib.c,v 1.1.1.1 2000-04-11 17:38:19 theoddone33 Exp $
+//** $Id: i_svgalib.c,v 1.2 2000-04-18 16:11:12 theoddone33 Exp $
 //**
 //**************************************************************************
 
@@ -530,7 +530,6 @@ int I_ResetMouse (void)
 ================
 */
 
-void I_StartupCyberMan(void);
 
 void I_StartupMouse (void)
 {
@@ -549,8 +548,6 @@ void I_StartupMouse (void)
 	ST_Message("Mouse: detected\n");
 
 	mousepresent = 1;
-
-	I_StartupCyberMan();
 }
 
 

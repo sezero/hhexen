@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2000-04-14 23:18:32 $
+//** $Revision: 1.3 $
+//** $Date: 2000-04-18 16:11:12 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -426,7 +426,7 @@ static Menu_t *Menus[] =
 	&SaveMenu
 };
 
-#if defined(__linux)
+#if defined(__linux) || defined (__FreeBSD__)
 static char *GammaText[] = 
 {
 	TXT_GAMMA_LEVEL_OFF,

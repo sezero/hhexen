@@ -4,37 +4,33 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2000-04-15 20:00:49 $
+//** $Revision: 1.3 $
+//** $Date: 2000-04-18 16:11:12 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
 
 // HEADER FILES ------------------------------------------------------------
 
-#ifdef __linux
 #include <malloc.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h> /* jim open() etc. */
 #include <ctype.h>  /* jim toupper() */
-#else
-#ifdef NeXT
-#include <libc.h>
-#include <ctype.h>
-#else
 #include <malloc.h>
-#include <io.h>
+//#include <io.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#endif
-#endif
+#ifndef HAVE_ALLOCA_H 
 #include <alloca.h>
+#else
+#define O_BINARY 0
+#endif
 #include "h2def.h"
 
 // MACROS ------------------------------------------------------------------
 
-#if defined(NeXT) || defined(__linux)
+#if defined(NeXT) || defined(__linux) || defined(__FreeBSD__)
 // NeXT doesn't need a binary flag in open call
 #define O_BINARY 0
 #define strcmpi strcasecmp
@@ -85,7 +81,6 @@ boolean AuxiliaryOpened = false;
 
 // CODE --------------------------------------------------------------------
 
-#if defined(NeXT) || defined(__linux)
 //==========================================================================
 //
 // strupr
@@ -114,7 +109,6 @@ int filelength(int handle)
 	}
     return fileinfo.st_size;
 }
-#endif
 
 //==========================================================================
 //

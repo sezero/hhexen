@@ -4,8 +4,8 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:03 $
+//** $Revision: 1.2 $
+//** $Date: 2000-04-18 16:11:12 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -187,9 +187,7 @@ extern boolean inventory;
 extern int curpos;
 extern int inv_ptr;
 
-extern  int             isCyberPresent;     // is CyberMan present?
 boolean usearti = true;
-void I_ReadCyberCmd (ticcmd_t *cmd);
 
 void G_BuildTiccmd (ticcmd_t *cmd)
 {
@@ -212,8 +210,6 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 
 	cmd->consistancy =
 		consistancy[consoleplayer][maketic%BACKUPTICS];
-	if (isCyberPresent)
-		I_ReadCyberCmd (cmd);
 
 //printf ("cons: %i\n",cmd->consistancy);
 	strafe = gamekeydown[key_strafe] || mousebuttons[mousebstrafe]

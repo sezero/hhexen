@@ -1640,7 +1640,7 @@ else
 #include "confdefs.h"
 #include <alloca.h>
 int main() {
-char *p = alloca(2 * sizeof(int));
+void *p = alloca(2 * sizeof(int));
 ; return 0; }
 EOF
 if { (eval echo configure:1647: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
@@ -1976,7 +1976,7 @@ else
 int main() {
 
 /* Ultrix mips cc rejects this.  */
-typedef int charset[2]; const charset x;
+typedef int charset[2]; const charset x = {0,0};
 /* SunOS 4.1.1 cc rejects this.  */
 char const *const *ccp;
 char **p;
@@ -2051,7 +2051,7 @@ for ac_kw in inline __inline__ __inline; do
 #include "confdefs.h"
 
 int main() {
-} $ac_kw foo() {
+} int $ac_kw foo() {
 ; return 0; }
 EOF
 if { (eval echo configure:2058: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
@@ -2615,12 +2615,13 @@ rm -fr confdefs* $ac_clean_files
 test "$no_create" = yes || ${CONFIG_SHELL-/bin/sh} $CONFIG_STATUS || exit 1
 
 
-if test "$HAVESVGA" = "no"
+if test "$HAVEGL" = "no"
 then
-  echo
-  echo "Warning: It appears that you do not have SvgaLib installed on your system"
-  echo "         If you want to compile with SvgaLib support, you will need to"
-  echo "         download the library from 'http://www.svgalib.org'."
+    echo
+    echo "Warning: Configure was not able to find your OpenGL libraries."
+    echo "         Perhaps you do not have them installed correctly. Until"
+    echo "         this problem is resolved, you won't be able to compile"
+    echo "         the OpenGL version of HHexen."
 fi
 
 if test "$HAVEX11" = "no"
@@ -2630,16 +2631,18 @@ then
   echo "         build.  Perhaps you do not have X11 installed correctly."
   echo "         Until this problem is resolved, you won't be able to compile"
   echo "         the X11 or OpenGL versions."
-  HAVEGL="yes"
 fi
 
-if test "$HAVEGL" = "no"
+if test "$HAVESVGA" = "no"
 then
-    echo
-    echo "Warning: Configure was not able to find your OpenGL libraries."
-    echo "         Perhaps you do not have them installed correctly. Until"
-    echo "         this problem is resolved, you won't be able to compile"
-    echo "         the OpenGL version of HHexen."
+	echo "This works"
+	if test "$HAVEGL" = "no"
+	then
+	  echo
+	  echo "Warning: It appears that you do not have SvgaLib installed on your system"
+	  echo "         If you want to compile with SvgaLib support, you will need to"
+	  echo "         download the library from 'http://www.svgalib.org'."
+	fi
 fi
 
 if test "$GLHEXEN" = "true"

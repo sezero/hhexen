@@ -69,7 +69,6 @@ BASEOBJS = \
 	base/oss.o \
 	base/i_sound.o \
 	base/i_cdmus.o \
-	base/i_cyber.o \
 	base/am_map.o \
 	base/a_action.o \
 	base/ct_chat.o \

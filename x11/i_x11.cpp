@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_x11.cpp,v 1.2 2000-04-15 00:23:25 theoddone33 Exp $
+//** $Id: i_x11.cpp,v 1.3 2000-04-18 16:11:12 theoddone33 Exp $
 //**
 //**************************************************************************
 
@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <unistd.h>
 #include <sys/time.h>
 #include <X11/keysym.h>
 #include "x11window.h"
@@ -409,11 +410,8 @@ int I_TimerISR (void)
 ================
 */
 
-void I_StartupCyberMan(void);
-
 void I_StartupMouse (void)
 {
-	I_StartupCyberMan();
 }
 
 
