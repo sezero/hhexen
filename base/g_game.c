@@ -4,8 +4,8 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2000-04-18 16:11:12 $
+//** $Revision: 1.3 $
+//** $Date: 2000-05-05 01:16:35 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -532,9 +532,7 @@ void G_BuildTiccmd (ticcmd_t *cmd)
         float adj = ((mousey*0x4)<<16) / (float) ANGLE_180*180*110.0/85.0;
         float newlookdir = 0; /* jim initialiser added to prevent warning */
 
-#ifndef RENDER3D
 	adj *= 2;	//Speed up the X11 mlook a little.
-#endif
 
 	if(mouselook == 1)
         	newlookdir = players[consoleplayer].lookdir + adj;
