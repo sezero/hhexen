@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2000-07-25 22:27:08 $
+//** $Revision: 1.5 $
+//** $Date: 2001-01-08 22:24:25 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -1387,6 +1387,7 @@ static void SCClass(int option)
 			SkillItems[3].text = "WARLOCK";
 			SkillItems[4].text = "ARCHIMAGE";
 			break;
+#ifdef ASSASSIN
 		case PCLASS_ASS:
 			SkillMenu.x = 116;
 			SkillItems[0].text = "KNAVE";
@@ -1395,6 +1396,7 @@ static void SCClass(int option)
 			SkillItems[3].text = "EXECUTIONER";
 			SkillItems[4].text = "WIDOW MAKER";
 			break;
+#endif
 	}
 	SetMenu(MENU_SKILL);
 }

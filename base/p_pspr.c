@@ -4,8 +4,8 @@
 //** p_pspr.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_pspr.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:11 $
+//** $Revision: 1.2 $
+//** $Date: 2001-01-08 22:24:25 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -72,6 +72,7 @@ weaponinfo_t WeaponInfo[NUMWEAPONS][NUMCLASSES] =
 			S_MWANDATK_1,
 			S_NULL
 		},
+#ifdef ASSASSIN
 		{ // Assassin - Katar
 			MANA_NONE,
 			S_KATARUP,
@@ -81,6 +82,7 @@ weaponinfo_t WeaponInfo[NUMWEAPONS][NUMCLASSES] =
 			S_KATARATK1_1,
 			S_NULL
 		},
+#endif
 		{ // Pig - Snout
 			MANA_NONE,			// mana
 			S_SNOUTUP,			// upstate
@@ -119,6 +121,7 @@ weaponinfo_t WeaponInfo[NUMWEAPONS][NUMCLASSES] =
 			S_CONEATK1_3,	// holdatkstate
 			S_NULL			// flashstate
 		},
+#ifdef ASSASSIN
 		{ // Assassin - Hand Crossbow
 			MANA_1,
 			S_ACROSSUP,
@@ -128,6 +131,7 @@ weaponinfo_t WeaponInfo[NUMWEAPONS][NUMCLASSES] =
 			S_ACROSSATK_3,
 			S_NULL
 		},
+#endif
 		{ // Pig - Snout
 			MANA_NONE,			// mana
 			S_SNOUTUP,			// upstate
@@ -166,6 +170,7 @@ weaponinfo_t WeaponInfo[NUMWEAPONS][NUMCLASSES] =
 			S_MLIGHTNINGATK_1,	// holdatkstate
 			S_NULL				// flashstate
 		},
+#ifdef ASSASSIN
 		{ // Assassin - Grenades
 			MANA_2,
 			S_AGRENUP,
@@ -175,6 +180,7 @@ weaponinfo_t WeaponInfo[NUMWEAPONS][NUMCLASSES] =
 			S_AGRENATK_1,
 			S_NULL
 		},
+#endif
 		{ // Pig - Snout
 			MANA_NONE,			// mana
 			S_SNOUTUP,			// upstate
@@ -213,6 +219,7 @@ weaponinfo_t WeaponInfo[NUMWEAPONS][NUMCLASSES] =
 			S_MSTAFFATK_1,	// holdatkstate
 			S_NULL				// flashstate
 		},
+#ifdef ASSASSIN
 		{ // Assassin - Staff of Set
 			MANA_BOTH,
 			S_ASTAFFUP,
@@ -222,6 +229,7 @@ weaponinfo_t WeaponInfo[NUMWEAPONS][NUMCLASSES] =
 			S_ASTAFFATK_1,
 			S_NULL
 		},
+#endif
 		{ // Pig - Snout
 			MANA_NONE,			// mana
 			S_SNOUTUP,			// upstate
@@ -241,7 +249,9 @@ static int WeaponManaUse[NUMCLASSES][NUMWEAPONS] =
 	{ 0, 2, 3, 14 },
 	{ 0, 1, 4, 18 },
 	{ 0, 3, 5, 15 },
+#ifdef ASSASSIN
 	{ 0, 3, 3, 1 },		// True to Hexen II
+#endif
 	{ 0, 0, 0, 0 }
 };
 
@@ -2502,7 +2512,7 @@ void P_MovePsprites(player_t *player)
 //
 // Jim Cameron did most of this one
 //============================================================================
-
+#ifdef ASSASSIN
 void A_AKnifeAttack(player_t *player, pspdef_t *psp)
 {
  angle_t angle;
@@ -2704,3 +2714,4 @@ void A_AStaffAttack(player_t *player, pspdef_t *psp)
 	angle = pmo->angle;
 
 }
+#endif

@@ -4,8 +4,8 @@
 //** d_net.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: d_net.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2000-04-14 23:18:32 $
+//** $Revision: 1.3 $
+//** $Date: 2001-01-08 22:24:25 $
 //** $Author: theoddone33 $
 //**
 //** This version has the fixed ticdup code.
@@ -865,6 +865,7 @@ if (debugfile)
 			// don't stay in here forever -- give the menu a chance to work
 			if (I_GetTime ()/ticdup - entertic >= 20)
 			{
+				CON_Ticker ();
 				MN_Ticker ();
 				return;
 			}
@@ -881,6 +882,7 @@ if (debugfile)
 				I_Error ("gametic>lowtic");
 			if (advancedemo)
 				H2_DoAdvanceDemo ();
+			CON_Ticker ();
 			MN_Ticker ();
 			G_Ticker ();
 			gametic++;

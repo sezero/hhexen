@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2000-07-25 22:27:08 $
+//** $Revision: 1.5 $
+//** $Date: 2001-01-08 22:24:25 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -86,6 +86,7 @@ static void WarpCheck(void);
 
 extern boolean automapactive;
 extern boolean MenuActive;
+extern boolean ConsoleActive;
 extern boolean askforquit;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
@@ -130,7 +131,9 @@ static char *wadfiles[MAXWADFILES] =
 static char *wadfiles[MAXWADFILES] =
 {
 	"hexen.wad"
+#ifdef ASSASSIN
 	,"assassin.wad"
+#endif
 	,NULL
 };
 #endif
@@ -197,6 +200,8 @@ void H2_Main(void)
 	ST_Message("Z_Init: Init zone memory allocation daemon.\n");
 	Z_Init();
 
+	ST_Message("CON_Init: Init console.\n");
+	CON_Init();
 
 	ST_Message("MN_Init: Init menu system.\n");
 	MN_Init();
@@ -571,6 +576,10 @@ void H2_ProcessEvents(void)
 		{
 			continue;
 		}
+		if(CON_Responder(ev))
+		{
+			continue;
+		}
 		if(MN_Responder(ev))
 		{
 			continue;
@@ -638,7 +647,7 @@ static void DrawAndBlit(void)
 			break;
 	}
 
-	if(paused && !MenuActive && !askforquit)
+	if(paused && !MenuActive && !ConsoleActive && !askforquit)
 	{
 		if(!netgame)
 		{
@@ -659,6 +668,9 @@ static void DrawAndBlit(void)
 
 	// Draw current message
 	DrawMessage();
+
+	// Draw console
+	CON_Drawer();
 
 	// Draw Menu
 	MN_Drawer();

@@ -1,5 +1,4 @@
-// $Id: i_sound.c,v 1.2 2000-07-25 22:27:08 theoddone33 Exp $
-
+// $Id: i_sound.c,v 1.3 2001-01-08 22:24:25 theoddone33 Exp $
 
 #include <stdio.h>
 #include <math.h>       // pow()

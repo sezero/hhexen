@@ -4,8 +4,8 @@
 //** v_video.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: v_video.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:16 $
+//** $Revision: 1.2 $
+//** $Date: 2001-01-08 22:24:25 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -58,6 +58,46 @@ void V_DrawPatch(int x, int y, patch_t *patch)
 	}
 	col = 0;
 	desttop = screen+y*SCREENWIDTH+x;
+	w = SHORT(patch->width);
+	for(; col < w; x++, col++, desttop++)
+	{
+		column = (column_t *)((byte *)patch+LONG(patch->columnofs[col]));
+		// Step through the posts in a column
+		while(column->topdelta != 0xff)
+		{
+			source = (byte *)column+3;
+			dest = desttop+column->topdelta*SCREENWIDTH;
+			count = column->length;
+			while(count--)
+			{
+				*dest = *source++;
+				dest += SCREENWIDTH;
+			}
+			column = (column_t *)((byte *)column+column->length+4);
+		}
+	}
+}
+
+//---------------------------------------------------------------------------
+//
+// PROC V_DrawPatchBuffer
+//
+// Draws a column based masked pic to a specified buffer.
+//
+//---------------------------------------------------------------------------
+
+void V_DrawPatchBuffer(int x, int y, patch_t *patch, byte *buffer)
+{
+	int count;
+	int col;
+	column_t *column;
+	byte *desttop;
+	byte *dest;
+	byte *source;
+	int w;
+
+	col = 0;
+	desttop = buffer+y*SCREENWIDTH+x;
 	w = SHORT(patch->width);
 	for(; col < w; x++, col++, desttop++)
 	{
@@ -240,6 +280,22 @@ void V_DrawShadowedPatch(int x, int y, patch_t *patch)
 	}			
 }
 
+void V_BlitToScreen (int x, int y, byte *buffer, int width, int height)
+{
+	int i, j;
+	byte *dest;
+
+	dest = screen+x+SCREENWIDTH*y;
+	for (i = 0; i < height; i++)
+	{
+		for (j = 0; j < width; j++)
+		{
+			*dest++ = *buffer++;
+		}
+		dest += (SCREENWIDTH-width);
+	}
+}
+	
 //---------------------------------------------------------------------------
 //
 // PROC V_DrawRawScreen

@@ -4,8 +4,8 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2000-05-05 01:16:35 $
+//** $Revision: 1.4 $
+//** $Date: 2001-01-08 22:24:25 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -120,14 +120,18 @@ static int LeavePosition;
 //#define MAXPLMOVE       0x32 // Old Heretic Max move
 
 fixed_t MaxPlayerMove[NUMCLASSES] = { 0x3C, 0x32, 0x2D,
+#ifdef ASSASSIN
 					0x3D,
+#endif
 					0x31 };
 fixed_t forwardmove[NUMCLASSES][2] = 
 {
 	{ 0x1D, 0x3C },
 	{ 0x19, 0x32 },
 	{ 0x16, 0x2E },
+#ifdef ASSASSIN
 	{ 0x17, 0x3D },
+#endif
 	{ 0x18, 0x31 }
 };
 	
@@ -136,7 +140,9 @@ fixed_t sidemove[NUMCLASSES][2] =
 	{ 0x1B, 0x3B },
 	{ 0x18, 0x28 },
 	{ 0x15, 0x25 },
+#ifdef ASSASSIN
 	{ 0x16, 0x3C },
+#endif
 	{ 0x17, 0x27 }
 };
 
@@ -218,7 +224,7 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 	speed = gamekeydown[key_speed] || joybuttons[joybspeed]
 		|| joybuttons[joybspeed];
 	if(alwaysrun && !demoplayback && !demorecording)
-	speed = !speed;
+		speed = !speed;
 	forward = side = look = arti = flyheight = 0;
 	
 //
@@ -528,24 +534,27 @@ void G_BuildTiccmd (ticcmd_t *cmd)
     }
     else if( mousey )
     {
-        // We'll directly change the viewing pitch of the console player.
-        float adj = ((mousey*0x4)<<16) / (float) ANGLE_180*180*110.0/85.0;
-        float newlookdir = 0; /* jim initialiser added to prevent warning */
+	    if (!paused)	// Mouselook was going when paused :/
+	    {
+		// We'll directly change the viewing pitch of the console player.
+		float adj = ((mousey*0x4)<<16) / (float) ANGLE_180*180*110.0/85.0;
+		float newlookdir = 0; /* jim initialiser added to prevent warning */
 
-	adj *= 2;	//Speed up the X11 mlook a little.
+		adj *= 2;	//Speed up the X11 mlook a little.
 
-	if(mouselook == 1)
-        	newlookdir = players[consoleplayer].lookdir + adj;
-	else if(mouselook == 2)
-		newlookdir = players[consoleplayer].lookdir - adj;
+		if(mouselook == 1)
+			newlookdir = players[consoleplayer].lookdir + adj;
+		else if(mouselook == 2)
+			newlookdir = players[consoleplayer].lookdir - adj;
 
-        // vertical view angle taken from p_user.c line 249.
-        if( newlookdir > 90 )
-            newlookdir = 90;
-        if( newlookdir < -110 )
-            newlookdir = -110;
+		// vertical view angle taken from p_user.c line 249.
+		if( newlookdir > 90 )
+		    newlookdir = 90;
+		if( newlookdir < -110 )
+		    newlookdir = -110;
 
-        players[consoleplayer].lookdir = newlookdir;
+		players[consoleplayer].lookdir = newlookdir;
+	    }
     }
 
 	mousex = mousey = 0;
@@ -660,6 +669,7 @@ boolean G_Responder(event_t *ev)
 {
 	player_t *plr;
 	extern boolean MenuActive;
+	extern boolean ConsoleActive;
 
 	plr = &players[consoleplayer];
 	if(ev->type == ev_keyup && ev->data1 == key_useartifact)
@@ -754,7 +764,7 @@ boolean G_Responder(event_t *ev)
 				}
 				return(true);
 			}
-			if(ev->data1 == KEY_PAUSE && !MenuActive)
+			if(ev->data1 == KEY_PAUSE && !MenuActive && !ConsoleActive)
 			{
 				sendpause = true;
 				return(true);

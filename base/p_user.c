@@ -4,8 +4,8 @@
 //** p_user.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_user.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:12 $
+//** $Revision: 1.2 $
+//** $Date: 2001-01-08 22:24:25 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -31,7 +31,9 @@ int PStateNormal[NUMCLASSES] =
 	S_FPLAY,
 	S_CPLAY,
 	S_MPLAY,
+#ifdef ASSASSIN
 	S_APLAY,
+#endif
 	S_PIGPLAY
 };
 
@@ -40,7 +42,9 @@ int PStateRun[NUMCLASSES] =
 	S_FPLAY_RUN1,
 	S_CPLAY_RUN1,
 	S_MPLAY_RUN1,
+#ifdef ASSASSIN
 	S_APLAY_RUN1,
+#endif
 	S_PIGPLAY_RUN1
 };
 
@@ -49,7 +53,9 @@ int PStateAttack[NUMCLASSES] =
 	S_FPLAY_ATK1,
 	S_CPLAY_ATK1,
 	S_MPLAY_ATK1,
+#ifdef ASSASSIN
 	S_APLAY_ATK1,
+#endif
 	S_PIGPLAY_ATK1
 };
 
@@ -58,11 +64,17 @@ int PStateAttackEnd[NUMCLASSES] =
 	S_FPLAY_ATK2,
 	S_CPLAY_ATK3,
 	S_MPLAY_ATK2,
+#ifdef ASSASSIN
 	S_APLAY_ATK3,
+#endif
 	S_PIGPLAY_ATK1	
 };
 
-int ArmorMax[NUMCLASSES] = { 20, 18, 16, 17, 1 };
+int ArmorMax[NUMCLASSES] = { 20, 18, 16
+#ifdef ASSASSIN
+	, 17
+#endif
+		, 1 };
 /*
 ==================
 =
@@ -536,9 +548,11 @@ boolean P_UndoPlayerMorph(player_t *player)
 		case PCLASS_MAGE:
 			mo = P_SpawnMobj(x, y, z, MT_PLAYER_MAGE);
 			break;
+#ifdef ASSASSIN
 		case PCLASS_ASS:
 			mo = P_SpawnMobj(x, y, z, MT_PLAYER_ASS);
 			break;
+#endif
 		default:
 			I_Error("P_UndoPlayerMorph:  Unknown player class %d\n", 
 				player->class);
@@ -746,7 +760,8 @@ void P_PlayerThink(player_t *player)
 					S_StartSound(player->mo, 
 						SFX_PLAYER_MAGE_FALLING_SCREAM);
 				}
-	case PCLASS_ASS:
+#ifdef ASSASSIN
+		case PCLASS_ASS:
 			if(player->mo->momz <= -35*FRACUNIT 
 				&& player->mo->momz >= -40*FRACUNIT && !player->morphTics
 				&& !S_GetSoundPlayingInfo(player->mo,
@@ -755,9 +770,11 @@ void P_PlayerThink(player_t *player)
 					S_StartSound(player->mo, 
 						SFX_PLAYER_MAGE_FALLING_SCREAM);
 				}			break;
+#endif
 		default:
 			break;
 	}
+
 	if(cmd->arti)
 	{ // Use an artifact
 		if((cmd->arti&AFLAG_JUMP) && onground && !player->jumpTics)
@@ -1323,6 +1340,7 @@ boolean P_HealRadius(player_t *player)
 					S_StartSound(mo, SFX_MYSTICINCANT);
 				}
 				break;
+#ifdef ASSASSIN
 			case PCLASS_ASS:		// Also Radius heal
 				amount = 50 + (P_Random()%50);
 				if (P_GiveBody(mo->player, amount))
@@ -1331,6 +1349,7 @@ boolean P_HealRadius(player_t *player)
 					S_StartSound(mo, SFX_MYSTICINCANT);
 				}
 				break;
+#endif
 			case PCLASS_PIG:
 			default:
 				break;

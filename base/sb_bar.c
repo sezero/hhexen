@@ -4,8 +4,8 @@
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2000-07-25 22:27:08 $
+//** $Revision: 1.3 $
+//** $Date: 2001-01-08 22:24:25 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -617,10 +617,14 @@ void SB_Init(void)
 void SB_SetClassData(void)
 {
 	int class;
+#ifdef ASSASSIN
 	if(PlayerClass[consoleplayer] != PCLASS_ASS) 
+#endif
 	class = PlayerClass[consoleplayer]; // original player class (not pig)
+#ifdef ASSASSIN
 	else
 	class = 0; // Use FIghter chain and gem for now
+#endif
 	PatchWEAPONSLOT = WR_CacheLumpNum(W_GetNumForName("wpslot0")
 		+class, PU_STATIC);
 	PatchWEAPONFULL = WR_CacheLumpNum(W_GetNumForName("wpfull0")
@@ -871,6 +875,8 @@ static void DrSmallNumber(int val, int x, int y)
 //
 //==========================================================================
 
+// Whoa... this function won't work in GL - DDOI
+// Update - Good thing it's never called - DDOI
 static void ShadeLine(int x, int y, int height, int shade)
 {
 	byte *dest;
@@ -1680,7 +1686,9 @@ static int PieceX[NUMCLASSES][3] =
 	{ 190, 225, 234 },
 	{ 190, 212, 225 },
 	{ 190, 205, 224 },
+#ifdef ASSASSIN
 	{ 190, 205, 224 },		// Use mage xpositions for now
+#endif
 	{ 0, 0, 0 }			// Pig is never used
 };
 

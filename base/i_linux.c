@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.2 2000-07-25 22:27:08 theoddone33 Exp $
+//** $Id: i_linux.c,v 1.3 2001-01-08 22:24:25 theoddone33 Exp $
 //**
 //**************************************************************************
 
@@ -1510,10 +1510,45 @@ void I_Error (char *error, ...)
 // goes to text mode, and exits.
 //
 //--------------------------------------------------------------------------
+/*
+// This would be great if I could find the WAD lump that has Hexen's ENDTEXT
+void put_dos2ansi (byte attrib)
+{
+        byte fore,back,blink=0,intens=0;
+        int table[] = {30,34,32,36,31,35,33,37};
+
+        fore = attrib&15;       // bits 0-3
+        back = attrib&112; // bits 4-6
+        blink = attrib&128; // bit 7
+
+        // Fix background, blink is either on or off.
+        back = back>>4;
+
+        // Fix foreground
+        if (fore > 7) {
+                intens = 1;
+                fore-=8;
+        }
+
+        // Convert fore/back
+        fore = table[fore];
+        back = table[back] + 10;
+
+	// 'Render'
+        if (blink)
+                printf ("\033[%d;5;%dm\033[%dm", intens, fore, back);
+        else
+                printf ("\033[%d;25;%dm\033[%dm", intens, fore, back);
+}
+*/
 
 void I_Quit(void)
 {
+//	int i;
+//	byte *scr;
+
 	D_QuitNetGame();
+	CON_UnInit();
 	M_SaveDefaults();
 	I_Shutdown();
 
@@ -1526,6 +1561,13 @@ void I_Quit(void)
 	regs.h.dh = 23;
 	int386(0x10, (const union REGS *)&regs, &regs); // Set text pos
 	_settextposition(24, 1);
+*/
+/*	for (i=0; i < 80*25*2; i+=2) {
+		put_dos2ansi (scr[i+1]);
+		putchar (scr[i]);
+	}
+	// Cleanup
+	printf ("\033[m");
 */
 	printf("\nHexen: Beyond Heretic\n");
 	exit(0);
@@ -1693,7 +1735,7 @@ int main( int argc, char** argv )
 	myargv = argv;
 	if (M_CheckParm("--version"))
 	{
-		printf("HHexen version 1.3pre3\n");
+		printf("HHexen version 1.4\n");
 		return 0;
 	}
 	H2_Main();

@@ -4,8 +4,8 @@
 //** f_finale.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: f_finale.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2000-05-05 00:51:25 $
+//** $Revision: 1.3 $
+//** $Date: 2001-01-08 22:24:25 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -171,10 +171,12 @@ static void TextWrite (void)
 		}
 		/* jim Looks like Dan got this one wrong! 8-) */
 /*  		else if(PlayerClass[consoleplayer] = PCLASS_ASS) */
+#ifdef ASSASSIN
   		else if(PlayerClass[consoleplayer] == PCLASS_ASS)
 		{
 			V_DrawPatch(60,0, W_CacheLumpNum(W_GetNumForName("chessa"), PU_CACHE));
 		}
+#endif
 		else if(PlayerClass[consoleplayer])
 		{
 			V_DrawPatch(60, 0, W_CacheLumpNum(W_GetNumForName("chessc")

@@ -4,8 +4,8 @@
 //** p_inter.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_inter.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2000-04-18 16:11:12 $
+//** $Revision: 1.3 $
+//** $Date: 2001-01-08 22:24:25 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -21,12 +21,16 @@ int ArmorIncrement[NUMCLASSES][NUMARMOR] =
 	{ 25*FRACUNIT, 20*FRACUNIT, 15*FRACUNIT, 5*FRACUNIT },
 	{ 10*FRACUNIT, 25*FRACUNIT, 5*FRACUNIT, 20*FRACUNIT },
 	{ 5*FRACUNIT, 15*FRACUNIT, 10*FRACUNIT, 25*FRACUNIT },
+#ifdef ASSASSIN
 	{20*FRACUNIT, 10*FRACUNIT, 25*FRACUNIT, 5*FRACUNIT },
+#endif
 	{ 0, 0, 0, 0 }
 };
 
 int AutoArmorSave[NUMCLASSES] = { 15*FRACUNIT, 10*FRACUNIT, 5*FRACUNIT,
+#ifdef ASSASSIN
  10*FRACUNIT,
+#endif
  0 };
 
 char *TextKeyMessages[] = 
@@ -217,7 +221,9 @@ static void TryPickupWeapon(player_t *player, pclass_t weaponClass,
 
 	remove = true;
 	if(player->class != weaponClass
+#ifdef ASSASSIN
 		&& player->class != PCLASS_ASS
+#endif
 		)
 	{ // Wrong class, but try to pick up for mana
 		if(netgame && !deathmatch)
@@ -460,7 +466,11 @@ static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass,
 	checkAssembled = true;
 	gaveWeapon = false;
 	// Allow assassin to pick up any weapons
+#ifdef ASSASSIN
 	if(player->class != matchClass && player->class != PCLASS_ASS)
+#else
+	if(player->class != matchClass)
+#endif
 	{ // Wrong class, but try to pick up for mana
 		if(netgame && !deathmatch)
 		{ // Can't pick up wrong-class weapons in coop netplay

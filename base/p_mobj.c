@@ -4,8 +4,8 @@
 //** p_mobj.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_mobj.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:11 $
+//** $Revision: 1.2 $
+//** $Date: 2001-01-08 22:24:25 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -1324,9 +1324,11 @@ void P_SpawnPlayer(mapthing_t *mthing)
 		case PCLASS_MAGE:
 			mobj = P_SpawnMobj(x, y, z, MT_PLAYER_MAGE);
 			break;
+#ifdef ASSASSIN
 		case PCLASS_ASS:
 			mobj = P_SpawnMobj(x, y, z, MT_PLAYER_ASS);
 			break;
+#endif
 		default:
 			I_Error("P_SpawnPlayer: Unknown class type");
 			/* jim never happens but keeps gcc happy */

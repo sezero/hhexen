@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.4 $
-//** $Date: 2000-05-05 02:04:59 $
+//** $Revision: 1.5 $
+//** $Date: 2001-01-08 22:24:25 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -439,7 +439,9 @@ typedef enum
 	PCLASS_FIGHTER,
 	PCLASS_CLERIC,
 	PCLASS_MAGE,
+#ifdef ASSASSIN
 	PCLASS_ASS,
+#endif
 	PCLASS_PIG,
 	NUMCLASSES
 } pclass_t;
@@ -1443,6 +1445,17 @@ void Draw_TeleportIcon(void);
 void Draw_SaveIcon(void);
 void Draw_LoadIcon(void);
 
+//----------------------
+// CONSOLE (c_console.c)
+//---------------------
+
+void CON_Init(void);
+void CON_UnInit(void);
+void CON_Ticker(void);
+void CON_Drawer(void);
+void CON_BufInsertLine (const char *line);
+boolean CON_Responder(event_t *event);
+
 //-----------------
 // MENU (MN_menu.c)
 //-----------------
@@ -1469,9 +1482,11 @@ extern int usegamma;
 
 void V_Init(void); // Allocates buffer screens, call before R_Init
 void V_DrawPatch(int x, int y, patch_t *patch);
+void V_DrawPatchBuffer(int x, int y, patch_t *patch, byte *buffer);
 void V_DrawFuzzPatch(int x, int y, patch_t *patch);
 void V_DrawAltFuzzPatch(int x, int y, patch_t *patch);
 void V_DrawShadowedPatch(int x, int y, patch_t *patch);
+void V_BlitToScreen (int x, int y, byte *buffer, int width, int height);
 void V_DrawRawScreen(byte *raw);
 
 #include "sounds.h"
