@@ -4,8 +4,8 @@
 //** in_lude.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: in_lude.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:04 $
+//** $Revision: 1.2 $
+//** $Date: 2000-05-05 00:51:25 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -147,19 +147,11 @@ static void Stop(void)
 
 static char *ClusMsgLumpNames[] =
 {
-#ifdef VERSION10_WAD
-	CLUS1MSG,
-	CLUS2MSG,
-	CLUS3MSG,
-	CLUS4MSG,
-	CLUS5MSG
-#else
 	"clus1msg",
 	"clus2msg", 
 	"clus3msg",
 	"clus4msg", 
 	"clus5msg"
-#endif
 };
 
 static void InitStats(void)
@@ -186,9 +178,6 @@ static void InitStats(void)
 		{
 			if(oldCluster >= 1 && oldCluster <= 5)
 			{
-#ifdef VERSION10_WAD
-				HubText = ClusMsgLumpNames[oldCluster-1];
-#else
 				msgLumpName = ClusMsgLumpNames[oldCluster-1];
 				msgLump = W_GetNumForName(msgLumpName);
 				msgSize = W_LumpLength(msgLump);
@@ -199,7 +188,6 @@ static void InitStats(void)
 				W_ReadLump(msgLump, ClusterMessage);
 				ClusterMessage[msgSize] = 0; // Append terminator
 				HubText = ClusterMessage;
-#endif
 				HubCount = strlen(HubText)*TEXTSPEED+TEXTWAIT;
 				S_StartSongName("hub", true);
 			}

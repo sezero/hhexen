@@ -4,8 +4,8 @@
 //** f_finale.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: f_finale.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:03 $
+//** $Revision: 1.2 $
+//** $Date: 2000-05-05 00:51:25 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -364,19 +364,10 @@ static char *GetFinaleText(int sequence)
 	int msgLump;
 	static char *winMsgLumpNames[] =
 	{
-#ifdef VERSION10_WAD
-		WIN1MSG,
-		WIN2MSG,
-		WIN3MSG
-#else
 		"win1msg",
 		"win2msg",
 		"win3msg"
-#endif
 	};
-#ifdef VERSION10_WAD
-	return winMsgLumpNames[sequence];
-#else
 	msgLumpName = winMsgLumpNames[sequence];
 	msgLump = W_GetNumForName(msgLumpName);
 	msgSize = W_LumpLength(msgLump);
@@ -387,5 +378,4 @@ static char *GetFinaleText(int sequence)
 	W_ReadLump(msgLump, ClusterMessage);
 	ClusterMessage[msgSize] = 0; // Append terminator
 	return ClusterMessage;
-#endif
 }

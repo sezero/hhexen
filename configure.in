@@ -31,10 +31,6 @@ AC_ARG_ENABLE(demowad,
 [  --enable-demowad		Enable compilation with the demo wadfile],
 [ AC_DEFINE(DEMO_WAD)])
 
-AC_ARG_ENABLE(userconfig,
-[  --enable-userconfig          Make HHexen store it's config in users' home directories],
-[ AC_DEFINE(USERCONFIG)])
-
 AC_ARG_ENABLE(assassin,
 [  --disable-assassin		Compile HHexen without support for the assassin],
 , [AC_DEFINE(ASSASSIN)])
