@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2000-04-14 23:18:32 $
+//** $Revision: 1.3 $
+//** $Date: 2000-05-05 02:04:59 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -744,7 +744,6 @@ void WritePCXfile (char *filename, byte *data, int width, int height, byte *pale
 #ifdef RENDER3D
 void M_ScreenShot (void)
 {
-//OGL_GrabScreen();
 }
 #else
 void M_ScreenShot (void)

@@ -4,14 +4,15 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2000-04-18 16:11:12 $
+//** $Revision: 1.4 $
+//** $Date: 2000-05-05 02:04:59 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
 
 // HEADER FILES ------------------------------------------------------------
 
+#include <stdio.h>
 #include <malloc.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -20,7 +21,6 @@
 #include <malloc.h>
 //#include <io.h>
 #include <fcntl.h>
-#include <sys/stat.h>
 #ifndef HAVE_ALLOCA_H 
 #include <alloca.h>
 #else
@@ -648,6 +648,18 @@ void *W_CacheLumpName(char *name, int tag)
 {
 	return W_CacheLumpNum(W_GetNumForName(name), tag);
 }
+
+void W_CheckForOldFiles (void)
+{
+	if(W_CheckNumForName("clus1msg") == -1)
+	{
+	ST_Message ("It appears that you are using a Version 1.0 \'hexen.wad\' file. Running HHexen\n");
+	ST_Message ("without a Version 1.1 wadfile can cause many problems. Please download the\n");
+	ST_Message ("wadfile patch from http://www.raven-games.com/hhexen\n");
+	ST_Message ("Press <ENTER> to continue.\n");
+	}
+	getchar();
+}	
 
 //==========================================================================
 //

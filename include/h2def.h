@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.3 $
-//** $Date: 2000-04-18 16:11:12 $
+//** $Revision: 1.4 $
+//** $Date: 2000-05-05 02:04:59 $
 //** $Author: theoddone33 $
 //**
 //**************************************************************************
@@ -969,6 +969,7 @@ int W_LumpLength(int lump);
 void W_ReadLump(int lump, void *dest);
 void *W_CacheLumpNum(int lump, int tag);
 void *W_CacheLumpName(char *name, int tag);
+void W_CheckForOldFiles(void);
 
 //----------
 //BASE LEVEL
