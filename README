@@ -1,11 +1,9 @@
 HHexen v1.3 README
 
-	HHexen is an enhanced Linux source port of the game Hexen by Raven Software. 
-Its main purpose right now is to incorperate the assassin character class from 
-Hexen 2 into the original Hexen.  Also, some minor enhancements are planned for
-later versions. 
-	HHexen is based on the code for Linux Hexen by Karl Robillard.  Linux
-Hexen can be found at http://www.raven-games.com/linuxhexen/
+	HHexen is an enhanced Linux source port of the game Hexen by Raven
+Software.  Its main purpose right now is to incorperate the assassin character
+class from Hexen 2 into the original Hexen.  Also, some minor enhancements are
+planned for later versions.  HHexen is not made or supported by Activision.
 
 Features:
 
