@@ -1,0 +1,53 @@
+HHexen v1.3 README
+
+	HHexen is an enhanced Linux source port of the game Hexen by Raven Software. 
+Its main purpose right now is to incorperate the assassin character class from 
+Hexen 2 into the original Hexen.  Also, some minor enhancements are planned for
+later versions. 
+	HHexen is based on the code for Linux Hexen by Karl Robillard.  Linux
+Hexen can be found at http://www.raven-games.com/linuxhexen/
+
+Features:
+
+	- New character class: the assassin from Hexen 2
+	- OpenGL rendering (thanks to Jaakko and Karl)
+	- Normal and inverse mouselook
+	- Higher in-game mouse sensitivity
+	- In-game key configuration
+
+Installation:
+
+  X11 or SvgaLib:
+	No special tricks are required to compile these.  Just unpack the 
+  tarball and type "./configure".  If configure doesn't find any problems,
+  type either "make x11" or "make svgalib" and you should be all set.
+
+  OpenGL:
+	To compile for OpenGL, just run configure with the --enable-gl switch.
+  It will automatically check for the libGL.so and libGLU.so files, and if it
+  doesn't find them, it will use the MesaGL and MesaGLU libraries instead.  
+  If you want to use the MesaGL and MesaGLU libraries by default, run 
+  configure with the switch --enable-gl-mesa instead of --enable-gl.
+
+	It is very important that you run a "make clean" before compiling for
+  OpenGL if you have previously compiled for X11.  The same is true when 
+  compiling for X11 after previously compiling for OpenGL.
+	
+  Demo Wadfile:
+	If you don't have the full version of Hexen, you can still play HHexen.
+  The command for using the demo wad is "./configure --enable-demowad" and then
+  "make".  Note that if you are using OpenGL and the demo wad, you will need to
+  pass one of the arguments listed above to configure as well.
+
+Contact:
+
+ Dan Olson - dolson@raven-games.com
+
+Website:
+
+ http://www.raven-games.com/hhexen
+
+Thanks:
+
+ Special thanks goes out to who have helped out with the code (see the AUTHORS 
+file). Also, thanks to those who faithfully help me test each new version.

@@ -1,0 +1,17 @@
+include/config.h
+include/config.status
+include/config.log
+include/config.cache
+Makefile
+HHexenGL
+HHexenS
+HHexenX
+clanlib
+hexndata
+hhexen.cfg
+glhexen
+hexdd.wad
+hexen.wad
+config.status
+config.cache
+config.log

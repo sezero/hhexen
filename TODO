@@ -1,0 +1,19 @@
+TODO for HHexen
+
+ - Change input system to allow for Quake style key binding.
+ - Finish the Assassin's third and fourth weapons.
+ - Nix all #ifdef RENDER3D's
+ - Screenshots for OpenGL version.
+ - Midi Music.
+ - CD Audio rewrite.
+ - 3D sound support.
+ - ALSA sound support.
+ - In-game MP3 music.
+ - High resolution support for X11 version.
+ - Linux joystick support.
+ - Extra map for final hub.
+ - Extra demo to show off the assassin.
+ - Assassin sound effects.
+ - More eye candy (lens flares, dynamic lights) 
+
+Send patches or ideas to Dan Olson <dolson@raven-games.com>

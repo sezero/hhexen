@@ -1,0 +1,14 @@
+HHexen ChangeLog
+
+v1.3
+ - OpenGL support
+ - Key configuration menu
+ - Mouselook and inverse mouselook
+ - Autorun
+
+v1.2
+ - Sprites load from assassin.wad file
+ - Works with Linux Hexen 0.5.0 code
+
+v1.0
+ - Initial release

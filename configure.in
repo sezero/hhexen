@@ -1,0 +1,194 @@
+dnl Process this file with autoconf to produce a configure script.
+dnl configure.in for HHexen v1.3
+AC_REVISION([configure.in 1.00])
+AC_INIT(base/a_action.c)		
+AC_CONFIG_HEADER(include/config.h)
+
+# We want these before the checks, so the checks can modify their values.
+
+dnl **** Command-line arguments ****
+
+dnl Default values
+GLHEXEN="false"
+GLLIBS=""
+BASELIBS=""
+SVGALIBS=""
+LIBS="-L/usr/X11R6/lib"
+HAVESVGA="no"
+HAVEX11="yes"
+HAVEGL="yes"
+FORCEMESAGL="no"
+
+AC_ARG_ENABLE(gl,
+[  --enable-gl	 		Enable OpenGL mode],
+[GLHEXEN="true"; AC_DEFINE(RENDER3D)])
+
+AC_ARG_ENABLE(gl-mesa,
+[  --enable-gl-mesa		Enable OpenGL mode for Mesa 3d acceleration],
+[GLHEXEN="true"; FORCEMESAGL="yes" ;AC_DEFINE(RENDER3D)])
+
+AC_ARG_ENABLE(demowad,
+[  --enable-demowad		Enable compilation with the demo wadfile],
+[ AC_DEFINE(DEMO_WAD)])
+
+AC_ARG_ENABLE(userconfig,
+[  --enable-userconfig          Make HHexen store it's config in users' home directories],
+[ AC_DEFINE(USERCONFIG)])
+
+AC_ARG_ENABLE(assassin,
+[  --disable-assassin		Compile HHexen without support for the assassin],
+, [AC_DEFINE(ASSASSIN)])
+
+AC_SUBST(GLHEXEN)
+AC_SUBST(SVGALIBS)
+
+AC_DEFINE(_REENTRANT)
+AC_DEFINE(NORANGECHECKING)
+
+dnl **** Check for some programs ****
+
+AC_PROG_CC
+AC_PROG_CPP
+
+dnl **** Check for some libraries ****
+
+dnl Check for pthread
+AC_CHECK_LIB(pthread, pthread_create, [BASELIBS="-lpthread"])
+AC_SUBST(BASELIBS)
+
+dnl Check for SvgaLib
+AC_CHECK_LIB(vga, vga_setmode, [SVGALIBS="-lvga"; HAVESVGA="yes"])
+
+dnl Check for all libs needed by X11 version
+AC_CHECK_LIB(Xext,XShmQueryExtension, [LIBS="$LIBS -lXext"],[HAVEX11="no"])
+AC_CHECK_LIB(X11, main, [LIBS="$LIBS -lX11"], [HAVEX11="no"])
+AC_CHECK_LIB(dl, dlopen)
+AC_CHECK_LIB(m, sqrt)
+
+dnl Check for GL libraries
+
+if test "$GLHEXEN" = "true"
+then
+  if test "$FORCEMESAGL" = "yes"
+  then
+    AC_CHECK_LIB(MesaGL, glBindTexture, ,HAVEGL="no")
+    AC_CHECK_LIB(MesaGLU, gluOrtho2D, ,HAVEGL="no")
+  else
+    AC_CHECK_LIB(GL, glBindTexture,[LIBS="$LIBS -lGL";]
+      AC_CHECK_LIB(GLU, gluOrtho2D, ,
+        AC_CHECK_LIB(MesaGL, glBindTexture,[LIBS="$LIBS -lMesaGL";]
+	  AC_CHECK_LIB(MesaGLU, gluOrtho2D, , HAVEGL="no"),
+	  HAVEGL="no")
+	),
+        AC_CHECK_LIB(MesaGL, glBindTexture,[LIBS="$LIBS -lMesaGL";]
+	  AC_CHECK_LIB(MesaGLU, gluOrtho2D, , HAVEGL="no"),
+	HAVEGL="no")
+    )
+  fi
+fi
+
+dnl **** Check for gcc strength-reduce bug ****
+
+if test "x${GCC}" = "xyes"
+then
+  CFLAGS="$CFLAGS -Wall"
+  AC_CACHE_CHECK( "for gcc strength-reduce bug", ac_cv_c_gcc_strength_bug,
+                  AC_TRY_RUN([
+int main(void) {
+  static int Array[[3]];
+  unsigned int B = 3;
+  int i;
+  for(i=0; i<B; i++) Array[[i]] = i - 3;
+  exit( Array[[1]] != -2 );
+}],
+    ac_cv_c_gcc_strength_bug="no",
+    ac_cv_c_gcc_strength_bug="yes",
+    ac_cv_c_gcc_strength_bug="yes") )
+  if test "$ac_cv_c_gcc_strength_bug" = "yes"
+  then
+    CFLAGS="$CFLAGS -fno-strength-reduce"
+  fi
+fi
+
+dnl **** Check for underscore on external symbols ****
+
+AC_CACHE_CHECK("whether external symbols need an underscore prefix",
+               ac_cv_c_extern_prefix,
+[saved_libs=$LIBS
+LIBS="conftest_asm.s $LIBS"
+cat > conftest_asm.s <<EOF
+	.globl _ac_test
+_ac_test:
+	.long 0
+EOF
+AC_TRY_LINK([extern int ac_test;],[if (ac_test) return 1],
+            ac_cv_c_extern_prefix="yes",ac_cv_c_extern_prefix="no")
+LIBS=$saved_libs])
+
+dnl **** Check for endianness ****
+
+dnl AC_C_BIGENDIAN
+
+dnl **** Check for functions ****
+
+AC_FUNC_ALLOCA()
+
+dnl **** Check for header files ****
+
+AC_CHECK_HEADERS(\
+	linux/cdrom.h \
+)
+AC_HEADER_STAT()
+
+dnl **** Check for types ****
+
+AC_C_CONST()
+AC_C_INLINE()
+AC_TYPE_SIZE_T()
+AC_CHECK_SIZEOF(long long,0)
+
+dnl **** Generate output files ****
+
+MAKE_NAME=Makefile
+AC_SUBST_FILE(MAKE_RULES)
+
+AC_OUTPUT(Makefile)
+
+if test "$HAVESVGA" = "no"
+then
+  echo
+  echo "Warning: It appears that you do not have SvgaLib installed on your system"
+  echo "         If you want to compile with SvgaLib support, you will need to"
+  echo "         download the library from 'http://www.svgalib.org'."
+fi
+
+if test "$HAVEX11" = "no"
+then
+  echo
+  echo "Warning: Configure did not find some necessary libraries for an X11"
+  echo "         build.  Perhaps you do not have X11 installed correctly."
+  echo "         Until this problem is resolved, you won't be able to compile"
+  echo "         the X11 or OpenGL versions."
+dnl Add this line so we don't get two error messages
+  HAVEGL="yes"
+fi
+
+if test "$HAVEGL" = "no"
+then
+    echo
+    echo "Warning: Configure was not able to find your OpenGL libraries."
+    echo "         Perhaps you do not have them installed correctly. Until"
+    echo "         this problem is resolved, you won't be able to compile"
+    echo "         the OpenGL version of HHexen."
+fi
+
+if test "$GLHEXEN" = "true"
+then
+  echo
+  echo "Configure finished.  Do 'make clean', then 'make' to build the OpenGL version."
+  echo
+else
+  echo
+  echo "Configure finished. Do 'make clean', then 'make x11' or 'make svgalib' to build"
+  echo
+fi

@@ -1,0 +1,161 @@
+# This Makefile understands the following targets:
+#
+# x11 (default):	build X11 version
+# svgalib:		build SVGALib version
+# opengl		build OpenGL version
+# clean:		remove all intermediate files
+
+# Basic stuff
+SHELL = /bin/sh
+VPATH = @srcdir@
+
+top_srcdir = @top_srcdir@
+srcdir = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = $(exec_prefix)/bin
+infodir = $(prefix)/info
+libdir = $(prefix)/lib/gnudl
+mandir = $(prefix)/man/man1
+includedir = $(prefix)/include
+
+CC = @CC@
+DEFS = @DEFS@
+CPPFLAGS = @CPPFLAGS@ @CFLAGS@
+CFLAGS = $(CPPFLAGS) 
+LDFLAGS = @LDFLAGS@
+BLIBS = @BASELIBS@
+XLIBS = $(BLIBS) @LIBS@
+SVGALIBS = $(BLIBS) @SVGALIBS@
+
+GLHEXEN = @GLHEXEN@
+
+# Directories
+
+TOPSRCDIR = @top_srcdir@
+TOPOBJDIR = .
+SRCDIR    = @srcdir@
+VPATH     = @srcdir@
+MODULE    = none
+
+INCSUBDIR = include
+
+CPPFLAGS += -I./include
+
+# Objects to build
+
+X11OBJS = \
+	x11/i_x11.o \
+	x11/x11window.o \
+	x11/xshmext.o
+
+SVGAOBJS = \
+	svgalib/i_svgalib.o
+
+GLOBJS = \
+	opengl/i_gl.o \
+	x11/x11window.o \
+	opengl/ogl_clip.o \
+	opengl/ogl_draw.o \
+	opengl/ogl_font.o \
+	opengl/ogl_rend.o \
+	opengl/ogl_rl.o \
+	opengl/ogl_sky.o \
+	opengl/ogl_tex.o \
+	opengl/m_bams.o
+
+BASEOBJS = \
+	base/i_linux.o \
+	base/oss.o \
+	base/i_sound.o \
+	base/i_cdmus.o \
+	base/i_cyber.o \
+	base/am_map.o \
+	base/a_action.o \
+	base/ct_chat.o \
+	base/c_console.o \
+	base/c_cvar.o \
+	base/d_net.o \
+	base/f_finale.o \
+	base/g_game.o \
+	base/h2_main.o \
+	base/info.o \
+	base/in_lude.o \
+	base/mn_menu.o \
+	base/m_misc.o \
+	base/p_acs.o \
+	base/p_anim.o \
+	base/p_ceilng.o \
+	base/p_doors.o \
+	base/p_enemy.o \
+	base/p_floor.o \
+	base/p_inter.o \
+	base/p_lights.o \
+	base/p_map.o \
+	base/p_maputl.o \
+	base/p_mobj.o \
+	base/p_plats.o \
+	base/p_pspr.o \
+	base/p_setup.o \
+	base/p_sight.o \
+	base/p_spec.o \
+	base/p_switch.o \
+	base/p_telept.o \
+	base/p_tick.o \
+	base/p_things.o \
+	base/p_user.o \
+	base/po_man.o \
+	base/r_bsp.o \
+	base/r_data.o \
+	base/r_draw.o \
+	base/r_main.o \
+	base/r_plane.o \
+	base/r_segs.o \
+	base/r_things.o \
+	base/sb_bar.o \
+	base/sc_man.o \
+	base/sn_sonix.o \
+	base/st_start.o \
+	base/sv_save.o \
+	base/sounds.o \
+	base/tables.o \
+	base/v_video.o \
+	base/w_wad.o \
+	base/z_zone.o
+
+ifeq ($(GLHEXEN),true)
+opengl: $(GLOBJS) $(BASEOBJS)
+	$(CC) -o HHexenGL $(GLOBJS) $(BASEOBJS) $(XLIBS)
+
+x11:
+	echo "You are trying to compile the X11 version after enabling OpenGL."
+	echo "Please type './configure' before you try this again."
+
+svgalib:
+	echo "You are trying to compile the SVGALib version after enabling OpenGL."
+	echo "Please type './configure' before you try this again."
+endif
+
+ifeq ($(GLHEXEN),false)
+x11: 	$(X11OBJS) $(BASEOBJS)
+	$(CC) -o HHexenX  $(X11OBJS) $(BASEOBJS) $(XLIBS)
+
+svgalib: $(SVGAOBJS) $(BASEOBJS)
+	$(CC) -o HHexenS $(SVGAOBJS) $(BASEOBJS) $(SVGALIBS)
+
+opengl:
+	echo "You have not enabled GL.  Please type './configure --enable-gl-mesa'"
+	echo "or './configure --enable-gl-tnt' to enable OpenGL mode."
+endif
+
+clean:
+	$(RM) base/*.o
+	$(RM) x11/*.o
+	$(RM) svgalib/*.o
+	$(RM) opengl/*.o
+
+%.o: %.c
+	$(CC) $< -o $@ -c $(CFLAGS) 
+
+%.o: %.cpp
+	$(CXX) $< -o $@ -c $(CPPFLAGS)

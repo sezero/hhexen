@@ -1,0 +1,38 @@
+Release notes for version 1.3
+
+New Features:
+ - Autorun option
+ - Variable screen resolutions for OpenGL versions
+ - More graphics for assassin weapons
+
+Bug Fixes:
+ - Demos now sync correctly
+ - Backstab now works better
+ - Smoother mouse for X11 and OpenGL
+
+Notes:
+  To use any resolution for OpenGL, run HHexenGL with the switches "-width"
+ and "-height".  Of course, you must specify the width and height you want
+ after the appropriate switch. Sorry, but for now the X11 version is 
+ staying with the double-size pixels.
+  Using the autorun feature is straightforward.  It can be turned on or off
+ from the "Options" menu.  Note that this is a "proper" autorun, meaning that
+ if you press the "Speed" key while autorun is enabled it will cause you to
+ walk.  Also note that autorun will not be enabled if you are recording a demo.
+  Demos now sync properly!  Much thanks to Krzysztof Nikiel for fixing this.
+  I know that the graphics for the crossbow look terrible.  I plan on doing
+ them over sometime.  If you have artistic talent and would like to draw some
+ graphics or fix up some of the existing ones, I will gratefully accept your
+ submission.
+  One last thing: HHexen now uses the file hhexen.cfg to store its settings.
+ The simplest way to preserve your settings is to rename your hexen.cfg file.
+ If you don't, a new file will be created using HHexen's default settings. 
+ This may not be ideal, since there is currently no way to change mouse buttons
+ from within the game.
+ 
+Thanks:
+ Jim Cameron, Krzysztof Nikiel: Programming
+ Dave "NivRaC" Turner, Horst Kausch: Testing and Bug Reports
+ William "Phoebus" Mull: HTML
+
+As always, send comments or bug reports to Dan Olson <dolson@raven-games.com>
