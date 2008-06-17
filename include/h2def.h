@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.24 $
-//** $Date: 2008-06-17 17:32:02 $
+//** $Revision: 1.25 $
+//** $Date: 2008-06-17 17:35:12 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -28,12 +28,6 @@
 #endif
 #define VERSION_MAJ 1
 #define VERSION_MIN 4
-
-// Uncomment, to enable all timebomb stuff
-//#define TIMEBOMB
-#define TIMEBOMB_YEAR	95		// years since 1900
-#define TIMEBOMB_STARTDATE	268	// initial date (9/26)
-#define TIMEBOMB_ENDDATE	301	// end date (10/29)
 
 // if rangecheck is undefined, most parameter validation debugging code
 // will not be compiled
