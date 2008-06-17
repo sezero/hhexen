@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.19 $
-//** $Date: 2008-06-17 17:07:24 $
+//** $Revision: 1.20 $
+//** $Date: 2008-06-17 17:09:28 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -840,6 +840,8 @@ static void AddWADFile(char *file)
 	while(wadfiles[i])
 	{
 		i++;
+		if (i == MAXWADFILES)
+			I_Error ("MAXWADFILES reached for %s", file);
 	}
 	new = malloc(strlen(file)+1);
 	strcpy(new, file);
