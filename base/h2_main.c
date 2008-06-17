@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-06-17 12:33:23 $
+//** $Revision: 1.11 $
+//** $Date: 2008-06-17 13:06:30 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -571,18 +571,20 @@ void H2_ProcessEvents(void)
 {
 	event_t *ev;
 
-	for(; eventtail != eventhead; eventtail = (++eventtail)&(MAXEVENTS-1))
+	while (eventtail != eventhead)
 	{
 		ev = &events[eventtail];
 		if(F_Responder(ev))
 		{
-			continue;
+			goto _next_ev;
 		}
 		if(MN_Responder(ev))
 		{
-			continue;
+			goto _next_ev;
 		}
 		G_Responder(ev);
+	_next_ev:
+		eventtail = (eventtail + 1) & (MAXEVENTS - 1);
 	}
 }
 

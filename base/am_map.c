@@ -4,8 +4,8 @@
 //** am_map.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: am_map.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 09:20:10 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-17 13:08:19 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -770,6 +770,11 @@ boolean AM_clipMline(mline_t *ml, fline_t *fl)
       dx = fl->b.x - fl->a.x;
       tmp.y = fl->a.y + (dy*(-fl->a.x))/dx;
       tmp.x = 0;
+    }
+    else /* avoid compiler warning */
+    {
+      tmp.x = 0;
+      tmp.y = 0;
     }
     if (outside == outcode1)
     {

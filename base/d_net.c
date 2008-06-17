@@ -4,8 +4,8 @@
 //** d_net.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: d_net.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-17 12:11:53 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-17 13:06:29 $
 //** $Author: sezero $
 //**
 //** This version has the fixed ticdup code.
@@ -503,12 +503,12 @@ void CheckAbort (void)
 		I_StartTic ();
 
 	I_StartTic ();
-	for ( ; eventtail != eventhead
-	; eventtail = (++eventtail)&(MAXEVENTS-1) )
+	while (eventtail != eventhead)
 	{
 		ev = &events[eventtail];
 		if (ev->type == ev_keydown && ev->data1 == KEY_ESCAPE)
 			I_Error ("Network game synchronization aborted.");
+		eventtail = (eventtail + 1) & (MAXEVENTS - 1);
 	}
 }
 
