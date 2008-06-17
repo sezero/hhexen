@@ -4,8 +4,8 @@
 //** ct_chat.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: ct_chat.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 13:40:16 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-17 14:03:38 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -397,19 +397,12 @@ void CT_Drawer(void)
 
 void CT_queueChatChar(char ch)
 {
-  /*
-   * jim - don't like this at all; relies on QUEUESIZE's being a power of 2,
-   *  and gcc's warning suggests that the precedence is wrong, but I don't
-   *  keep track of C precedence and IDHK&RIFOM...
-   */
-/*  	if((tail+1)&(QUEUESIZE-1) == head) */
-  if (((tail + 1) % QUEUESIZE) == head)
+	if (((tail + 1) & (QUEUESIZE - 1)) == head)
 	{ // the queue is full
 		return;
 	}
 	ChatQueue[tail] = ch;
-/*  	tail = (tail+1)&(QUEUESIZE-1); */
-	tail = (tail + 1) % QUEUESIZE;
+	tail = (tail + 1) & (QUEUESIZE - 1);
 }
 
 //===========================================================================
@@ -422,12 +415,12 @@ char CT_dequeueChatChar(void)
 {
 	byte temp;
 
-	if(head == tail)
+	if (head == tail)
 	{ // queue is empty
 		return 0;
 	}
 	temp = ChatQueue[head];
-	head = (head+1)&(QUEUESIZE-1);
+	head = (head + 1) & (QUEUESIZE - 1);
 	return temp;
 }
 
