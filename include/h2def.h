@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.22 $
-//** $Date: 2008-06-17 14:52:23 $
+//** $Revision: 1.23 $
+//** $Date: 2008-06-17 17:15:12 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1031,34 +1031,35 @@ int LongSwap (int);
 #define	PU_LEVEL		50			// static until level exited
 #define	PU_LEVSPEC		51			// a special thinker in a level
 // tags >= 100 are purgable whenever needed
-#define	PU_PURGELEVEL	100
+#define	PU_PURGELEVEL		100
 #define	PU_CACHE		101
 
+#define	ZONEID		0x1d4a11
 
 void	Z_Init (void);
-void 	*Z_Malloc (int size, int tag, void *ptr);
-void 	Z_Free (void *ptr);
-void 	Z_FreeTags (int lowtag, int hightag);
-//void 	Z_DumpHeap (int lowtag, int hightag);
+void	*Z_Malloc (int size, int tag, void *ptr);
+void	Z_Free (void *ptr);
+void	Z_FreeTags (int lowtag, int hightag);
+//void	Z_DumpHeap (int lowtag, int hightag);
 //void	Z_FileDumpHeap (FILE *f);
 void	Z_CheckHeap (void);
 void	Z_ChangeTag2 (void *ptr, int tag);
-//int 	Z_FreeMemory (void);
+//int	Z_FreeMemory (void);
 
 typedef struct memblock_s
 {
-	int                     size;           // including the header and possibly tiny fragments
-	void            **user;         // NULL if a free block
-	int                     tag;            // purgelevel
-	int                     id;                     // should be ZONEID
-	struct memblock_s       *next, *prev;
+	int			size;		// including the header and possibly tiny fragments
+	void			**user;		// NULL if a free block
+	int			tag;		// purgelevel
+	int			id;		// should be ZONEID
+	struct memblock_s	*next, *prev;
 } memblock_t;
 
-#define Z_ChangeTag(p,t) \
-{ \
-if (( (memblock_t *)( (byte *)(p) - sizeof(memblock_t)))->id!=0x1d4a11) \
-	I_Error("Z_CT at "__FILE__":%i",__LINE__); \
-Z_ChangeTag2(p,t); \
+#define Z_ChangeTag(p,t)							\
+{										\
+	if (((memblock_t *)((byte *)((p)) - sizeof(memblock_t)))->id != ZONEID)	\
+		I_Error("Z_CT at %s:%i", __FILE__, __LINE__);			\
+	Z_ChangeTag2((p),(t));							\
 };
 
 //-------

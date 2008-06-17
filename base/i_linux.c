@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.19 2008-06-17 17:05:34 sezero Exp $
+//** $Id: i_linux.c,v 1.20 2008-06-17 17:15:12 sezero Exp $
 //**
 //**************************************************************************
 
@@ -684,7 +684,7 @@ void S_UpdateSounds(mobj_t *listener)
 					{
 						if(((memblock_t *)((byte*)
 							(lumpcache[S_sfx[i].lumpnum])-
-							sizeof(memblock_t)))->id == 0x1d4a11)
+							sizeof(memblock_t)))->id == ZONEID)
 						{ // taken directly from the Z_ChangeTag macro
 							Z_ChangeTag2(lumpcache[S_sfx[i].lumpnum],
 								PU_CACHE); 
