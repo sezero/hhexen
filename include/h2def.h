@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.12 $
-//** $Date: 2008-06-17 12:48:08 $
+//** $Revision: 1.13 $
+//** $Date: 2008-06-17 13:15:49 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -159,10 +159,6 @@ extern byte *destview, *destscreen;	// PC direct to screen pointers
 #define	FRACBITS		16
 #define	FRACUNIT		(1<<FRACBITS)
 typedef int fixed_t;
-
-#ifndef __linux
-typedef unsigned int uint;
-#endif
 
 //#define ANGLE_1		0x01000000
 #define ANGLE_45	0x20000000
@@ -697,8 +693,8 @@ typedef struct player_s
 	int			colormap;				// 0-3 for which color to draw player
 	pspdef_t	psprites[NUMPSPRITES];	// view sprites (gun, etc)
 	int			morphTics;				// player is a pig if > 0
-	uint		jumpTics;				// delay the next jump for a moment
-	unsigned int worldTimer;			// total time the player's been playing
+	unsigned int	jumpTics;				// delay the next jump for a moment
+	unsigned int	worldTimer;			// total time the player's been playing
 } player_t;
 
 #define CF_NOCLIP		1
