@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.16 2008-06-17 14:24:18 sezero Exp $
+//** $Id: i_linux.c,v 1.17 2008-06-17 14:34:23 sezero Exp $
 //**
 //**************************************************************************
 
@@ -1343,9 +1343,8 @@ void PrintVersion (void)
 void PrintHelp(char *name)
 {
 	printf ("HHexen (%s %d.%d)\n", VERSION_PLATFORM, VERSION_MAJ, VERSION_MIN);
-	printf ("http://icculus.org/hast/\n");
-	printf ("Please send bug reports or patches to:\n");
-	printf ("             Dan Olson <theoddone33@icculus.org>\n");
+	printf ("http://sourceforge.net/projects/hhexen\n");
+	printf ("http://icculus.org/hast\n");
 	printf ("\n");
 	printf ("Usage: %s [options]\n", name);
 	printf ("     [ -h | --help]           Display this help message\n");
@@ -1355,6 +1354,8 @@ void PrintHelp(char *name)
 	printf ("     [ -s | --nosound]        Run the game without sound\n");
 	printf ("     [ -g | --nograb]         Disable mouse grabbing\n");
 #ifdef RENDER3D
+	printf ("     [ -width ]      Set screen width\n");
+	printf ("     [ -height ]     Set screen height\n");
 //	printf ("     [ -l | --gllibrary]      Select 3D rendering library\n");
 #endif
 	printf ("\n");
@@ -1367,7 +1368,7 @@ int main (int argc, char** argv)
 {
 	myargc = argc;
 	myargv = argv;
-	if (M_CheckParm("--help") || M_CheckParm("-h"))
+	if (M_CheckParm("--help") || M_CheckParm("-h") || M_CheckParm("-?"))
 	{
 		PrintHelp (argv[0]);
 		return 0;
