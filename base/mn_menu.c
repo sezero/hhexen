@@ -3,14 +3,15 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-06-17 13:14:34 $
+//** $Revision: 1.11 $
+//** $Date: 2008-06-17 13:40:35 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 // HEADER FILES ------------------------------------------------------------
 
+#include "h2stdinc.h"
 #include <ctype.h>
 #include "h2def.h"
 #include "p_local.h"

@@ -4,16 +4,16 @@
 //** p_setup.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_setup.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-17 13:12:10 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-17 13:40:47 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 // HEADER FILES ------------------------------------------------------------
 
+#include "h2stdinc.h"
 #include <math.h>
-#include <stdlib.h>
 #include "h2def.h"
 #include "p_local.h"
 #include "soundst.h"

@@ -4,18 +4,19 @@
 //** f_finale.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: f_finale.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-17 11:00:36 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-17 13:40:25 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 // HEADER FILES ------------------------------------------------------------
 
+#include "h2stdinc.h"
+#include <ctype.h>
 #include "h2def.h"
 #include "soundst.h"
 #include "p_local.h"
-#include <ctype.h>
 
 // MACROS ------------------------------------------------------------------
 

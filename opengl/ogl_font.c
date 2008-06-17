@@ -2,6 +2,8 @@
 // The font must be small enough to fit one texture (not a problem with *real*
 // graphics cars!).
 
+#include "h2stdinc.h"
+
 #ifdef __WIN32__
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -14,8 +16,6 @@
 #include <GL/glu.h>
 #include <stdlib.h>
 #include "ogl_font.h"
-#include <stdio.h>
-#include <string.h> /* fix memmove warning */
 
 static int		initOk = 0;
 static int		numFonts;

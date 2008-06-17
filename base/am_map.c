@@ -4,17 +4,17 @@
 //** am_map.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: am_map.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-17 13:08:19 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-17 13:40:11 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
+#include "h2stdinc.h"
 #include "h2def.h"
 #include "p_local.h"
 #include "am_map.h"
 #include "am_data.h"
-#include <stdio.h>
 
 #ifdef RENDER3D
 #include "ogl_def.h"

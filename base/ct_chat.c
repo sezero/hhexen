@@ -4,13 +4,13 @@
 //** ct_chat.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: ct_chat.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2008-06-17 09:20:10 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 13:40:16 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
-#include <string.h>
+#include "h2stdinc.h"
 #include <ctype.h>
 #include "h2def.h"
 #include "p_local.h"

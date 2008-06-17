@@ -4,12 +4,13 @@
 //** r_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_main.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 13:12:11 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-17 13:40:53 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
+#include "h2stdinc.h"
 #include <math.h>
 #include "h2def.h"
 #include "r_local.h"
@@ -324,7 +325,7 @@ void R_InitPointToAngle (void)
 // now getting from tables.c
 #if 0
 	int	i;
-	long	t;
+	int	t;	/* int32_t */
 	float	f;
 //
 // slope (tangent) to angle lookup

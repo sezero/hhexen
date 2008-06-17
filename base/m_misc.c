@@ -4,14 +4,15 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-17 13:04:36 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-17 13:40:33 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 // HEADER FILES ------------------------------------------------------------
 
+#include "h2stdinc.h"
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>    /* jim write() read() close() */

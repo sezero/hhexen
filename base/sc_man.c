@@ -4,16 +4,15 @@
 //** sc_man.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sc_man.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 09:20:19 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-17 13:40:58 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 // HEADER FILES ------------------------------------------------------------
 
-#include <string.h>
-#include <stdlib.h>
+#include "h2stdinc.h"
 #include "h2def.h"
 
 // MACROS ------------------------------------------------------------------

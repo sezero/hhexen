@@ -11,10 +11,12 @@
 
 // HEADER FILES ------------------------------------------------------------
 
+#include "h2stdinc.h"
+
 #ifdef __WIN32__
 #include <windows.h>
 #endif
-#include <stdlib.h>
+
 #include "h2def.h"
 #include "r_local.h"
 #include "m_bams.h"

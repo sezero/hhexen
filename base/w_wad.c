@@ -4,15 +4,15 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-17 13:00:23 $
+//** $Revision: 1.12 $
+//** $Date: 2008-06-17 13:41:07 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 // HEADER FILES ------------------------------------------------------------
 
-#include <stdio.h>
+#include "h2stdinc.h"
 #include <malloc.h>
 #include <sys/stat.h>
 #include <fcntl.h>

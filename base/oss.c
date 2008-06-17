@@ -17,7 +17,6 @@
  */
 
 
-#include "oss.h"
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
@@ -30,7 +29,7 @@
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <sys/soundcard.h>
-//#include <machine/soundcard.h>
+#include "oss.h"
 
 #ifndef AFMT_U16_NE
 # ifdef WORDS_BIGENDIAN

@@ -4,12 +4,13 @@
 //** sounds.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sounds.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2008-06-17 09:20:19 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 13:41:02 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
+#include "h2stdinc.h"
 #include "h2def.h"
 #include "sounds.h"
 

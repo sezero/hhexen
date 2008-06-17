@@ -4,12 +4,13 @@
 //** p_enemy.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_enemy.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2008-06-17 09:20:12 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 13:40:40 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
+#include "h2stdinc.h"
 #include "h2def.h"
 #include "p_local.h"
 #include "soundst.h"

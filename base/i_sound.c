@@ -1,7 +1,7 @@
-// $Id: i_sound.c,v 1.4 2008-06-17 09:20:10 sezero Exp $
+// $Id: i_sound.c,v 1.5 2008-06-17 13:40:30 sezero Exp $
 
 
-#include <stdio.h>
+#include "h2stdinc.h"
 #include <math.h>       // pow()
 #include <pthread.h>
 #include "h2def.h"
@@ -122,7 +122,7 @@ typedef struct
 {
     short a;            // always 3
     short freq;         // always 11025
-    long length;        // sample length
+    int32_t length;     // sample length
     unsigned char firstSample;
 } Sample;
 

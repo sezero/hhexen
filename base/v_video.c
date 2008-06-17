@@ -4,12 +4,13 @@
 //** v_video.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: v_video.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-17 11:11:36 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-17 13:41:06 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
+#include "h2stdinc.h"
 #include "h2def.h"
 
 #define SC_INDEX 0x3c4

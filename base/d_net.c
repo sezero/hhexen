@@ -4,17 +4,17 @@
 //** d_net.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: d_net.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-17 13:06:29 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-17 13:40:17 $
 //** $Author: sezero $
 //**
 //** This version has the fixed ticdup code.
 //**
 //**************************************************************************
 
+#include "h2stdinc.h"
 #include "h2def.h"
 #include "p_local.h"
-#include <stdlib.h> // for atoi()
 
 #define NCMD_EXIT               0x80000000
 #define NCMD_RETRANSMIT 0x40000000

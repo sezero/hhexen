@@ -125,6 +125,9 @@ dnl **** Check for header files ****
 
 AC_CHECK_HEADERS(\
 	linux/cdrom.h \
+	stdint.h \
+	inttypes.h \
+	strings.h
 )
 AC_HEADER_STAT()
 

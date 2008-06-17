@@ -1,12 +1,11 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.10 2008-06-17 13:17:25 sezero Exp $
+//** $Id: i_linux.c,v 1.11 2008-06-17 13:40:29 sezero Exp $
 //**
 //**************************************************************************
 
 
-#include <stdlib.h>
-#include <stdarg.h>
+#include "h2stdinc.h"
 #include <sys/time.h>
 #include "h2def.h"
 #include "r_local.h"
@@ -1611,47 +1610,6 @@ byte *I_AllocLow (int length)
 
 ============================================================================
 */
-
-/* // FUCKED LINES
-typedef struct
-{
-	char    priv[508];
-} doomdata_t;
-*/ // FUCKED LINES
-
-#define DOOMCOM_ID              0x12345678l
-
-/* // FUCKED LINES
-typedef struct
-{
-	long    id;
-	short   intnum;                 // DOOM executes an int to execute commands
-
-// communication between DOOM and the driver
-	short   command;                // CMD_SEND or CMD_GET
-	short   remotenode;             // dest for send, set by get (-1 = no packet)
-	short   datalength;             // bytes in doomdata to be sent
-
-// info common to all nodes
-	short   numnodes;               // console is allways node 0
-	short   ticdup;                 // 1 = no duplication, 2-5 = dup for slow nets
-	short   extratics;              // 1 = send a backup tic in every packet
-	short   deathmatch;             // 1 = deathmatch
-	short   savegame;               // -1 = new game, 0-5 = load savegame
-	short   episode;                // 1-3
-	short   map;                    // 1-9
-	short   skill;                  // 1-5
-
-// info specific to this node
-	short   consoleplayer;
-	short   numplayers;
-	short   angleoffset;    // 1 = left, 0 = center, -1 = right
-	short   drone;                  // 1 = drone
-
-// packet data to be sent
-	doomdata_t      data;
-} doomcom_t;
-*/ // FUCKED LINES
 
 extern  doomcom_t               *doomcom;
 

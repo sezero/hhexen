@@ -4,17 +4,15 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-17 13:12:11 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-17 13:41:03 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 // HEADER FILES ------------------------------------------------------------
 
-#ifdef __linux
-#  include <sys/stat.h>
-#endif
+#include "h2stdinc.h"
 #include "h2def.h"
 #include "p_local.h"
 

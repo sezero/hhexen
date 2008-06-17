@@ -4,14 +4,15 @@
 //** in_lude.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: in_lude.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-17 09:20:11 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-17 13:40:31 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
-#include "h2def.h"
+#include "h2stdinc.h"
 #include <ctype.h>
+#include "h2def.h"
 
 // MACROS ------------------------------------------------------------------
 

@@ -4,22 +4,14 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.15 $
-//** $Date: 2008-06-17 13:18:33 $
+//** $Revision: 1.16 $
+//** $Date: 2008-06-17 13:41:09 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 #ifndef __H2DEF__
 #define __H2DEF__
-#include <config.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include "st_start.h"
-#ifdef __linux
-#include <sys/types.h>
-#endif
 
 #define VERSION 110
 #define VERSION_TEXT "v1.1"
@@ -71,6 +63,9 @@
 #define VERSIONTEXT "Version 1.3 "__DATE__" ("VER_ID")"
 #endif
 #endif
+
+
+#include "st_start.h"
 
 // all exterior data is defined here
 #include "xddefs.h"
@@ -126,16 +121,6 @@ extern byte *destview, *destscreen;	// PC direct to screen pointers
 #define KEY_BACKSLASH		0x5C
 
 
-#define MAXCHAR ((char)0x7f)
-#define MAXSHORT ((short)0x7fff)
-#define MAXINT	((int)0x7fffffff)	/* max pos 32-bit int */
-#define MAXLONG ((long)0x7fffffff)
-
-#define MINCHAR ((char)0x80)
-#define MINSHORT ((short)0x8000)
-#define MININT 	((int)0x80000000)	/* max negative 32-bit integer */
-#define MINLONG ((long)0x80000000)
-
 #define	FINEANGLES			8192
 #define	FINEMASK			(FINEANGLES-1)
 #define	ANGLETOFINESHIFT	19	// 0x100000000 to 0x2000
@@ -155,10 +140,6 @@ extern byte *destview, *destscreen;	// PC direct to screen pointers
 
 #define MINIMUM_HEAP_SIZE	0x800000		//  8 meg
 #define MAXIMUM_HEAP_SIZE	0x2000000		// 32 meg
-
-#define	FRACBITS		16
-#define	FRACUNIT		(1<<FRACBITS)
-typedef int fixed_t;
 
 //#define ANGLE_1		0x01000000
 #define ANGLE_45	0x20000000
@@ -715,7 +696,7 @@ typedef struct
 
 typedef struct
 {
-	long	id;
+	int32_t	id;
 	short	intnum;			// DOOM executes an int to execute commands
 
 // communication between DOOM and the driver

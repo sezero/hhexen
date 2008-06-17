@@ -6,14 +6,12 @@
 //**************************************************************************
 
 // HEADER FILES ------------------------------------------------------------
-#include <stdio.h>
+
+#include "h2stdinc.h"
 #include <unistd.h>
-#include <stdlib.h>
 #include <sys/ioctl.h>
 #include <sys/file.h>
-#include <sys/types.h>
 #include <fcntl.h>
-#include <string.h>
 #include <time.h>
 #include <errno.h>
 #ifdef HAVE_LINUX_CDROM_H

@@ -7,17 +7,19 @@
 
 // HEADER FILES ------------------------------------------------------------
 
+#include "h2stdinc.h"
+
 #ifdef __WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
 
+#include <math.h>
 #include <GL/gl.h>
 #include "h2def.h"
 #include "r_local.h"
 #include "ogl_def.h"
 #include "ogl_rl.h"
-#include <math.h>
 
 // MACROS ------------------------------------------------------------------
 

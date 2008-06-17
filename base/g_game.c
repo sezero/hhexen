@@ -4,13 +4,13 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-17 13:15:48 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-17 13:40:27 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
-#include <string.h>
+#include "h2stdinc.h"
 #include "h2def.h"
 #include "p_local.h"
 #include "soundst.h"

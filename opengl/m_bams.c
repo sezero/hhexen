@@ -1,5 +1,6 @@
 // BAMS trigonometric functions.
 
+#include "h2stdinc.h"
 #include <math.h>
 #include "m_bams.h"
 

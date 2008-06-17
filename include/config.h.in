@@ -56,6 +56,15 @@
 /* Define if you have the <linux/cdrom.h> header file.  */
 #undef HAVE_LINUX_CDROM_H
 
+/* Define if you have the <stdint.h> header file.  */
+#undef HAVE_STDINT_H
+
+/* Define if you have the <inttypes.h> header file.  */
+#undef HAVE_INTTYPES_H
+
+/* Define if you have the <strings.h> header file.  */
+#undef HAVE_STRINGS_H
+
 /* Define if you have the GLU library (-lGLU).  */
 #undef HAVE_LIBGLU
 

@@ -4,24 +4,14 @@
 //** xddefs.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: xddefs.h,v $
-//** $Revision: 1.2 $
-//** $Date: 2008-06-17 09:20:20 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 13:41:11 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 #ifndef __XDDEFS__
 #define __XDDEFS__
-
-#ifndef __BYTEBOOL__
-#define __BYTEBOOL__
-#if defined(__cplusplus)
-typedef bool boolean;
-#else
-typedef enum {false, true} boolean;
-#endif
-typedef unsigned char byte;
-#endif
 
 //--------------------------------------------------------------------------
 //

@@ -4,14 +4,15 @@
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-17 09:20:18 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-17 13:40:58 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 // HEADER FILES ------------------------------------------------------------
 
+#include "h2stdinc.h"
 #include "h2def.h"
 #include "p_local.h"
 #include "soundst.h"
@@ -963,7 +964,7 @@ static void DrawSoundInfo(void)
 		MN_DrTextA(text, xPos[x++], y);
 		snprintf(text, 32, "%d", c->mo->y>>FRACBITS);
 		MN_DrTextA(text, xPos[x++], y);
-		snprintf(text, 32, "%ld", c->id);    /* jim added 'l' */
+		snprintf(text, 32, "%d", c->id);
 		MN_DrTextA(text, xPos[x++], y);
 		snprintf(text, 32, "%d", c->priority);
 		MN_DrTextA(text, xPos[x++], y);

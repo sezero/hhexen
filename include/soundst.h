@@ -4,8 +4,8 @@
 //** soundst.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: soundst.h,v $
-//** $Revision: 1.2 $
-//** $Date: 2008-06-17 09:20:20 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 13:41:11 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -44,7 +44,7 @@ typedef struct
 
 typedef struct
 {
-	long id;
+	int id;
 	unsigned short priority;
 	char *name;
 	mobj_t *mo;

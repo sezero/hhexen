@@ -4,12 +4,13 @@
 //** tables.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: tables.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2008-06-17 09:20:19 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 13:41:04 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
+#include "h2stdinc.h"
 #include "h2def.h"
 
 int finetangent[4096] = {

@@ -4,14 +4,15 @@
 //** p_acs.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_acs.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 09:20:11 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-17 13:40:36 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 // HEADER FILES ------------------------------------------------------------
 
+#include "h2stdinc.h"
 #include "h2def.h"
 #include "p_local.h"
 

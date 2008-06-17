@@ -4,12 +4,13 @@
 //** p_user.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_user.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-17 11:00:38 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-17 13:40:51 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
+#include "h2stdinc.h"
 #include "h2def.h"
 #include "p_local.h"
 #include "soundst.h"

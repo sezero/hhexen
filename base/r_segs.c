@@ -4,14 +4,15 @@
 //** r_segs.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_segs.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2008-06-17 09:20:18 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 13:40:56 $
 //** $Author: sezero $
 //**
 //** This version has the tall-sector-crossing-precision-bug fixed.
 //**
 //**************************************************************************
 
+#include "h2stdinc.h"
 #include "h2def.h"
 #include "r_local.h"
 

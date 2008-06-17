@@ -4,14 +4,15 @@
 //** p_pspr.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_pspr.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-17 11:00:38 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-17 13:40:46 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 // HEADER FILES ------------------------------------------------------------
 
+#include "h2stdinc.h"
 #include "h2def.h"
 #include "p_local.h"
 #include "soundst.h"

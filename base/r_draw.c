@@ -4,12 +4,13 @@
 //** r_draw.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_draw.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2008-06-17 09:20:18 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 13:40:53 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
+#include "h2stdinc.h"
 #include "h2def.h"
 #include "r_local.h"
 

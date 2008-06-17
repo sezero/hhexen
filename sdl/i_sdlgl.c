@@ -1,12 +1,10 @@
 //**************************************************************************
 //**
-//** $Id: i_sdlgl.c,v 1.5 2008-06-17 13:05:23 sezero Exp $
+//** $Id: i_sdlgl.c,v 1.6 2008-06-17 13:41:18 sezero Exp $
 //**
 //**************************************************************************
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
+#include "h2stdinc.h"
 #include <unistd.h>
 #include <sys/time.h>
 #include <SDL/SDL.h> 

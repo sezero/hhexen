@@ -4,19 +4,16 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.13 $
-//** $Date: 2008-06-17 13:20:16 $
+//** $Revision: 1.14 $
+//** $Date: 2008-06-17 13:40:27 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 // HEADER FILES ------------------------------------------------------------
 
-#ifdef __linux
+#include "h2stdinc.h"
 #include <sys/stat.h>
-#endif 
-#include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
 #include "h2def.h"
 #include "p_local.h"
@@ -506,7 +503,7 @@ static void ExecOptionMAXZONE(char **args, int tag)
 {
 	int size;
 	
-	size = superatol(args[1]);
+	size = (int) superatol(args[1]);
 	if (size < MINIMUM_HEAP_SIZE) size = MINIMUM_HEAP_SIZE;
 	if (size > MAXIMUM_HEAP_SIZE) size = MAXIMUM_HEAP_SIZE;
 	maxzone = size;
@@ -919,7 +916,7 @@ fixed_t	FixedDiv2 (fixed_t a, fixed_t b)
 #if !defined(_HAVE_FIXED_ASM)	/* for non-i386 */
 fixed_t FixedMul (fixed_t a, fixed_t b)
 {
-	return ((long long) a * (long long) b) >> 16;
+	return ((int64_t) a * (int64_t) b) >> 16;
 }
 
 fixed_t FixedDiv2 (fixed_t a, fixed_t b)
