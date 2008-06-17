@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.19 $
-//** $Date: 2008-06-17 14:24:19 $
+//** $Revision: 1.20 $
+//** $Date: 2008-06-17 14:28:15 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -42,27 +42,21 @@
 #endif
 
 // Past distributions
-#ifndef VER_ID
-#define VER_ID "DVL"
-#endif
 //#define VERSIONTEXT "ID V1.2"
 //#define VERSIONTEXT "RETAIL STORE BETA"		// 9/26/95
 //#define VERSIONTEXT "DVL BETA 10 05 95" // Used for GT for testing
 //#define VERSIONTEXT "DVL BETA 10 07 95" // Just an update for Romero
 //#define VERSIONTEXT "FINAL 1.0 (10 13 95)" // Just an update for Romero
-#ifdef __linux
+
+//#define VER_ID		"DVL"
+//#define VER_ID		"RETAIL"
 #ifdef RANGECHECK
-#define VERSIONTEXT "Version 1.3 +R "__DATE__" (BCP)"
+#define VER_ID		"DVL +R"
 #else
-#define VERSIONTEXT "Version 1.3 "__DATE__" (BCP)"
+#define VER_ID		"DVL"
 #endif
-#else
-#ifdef RANGECHECK
-#define VERSIONTEXT "Version 1.3 +R "__DATE__" ("VER_ID")"
-#else
-#define VERSIONTEXT "Version 1.3 "__DATE__" ("VER_ID")"
-#endif
-#endif
+
+#define VERSIONTEXT "Version " HHEXEN_VERSION " " __DATE__ " (" VER_ID ")"
 
 /* max length of a filesystem pathname	*/
 #define	MAX_OSPATH		256
