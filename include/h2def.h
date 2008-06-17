@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.25 $
-//** $Date: 2008-06-17 17:35:12 $
+//** $Revision: 1.26 $
+//** $Date: 2008-06-17 17:45:13 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -56,7 +56,7 @@
 #define	MAX_OSPATH		256
 
 /* path to the user directory		*/
-extern	char			*basePath;
+extern	const char		*basePath;
 
 
 #include "st_start.h"

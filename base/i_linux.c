@@ -1,12 +1,14 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.20 2008-06-17 17:15:12 sezero Exp $
+//** $Id: i_linux.c,v 1.21 2008-06-17 17:45:13 sezero Exp $
 //**
 //**************************************************************************
 
 
 #include "h2stdinc.h"
 #include <sys/time.h>
+#include <sys/stat.h>
+#include <errno.h>
 #include "h2def.h"
 #include "r_local.h"
 #include "p_local.h"	/* for P_AproxDistance */
@@ -1334,6 +1336,22 @@ void I_CheckExternDriver (void)
 //
 //=========================================================================
 
+static char base[MAX_OSPATH];
+
+static void CreateBasePath (void)
+{
+	int rc;
+	char *homedir = getenv("HOME");
+	if (homedir == NULL)
+		I_Error ("Unable to determine user home directory");
+	snprintf(base, sizeof(base), "%s/.hhexen/", homedir);
+	basePath = base;
+	rc = mkdir(base, S_IRWXU|S_IRWXG|S_IRWXO);
+	if (rc != 0 && errno != EEXIST)
+		I_Error ("Unable to create hhexen user directory");
+}
+
+
 void PrintVersion (void)
 {
 	printf ("HHexen (%s %d.%d)\n", VERSION_PLATFORM, VERSION_MAJ, VERSION_MIN);
@@ -1377,6 +1395,9 @@ int main (int argc, char** argv)
 		PrintVersion ();
 		return 0;
 	}
+
+	CreateBasePath();
+
 	H2_Main();
 	return 0;
 }

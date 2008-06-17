@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.21 $
-//** $Date: 2008-06-17 17:32:02 $
+//** $Revision: 1.22 $
+//** $Date: 2008-06-17 17:45:13 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -76,7 +76,6 @@ static void ExecOptionDEVMAPS(char **args, int tag);
 static void ExecOptionSKILL(char **args, int tag);
 static void ExecOptionPLAYDEMO(char **args, int tag);
 static void ExecOptionMAXZONE(char **args, int tag);
-static void CreateBasePath(void);
 static void WarpCheck(void);
 
 
@@ -88,8 +87,7 @@ extern boolean askforquit;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
-char *basePath;
-char base[MAX_OSPATH];
+const char *basePath = "";
 boolean DevMaps;			// true = Map development mode
 char *DevMapsDir = "";		// development maps directory
 boolean shareware;			// true if only episode 1 present
@@ -203,8 +201,6 @@ void H2_Main(void)
 #endif
 
 	HandleArgs();
-
-	CreateBasePath();
 
 	// Initialize subsystems
 
@@ -883,20 +879,6 @@ static void AddWADFile(char *file)
 	new = malloc(strlen(file)+1);
 	strcpy(new, file);
 	wadfiles[i] = new;
-}
-
-
-//==========================================================================
-//
-// CreateBasePath
-//
-//==========================================================================
-
-static void CreateBasePath(void)
-{
-	snprintf(base, sizeof(base), "%s/.hhexen/", getenv("HOME"));
-	basePath = base;
-	mkdir( base, S_IRWXU|S_IRWXG|S_IRWXO );
 }
 
 
