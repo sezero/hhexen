@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdlgl.c,v 1.2 2008-06-17 10:18:48 sezero Exp $
+//** $Id: i_sdlgl.c,v 1.3 2008-06-17 10:21:28 sezero Exp $
 //**
 //**************************************************************************
 
@@ -163,8 +163,7 @@ void I_InitGraphics(void)
 	return;
     }
 
-    p = M_CheckParm ("-fullscreen");
-    if (p) {
+    if (M_CheckParm("-f") || M_CheckParm("--fullscreen")) {
 	flags |= SDL_FULLSCREEN;
 	setenv ("MESA_GLX_FX","fullscreen", 1);
     } else {
@@ -326,12 +325,16 @@ void I_GetEvent(SDL_Event *Event)
     {
       case SDL_KEYDOWN:
 	mod = SDL_GetModState ();
-	if (mod & KMOD_RALT || mod & KMOD_LALT) {
+	if (mod & KMOD_RCTRL || mod & KMOD_LCTRL) {
 		if (Event->key.keysym.sym == 'g') {
 			if (SDL_WM_GrabInput (SDL_GRAB_QUERY) == SDL_GRAB_OFF)
 				SDL_WM_GrabInput (SDL_GRAB_ON);
 			else
 				SDL_WM_GrabInput (SDL_GRAB_OFF);
+		}
+	} else if (mod & KMOD_RALT || mod & KMOD_LALT) {
+		if (Event->key.keysym.sym == SDLK_RETURN) {
+			SDL_WM_ToggleFullScreen(SDL_GetVideoSurface());
 		}
 	} else { 
 	        event.type = ev_keydown;
