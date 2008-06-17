@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.16 $
-//** $Date: 2008-06-17 14:24:19 $
+//** $Revision: 1.17 $
+//** $Date: 2008-06-17 14:39:15 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -513,7 +513,7 @@ default_t defaults[] =
 	{ "chatmacro7", (int *) &chat_macros[7], (int) HUSTR_CHATMACRO7 },
 	{ "chatmacro8", (int *) &chat_macros[8], (int) HUSTR_CHATMACRO8 },
 	{ "chatmacro9", (int *) &chat_macros[9], (int) HUSTR_CHATMACRO9 },
-	{ "mouselook", &mouselook, 0 },
+	{ "mouselook", &mouselook, 1 },
 	{ "cdaudio", &cdaudio, 0 },
 	{ "alwaysrun", &alwaysrun, 0 }
 };
