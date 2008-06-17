@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-06-17 13:47:54 $
+//** $Revision: 1.10 $
+//** $Date: 2008-06-17 13:50:43 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -31,7 +31,7 @@
 // EXTERNAL FUNCTION PROTOTYPES --------------------------------------------
 
 #ifdef RENDER3D
-extern void OGL_GrabScreen();
+#include "ogl_def.h"
 #endif
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
@@ -752,6 +752,7 @@ void WritePCXfile (char *filename, byte *data, int width, int height, byte *pale
 #ifdef RENDER3D
 void M_ScreenShot (void)
 {
+	OGL_GrabScreen();
 }
 #else
 void M_ScreenShot (void)

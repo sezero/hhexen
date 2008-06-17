@@ -115,6 +115,18 @@ void OGL_UpdateTexParams(int mipmode);
 void OGL_UpdateRawScreenParams(int smoothing);
 
 
+// ogl_scr.c
+typedef struct _TargaHeader {
+	unsigned char	id_length, colormap_type, image_type;
+	unsigned short	colormap_index, colormap_length;
+	unsigned char	colormap_size;
+	unsigned short	x_origin, y_origin, width, height;
+	unsigned char	pixel_size, attributes;
+} TargaHeader;
+
+extern void OGL_GrabScreen();
+
+
 #include "m_bams.h"
 
 // ogl_clip.c

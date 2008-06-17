@@ -59,6 +59,7 @@ GLOBJS = \
 	opengl/ogl_font.o \
 	opengl/ogl_rend.o \
 	opengl/ogl_rl.o \
+	opengl/ogl_scr.o \
 	opengl/ogl_sky.o \
 	opengl/ogl_tex.o \
 	opengl/m_bams.o
