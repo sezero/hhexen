@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdl.c,v 1.12 2008-06-17 17:54:11 sezero Exp $
+//** $Id: i_sdl.c,v 1.13 2008-06-17 18:00:21 sezero Exp $
 //**
 //**************************************************************************
 
@@ -19,20 +19,22 @@
 
 int DisplayTicker = 0;
 
+boolean useexterndriver;
+boolean mousepresent;
 
-// Code
+
+// Extern Data
+
 extern void **lumpcache;
 
 extern int usemouse, usejoystick;
 
-boolean useexterndriver;
-boolean mousepresent;
+// Private Data
 
-SDL_Surface* sdl_screen;
+static boolean vid_initialized = false;
 
-//===============================
+static SDL_Surface* sdl_screen;
 
-boolean novideo;	// if true, stay in text mode for debugging
 
 /*
 ============================================================================
@@ -50,7 +52,7 @@ boolean novideo;	// if true, stay in text mode for debugging
 
 void I_WaitVBL(int vbls)
 {
-	if (novideo)
+	if (!vid_initialized)
 	{
 		return;
 	}
@@ -74,7 +76,7 @@ void I_SetPalette(byte *palette)
 	SDL_Color* cend;
 	SDL_Color cmap[256];
 
-	if (novideo)
+	if (!vid_initialized)
 		return;
 
 	I_WaitVBL(1);
@@ -117,6 +119,9 @@ void I_Update (void)
 	byte *dest;
 	int tics;
 	static int lasttic;
+
+	if(!vid_initialized)
+		return;
 
 //
 // blit screen to video
@@ -219,7 +224,7 @@ void I_InitGraphics(void)
 	char text[20];
 	Uint32 flags = SDL_SWSURFACE|SDL_HWPALETTE;
 
-	if (novideo)
+	if (M_CheckParm("novideo"))	// if true, stay in text mode for debugging
 		return;
 
 	if (M_CheckParm("-f") || M_CheckParm("--fullscreen"))
@@ -233,10 +238,11 @@ void I_InitGraphics(void)
 
 	if (sdl_screen == NULL)
 	{
-		fprintf (stderr, "Couldn't set video mode %dx%d: %s\n",
-			 SCREENWIDTH, SCREENHEIGHT, SDL_GetError());
-		exit (3);
+		I_Error("Couldn't set video mode %dx%d: %s\n",
+			SCREENWIDTH, SCREENHEIGHT, SDL_GetError());
 	}
+
+	vid_initialized = true;
 
 	// Only grab if we want to
 	if (!M_CheckParm ("--nograb") && !M_CheckParm ("-g"))
@@ -261,6 +267,9 @@ void I_InitGraphics(void)
 
 void I_ShutdownGraphics(void)
 {
+	if (!vid_initialized)
+		return;
+	vid_initialized = false;
 	SDL_Quit ();
 }
 

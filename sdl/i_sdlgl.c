@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdlgl.c,v 1.12 2008-06-17 17:54:11 sezero Exp $
+//** $Id: i_sdlgl.c,v 1.13 2008-06-17 18:00:21 sezero Exp $
 //**
 //**************************************************************************
 
@@ -28,17 +28,19 @@ int test3dfx = 0;
 
 int DisplayTicker = 0;
 
+boolean useexterndriver;
+boolean mousepresent;
 
-// Code
+// Extern Data
+
 extern void **lumpcache;
 
 extern int usemouse, usejoystick;
 
-boolean useexterndriver;
-boolean mousepresent;
+// Private Data
 
+static boolean vid_initialized = false;
 
-boolean novideo;	// if true, stay in text mode for debugging
 
 //--------------------------------------------------------------------------
 //
@@ -48,7 +50,7 @@ boolean novideo;	// if true, stay in text mode for debugging
 
 void I_WaitVBL(int vbls)
 {
-	if (novideo)
+	if (!vid_initialized)
 	{
 		return;
 	}
@@ -91,6 +93,8 @@ extern int screenblocks;
 
 void I_Update (void)
 {
+	if(!vid_initialized)
+		return;
 	if(UpdateState == I_NOUPDATE)
 		return;
 
@@ -110,7 +114,7 @@ void I_InitGraphics(void)
 	char text[20];
 	Uint32 flags = SDL_OPENGL;
 
-	if (novideo)
+	if (M_CheckParm("novideo"))	// if true, stay in text mode for debugging
 		return;
 
 	if (M_CheckParm("-f") || M_CheckParm("--fullscreen"))
@@ -136,10 +140,11 @@ void I_InitGraphics(void)
 
 	if (SDL_SetVideoMode(screenWidth, screenHeight, 8, flags) == NULL)
 	{
-		fprintf(stderr, "Couldn't set video mode %dx%d: %s\n",
+		I_Error("Couldn't set video mode %dx%d: %s\n",
 			screenWidth, screenHeight, SDL_GetError());
-		exit (3);
 	}
+
+	vid_initialized = true;
 
 	OGL_InitRenderer ();
 
@@ -186,6 +191,9 @@ void I_InitGraphics(void)
 
 void I_ShutdownGraphics(void)
 {
+	if (!vid_initialized)
+		return;
+	vid_initialized = false;
 	OGL_ResetData ();
 	OGL_ResetLumpTexData ();
 	SDL_Quit ();

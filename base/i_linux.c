@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.21 2008-06-17 17:45:13 sezero Exp $
+//** $Id: i_linux.c,v 1.22 2008-06-17 18:00:21 sezero Exp $
 //**
 //**************************************************************************
 
@@ -894,13 +894,13 @@ void S_SetMusicVolume(void)
 
 void S_ShutDown(void)
 {
-	extern int tsm_ID;
-	if(tsm_ID != -1)
+	if(RegisteredSong)
 	{
 		I_StopSong(RegisteredSong);
 		I_UnRegisterSong(RegisteredSong);
-		I_ShutdownSound();
 	}
+	I_ShutdownSound();
+
 	if(i_CDMusic)
 	{
 		I_CDMusStop();
@@ -990,8 +990,6 @@ void S_InitScript(void)
 
 
 int ticcount;
-
-boolean novideo; // if true, stay in text mode for debugging
 
 
 //==========================================================================
@@ -1099,7 +1097,6 @@ void I_StartFrame (void)
 
 void I_Init (void)
 {
-	novideo = M_CheckParm("novideo");
 	I_StartupMouse();
 	I_StartupJoystick();
 	ST_Message("  S_Init... ");

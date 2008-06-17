@@ -1,4 +1,8 @@
-// $Id: i_sound.c,v 1.6 2008-06-17 14:42:23 sezero Exp $
+//**************************************************************************
+//**
+//** $Id: i_sound.c,v 1.7 2008-06-17 18:00:21 sezero Exp $
+//**
+//**************************************************************************
 
 
 #include "h2stdinc.h"
@@ -128,7 +132,7 @@ typedef struct
 
 
 extern OutputPlugin* get_oplugin_info();
-static OutputPlugin* audioPI = 0;
+static OutputPlugin* audioPI = NULL;
 static int audio_exit_thread = 1;
 static pthread_t audio_thread;
 
@@ -387,6 +391,8 @@ void I_StartupSound (void)
     /* Using get_oplugin_info() from oss.c.  In the future this could
      load from a real shared library plugin. */
     audioPI = get_oplugin_info();
+    if (!audioPI)
+	return;
     audioPI->init();
     audioPI->about();
     
@@ -415,6 +421,7 @@ void I_ShutdownSound (void)
         }
         audioPI->close_audio();
     }
+    audioPI = NULL;
 }
 
 void I_SetChannels(int channels)
@@ -431,14 +438,12 @@ void I_SetChannels(int channels)
         channel[ j ].time = 0;
     }
 
-
     // This table provides step widths for pitch parameters.
     steptablemid = steptable + 128;
     for( j = -128; j < 128; j++ )
     {
         steptablemid[ j ] = (int) (pow( 2.0, (j/64.0) ) * 65536.0);
     }
-
 
     // Generate the volume lookup tables.
     for( v = 0 ; v < MAX_VOL ; v++ )
