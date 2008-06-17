@@ -4,16 +4,23 @@
 //** st_start.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: st_start.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-17 09:20:19 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-17 12:25:51 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 
 // HEADER FILES ------------------------------------------------------------
-#include <sys/stat.h>
-#include <sys/types.h>
+#if 1
+	#include <sys/stat.h>
+	#include <sys/types.h>
+#else
+	/* I doubt I'll readd DOS support, but who knows */
+	#include <libc.h>
+	#include <ctype.h>
+	#define O_BINARY 0
+#endif
 #include "h2def.h"
 #include <fcntl.h>
 #include <stdarg.h>				// Needed for next as well as dos
