@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.15 $
-//** $Date: 2008-06-17 14:17:23 $
+//** $Revision: 1.16 $
+//** $Date: 2008-06-17 14:24:19 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -459,13 +459,6 @@ default_t defaults[] =
 	{ "sfx_volume", &snd_MaxVolume, 10},
 	{ "music_volume", &snd_MusicVolume, 10},
 
-#define SC_INSERT				0x52
-#define SC_DELETE				0x53
-#define SC_PAGEUP				0x49
-#define SC_PAGEDOWN				0x51
-#define SC_HOME					0x47
-#define SC_END					0x4f
-
 	{ "key_right", &key_right, KEY_RIGHTARROW },
 	{ "key_left", &key_left, KEY_LEFTARROW },
 	{ "key_up", &key_up, KEY_UPARROW },
@@ -473,12 +466,12 @@ default_t defaults[] =
 	{ "key_strafeleft", &key_strafeleft, ',' },
 	{ "key_straferight", &key_straferight, '.' },
 	{ "key_jump", &key_jump, '/'},
-	{ "key_flyup", &key_flyup, SC_PAGEUP },
-	{ "key_flydown", &key_flydown, SC_INSERT },
-	{ "key_flycenter", &key_flycenter, SC_HOME },
-	{ "key_lookup", &key_lookup, SC_PAGEDOWN },
-	{ "key_lookdown", &key_lookdown, SC_DELETE },
-	{ "key_lookcenter", &key_lookcenter, SC_END },
+	{ "key_flyup", &key_flyup, KEY_PGUP },
+	{ "key_flydown", &key_flydown, KEY_INS },
+	{ "key_flycenter", &key_flycenter, KEY_HOME },
+	{ "key_lookup", &key_lookup, KEY_PGDN },
+	{ "key_lookdown", &key_lookdown, KEY_DEL },
+	{ "key_lookcenter", &key_lookcenter, KEY_END },
 	{ "key_invleft", &key_invleft, '[' },
 	{ "key_invright", &key_invright, ']' },
 	{ "key_useartifact", &key_useartifact, 13 },

@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdl.c,v 1.6 2008-06-17 13:41:18 sezero Exp $
+//** $Id: i_sdl.c,v 1.7 2008-06-17 14:24:19 sezero Exp $
 //**
 //**************************************************************************
 
@@ -26,7 +26,6 @@ int DisplayTicker = 0;
 void I_StartupNet (void);
 void I_ShutdownNet (void);
 void I_ReadExternDriver(void);
-void GrabScreen (void);
 
 extern int usemouse, usejoystick;
 
@@ -46,13 +45,6 @@ int ticcount;
 
 
 boolean novideo; // if true, stay in text mode for debugging
-
-#define KEY_INS         0x52
-#define KEY_DEL         0x53
-#define KEY_PGUP        0x49
-#define KEY_PGDN        0x51
-#define KEY_HOME        0x47
-#define KEY_END         0x4f
 
 /*
 ============================================================================
@@ -301,80 +293,121 @@ void I_ReadScreen(byte *scr)
 
 //===========================================================================
 
-
 //
-//  Translates the key 
+//  Translates the key
 //
-
-int xlatekey(SDL_keysym *key)
+static int xlatekey (SDL_keysym *key)
 {
+	switch (key->sym)
+	{
+	case SDLK_LEFT:		return KEY_LEFTARROW;
+	case SDLK_RIGHT:	return KEY_RIGHTARROW;
+	case SDLK_DOWN:		return KEY_DOWNARROW;
+	case SDLK_UP:		return KEY_UPARROW;
+	case SDLK_ESCAPE:	return KEY_ESCAPE;
+	case SDLK_RETURN:	return KEY_ENTER;
 
-    int rc;
+	case SDLK_F1:		return KEY_F1;
+	case SDLK_F2:		return KEY_F2;
+	case SDLK_F3:		return KEY_F3;
+	case SDLK_F4:		return KEY_F4;
+	case SDLK_F5:		return KEY_F5;
+	case SDLK_F6:		return KEY_F6;
+	case SDLK_F7:		return KEY_F7;
+	case SDLK_F8:		return KEY_F8;
+	case SDLK_F9:		return KEY_F9;
+	case SDLK_F10:		return KEY_F10;
+	case SDLK_F11:		return KEY_F11;
+	case SDLK_F12:		return KEY_F12;
 
-    switch(key->sym)
-    {
-      case SDLK_LEFT:	rc = KEY_LEFTARROW;	break;
-      case SDLK_RIGHT:	rc = KEY_RIGHTARROW;	break;
-      case SDLK_DOWN:	rc = KEY_DOWNARROW;	break;
-      case SDLK_UP:	rc = KEY_UPARROW;	break;
-      case SDLK_ESCAPE:	rc = KEY_ESCAPE;	break;
+	case SDLK_INSERT:	return KEY_INS;
+	case SDLK_DELETE:	return KEY_DEL;
+	case SDLK_PAGEUP:	return KEY_PGUP;
+	case SDLK_PAGEDOWN:	return KEY_PGDN;
+	case SDLK_HOME:		return KEY_HOME;
+	case SDLK_END:		return KEY_END;
+	case SDLK_BACKSPACE:	return KEY_BACKSPACE;
+	case SDLK_PAUSE:	return KEY_PAUSE;
+	case SDLK_EQUALS:	return KEY_EQUALS;
+	case SDLK_MINUS:	return KEY_MINUS;
 
-      case SDLK_KP_ENTER:
-      case SDLK_RETURN:	rc = KEY_ENTER;		break;
+	case SDLK_LSHIFT:
+	case SDLK_RSHIFT:
+		return KEY_RSHIFT;
 
-      case SDLK_F1:	rc = KEY_F1;		break;
-      case SDLK_F2:	rc = KEY_F2;		break;
-      case SDLK_F3:	rc = KEY_F3;		break;
-      case SDLK_F4:	rc = KEY_F4;		break;
-      case SDLK_F5:	rc = KEY_F5;		break;
-      case SDLK_F6:	rc = KEY_F6;		break;
-      case SDLK_F7:	rc = KEY_F7;		break;
-      case SDLK_F8:	rc = KEY_F8;		break;
-      case SDLK_F9:	rc = KEY_F9;		break;
-      case SDLK_F10:	rc = KEY_F10;		break;
-      case SDLK_F11:	rc = KEY_F11;		break;
-      case SDLK_F12:	rc = KEY_F12;		break;
-	
-      case SDLK_INSERT: rc = KEY_INS;           break;
-      case SDLK_DELETE: rc = KEY_DEL;           break;
-      case SDLK_PAGEUP: rc = KEY_PGUP;          break;
-      case SDLK_PAGEDOWN: rc = KEY_PGDN;        break;
-      case SDLK_HOME:   rc = KEY_HOME;          break;
-      case SDLK_END:    rc = KEY_END;           break;
+	case SDLK_LCTRL:
+	case SDLK_RCTRL:
+		return KEY_RCTRL;
 
-      case SDLK_BACKSPACE: rc = KEY_BACKSPACE;	break;
+	case SDLK_LALT:
+	case SDLK_LMETA:
+	case SDLK_RALT:
+	case SDLK_RMETA:
+		return KEY_RALT;
 
-      case SDLK_PAUSE:	rc = KEY_PAUSE;		break;
+	case SDLK_KP0:
+		if (key->mod & KMOD_NUM)
+			return SDLK_0;
+		else
+			return KEY_INS;
+	case SDLK_KP1:
+		if (key->mod & KMOD_NUM)
+			return SDLK_1;
+		else
+			return KEY_END;
+	case SDLK_KP2:
+		if (key->mod & KMOD_NUM)
+			return SDLK_2;
+		else
+			return KEY_DOWNARROW;
+	case SDLK_KP3:
+		if (key->mod & KMOD_NUM)
+			return SDLK_3;
+		else
+			return KEY_PGDN;
+	case SDLK_KP4:
+		if (key->mod & KMOD_NUM)
+			return SDLK_4;
+		else
+			return KEY_LEFTARROW;
+	case SDLK_KP5:
+		return SDLK_5;
+	case SDLK_KP6:
+		if (key->mod & KMOD_NUM)
+			return SDLK_6;
+		else
+			return KEY_RIGHTARROW;
+	case SDLK_KP7:
+		if (key->mod & KMOD_NUM)
+			return SDLK_7;
+		else
+			return KEY_HOME;
+	case SDLK_KP8:
+		if (key->mod & KMOD_NUM)
+			return SDLK_8;
+		else
+			return KEY_UPARROW;
+	case SDLK_KP9:
+		if (key->mod & KMOD_NUM)
+			return SDLK_9;
+		else
+			return KEY_PGUP;
 
-      case SDLK_EQUALS:	rc = KEY_EQUALS;	break;
+	case SDLK_KP_PERIOD:
+		if (key->mod & KMOD_NUM)
+			return SDLK_PERIOD;
+		else
+			return KEY_DEL;
+	case SDLK_KP_DIVIDE:	return SDLK_SLASH;
+	case SDLK_KP_MULTIPLY:	return SDLK_ASTERISK;
+	case SDLK_KP_MINUS:	return KEY_MINUS;
+	case SDLK_KP_PLUS:	return SDLK_PLUS;
+	case SDLK_KP_ENTER:	return KEY_ENTER;
+	case SDLK_KP_EQUALS:	return KEY_EQUALS;
 
-      case SDLK_KP_MINUS:
-      case SDLK_MINUS:	rc = KEY_MINUS;		break;
-
-      case SDLK_LSHIFT:
-      case SDLK_RSHIFT:
-	rc = KEY_RSHIFT;
-	break;
-	
-      case SDLK_LCTRL:
-      case SDLK_RCTRL:
-	rc = KEY_RCTRL;
-	break;
-	
-      case SDLK_LALT:
-      case SDLK_LMETA:
-      case SDLK_RALT:
-      case SDLK_RMETA:
-	rc = KEY_RALT;
-	break;
-	
-      default:
-        rc = key->sym;
-	break;
-    }
-
-    return rc;
-
+	default:
+		return key->sym;
+	}
 }
 
 
@@ -389,16 +422,21 @@ void I_GetEvent(SDL_Event *Event)
     {
       case SDL_KEYDOWN:
 	mod = SDL_GetModState ();
-	if (mod & KMOD_RCTRL || mod & KMOD_LCTRL) {
-		if (Event->key.keysym.sym == 'g') {
+	if (mod & (KMOD_RCTRL|KMOD_LCTRL))
+	{
+		if (Event->key.keysym.sym == 'g')
+		{
 			if (SDL_WM_GrabInput (SDL_GRAB_QUERY) == SDL_GRAB_OFF)
 				SDL_WM_GrabInput (SDL_GRAB_ON);
 			else
 				SDL_WM_GrabInput (SDL_GRAB_OFF);
 			break;
 		}
-	} else if (mod & KMOD_RALT || mod & KMOD_LALT) {
-		if (Event->key.keysym.sym == SDLK_RETURN) {
+	}
+	else if (mod & (KMOD_RALT|KMOD_LALT))
+	{
+		if (Event->key.keysym.sym == SDLK_RETURN)
+		{
 			SDL_WM_ToggleFullScreen(SDL_GetVideoSurface());
 			break;
 		}
@@ -484,17 +522,6 @@ int I_TimerISR (void)
 	return 0;
 }
 
-/*
-============================================================================
-
-						KEYBOARD
-
-============================================================================
-*/
-
-int lastpress;
-
-
 
 /*
 ============================================================================
@@ -519,6 +546,3 @@ void I_StartupMouse (void)
 	mousepresent = 1;
 }
 
-void GrabScreen (void)
-{
-}

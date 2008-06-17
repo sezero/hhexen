@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.18 $
-//** $Date: 2008-06-17 14:07:15 $
+//** $Revision: 1.19 $
+//** $Date: 2008-06-17 14:24:19 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -87,49 +87,121 @@ extern byte *destview, *destscreen;	// PC direct to screen pointers
 //
 // most key data are simple ascii (uppercased)
 //
-#define	KEY_RIGHTARROW		0xae
-#define	KEY_LEFTARROW		0xac
-#define	KEY_UPARROW			0xad
-#define	KEY_DOWNARROW		0xaf
-#define	KEY_ESCAPE			27
-#define	KEY_ENTER			13
-#define	KEY_F1				(0x80+0x3b)
-#define	KEY_F2				(0x80+0x3c)
-#define	KEY_F3				(0x80+0x3d)
-#define	KEY_F4				(0x80+0x3e)
-#define	KEY_F5				(0x80+0x3f)
-#define	KEY_F6				(0x80+0x40)
-#define	KEY_F7				(0x80+0x41)
-#define	KEY_F8				(0x80+0x42)
-#define	KEY_F9				(0x80+0x43)
-#define	KEY_F10				(0x80+0x44)
-#define	KEY_F11				(0x80+0x57)
-#define	KEY_F12				(0x80+0x58)
+#define	KEY_TAB			9
+#define	KEY_ENTER		13
+#define	KEY_ESCAPE		27
+#define	KEY_SPACE		32	/* 0x20 */
+#define	KEY_MINUS		45	/* 0x2D */
 
-#define	KEY_BACKSPACE		127
-#define	KEY_PAUSE			0xff
+#define	KEY_FIVE		53	/* 0x35 */
+#define	KEY_SIX			54	/* 0x36 */
+#define	KEY_SEVEN		55	/* 0x37 */
+#define	KEY_EIGHT		56	/* 0x38 */
+#define	KEY_NINE		57	/* 0x39 */
+#define	KEY_ZERO		48	/* 0x30 */
 
-#define KEY_EQUALS			0x3d
-#define KEY_MINUS			0x2d
+#define	KEY_EQUALS		61	/* 0x3D */
+#define	KEY_BACKSLASH		92	/* 0x5C */
 
-#define	KEY_RSHIFT			(0x80+0x36)
-#define	KEY_RCTRL			(0x80+0x1d)
-#define	KEY_RALT			(0x80+0x38)
+#define	KEY_BACKSPACE		127	/* 0x7F */
 
-#define	KEY_LALT			KEY_RALT
+#define	KEY_UPARROW		128	/* 0x80 */
+#define	KEY_DOWNARROW		129
+#define	KEY_LEFTARROW		130
+#define	KEY_RIGHTARROW		131
 
-#define KEY_FIVE			0x35
-#define KEY_SIX				0x36
-#define KEY_SEVEN			0x37
-#define KEY_EIGHT			0x38
-#define KEY_NINE			0x39
-#define KEY_ZERO			0x30
-#define KEY_BACKSLASH		0x5C
+#define	KEY_ALT			132
+#define	KEY_LALT		KEY_ALT
+#define	KEY_RALT		KEY_ALT
+
+#define	KEY_CTRL		133
+#define	KEY_LCTRL		KEY_CTRL
+#define	KEY_RCTRL		KEY_CTRL
+
+#define	KEY_SHIFT		134
+#define	KEY_LSHIFT		KEY_SHIFT
+#define	KEY_RSHIFT		KEY_SHIFT
+
+#define	KEY_F1			135
+#define	KEY_F2			136
+#define	KEY_F3			137
+#define	KEY_F4			138
+#define	KEY_F5			139
+#define	KEY_F6			140
+#define	KEY_F7			141
+#define	KEY_F8			142
+#define	KEY_F9			143
+#define	KEY_F10			144
+#define	KEY_F11			145
+#define	KEY_F12			146
+#define	KEY_INS			147
+#define	KEY_DEL			148
+#define	KEY_PGDN		149
+#define	KEY_PGUP		150
+#define	KEY_HOME		151
+#define	KEY_END			152
+
+#define KEY_PAUSE		255	/* 0xFF */
+
+//
+// mouse buttons
+//
+#define	KEY_MOUSE1		200	/* 0xC8 */
+#define	KEY_MOUSE2		201	/* right mouse button			*/
+#define	KEY_MOUSE3		202	/* middle mouse button			*/
+#define	KEY_MWHEELUP		203	/* wheel-up as a virtual button		*/
+#define	KEY_MWHEELDOWN		204	/* wheel-down as a virtual button	*/
+#define	KEY_MOUSE4		205	/* thumb buttons			*/
+#define	KEY_MOUSE5		206	/* thumb buttons			*/
+
+//
+// joystick buttons
+//
+#define	KEY_JOY1		207
+#define	KEY_JOY2		208
+#define	KEY_JOY3		209
+#define	KEY_JOY4		210
+
+//
+// aux keys, for multi-buttoned joysticks
+//
+#define	KEY_AUX1		211
+#define	KEY_AUX2		212
+#define	KEY_AUX3		213
+#define	KEY_AUX4		214
+#define	KEY_AUX5		215
+#define	KEY_AUX6		216
+#define	KEY_AUX7		217
+#define	KEY_AUX8		218
+#define	KEY_AUX9		219
+#define	KEY_AUX10		220
+#define	KEY_AUX11		221
+#define	KEY_AUX12		222
+#define	KEY_AUX13		223
+#define	KEY_AUX14		224
+#define	KEY_AUX15		225
+#define	KEY_AUX16		226
+#define	KEY_AUX17		227
+#define	KEY_AUX18		228
+#define	KEY_AUX19		229
+#define	KEY_AUX20		230
+#define	KEY_AUX21		231
+#define	KEY_AUX22		232
+#define	KEY_AUX23		233
+#define	KEY_AUX24		234
+#define	KEY_AUX25		235
+#define	KEY_AUX26		236
+#define	KEY_AUX27		237
+#define	KEY_AUX28		238
+#define	KEY_AUX29		239
+#define	KEY_AUX30		240
+#define	KEY_AUX31		241
+#define	KEY_AUX32		242
 
 
-#define	FINEANGLES			8192
-#define	FINEMASK			(FINEANGLES-1)
-#define	ANGLETOFINESHIFT	19	// 0x100000000 to 0x2000
+#define	FINEANGLES		8192
+#define	FINEMASK		(FINEANGLES - 1)
+#define	ANGLETOFINESHIFT	19	/* 0x100000000 to 0x2000 */
 
 /*
 ===============================================================================

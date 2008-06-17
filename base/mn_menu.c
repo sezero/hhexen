@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.13 $
-//** $Date: 2008-06-17 14:10:18 $
+//** $Revision: 1.14 $
+//** $Date: 2008-06-17 14:24:19 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -30,12 +30,6 @@
 #define SMALL_ITEM_HEIGHT 9
 #define MENU_MAX_MOUSE_SENS 50
 
-#define KEY_INS         (0x80+0x52)
-#define KEY_DEL         (0x80+0x53)
-#define KEY_PGUP        (0x80+0x49)
-#define KEY_PGDN        (0x80+0x51)
-#define KEY_HOME        (0x80+0x47)
-#define KEY_END         (0x80+0x4f)
 #define SELECTOR_XOFFSET (-28)
 #define SELECTOR_YOFFSET (-1)
 #define SLOTTEXTLEN	16
@@ -86,57 +80,19 @@ typedef struct
 	int oldItPos;
 	int step;
 	MenuType_t prevMenu;
-
-#ifdef RENDER3D
-#if 0
-    void (*textDrawer)(char*,int,int);
-    int itemHeight;
-#endif
-#endif
-
 } Menu_t;
 
-char *mlooktext[] =
-{
-	"OFF",
-	"NORMAL",
-	"INVERSE"
-};
+// EXTERNAL FUNCTION PROTOTYPES --------------------------------------------
 
-int cdaudio;	/* boolean */
-
-extern int alwaysrun;
-extern boolean i_CDMusic;
 extern int I_CDMusInit( void );
 extern int I_CDMusStop( void );
-
-extern int mouselook;
-
-extern int key_right,key_left,key_up,key_down;
-extern int key_straferight,key_strafeleft,key_jump;
-extern int key_fire, key_use, key_strafe, key_speed;
-extern int key_flyup, key_flydown, key_flycenter;
-extern int key_lookup, key_lookdown, key_lookcenter;
-extern int key_invleft, key_invright, key_useartifact;
-
-char *stupidtable[] = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N",
-"O","P","Q","R","S","T","U","V","W","X","Y","Z"};
-
-extern default_t defaults[];
-int FirstKey = 0;
-
-boolean askforkey = false;
-int keyaskedfor;
-int *mbone, *mbtwo, *mbthree;
-
-// EXTERNAL FUNCTION PROTOTYPES --------------------------------------------
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
 
-char *Key2String(int key);
-void ClearControls(int key);
+static char *Key2String(int key);
+static void ClearControls(int key);
 static void InitFonts(void);
 static void SetMenu(MenuType_t menu);
 static void SCQuitGame(int option);
@@ -169,7 +125,7 @@ static void MN_DrawInfo(void);
 static void DrawLoadMenu(void);
 static void DrawSaveMenu(void);
 static void DrawSlider(Menu_t *menu, int item, int width, int slot);
-void MN_LoadSlotText(void);
+static void MN_LoadSlotText(void);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
@@ -177,6 +133,19 @@ extern int detailLevel;
 extern int screenblocks;
 extern int key_speed, key_strafe;
 extern boolean gamekeydown[256]; // The NUMKEYS macro is local to g_game
+extern default_t defaults[];
+
+extern int alwaysrun;
+extern boolean i_CDMusic;
+
+extern int mouselook;
+
+extern int key_right,key_left,key_up,key_down;
+extern int key_straferight,key_strafeleft,key_jump;
+extern int key_fire, key_use, key_strafe, key_speed;
+extern int key_flyup, key_flydown, key_flycenter;
+extern int key_lookup, key_lookdown, key_lookcenter;
+extern int key_invleft, key_invright, key_useartifact;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
@@ -184,6 +153,8 @@ boolean MenuActive;
 int InfoType;
 int messageson;	/* boolean */
 boolean mn_SuicideConsole;
+
+int cdaudio;	/* boolean */
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
@@ -216,6 +187,10 @@ static int currentSlot;
 static int quicksave;
 static int quickload;
 static int typeofask;
+
+static int FirstKey = 0;
+static boolean askforkey = false;
+static int keyaskedfor;
 
 static MenuItem_t MainItems[] =
 {
@@ -407,6 +382,7 @@ static MenuItem_t Options3Items[] =
 	{ ITT_SETKEY, "STRAFE :", SCSetKey, 18, MENU_NONE },
 	{ ITT_SETKEY, "SPEED :", SCSetKey, 19, MENU_NONE }
 };
+
 static Menu_t Options3Menu = 
 {
 	70,20,
@@ -430,7 +406,24 @@ static Menu_t *Menus[] =
 	&SaveMenu
 };
 
-#if defined(__linux) || defined (__FreeBSD__)
+static char *mlooktext[] =
+{
+	"OFF",
+	"NORMAL",
+	"INVERSE"
+};
+
+static char *stupidtable[] =
+{
+	"A","B","C","D","E",
+	"F","G","H","I","J",
+	"K","L","M","N","O",
+	"P","Q","R","S","T",
+	"U","V","W","X","Y",
+	"Z"
+};
+
+#if defined(__linux) || defined(__FreeBSD__)
 static char *GammaText[] = 
 {
 	TXT_GAMMA_LEVEL_OFF,
@@ -440,55 +433,59 @@ static char *GammaText[] =
 	TXT_GAMMA_LEVEL_4
 };
 #endif
-	
+
 // CODE --------------------------------------------------------------------
-char *Key2String(int key)
+
+static char *Key2String (int key)
 {
-  switch(key) {
+	switch (key)
+	{
 	case KEY_RIGHTARROW:
-	return "RIGHT ARROW";
+		return "RIGHT ARROW";
 	case KEY_LEFTARROW:
-	return "LEFT ARROW";
+		return "LEFT ARROW";
 	case KEY_DOWNARROW:
-	return "DOWN ARROW";
+		return "DOWN ARROW";
 	case KEY_UPARROW:
-	return "UP ARROW";
+		return "UP ARROW";
 	case KEY_ENTER:
-	return "ENTER";
+		return "ENTER";
 	case KEY_PGUP:
-	return "PAGE UP";
+		return "PAGE UP";
 	case KEY_PGDN:
-	return "PAGE DOWN";
+		return "PAGE DOWN";
 	case KEY_INS:
-	return "INSERT";
+		return "INSERT";
 	case KEY_HOME:
-	return "HOME";
+		return "HOME";
 	case KEY_END:
-	return "END";
+		return "END";
 	case KEY_DEL:
-	return "DELETE";
+		return "DELETE";
 	case ' ':
-	return "SPACE";
+		return "SPACE";
 	case KEY_RSHIFT:
-	return "SHIFT";
+		return "SHIFT";
 	case KEY_RALT:
-	return "ALT";
+		return "ALT";
 	case KEY_RCTRL:
-	return "CTRL";
-  }
-  //Handle letter keys
-  if(key >= 'a' && key <= 'z') return stupidtable[(key - 'a')];
-  //Everything else
-  return " ";
+		return "CTRL";
+	}
+	// Handle letter keys
+	if (key >= 'a' && key <= 'z')
+		return stupidtable[(key - 'a')];
+	// Everything else
+	return " ";
 }
 
-void ClearControls(int key)
+static void ClearControls (int key)
 {
 	int i;
 
-	for(i=3;i<24;i++)
+	for (i = 3; i < 24; i++)
 	{
-		if(*defaults[i].location == key) *defaults[i].location = 0;
+		if (*defaults[i].location == key)
+			*defaults[i].location = 0;
 	}
 }
 
@@ -1044,7 +1041,7 @@ static void DrawSaveMenu(void)
 //
 //===========================================================================
 
-void MN_LoadSlotText(void)
+static void MN_LoadSlotText(void)
 {
 	int slot;
 	FILE *fp;
@@ -1169,17 +1166,18 @@ static void DrawOptions3Menu(void)
 {
 	int i;
 
-	for(i=0;i<15;i++)
+	for (i = 0; i < 15; i++)
 	{
-		if(askforkey && keyaskedfor == i) {
+		if(askforkey && keyaskedfor == i)
+		{
 			MN_DrTextAYellow("???", 195, (i*SMALL_ITEM_HEIGHT+26));
 		}
-		else {
+		else
+		{
 			MN_DrTextA(Key2String(*defaults[i+FirstKey+3].location),
 				195, (i*SMALL_ITEM_HEIGHT+26));
 		}
 	}
-
 }
 
 //---------------------------------------------------------------------------
@@ -1625,13 +1623,12 @@ boolean MN_Responder(event_t *event)
 	if(askforkey && event->type == ev_mouse)
 	{
 		if(event->data1&1)
-			mbone = defaults[keyaskedfor+3+FirstKey].location;
+			return(true);
 		if(event->data1&2)
-			mbtwo = defaults[keyaskedfor+3+FirstKey].location;
+			return(true);
 		if(event->data1&4)
-			mbthree = defaults[keyaskedfor+3+FirstKey].location;
-		else return(false);
-		return(true);
+			return(true);
+		return(false);
 	}
 	if(event->data1 == KEY_RSHIFT)
 	{

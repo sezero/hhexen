@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.15 2008-06-17 14:20:03 sezero Exp $
+//** $Id: i_linux.c,v 1.16 2008-06-17 14:24:18 sezero Exp $
 //**
 //**************************************************************************
 
@@ -22,15 +22,6 @@
 #define DEFAULT_ARCHIVEPATH     "o:\\sound\\archive\\"
 #define PRIORITY_MAX_ADJUST	10
 #define DIST_ADJUST	(MAX_SND_DIST/PRIORITY_MAX_ADJUST)
-
-#define KEY_LSHIFT	0xfe
-
-#define KEY_INS		(0x80 + 0x52)
-#define KEY_DEL		(0x80 + 0x53)
-#define KEY_PGUP	(0x80 + 0x49)
-#define KEY_PGDN	(0x80 + 0x51)
-#define KEY_HOME	(0x80 + 0x47)
-#define KEY_END		(0x80 + 0x4f)
 
 extern void **lumpcache;
 
