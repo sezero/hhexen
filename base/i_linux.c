@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.13 2008-06-17 14:10:18 sezero Exp $
+//** $Id: i_linux.c,v 1.14 2008-06-17 14:15:27 sezero Exp $
 //**
 //**************************************************************************
 
@@ -39,7 +39,6 @@ extern void I_ShutdownGraphics(void);
 
 int i_Vector;
 externdata_t *i_ExternData;
-boolean useexterndriver;
 
 boolean i_CDMusic;
 int i_CDTrack;
@@ -1259,7 +1258,7 @@ unsigned joystickx, joysticky;
 // returns false if not connected
 boolean I_ReadJoystick (void)
 {
-    return false;
+	return false;
 }
 
 
@@ -1576,12 +1575,12 @@ void I_Quit(void)
 byte *I_ZoneBase (int *size)
 {
 	byte *ptr;
-    int heap = 0x800000;
+	int heap = 0x800000;
 
-    ptr = malloc ( heap );
+	ptr = malloc ( heap );
 
 	ST_Message ("  0x%x allocated for zone, ", heap);
-	ST_Message ("ZoneBase: 0x%X\n", (int)ptr);
+	ST_Message ("ZoneBase: %p\n", ptr);
 
 	if ( ! ptr )
 		I_Error ("  Insufficient DPMI memory!");
@@ -1642,13 +1641,15 @@ void I_InitNetwork (void)
 		doomcom->extratics = 0;
 		return;
 	}
-	netgame = true;
+	I_Error ("NET GAME NOT IMPLEMENTED !!!");
+	// THIS IS DOS-ISH AND BROKEN ON UNIX!!!
 	doomcom = (doomcom_t *)atoi(myargv[i+1]);
-//DEBUG
-doomcom->skill = startskill;
-doomcom->episode = startepisode;
-doomcom->map = startmap;
-doomcom->deathmatch = deathmatch;
+	netgame = true;
+	//DEBUG
+	doomcom->skill = startskill;
+	doomcom->episode = startepisode;
+	doomcom->map = startmap;
+	doomcom->deathmatch = deathmatch;
 }
 
 void I_NetCmd (void)
@@ -1667,16 +1668,8 @@ void I_NetCmd (void)
 
 void I_CheckExternDriver(void)
 {
-	int i;
-
-	if(!(i = M_CheckParm("-externdriver")))
-	{
-		return;
-	}
-	i_ExternData = (externdata_t *)atoi(myargv[i+1]);
-	i_Vector = i_ExternData->vector;
-
-	useexterndriver = true;
+// THIS IS FOR DOS, ONLY. NOTHING ON UNIX.
+	useexterndriver = false;
 }
 
 void PrintHelp(char *name)
