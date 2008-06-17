@@ -4,8 +4,8 @@
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-17 15:02:38 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-17 17:21:06 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -127,8 +127,6 @@ boolean inventory;
 int curpos;
 int inv_ptr;
 int ArtifactFlash;
-
-boolean i_CDMusic; // in Watcom, defined in i_ibm
 
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
