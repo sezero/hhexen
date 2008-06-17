@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-06-17 12:41:36 $
+//** $Revision: 1.11 $
+//** $Date: 2008-06-17 12:44:53 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1276,11 +1276,7 @@ void M_ForceUppercase(char *text);
 
 int M_Random (void);
 // returns a number from 0 to 255
-
-extern unsigned char rndtable[256];
-extern int prndindex;
-#define P_Random() rndtable[(++prndindex)&0xff]
-// as M_Random, but used only by the play simulation
+extern unsigned char P_Random(void);
 
 void M_ClearRandom (void);
 // fix randoms for demos

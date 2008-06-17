@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-17 09:20:11 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-17 12:44:52 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -153,6 +153,11 @@ unsigned char rndtable[256] = {
 
 int rndindex = 0;
 int prndindex = 0;
+
+unsigned char P_Random (void)
+{
+	return rndtable[(++prndindex)&0xff];
+}
 
 int M_Random (void)
 {
