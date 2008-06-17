@@ -4,8 +4,8 @@
 //** am_map.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: am_map.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-17 13:40:11 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-17 13:45:26 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -672,12 +672,15 @@ void AM_clearFB(int color)
     OGL_DrawCutRectTiled(0, finit_height, 320, 4,
         lumptexsizes[lump].w, lumptexsizes[lump].h,
         160-160*scaler+1, finit_height, 320*scaler-2, 4);
- 
+#if 0	/* bbm 3/9/2003: Makes map transparent */
     OGL_SetRawImage(maplumpnum, 0); // We only want the left portion.
     OGL_DrawRectTiled( 0, 0, finit_width,
-                       /*(sbarscale<20)?200:*/ finit_height,
-128, 128);
-#else
+                       /*(sbarscale<20)?200:*/ finit_height, 128, 128);
+#endif	/* Transparent map */
+
+#else	/* RENDER3D */
+
+#if 0	/* bbm 3/9/2003: Makes map transparent */
 	//blit the automap background to the screen.
 	j=mapystart*finit_width;
 	for(i = 0; i < SCREENHEIGHT-SBARHEIGHT; i++)
@@ -690,10 +693,11 @@ void AM_clearFB(int color)
 		if(j >= finit_height*finit_width)
 			j=0;
 	}
+#endif	/* Transparent map */
 
-//	 memcpy(screen, maplump, finit_width*finit_height);
-//  memset(fb, color, f_w*f_h);
-#endif
+//	memcpy(screen, maplump, finit_width*finit_height);
+//	memset(fb, color, f_w*f_h);
+#endif	/* !RENDER3D */
 }
 
 // Based on Cohen-Sutherland clipping algorithm but with a slightly
@@ -1039,12 +1043,10 @@ void DrawWuLine(int X0, int Y0, int X1, int Y1, byte *BaseColor,
 void AM_drawMline(mline_t *ml, int color)
 {
 #ifdef RENDER3D
-    byte *palette = W_CacheLumpName("playpal", PU_CACHE);
-    byte r = palette[color*3], g = palette[color*3+1], b = palette[color*3+2];
- 
-    OGL_DrawLine( FIX2FLT(CXMTOFX(ml->a.x)), FIX2FLT(CYMTOFX(ml->a.y))/1.2,
-                  FIX2FLT(CXMTOFX(ml->b.x)), FIX2FLT(CYMTOFX(ml->b.y))/1.2,
-                  r/255.0, g/255.0, b/255.0, 1 );
+  OGL_SetColor(color);	/* bbm 3/9/2003: Consistant color rendering method */
+  /* Draw the line. 1.2 is the to-square aspect corrector. */
+  glVertex2f(FIX2FLT(CXMTOFX(ml->a.x)), FIX2FLT(CYMTOFX(ml->a.y))/1.2);
+  glVertex2f(FIX2FLT(CXMTOFX(ml->b.x)), FIX2FLT(CYMTOFX(ml->b.y))/1.2);
 #else
   static fline_t fl;
 
@@ -1099,11 +1101,6 @@ void AM_drawWalls(void)
   int i;
 
 #ifdef RENDER3D
-    //OGL_SetNoTexture();
-    glDisable( GL_TEXTURE_2D );
-
-    glLineWidth(2.5); 
-    glBegin(GL_LINES);  // We'll draw pretty much all of them.
     for(i=0;i<numlines;i++)
     {
         if (cheating || (lines[i].flags & ML_MAPPED))
@@ -1169,9 +1166,6 @@ void AM_drawWalls(void)
         glVertex2f( FIX2FLT(CXMTOFX(lines[i].v2->x)),
                     FIX2FLT(CYMTOFX(lines[i].v2->y))/1.2);
     }
-    glEnd();
-    glLineWidth(1.0);
-    glEnable( GL_TEXTURE_2D );
 #else
   static mline_t l;
 
@@ -1396,23 +1390,27 @@ void AM_Drawer (void)
 {
     if (!automapactive) return;
 
-    UpdateState |= I_FULLSCRN;
 
 #ifdef RENDER3D
     // Update the height (in case sbarscale has been changed).
     finit_height = SCREENHEIGHT-SBARHEIGHT*sbarscale/20/*-3*/;
 #endif
 
-    AM_clearFB(BACKGROUND);
+    UpdateState |= I_FULLSCRN;
 
 #ifdef RENDER3D
     AM_OGL_SetupState();
 #endif
 
+    AM_clearFB(BACKGROUND);
+#ifdef RENDER3D
+    glDisable( GL_TEXTURE_2D );
+    glLineWidth(1.0);
+    glBegin(GL_LINES);	/* bbm 3/9/2003: draw all lines at once */
+#endif
     if (grid) AM_drawGrid(GRIDCOLORS);
     AM_drawWalls();
     AM_drawPlayers();
-	DrawWorldTimer();
 
     if (cheating==2) AM_drawThings(THINGCOLORS, THINGRANGE);
 
@@ -1421,9 +1419,13 @@ void AM_Drawer (void)
 //	if(gameskill == sk_baby) AM_drawkeys();
 
 #ifdef RENDER3D
+    glEnd();		/* bbm 3/9/2003: 'draw all lines at once' end */
+    glLineWidth(1.0);
+    glEnable(GL_TEXTURE_2D);
     AM_OGL_RestoreState();
 #endif
 
+	DrawWorldTimer();
 	MN_DrTextA(P_GetMapName(gamemap), 38, 144);
 	if(ShowKills && netgame && deathmatch)
 	{

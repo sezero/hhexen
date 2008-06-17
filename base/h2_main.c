@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.14 $
-//** $Date: 2008-06-17 13:40:27 $
+//** $Revision: 1.15 $
+//** $Date: 2008-06-17 13:45:26 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -619,17 +619,11 @@ static void DrawAndBlit(void)
 	{
 		case GS_LEVEL:
 			if(!gametic)
-			{
 				break;
-			}
+			/* bbm 3/9/2003: Always render player map transparent */
+			R_RenderPlayerView(&players[displayplayer]);
 			if(automapactive)
-			{
 				AM_Drawer();
-			}
-			else
-			{
-				R_RenderPlayerView(&players[displayplayer]);
-			}
 			CT_Drawer();
 			UpdateState |= I_FULLVIEW;
 			SB_Drawer();
