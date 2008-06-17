@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-17 09:20:19 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-17 12:28:07 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -89,7 +89,6 @@ void P_SpawnPlayer(mapthing_t *mthing);
 
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
 
-static void CreateSavePath(void);
 static void ArchiveWorld(void);
 static void UnarchiveWorld(void);
 static void ArchivePolyobjs(void);
@@ -251,15 +250,6 @@ static thinkInfo_t ThinkerInfo[] =
 
 // CODE --------------------------------------------------------------------
 
-void CreateSavePath (void)
-{
-	char path[256];
-
-	snprintf (path, 256, "%ssavegames", basePath);
-	mkdir (path, S_IRWXU|S_IRWXG|S_IRWXO );
-}
-
-
 //==========================================================================
 //
 // SV_SaveGame
@@ -268,13 +258,11 @@ void CreateSavePath (void)
 
 void SV_SaveGame(int slot, char *description)
 {
-	char fileName[256];
+	char fileName[100];
 	char versionText[HXS_VERSION_TEXT_LENGTH];
 
-	CreateSavePath ();
-
 	// Open the output file
-	snprintf(fileName, 256, "%ssavegames/hex6.hxs", basePath);
+	snprintf(fileName, 100, "%shex6.hxs", basePath);
 	OpenStreamOut(fileName);
 
 	// Write game save description
@@ -322,14 +310,12 @@ void SV_SaveGame(int slot, char *description)
 
 void SV_SaveMap(boolean savePlayers)
 {
-	char fileName[256];
+	char fileName[100];
 
-	CreateSavePath();
-	
 	SavingPlayers = savePlayers;
 
 	// Open the output file
-	snprintf(fileName, 256, "%ssavegames/hex6%02d.hxs", basePath, gamemap);
+	snprintf(fileName, 100, "%shex6%02d.hxs", basePath, gamemap);
 	OpenStreamOut(fileName);
 
 	// Place a header marker
@@ -365,7 +351,7 @@ void SV_SaveMap(boolean savePlayers)
 void SV_LoadGame(int slot)
 {
 	int i;
-	char fileName[256];
+	char fileName[100];
 	player_t playerBackup[MAXPLAYERS];
 	mobj_t *mobj;
 
@@ -377,7 +363,7 @@ void SV_LoadGame(int slot)
 	}
 
 	// Create the name
-	snprintf(fileName, 256, "%ssavegames/hex6.hxs", basePath);
+	snprintf(fileName, 100, "%shex6.hxs", basePath);
 
 	// Load the file
 	M_ReadFile(fileName, &SaveBuffer);
@@ -473,7 +459,7 @@ void SV_MapTeleport(int map, int position)
 {
 	int i;
 	int j;
-	char fileName[256];
+	char fileName[100];
 	player_t playerBackup[MAXPLAYERS];
 	mobj_t *targetPlayerMobj;
 	mobj_t *mobj;
@@ -515,7 +501,7 @@ void SV_MapTeleport(int map, int position)
 	TargetPlayerAddrs = NULL;
 
 	gamemap = map;
-	snprintf(fileName, 256, "%ssavegames/hex6%02d.hxs", basePath, gamemap);
+	snprintf(fileName, 100, "%shex6%02d.hxs", basePath, gamemap);
 	if(!deathmatch && ExistingFile(fileName))
 	{ // Unarchive map
 		SV_LoadMap();
@@ -663,9 +649,9 @@ int SV_GetRebornSlot(void)
 
 boolean SV_RebornSlotAvailable(void)
 {
-	char fileName[256];
+	char fileName[100];
 
-	snprintf(fileName, 256, "%ssavegames/hex%d.hxs", basePath, REBORN_SLOT);
+	snprintf(fileName, 100, "%shex%d.hxs", basePath, REBORN_SLOT);
 	return ExistingFile(fileName);
 }
 
@@ -677,7 +663,7 @@ boolean SV_RebornSlotAvailable(void)
 
 void SV_LoadMap(void)
 {
-	char fileName[256];
+	char fileName[100];
 
 	// Load a base level
 	G_InitNew(gameskill, gameepisode, gamemap);
@@ -686,7 +672,7 @@ void SV_LoadMap(void)
 	RemoveAllThinkers();
 
 	// Create the name
-	snprintf(fileName, 256, "%ssavegames/hex6%02d.hxs", basePath, gamemap);
+	snprintf(fileName, 100, "%shex6%02d.hxs", basePath, gamemap);
 
 	// Load the file
 	M_ReadFile(fileName, &SaveBuffer);
@@ -1624,14 +1610,14 @@ static void AssertSegment(gameArchiveSegment_t segType)
 static void ClearSaveSlot(int slot)
 {
 	int i;
-	char fileName[256];
+	char fileName[100];
 
 	for(i = 0; i < MAX_MAPS; i++)
 	{
-		snprintf(fileName, 256, "%ssavegames/hex%d%02d.hxs", basePath, slot, i);
+		snprintf(fileName, 100, "%shex%d%02d.hxs", basePath, slot, i);
 		remove(fileName);
 	}
-	snprintf(fileName, 256, "%ssavegames/hex%d.hxs", basePath, slot);
+	snprintf(fileName, 100, "%shex%d.hxs", basePath, slot);
 	remove(fileName);
 }
 
@@ -1646,22 +1632,22 @@ static void ClearSaveSlot(int slot)
 static void CopySaveSlot(int sourceSlot, int destSlot)
 {
 	int i;
-	char sourceName[256];
-	char destName[256];
+	char sourceName[100];
+	char destName[100];
 
 	for(i = 0; i < MAX_MAPS; i++)
 	{
-		snprintf(sourceName, 256, "%ssavegames/hex%d%02d.hxs", basePath, sourceSlot, i);
+		snprintf(sourceName,100, "%shex%d%02d.hxs", basePath,sourceSlot, i);
 		if(ExistingFile(sourceName))
 		{
-			snprintf(destName, 256, "%ssavegames/hex%d%02d.hxs", basePath, destSlot, i);
+			snprintf(destName,100, "%shex%d%02d.hxs", basePath,destSlot, i);
 			CopyFile(sourceName, destName);
 		}
 	}
-	snprintf(sourceName, 256, "%ssavegames/hex%d.hxs", basePath, sourceSlot);
+	snprintf(sourceName, 100,"%shex%d.hxs", basePath, sourceSlot);
 	if(ExistingFile(sourceName))
 	{
-		snprintf(destName, 256, "%ssavegames/hex%d.hxs", basePath, destSlot);
+		snprintf(destName, 100,"%shex%d.hxs", basePath, destSlot);
 		CopyFile(sourceName, destName);
 	}
 }
