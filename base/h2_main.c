@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-06-17 12:31:37 $
+//** $Revision: 1.10 $
+//** $Date: 2008-06-17 12:33:23 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -32,6 +32,7 @@
 
 // MACROS ------------------------------------------------------------------
 
+#define CONFIG_FILE_NAME "hhexen.cfg"
 #define MAXWADFILES 20
 
 // TYPES -------------------------------------------------------------------
@@ -90,8 +91,8 @@ extern boolean askforquit;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
-char *basePath; 
-char base[128];
+char *basePath;
+char base[121];
 boolean DevMaps;			// true = Map development mode
 char *DevMapsDir = "";		// development maps directory
 boolean shareware;			// true if only episode 1 present
@@ -176,16 +177,16 @@ void H2_Main(void)
 
 	HandleArgs();
 
+	CreateBasePath();
+
 	// Initialize subsystems
 
 	ST_Message("V_Init: allocate screens.\n");
 	V_Init();
 
-        CreateBasePath();
-	
 	// Load defaults before initing other systems
 	ST_Message("M_LoadDefaults: Load system defaults.\n");
-	M_LoadDefaults("hhexen.cfg");
+	M_LoadDefaults(CONFIG_FILE_NAME);
 
 	// HEXEN MODIFICATION:
 	// There is a realloc() in W_AddFile() that might fail if the zone
@@ -193,11 +194,16 @@ void H2_Main(void)
 	// WAD files BEFORE the zone memory initialization.
 	ST_Message("W_Init: Init WADfiles.\n");
 	W_InitMultipleFiles(wadfiles);
-#if !(defined (DEMO_WAD))
+
+
+#ifndef DEMO_WAD
 	W_CheckForOldFiles();
 #endif
+	
+
 	ST_Message("Z_Init: Init zone memory allocation daemon.\n");
 	Z_Init();
+
 
 	ST_Message("MN_Init: Init menu system.\n");
 	MN_Init();
@@ -410,7 +416,7 @@ static void ExecOptionPLAYDEMO(char **args, int tag)
 {
 	char file[256];
 
-	snprintf(file, 256, "%s.lmp", args[1]);
+	sprintf(file, "%s.lmp", args[1]);
 	AddWADFile(file);
 	ST_Message("Playing demo %s.lmp.\n", args[1]);
 }
@@ -517,7 +523,7 @@ void H2_GameLoop(void)
 	if(M_CheckParm("-debugfile"))
 	{
 		char filename[20];
-		snprintf(filename, 20, "debug%i.txt", consoleplayer);
+		sprintf(filename, "debug%i.txt", consoleplayer);
 		debugfile = fopen(filename,"w");
 	}
 	I_InitGraphics();
@@ -903,9 +909,9 @@ fixed_t FixedDiv(fixed_t a, fixed_t b)
 //
 //==========================================================================
 
-void CreateBasePath(void)
+static void CreateBasePath(void)
 {
-	snprintf(base, 128, "%s/.hhexen/", getenv("HOME"));
+	sprintf(base,"%s/.hhexen/",getenv("HOME"));
 	basePath = base;
 	mkdir( base, S_IRWXU|S_IRWXG|S_IRWXO );
 } 
