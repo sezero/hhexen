@@ -3,7 +3,7 @@
 	includes the minimum necessary stdc headers,
 	defines common and / or missing types.
 
-	$Id: h2stdinc.h,v 1.1 2008-06-17 13:41:57 sezero Exp $
+	$Id: h2stdinc.h,v 1.2 2008-06-17 17:32:03 sezero Exp $
 */
 
 #ifndef __H2STDINC_H
@@ -98,6 +98,15 @@ typedef int	fixed_t;
 
 
 /*==========================================================================*/
+
+/* compatibility with DOS stuff */
+#ifndef O_BINARY
+# if defined(_O_BINARY)
+#  define O_BINARY	_O_BINARY
+# else
+#  define O_BINARY		0
+# endif
+#endif
 
 /* compatibility with M$ types */
 #if !(defined(_WIN32) || defined(_WIN64))

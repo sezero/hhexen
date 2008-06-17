@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.15 $
-//** $Date: 2008-06-17 17:19:30 $
+//** $Revision: 1.16 $
+//** $Date: 2008-06-17 17:32:02 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -13,20 +13,12 @@
 // HEADER FILES ------------------------------------------------------------
 
 #include "h2stdinc.h"
-#include <malloc.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h> /* jim open() etc. */
-#include <ctype.h>  /* jim toupper() */
-#define O_BINARY 0
+#include <unistd.h>
 #include "h2def.h"
 
 // MACROS ------------------------------------------------------------------
-
-#if defined(NeXT) || defined(__linux) || defined(__FreeBSD__)
-// NeXT doesn't need a binary flag in open call
-#define O_BINARY 0
-#endif
 
 // TYPES -------------------------------------------------------------------
 
@@ -72,40 +64,6 @@ static int AuxiliaryHandle = 0;
 boolean AuxiliaryOpened = false;
 
 // CODE --------------------------------------------------------------------
-
-#if defined(NeXT) || defined(__linux) || defined(__FreeBSD__)
-//==========================================================================
-//
-// strupr
-//
-//==========================================================================
-
-void strupr(char *s)
-{
-    while(*s)
-    {
-	*s = toupper(*s);
-	s++;
-    }
-}
-
-//==========================================================================
-//
-// filelength
-//
-//==========================================================================
-
-int filelength(int handle)
-{
-    struct stat fileinfo;
-
-    if(fstat(handle, &fileinfo) == -1)
-	{
-		I_Error("Error fstating");
-	}
-    return fileinfo.st_size;
-}
-#endif
 
 //==========================================================================
 //

@@ -4,8 +4,8 @@
 //** p_inter.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_inter.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-06-17 14:56:27 $
+//** $Revision: 1.10 $
+//** $Date: 2008-06-17 17:32:02 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -60,12 +60,6 @@ static void SetDormantArtifact(mobj_t *arti);
 static void TryPickupArtifact(player_t *player, artitype_t artifactType, mobj_t *artifact);
 static void TryPickupWeapon(player_t *player, pclass_t weaponClass, weapontype_t weaponType, mobj_t *weapon, char *message);
 static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass, int pieceValue, mobj_t *pieceMobj);
-
-/* jim Linux needs this too */
-/*  #ifdef __NeXT__ */
-#if defined(__NeXT__) || defined(__linux) || defined(__FreeBSD__)
-extern void strupr(char *s);
-#endif
 
 //--------------------------------------------------------------------------
 //

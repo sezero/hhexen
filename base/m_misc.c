@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.18 $
-//** $Date: 2008-06-17 15:02:33 $
+//** $Revision: 1.19 $
+//** $Date: 2008-06-17 17:32:02 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -196,10 +196,6 @@ void M_AddToBox (fixed_t *box, fixed_t x, fixed_t y)
 =
 ==================
 */
-
-#ifndef O_BINARY
-#define O_BINARY 0
-#endif
 
 boolean M_WriteFile (char const *name, void *source, int length)
 {

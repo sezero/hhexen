@@ -4,8 +4,8 @@
 //** st_start.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: st_start.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-17 15:02:39 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-17 17:32:02 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -17,7 +17,6 @@
 /* I doubt I'll readd DOS support, but who knows */
 #include <libc.h>
 #include <ctype.h>
-#define O_BINARY 0
 #endif
 #include "h2stdinc.h"
 #include <sys/stat.h>

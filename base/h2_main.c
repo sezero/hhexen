@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.20 $
-//** $Date: 2008-06-17 17:09:28 $
+//** $Revision: 1.21 $
+//** $Date: 2008-06-17 17:32:02 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -14,7 +14,7 @@
 
 #include "h2stdinc.h"
 #include <sys/stat.h>
-#include <time.h>
+#include <ctype.h>
 #include "h2def.h"
 #include "p_local.h"
 #include "soundst.h"
@@ -140,6 +140,43 @@ static execOpt_t ExecOptions[] =
 };
 
 // CODE --------------------------------------------------------------------
+
+#if !(defined(__DOS__) || defined(__WATCOMC__) || defined(__DJGPP__) || defined(_WIN32) || defined(_WIN64))
+char *strlwr (char *str)
+{
+	char	*c;
+	c = str;
+	while (*c)
+	{
+		*c = tolower(*c);
+		c++;
+	}
+	return str;
+}
+
+char *strupr (char *str)
+{
+	char	*c;
+	c = str;
+	while (*c)
+	{
+		*c = toupper(*c);
+		c++;
+	}
+	return str;
+}
+
+int filelength(int handle)
+{
+	struct stat fileinfo;
+
+	if (fstat(handle, &fileinfo) == -1)
+	{
+		I_Error("Error fstating");
+	}
+	return fileinfo.st_size;
+}
+#endif
 
 //==========================================================================
 //

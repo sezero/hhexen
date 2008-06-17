@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.23 $
-//** $Date: 2008-06-17 17:15:12 $
+//** $Revision: 1.24 $
+//** $Date: 2008-06-17 17:32:02 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1012,8 +1012,8 @@ int LongSwap (int);
 #ifdef __BIG_ENDIAN__
 */
 #ifdef WORDS_BIGENDIAN
-#define SHORT(x)	ShortSwap(x)
-#define LONG(x)		LongSwap(x)
+#define SHORT(x)	ShortSwap((x))
+#define LONG(x)		LongSwap((x))
 #else
 #define SHORT(x)	(x)
 #define LONG(x)		(x)
@@ -1115,14 +1115,20 @@ void D_QuitNetGame (void);
 
 void TryRunTics (void);
 
+#if !(defined(__WATCOMC__) || defined(__DJGPP__) || defined(__DOS__) || defined(_WIN32) || defined(_WIN64))
+char *strupr (char *str);
+char *strlwr (char *str);
+int filelength(int handle);
+#endif
+
 //---------
 //SYSTEM IO
 //---------
 #if 1
-#define	SCREENWIDTH		320
+#define	SCREENWIDTH	320
 #define	SCREENHEIGHT	200
 #else
-#define	SCREENWIDTH		560
+#define	SCREENWIDTH	560
 #define	SCREENHEIGHT	375
 #endif
 
@@ -1188,7 +1194,7 @@ byte	*I_AllocLow (int length);
 
 extern boolean useexterndriver;
 
-#if defined(__WATCOMC__) || defined(__DOS__)
+#if defined(__WATCOMC__) || defined(__DJGPP__) || defined(__DOS__)
 #define EBT_FIRE		1
 #define EBT_OPENDOOR 		2
 #define EBT_SPEED		4
@@ -1368,9 +1374,9 @@ int	R_CheckTextureNumForName (char *name);
 //----
 //MISC
 //----
-extern	int		myargc;
+extern	int	myargc;
 extern	char	**myargv;
-extern	int		localQuakeHappening[MAXPLAYERS];
+extern	int	localQuakeHappening[MAXPLAYERS];
 
 int	M_CheckParm(char *check);
 // returns the position of the given parameter in the arg list (0 if not found)
