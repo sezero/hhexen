@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdl.c,v 1.9 2008-06-17 14:33:07 sezero Exp $
+//** $Id: i_sdl.c,v 1.10 2008-06-17 14:40:31 sezero Exp $
 //**
 //**************************************************************************
 
@@ -219,13 +219,19 @@ void I_Update (void)
 void I_InitGraphics(void)
 {
 	char text[20];
+	Uint32 flags = SDL_SWSURFACE|SDL_HWPALETTE;
 
 	if (novideo)
 		return;
 
+	if (M_CheckParm("-f") || M_CheckParm("--fullscreen"))
+		flags |= SDL_FULLSCREEN;
+
+	// Needs some work to get screenHeight and screenWidth working - S.A.
+
 	// SDL_DOUBLEBUF does not work in full screen mode.  Does not seem to
 	// be necessary anyway.
-	sdl_screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, 8, SDL_SWSURFACE);
+	sdl_screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, 8, flags);
 
 	if (sdl_screen == NULL)
 	{
