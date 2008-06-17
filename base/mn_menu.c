@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.16 $
-//** $Date: 2008-06-17 14:33:06 $
+//** $Revision: 1.17 $
+//** $Date: 2008-06-17 14:37:09 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1816,7 +1816,7 @@ boolean MN_Responder(event_t *event)
 					slottextloaded = false; //reload the slot text, when needed
 				}
 				return true;
-			case KEY_F4: // volume
+			case KEY_F5: // volume
 				MenuActive = true;
 				FileMenuKeySteal = false;
 				MenuTime = 0;
@@ -1829,10 +1829,18 @@ boolean MN_Responder(event_t *event)
 				S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
 				slottextloaded = false; //reload the slot text, when needed
 				return true;
-			case KEY_F5:
-				MenuActive = false;
-				askforquit = true;
-				typeofask = 5; // suicide
+			case KEY_F4: //controls S.A.
+				MenuActive = true;
+				FileMenuKeySteal = false;
+				MenuTime = 0;
+				CurrentMenu = &OptionsMenu;
+				CurrentItPos = CurrentMenu->oldItPos;
+				if(!netgame && !demoplayback)
+				{
+					paused = true;
+				}
+				S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
+				slottextloaded = false; //reload the slot text, when needed
 				return true;
 			case KEY_F6: // quicksave
 				if(gamestate == GS_LEVEL && !demoplayback)
