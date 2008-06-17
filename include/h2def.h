@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.16 $
-//** $Date: 2008-06-17 13:41:09 $
+//** $Revision: 1.17 $
+//** $Date: 2008-06-17 14:00:33 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -63,6 +63,12 @@
 #define VERSIONTEXT "Version 1.3 "__DATE__" ("VER_ID")"
 #endif
 #endif
+
+/* max length of a filesystem pathname	*/
+#define	MAX_OSPATH		256
+
+/* path to the user directory		*/
+extern	char			*basePath;
 
 
 #include "st_start.h"

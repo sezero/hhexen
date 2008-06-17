@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-17 13:41:03 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-17 14:00:33 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -136,8 +136,6 @@ extern acsInfo_t *ACSInfo;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
-extern char *basePath;
-
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
 static int MobjCount;
@@ -256,11 +254,11 @@ static thinkInfo_t ThinkerInfo[] =
 
 void SV_SaveGame(int slot, char *description)
 {
-	char fileName[100];
+	char fileName[MAX_OSPATH];
 	char versionText[HXS_VERSION_TEXT_LENGTH];
 
 	// Open the output file
-	snprintf(fileName, 100, "%shex6.hxs", basePath);
+	snprintf(fileName, sizeof(fileName), "%shex6.hxs", basePath);
 	OpenStreamOut(fileName);
 
 	// Write game save description
@@ -308,12 +306,12 @@ void SV_SaveGame(int slot, char *description)
 
 void SV_SaveMap(boolean savePlayers)
 {
-	char fileName[100];
+	char fileName[MAX_OSPATH];
 
 	SavingPlayers = savePlayers;
 
 	// Open the output file
-	snprintf(fileName, 100, "%shex6%02d.hxs", basePath, gamemap);
+	snprintf(fileName, sizeof(fileName), "%shex6%02d.hxs", basePath, gamemap);
 	OpenStreamOut(fileName);
 
 	// Place a header marker
@@ -349,7 +347,7 @@ void SV_SaveMap(boolean savePlayers)
 void SV_LoadGame(int slot)
 {
 	int i;
-	char fileName[100];
+	char fileName[MAX_OSPATH];
 	player_t playerBackup[MAXPLAYERS];
 	mobj_t *mobj;
 
@@ -361,7 +359,7 @@ void SV_LoadGame(int slot)
 	}
 
 	// Create the name
-	snprintf(fileName, 100, "%shex6.hxs", basePath);
+	snprintf(fileName, sizeof(fileName), "%shex6.hxs", basePath);
 
 	// Load the file
 	M_ReadFile(fileName, &SaveBuffer);
@@ -457,7 +455,7 @@ void SV_MapTeleport(int map, int position)
 {
 	int i;
 	int j;
-	char fileName[100];
+	char fileName[MAX_OSPATH];
 	player_t playerBackup[MAXPLAYERS];
 	mobj_t *targetPlayerMobj;
 	mobj_t *mobj;
@@ -499,7 +497,7 @@ void SV_MapTeleport(int map, int position)
 	TargetPlayerAddrs = NULL;
 
 	gamemap = map;
-	snprintf(fileName, 100, "%shex6%02d.hxs", basePath, gamemap);
+	snprintf(fileName, sizeof(fileName), "%shex6%02d.hxs", basePath, gamemap);
 	if(!deathmatch && ExistingFile(fileName))
 	{ // Unarchive map
 		SV_LoadMap();
@@ -647,9 +645,9 @@ int SV_GetRebornSlot(void)
 
 boolean SV_RebornSlotAvailable(void)
 {
-	char fileName[100];
+	char fileName[MAX_OSPATH];
 
-	snprintf(fileName, 100, "%shex%d.hxs", basePath, REBORN_SLOT);
+	snprintf(fileName, sizeof(fileName), "%shex%d.hxs", basePath, REBORN_SLOT);
 	return ExistingFile(fileName);
 }
 
@@ -661,7 +659,7 @@ boolean SV_RebornSlotAvailable(void)
 
 void SV_LoadMap(void)
 {
-	char fileName[100];
+	char fileName[MAX_OSPATH];
 
 	// Load a base level
 	G_InitNew(gameskill, gameepisode, gamemap);
@@ -670,7 +668,7 @@ void SV_LoadMap(void)
 	RemoveAllThinkers();
 
 	// Create the name
-	snprintf(fileName, 100, "%shex6%02d.hxs", basePath, gamemap);
+	snprintf(fileName, sizeof(fileName), "%shex6%02d.hxs", basePath, gamemap);
 
 	// Load the file
 	M_ReadFile(fileName, &SaveBuffer);
@@ -1608,14 +1606,14 @@ static void AssertSegment(gameArchiveSegment_t segType)
 static void ClearSaveSlot(int slot)
 {
 	int i;
-	char fileName[100];
+	char fileName[MAX_OSPATH];
 
 	for(i = 0; i < MAX_MAPS; i++)
 	{
-		snprintf(fileName, 100, "%shex%d%02d.hxs", basePath, slot, i);
+		snprintf(fileName, sizeof(fileName), "%shex%d%02d.hxs", basePath, slot, i);
 		remove(fileName);
 	}
-	snprintf(fileName, 100, "%shex%d.hxs", basePath, slot);
+	snprintf(fileName, sizeof(fileName), "%shex%d.hxs", basePath, slot);
 	remove(fileName);
 }
 
@@ -1630,22 +1628,22 @@ static void ClearSaveSlot(int slot)
 static void CopySaveSlot(int sourceSlot, int destSlot)
 {
 	int i;
-	char sourceName[100];
-	char destName[100];
+	char sourceName[MAX_OSPATH];
+	char destName[MAX_OSPATH];
 
 	for(i = 0; i < MAX_MAPS; i++)
 	{
-		snprintf(sourceName,100, "%shex%d%02d.hxs", basePath,sourceSlot, i);
+		snprintf(sourceName, sizeof(sourceName), "%shex%d%02d.hxs", basePath,sourceSlot, i);
 		if(ExistingFile(sourceName))
 		{
-			snprintf(destName,100, "%shex%d%02d.hxs", basePath,destSlot, i);
+			snprintf(destName, sizeof(destName), "%shex%d%02d.hxs", basePath,destSlot, i);
 			CopyFile(sourceName, destName);
 		}
 	}
-	snprintf(sourceName, 100,"%shex%d.hxs", basePath, sourceSlot);
+	snprintf(sourceName, sizeof(sourceName), "%shex%d.hxs", basePath, sourceSlot);
 	if(ExistingFile(sourceName))
 	{
-		snprintf(destName, 100,"%shex%d.hxs", basePath, destSlot);
+		snprintf(destName, sizeof(destName), "%shex%d.hxs", basePath, destSlot);
 		CopyFile(sourceName, destName);
 	}
 }

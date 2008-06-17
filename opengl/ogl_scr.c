@@ -33,8 +33,6 @@
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
-extern char *basePath;
-
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
@@ -44,7 +42,7 @@ extern char *basePath;
 void OGL_GrabScreen (void)
 {
 	int	i, len, temp;
-	char	tganame[256], *p;
+	char	tganame[MAX_OSPATH], *p;
 	byte	*buffer;
 
 //

@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-06-17 13:50:43 $
+//** $Revision: 1.11 $
+//** $Date: 2008-06-17 14:00:33 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -41,7 +41,6 @@
 static int ReadFile(char const *name, byte **buffer, int mallocType);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
-extern char *basePath;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
@@ -528,7 +527,7 @@ default_t defaults[] =
 };
 
 int numdefaults;
-char defaultfile[256];
+char defaultfile[MAX_OSPATH];
 
 /*
 ==============
@@ -594,12 +593,12 @@ void M_LoadDefaults(char *fileName)
 	i = M_CheckParm("-config");
 	if(i && i < myargc-1)
 	{
-		snprintf(defaultfile, 256, "%s%s", basePath, myargv[i+1]);
+		snprintf(defaultfile, sizeof(defaultfile), "%s%s", basePath, myargv[i+1]);
 		ST_Message("config file: %s\n", defaultfile);
 	}
 	else
 	{
-		snprintf(defaultfile, 256, "%s%s", basePath, fileName);
+		snprintf(defaultfile, sizeof(defaultfile), "%s%s", basePath, fileName);
 	}
 
 	// Scan the config file
@@ -759,7 +758,7 @@ void M_ScreenShot (void)
 {
 	int     i;
 	byte    *linear;
-	char    lbmname[256], *p;
+	char    lbmname[MAX_OSPATH], *p;
 	byte *pal;
 
 //
