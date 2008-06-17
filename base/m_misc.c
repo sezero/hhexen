@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.14 $
-//** $Date: 2008-06-17 14:10:18 $
+//** $Revision: 1.15 $
+//** $Date: 2008-06-17 14:17:23 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -404,8 +404,10 @@ void M_ForceUppercase(char *text)
 ==============================================================================
 */
 
-int     usemouse;
-int     usejoystick;
+int	usemouse;
+int	usejoystick;
+
+int	mouseSensitivity;
 
 extern int mouselook;
 extern int cdaudio;
@@ -431,24 +433,21 @@ extern int joybjump;
 
 extern int messageson;
 
-extern  int     viewwidth, viewheight;
+extern int viewwidth, viewheight;
 
-int mouseSensitivity;
-
-extern  int screenblocks;
+extern int screenblocks;
 
 extern char *chat_macros[10];
-
 
 
 #ifndef __NeXT__
 extern int snd_Channels;
 extern int snd_DesiredMusicDevice, snd_DesiredSfxDevice;
-extern int snd_MusicDevice, // current music card # (index to dmxCodes)
-	snd_SfxDevice; // current sfx card # (index to dmxCodes)
+extern int snd_MusicDevice,	// current music card # (index to dmxCodes)
+	   snd_SfxDevice;	// current sfx card # (index to dmxCodes)
 
-extern int     snd_SBport, snd_SBirq, snd_SBdma;       // sound blaster variables
-extern int     snd_Mport;                              // midi variables
+extern int snd_SBport, snd_SBirq, snd_SBdma;	// sound blaster variables
+extern int snd_Mport;				// midi variables
 #endif
 
 default_t defaults[] =
@@ -544,7 +543,7 @@ void M_SaveDefaults (void)
 
 	f = fopen (defaultfile, "w");
 	if (!f)
-		return;         // can't write the file, but don't complain
+		return;	// can't write the file, but don't complain
 
 	for (i=0 ; i<numdefaults ; i++)
 	{ 
@@ -553,9 +552,11 @@ void M_SaveDefaults (void)
 		{
 			v = *defaults[i].location;
 			fprintf (f,"%s\t\t%i\n",defaults[i].name,v);
-		} else {
+		}
+		else
+		{
 			fprintf (f,"%s\t\t\"%s\"\n",defaults[i].name,
-			  * (char **) (defaults[i].location));
+				  *(char **) (defaults[i].location));
 		}
 	}
 
@@ -612,13 +613,14 @@ void M_LoadDefaults(char *fileName)
 			{
 				if(strparm[0] == '"')
 				{
-					 // Get a string default
-					 isstring = true;
-					 len = strlen(strparm);
-					 newstring = (char *)malloc(len);
-					 if (newstring == NULL) I_Error("can't malloc newstring");
-					 strparm[len-1] = 0;
-					 strcpy(newstring, strparm+1);
+					// Get a string default
+					isstring = true;
+					len = strlen(strparm);
+					newstring = (char *)malloc(len);
+					if (newstring == NULL)
+						I_Error("can't malloc newstring");
+					strparm[len-1] = 0;
+					strcpy(newstring, strparm+1);
 				}
 				else if(strparm[0] == '0' && strparm[1] == 'x')
 				{
@@ -647,7 +649,6 @@ void M_LoadDefaults(char *fileName)
 		}
 		fclose (f);
 	}
-
 }
 
 /*
@@ -713,7 +714,8 @@ void WritePCXfile (char *filename, byte *data, int width, int height, byte *pale
 //
 	pack = &pcx->data;
 
-	for (i=0 ; i<width*height ; i++)
+	for (i = 0; i < width*height; i++)
+	{
 		if ( (*data & 0xc0) != 0xc0)
 			*pack++ = *data++;
 		else
@@ -721,12 +723,13 @@ void WritePCXfile (char *filename, byte *data, int width, int height, byte *pale
 			*pack++ = 0xc1;
 			*pack++ = *data++;
 		}
+	}
 
 //
 // write the palette
 //
 	*pack++ = 0x0c; // palette ID byte
-	for (i=0 ; i<768 ; i++)
+	for (i = 0; i < 768; i++)
 		*pack++ = *palette++;
 
 //
@@ -770,15 +773,18 @@ void M_ScreenShot (void)
 //
 	snprintf (lbmname, sizeof(lbmname), "%shexen00.pcx", basePath);
 	p = lbmname + strlen(basePath);
-	for (i=0 ; i<=99 ; i++)
+	for (i = 0; i <= 99; i++)
 	{
 		p[5] = i/10 + '0';
 		p[6] = i%10 + '0';
 		if (access(lbmname,0) == -1)
-			break;  // file doesn't exist
+			break;	// file doesn't exist
 	}
-	if (i==100)
-		I_Error ("M_ScreenShot: Couldn't create a PCX");
+	if (i == 100)
+	{
+		P_SetMessage(&players[consoleplayer], "SCREEN SHOT FAILED", false);
+		return;
+	}
 
 //
 // save the pcx file
