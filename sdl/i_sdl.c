@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdl.c,v 1.1 2000-07-25 22:27:08 theoddone33 Exp $
+//** $Id: i_sdl.c,v 1.2 2008-06-17 10:18:47 sezero Exp $
 //**
 //**************************************************************************
 
@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <sys/time.h>
-#include <SDL/SDL.h> 
+#include "SDL.h"
 #include "h2def.h"
 #include "r_local.h"
 #include "p_local.h"    // for P_AproxDistance
@@ -38,7 +38,6 @@ externdata_t *i_ExternData;
 boolean useexterndriver;
 
 SDL_Surface* sdl_screen;
-int grabMouse;
 
 boolean mousepresent;
 
@@ -241,6 +240,8 @@ void I_Update (void)
 
 void I_InitGraphics(void)
 {
+	char text[20];
+
 	if( novideo )
 	{
 		return;
@@ -250,8 +251,7 @@ void I_InitGraphics(void)
     // be necessary anyway.
 
     sdl_screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, 8, SDL_SWSURFACE);
-                                   //SDL_HWSURFACE | SDL_FULLSCREEN );
-                                   //0 );
+
     if( sdl_screen == NULL )
     {
         fprintf( stderr, "Couldn't set video mode %dx%d: %s\n",
@@ -259,22 +259,14 @@ void I_InitGraphics(void)
         exit( 3 );
     }
 
-    if( SDL_MUSTLOCK( sdl_screen ) )
-    {
-        printf( "SDL_MUSTLOCK\n" );
-        exit( 4 );
-    }
-
     // Only grab if we want to
-    if (M_CheckParm ("-nograb")) {
-	    grabMouse = 0;
-    } else {
-	    grabMouse = 1;
-	    SDL_WM_GrabInput (1);
+    if (!M_CheckParm ("--nograb") && !M_CheckParm ("-g")) {
+	    SDL_WM_GrabInput (SDL_GRAB_ON);
     }
 
     SDL_ShowCursor( 0 );
-    SDL_WM_SetCaption( "HHexen v1.4", "HHEXEN" );
+    snprintf (text, 20, "HHexen v%s", HHEXEN_VERSION);
+    SDL_WM_SetCaption( text, "HHEXEN" );
 
 
 	pcscreen = destscreen = sdl_screen->pixels;
@@ -397,7 +389,10 @@ void I_GetEvent(SDL_Event *Event)
 	mod = SDL_GetModState ();
 	if (mod & KMOD_RALT || mod & KMOD_LALT) {
 		if (Event->key.keysym.sym == 'g') {
-			grabMouse = !grabMouse;
+			if (SDL_WM_GrabInput (SDL_GRAB_QUERY) == SDL_GRAB_OFF)
+				SDL_WM_GrabInput (SDL_GRAB_ON);
+			else
+				SDL_WM_GrabInput (SDL_GRAB_OFF);
 		}
 	} else { 
 	        event.type = ev_keydown;
@@ -430,9 +425,6 @@ void I_GetEvent(SDL_Event *Event)
              (Event->motion.y != sdl_screen->h/2) )
         {
             /* Warp the mouse back to the center */
-            if (grabMouse) {
-                SDL_WarpMouse(sdl_screen->w/2, sdl_screen->h/2);
-            }
             event.type = ev_mouse;
             event.data1 = 0
                 | (Event->motion.state & SDL_BUTTON(1) ? 1 : 0)

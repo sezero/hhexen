@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdlgl.c,v 1.1 2000-07-25 22:27:08 theoddone33 Exp $
+//** $Id: i_sdlgl.c,v 1.2 2008-06-17 10:18:48 sezero Exp $
 //**
 //**************************************************************************
 
@@ -49,8 +49,6 @@ extern void **lumpcache;
 int i_Vector;
 externdata_t *i_ExternData;
 boolean useexterndriver;
-
-int grabMouse;
 
 boolean mousepresent;
 
@@ -157,6 +155,7 @@ void I_Update (void)
 void I_InitGraphics(void)
 {
     int p;
+    char text[20];
     Uint32 flags = SDL_OPENGL;
 
     if( novideo )
@@ -215,10 +214,14 @@ void I_InitGraphics(void)
             ST_Message("  3dfx test mode.\n");
     }
 
-    // Start off with mouse grabbed
-    grabMouse = 1;
+    // Only grab if we want to
+    if (!M_CheckParm ("--nograb") && !M_CheckParm ("-g")) {
+            SDL_WM_GrabInput (SDL_GRAB_ON);
+    }
+
     SDL_ShowCursor( 0 );
-    SDL_WM_SetCaption( "HHexen v1.4", "HHEXEN" );
+    snprintf (text, 20, "HHexen v%s", HHEXEN_VERSION);
+    SDL_WM_SetCaption( text, "HHEXEN" );
 
 
     //I_SetPalette( W_CacheLumpName("PLAYPAL", PU_CACHE) );
@@ -325,7 +328,10 @@ void I_GetEvent(SDL_Event *Event)
 	mod = SDL_GetModState ();
 	if (mod & KMOD_RALT || mod & KMOD_LALT) {
 		if (Event->key.keysym.sym == 'g') {
-			grabMouse = !grabMouse;
+			if (SDL_WM_GrabInput (SDL_GRAB_QUERY) == SDL_GRAB_OFF)
+				SDL_WM_GrabInput (SDL_GRAB_ON);
+			else
+				SDL_WM_GrabInput (SDL_GRAB_OFF);
 		}
 	} else { 
 	        event.type = ev_keydown;
@@ -358,9 +364,6 @@ void I_GetEvent(SDL_Event *Event)
              (Event->motion.y != SCREENHEIGHT/2) )
         {
             /* Warp the mouse back to the center */
-            if (grabMouse) {
-                SDL_WarpMouse(SCREENWIDTH/2, SCREENHEIGHT/2);
-            }
             event.type = ev_mouse;
             event.data1 = 0
                 | (Event->motion.state & SDL_BUTTON(1) ? 1 : 0)
