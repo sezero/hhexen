@@ -4,8 +4,8 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-06-17 13:40:27 $
+//** $Revision: 1.10 $
+//** $Date: 2008-06-17 14:10:18 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -101,7 +101,7 @@ int	key_lookup, key_lookdown, key_lookcenter;
 int	key_invleft, key_invright, key_useartifact;
 
 int mouselook;
-boolean alwaysrun;
+int alwaysrun;	/* boolean */
 
 int mousebfire;
 int mousebstrafe;

@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.13 $
-//** $Date: 2008-06-17 14:07:15 $
+//** $Revision: 1.14 $
+//** $Date: 2008-06-17 14:10:18 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -408,8 +408,8 @@ int     usemouse;
 int     usejoystick;
 
 extern int mouselook;
-extern boolean cdaudio;
-extern boolean alwaysrun;
+extern int cdaudio;
+extern int alwaysrun;
 
 extern int key_right, key_left, key_up, key_down;
 extern int key_strafeleft, key_straferight, key_jump;
@@ -429,7 +429,7 @@ extern int joybuse;
 extern int joybspeed;
 extern int joybjump;
 
-extern boolean messageson;
+extern int messageson;
 
 extern  int     viewwidth, viewheight;
 
@@ -509,7 +509,7 @@ default_t defaults[] =
 
 	{ "usegamma", &usegamma, 0 },
 
-	{ "messageson", (int *) &messageson, 1 },
+	{ "messageson", &messageson, 1 },
 
 	{ "chatmacro0", (int *) &chat_macros[0], (int) HUSTR_CHATMACRO0 },
 	{ "chatmacro1", (int *) &chat_macros[1], (int) HUSTR_CHATMACRO1 },
@@ -522,8 +522,8 @@ default_t defaults[] =
 	{ "chatmacro8", (int *) &chat_macros[8], (int) HUSTR_CHATMACRO8 },
 	{ "chatmacro9", (int *) &chat_macros[9], (int) HUSTR_CHATMACRO9 },
 	{ "mouselook", &mouselook, 0 },
-	{ "cdaudio", (int *) &cdaudio, false }, /* jim cast added (warning) */
-	{ "alwaysrun", (int *) &alwaysrun, false }
+	{ "cdaudio", &cdaudio, 0 },
+	{ "alwaysrun", &alwaysrun, 0 }
 };
 
 int numdefaults;

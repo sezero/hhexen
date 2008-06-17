@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.12 $
-//** $Date: 2008-06-17 14:00:33 $
+//** $Revision: 1.13 $
+//** $Date: 2008-06-17 14:10:18 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -103,7 +103,7 @@ char *mlooktext[] =
 	"INVERSE"
 };
 
-boolean cdaudio;
+int cdaudio;	/* boolean */
 
 extern int alwaysrun;
 extern boolean i_CDMusic;
@@ -182,7 +182,7 @@ extern boolean gamekeydown[256]; // The NUMKEYS macro is local to g_game
 
 boolean MenuActive;
 int InfoType;
-boolean messageson;
+int messageson;	/* boolean */
 boolean mn_SuicideConsole;
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
@@ -502,7 +502,7 @@ void MN_Init(void)
 {
 	InitFonts();
 	MenuActive = false;
-//	messageson = true;		// Set by defaults in .CFG
+//	messageson = 1;			// Set by defaults in .CFG
 	MauloBaseLump = W_GetNumForName("FBULA0"); // ("M_SKL00");
 }
 
@@ -1154,7 +1154,7 @@ static void DrawOptions2Menu(void)
 	DrawSlider(&Options2Menu, 1, 9, screenblocks-3);
 	DrawSlider(&Options2Menu, 3, 16, snd_MaxVolume);
 	DrawSlider(&Options2Menu, 5, 16, snd_MusicVolume);
-	if(cdaudio == true)
+	if(cdaudio)
 	{
 		MN_DrTextB("ON", 196, 140);
 	}
@@ -1564,20 +1564,20 @@ static void SCMouselook(int option)
 
 static void SCAlwaysRun(int option)
 {
-	if(alwaysrun) alwaysrun=0;
-	else alwaysrun=1;
+	alwaysrun ^= 1;
 }
+
 static void SCCDAudio(int option)
 {
-	if(cdaudio == true)
+	if(cdaudio)
 	{
-		cdaudio = false;
+		cdaudio = 0;
 		I_CDMusStop();
 		i_CDMusic = false;
 	}
 	else
 	{
-		cdaudio = true;
+		cdaudio = 1;
 		ST_Message("Attempting to initialize CD Music: ");
                 if(!cdrom)
                 {
@@ -1961,46 +1961,46 @@ boolean MN_Responder(event_t *event)
 			case KEY_DOWNARROW:
 				do
 				{
-if(CurrentMenu->items[CurrentItPos].type == ITT_SETKEY && CurrentItPos+1 > CurrentMenu->itemCount-1)
-	{
-		if(FirstKey == 5) 
-		{
-			CurrentItPos = 0;  //End of Key menu
-			FirstKey = 0;
-		}
-		else
-		{
-			FirstKey++;
-		}	
-	}
-	else if(CurrentItPos+1 > CurrentMenu->itemCount-1)
-	{
-		CurrentItPos = 0;
-	}
-	else
-	{
-		CurrentItPos++;
-	}
-} while(CurrentMenu->items[CurrentItPos].type == ITT_EMPTY);
-S_StartSound(NULL, SFX_FIGHTER_HAMMER_HITWALL);
-return(true);
-break;
-case KEY_UPARROW:
-	do
-	{
-	if(CurrentMenu->items[CurrentItPos].type == ITT_SETKEY && CurrentItPos==0)
-	{
-		if(FirstKey == 0) 
-		{
-			CurrentItPos = 14;  //End of Key menu
-			FirstKey = 5;
-		}
-		else
-		{
-			FirstKey--;
-		}	
-	}
-	else if(CurrentItPos == 0)
+					if(CurrentMenu->items[CurrentItPos].type == ITT_SETKEY
+						&& CurrentItPos+1 > CurrentMenu->itemCount-1)
+					{
+						if(FirstKey == 5)
+						{
+							CurrentItPos = 0;  //End of Key menu
+							FirstKey = 0;
+						}
+						else
+						{
+							FirstKey++;
+						}
+					}
+					else if(CurrentItPos+1 > CurrentMenu->itemCount-1)
+					{
+						CurrentItPos = 0;
+					}
+					else
+					{
+						CurrentItPos++;
+					}
+				} while(CurrentMenu->items[CurrentItPos].type == ITT_EMPTY);
+				S_StartSound(NULL, SFX_FIGHTER_HAMMER_HITWALL);
+				return(true);
+			case KEY_UPARROW:
+				do
+				{
+					if(CurrentMenu->items[CurrentItPos].type == ITT_SETKEY && CurrentItPos==0)
+					{
+						if(FirstKey == 0)
+						{
+							CurrentItPos = 14;  //End of Key menu
+							FirstKey = 5;
+						}
+						else
+						{
+							FirstKey--;
+						}
+					}
+					else if(CurrentItPos == 0)
 					{
 						CurrentItPos = CurrentMenu->itemCount-1;
 					}
@@ -2011,7 +2011,6 @@ case KEY_UPARROW:
 				} while(CurrentMenu->items[CurrentItPos].type == ITT_EMPTY);
 				S_StartSound(NULL, SFX_FIGHTER_HAMMER_HITWALL);
 				return(true);
-				break;
 			case KEY_LEFTARROW:
 				if(item->type == ITT_LRFUNC && item->func != NULL)
 				{
@@ -2019,7 +2018,6 @@ case KEY_UPARROW:
 					S_StartSound(NULL, SFX_PICKUP_KEY);
 				}
 				return(true);
-				break;
 			case KEY_RIGHTARROW:
 				if(item->type == ITT_LRFUNC && item->func != NULL)
 				{
@@ -2027,7 +2025,6 @@ case KEY_UPARROW:
 					S_StartSound(NULL, SFX_PICKUP_KEY);
 				}
 				return(true);
-				break;
 			case KEY_ENTER:
 				if(item->type == ITT_SETMENU)
 				{
@@ -2055,7 +2052,6 @@ case KEY_UPARROW:
 				}
 				S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
 				return(true);
-				break;
 			case KEY_ESCAPE:
 				MN_DeactivateMenu();
 				return(true);

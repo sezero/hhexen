@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.12 2008-06-17 14:07:15 sezero Exp $
+//** $Id: i_linux.c,v 1.13 2008-06-17 14:10:18 sezero Exp $
 //**
 //**************************************************************************
 
@@ -47,7 +47,7 @@ int i_CDCurrentTrack;
 int i_CDMusicLength;
 int oldTic;
 
-extern boolean cdaudio;
+extern int cdaudio;
 
 extern void I_CDMusShutdown(void);
 extern void I_CDMusUpdate(void);
@@ -992,7 +992,7 @@ void S_Init(void)
 	I_SetMusicVolume(snd_MusicVolume);
 
 	// Attempt to setup CD music
-	if(cdaudio == true)
+	if(cdaudio)
 	{
 	   	ST_Message("  Attempting to initialize CD Music: ");
 		if(!cdrom)

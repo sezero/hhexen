@@ -4,8 +4,8 @@
 //** p_inter.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_inter.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-17 13:40:42 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-17 14:10:18 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -15,6 +15,8 @@
 #include "p_local.h"
 #include "soundst.h"
 
+extern int messageson;
+
 #define BONUSADD 6
 
 int ArmorIncrement[NUMCLASSES][NUMARMOR] =
@@ -23,16 +25,21 @@ int ArmorIncrement[NUMCLASSES][NUMARMOR] =
 	{ 10*FRACUNIT, 25*FRACUNIT, 5*FRACUNIT, 20*FRACUNIT },
 	{ 5*FRACUNIT, 15*FRACUNIT, 10*FRACUNIT, 25*FRACUNIT },
 #ifdef ASSASSIN
-	{20*FRACUNIT, 10*FRACUNIT, 25*FRACUNIT, 5*FRACUNIT },
+	{ 20*FRACUNIT, 10*FRACUNIT, 25*FRACUNIT, 5*FRACUNIT },
 #endif
 	{ 0, 0, 0, 0 }
 };
 
-int AutoArmorSave[NUMCLASSES] = { 15*FRACUNIT, 10*FRACUNIT, 5*FRACUNIT,
+int AutoArmorSave[NUMCLASSES] =
+{
+	15*FRACUNIT,
+	10*FRACUNIT,
+	5*FRACUNIT,
 #ifdef ASSASSIN
- 10*FRACUNIT,
+	10*FRACUNIT,
 #endif
- 0 };
+	0
+};
 
 char *TextKeyMessages[] = 
 {
@@ -50,12 +57,9 @@ char *TextKeyMessages[] =
 };
 
 static void SetDormantArtifact(mobj_t *arti);
-static void TryPickupArtifact(player_t *player, artitype_t artifactType,
-	mobj_t *artifact);
-static void TryPickupWeapon(player_t *player, pclass_t weaponClass,
-	weapontype_t weaponType, mobj_t *weapon, char *message);
-static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass,
-	int pieceValue, mobj_t *pieceMobj);
+static void TryPickupArtifact(player_t *player, artitype_t artifactType, mobj_t *artifact);
+static void TryPickupWeapon(player_t *player, pclass_t weaponClass, weapontype_t weaponType, mobj_t *weapon, char *message);
+static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass, int pieceValue, mobj_t *pieceMobj);
 
 /* jim Linux needs this too */
 /*  #ifdef __NeXT__ */
@@ -71,8 +75,6 @@ extern void strupr(char *s);
 
 void P_SetMessage(player_t *player, char *message, boolean ultmsg)
 {
-	extern boolean messageson;
-	
 	if((player->ultimateMessage || !messageson) && !ultmsg)
 	{
 		return;
@@ -107,8 +109,6 @@ void P_SetMessage(player_t *player, char *message, boolean ultmsg)
 
 void P_SetYellowMessage(player_t *player, char *message, boolean ultmsg)
 {
-	extern boolean messageson;
-	
 	if((player->ultimateMessage || !messageson) && !ultmsg)
 	{
 		return;
