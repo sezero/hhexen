@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdlgl.c,v 1.9 2008-06-17 14:25:13 sezero Exp $
+//** $Id: i_sdlgl.c,v 1.10 2008-06-17 14:33:07 sezero Exp $
 //**
 //**************************************************************************
 
@@ -201,6 +201,18 @@ static int xlatekey (SDL_keysym *key)
 {
 	switch (key->sym)
 	{
+	// S.A.
+	case SDLK_LEFTBRACKET:	return KEY_LEFTBRACKET;
+	case SDLK_RIGHTBRACKET:	return KEY_RIGHTBRACKET;
+	case SDLK_BACKQUOTE:	return KEY_BACKQUOTE;
+	case SDLK_QUOTEDBL:	return KEY_QUOTEDBL;
+	case SDLK_QUOTE:	return KEY_QUOTE;
+	case SDLK_SEMICOLON:	return KEY_SEMICOLON;
+	case SDLK_PERIOD:	return KEY_PERIOD;
+	case SDLK_COMMA:	return KEY_COMMA;
+	case SDLK_SLASH:	return KEY_SLASH;
+	case SDLK_BACKSLASH:	return KEY_BACKSLASH;
+
 	case SDLK_LEFT:		return KEY_LEFTARROW;
 	case SDLK_RIGHT:	return KEY_RIGHTARROW;
 	case SDLK_DOWN:		return KEY_DOWNARROW;

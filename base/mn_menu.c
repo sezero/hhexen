@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.15 $
-//** $Date: 2008-06-17 14:30:44 $
+//** $Revision: 1.16 $
+//** $Date: 2008-06-17 14:33:06 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -438,44 +438,52 @@ static char *GammaText[] =
 
 static char *Key2String (int key)
 {
+
+// Hmmm... return "[" doesnt work!
+// Well, fuck me dead, this is because the there's no GL lump for these chars or something,
+// so we'll have to go wih RIGHT BRACKET and simliar for much punctuation
+
+// Prob wont work with internatinal keyboards, Sorry :<
+
 	switch (key)
 	{
-	case KEY_RIGHTARROW:
-		return "RIGHT ARROW";
-	case KEY_LEFTARROW:
-		return "LEFT ARROW";
-	case KEY_DOWNARROW:
-		return "DOWN ARROW";
-	case KEY_UPARROW:
-		return "UP ARROW";
-	case KEY_ENTER:
-		return "ENTER";
-	case KEY_PGUP:
-		return "PAGE UP";
-	case KEY_PGDN:
-		return "PAGE DOWN";
-	case KEY_INS:
-		return "INSERT";
-	case KEY_HOME:
-		return "HOME";
-	case KEY_END:
-		return "END";
-	case KEY_DEL:
-		return "DELETE";
-	case ' ':
-		return "SPACE";
-	case KEY_RSHIFT:
-		return "SHIFT";
-	case KEY_RALT:
-		return "ALT";
-	case KEY_RCTRL:
-		return "CTRL";
+	// S.A. just support a few puncuation keys here
+	// Some of these must be WRITTEN (see above comment)
+	case KEY_LEFTBRACKET:	return "LEFT BRACK";
+	case KEY_RIGHTBRACKET:	return "RIGHT BRACK";
+	case KEY_BACKQUOTE:	return "BACK QUOTE";
+	case KEY_QUOTE:		return "'";
+	case KEY_QUOTEDBL:	return "DOUBLE QUOTE";
+	case KEY_SEMICOLON:	return ";";
+	case KEY_MINUS:		return "-";
+	case KEY_PERIOD:	return ".";
+	case KEY_COMMA:		return ",";
+	case KEY_SLASH:		return "/";
+	case KEY_BACKSLASH:	return "BACKSLASH";
+	case KEY_TAB:		return "TAB";
+	case KEY_EQUALS:	return "=";
+
+	case KEY_RIGHTARROW:	return "RIGHT ARROW";
+	case KEY_LEFTARROW:	return "LEFT ARROW";
+	case KEY_DOWNARROW:	return "DOWN ARROW";
+	case KEY_UPARROW:	return "UP ARROW";
+	case KEY_ENTER:		return "ENTER";
+	case KEY_PGUP:		return "PAGE UP";
+	case KEY_PGDN:		return "PAGE DOWN";
+	case KEY_INS:		return "INSERT";
+	case KEY_HOME:		return "HOME";
+	case KEY_END:		return "END";
+	case KEY_DEL:		return "DELETE";
+	case ' ':		return "SPACE";
+	case KEY_RSHIFT:	return "SHIFT";
+	case KEY_RALT:		return "ALT";
+	case KEY_RCTRL:		return "CTRL";
 	}
-	// Handle letter keys
+	// Handle letter keys (could also be done with toupper and >=a && <=z S.A.)
 	if (key >= 'a' && key <= 'z')
 		return stupidtable[(key - 'a')];
 	// Everything else
-	return " ";
+	return "?";
 }
 
 static void ClearControls (int key)
@@ -1174,7 +1182,7 @@ static void DrawOptions3Menu(void)
 		}
 		else
 		{
-			MN_DrTextA(Key2String(*defaults[i+FirstKey+3].location),
+			MN_DrTextA(Key2String(*(defaults[i+FirstKey+3].location)),
 				195, (i*SMALL_ITEM_HEIGHT+26));
 		}
 	}

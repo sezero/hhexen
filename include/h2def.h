@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.20 $
-//** $Date: 2008-06-17 14:28:15 $
+//** $Revision: 1.21 $
+//** $Date: 2008-06-17 14:33:06 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -136,6 +136,18 @@ extern byte *destview, *destscreen;	// PC direct to screen pointers
 #define	KEY_END			152
 
 #define KEY_PAUSE		255	/* 0xFF */
+
+// S.A.
+#define KEY_LEFTBRACKET		91
+#define KEY_RIGHTBRACKET	93
+#define KEY_BACKQUOTE		96
+#define KEY_QUOTEDBL		34
+#define KEY_QUOTE		39
+#define KEY_SEMICOLON		59
+#define KEY_PERIOD		46
+#define KEY_COMMA		44
+#define KEY_SLASH		47
+#define KEY_BACKSLASH		92
 
 //
 // mouse buttons
