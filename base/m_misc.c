@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-17 14:00:33 $
+//** $Revision: 1.12 $
+//** $Date: 2008-06-17 14:02:48 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -21,6 +21,10 @@
 #include "p_local.h"
 #include "soundst.h"
 
+#ifdef RENDER3D
+#include "ogl_def.h"
+#endif
+
 // MACROS ------------------------------------------------------------------
 
 #define MALLOC_CLIB 1
@@ -29,10 +33,6 @@
 // TYPES -------------------------------------------------------------------
 
 // EXTERNAL FUNCTION PROTOTYPES --------------------------------------------
-
-#ifdef RENDER3D
-#include "ogl_def.h"
-#endif
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
