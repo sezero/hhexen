@@ -18,5 +18,3 @@
 /* Same as above */
 #undef NORANGECHECKING
 
-/* Define if you want configs stored in users' home directories */
-#undef USERCONFIG

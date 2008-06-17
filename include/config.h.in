@@ -7,8 +7,11 @@
    This function is required for alloca.c support on those systems.  */
 #undef CRAY_STACKSEG_END
 
-/* Define as __inline if that's what the C compiler calls it.  */
+/* Define to `__inline__' or `__inline' if that's what the C compiler
+   calls it, or to nothing if 'inline' is not supported under any name.  */
+#ifndef __cplusplus
 #undef inline
+#endif
 
 /* Define to `unsigned' if <sys/types.h> doesn't define.  */
 #undef size_t
@@ -32,6 +35,77 @@
    first (like Motorola and SPARC, unlike Intel and VAX). */
 /* #undef WORDS_BIGENDIAN */
 
+/* Define if type char is unsigned and you are not using gcc.  */
+#ifndef __CHAR_UNSIGNED__
+#undef __CHAR_UNSIGNED__
+#endif
+
+/* The number of bytes in a char.  */
+#undef SIZEOF_CHAR
+
+/* The number of bytes in a short.  */
+#undef SIZEOF_SHORT
+
+/* The number of bytes in a int.  */
+#undef SIZEOF_INT
+
+/* The number of bytes in a long.  */
+#undef SIZEOF_LONG
+
+/* The number of bytes in a long long.  */
+#undef SIZEOF_LONG_LONG
+
+/* The number of bytes in a size_t.  */
+#undef SIZEOF_SIZE_T
+
+/* Define if you have the <linux/cdrom.h> header file.  */
+#undef HAVE_LINUX_CDROM_H
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Define if you have the <inttypes.h> header file.  */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define if you have the <stdint.h> header file.  */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define if you have the <strings.h> header file.  */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define if you have the dl library (-ldl).  */
+#undef HAVE_LIBDL
+
+/* Define if you have the m library (-lm).  */
+#undef HAVE_LIBM
+
+/* Define if you have the GLU library (-lGLU).  */
+#undef HAVE_LIBGLU
+
+/* Define if you have the MesaGL library (-lMesaGL).  */
+#undef HAVE_LIBMESAGL
+
+/* Define if you have the MesaGLU library (-lMesaGLU).  */
+#undef HAVE_LIBMESAGLU
+
 /* Define if including the assassin in compile */
 #undef ASSASSIN 
 
@@ -47,35 +121,3 @@
 /* Same as above */
 #undef NORANGECHECKING
 
-/* Define if you want configs stored in users' home directories */
-#undef USERCONFIG
-
-/* The number of bytes in a long long.  */
-#undef SIZEOF_LONG_LONG
-
-/* Define if you have the <linux/cdrom.h> header file.  */
-#undef HAVE_LINUX_CDROM_H
-
-/* Define if you have the <stdint.h> header file.  */
-#undef HAVE_STDINT_H
-
-/* Define if you have the <inttypes.h> header file.  */
-#undef HAVE_INTTYPES_H
-
-/* Define if you have the <strings.h> header file.  */
-#undef HAVE_STRINGS_H
-
-/* Define if you have the GLU library (-lGLU).  */
-#undef HAVE_LIBGLU
-
-/* Define if you have the MesaGL library (-lMesaGL).  */
-#undef HAVE_LIBMESAGL
-
-/* Define if you have the MesaGLU library (-lMesaGLU).  */
-#undef HAVE_LIBMESAGLU
-
-/* Define if you have the dl library (-ldl).  */
-#undef HAVE_LIBDL
-
-/* Define if you have the m library (-lm).  */
-#undef HAVE_LIBM
