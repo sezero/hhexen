@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdl.c,v 1.3 2008-06-17 10:21:27 sezero Exp $
+//** $Id: i_sdl.c,v 1.4 2008-06-17 13:03:44 sezero Exp $
 //**
 //**************************************************************************
 
@@ -393,17 +393,18 @@ void I_GetEvent(SDL_Event *Event)
 				SDL_WM_GrabInput (SDL_GRAB_ON);
 			else
 				SDL_WM_GrabInput (SDL_GRAB_OFF);
+			break;
 		}
 	} else if (mod & KMOD_RALT || mod & KMOD_LALT) {
 		if (Event->key.keysym.sym == SDLK_RETURN) {
 			SDL_WM_ToggleFullScreen(SDL_GetVideoSurface());
+			break;
 		}
-	} else { 
-	        event.type = ev_keydown;
-	        event.data1 = xlatekey(&Event->key.keysym);
-	        H2_PostEvent(&event);
 	}
-        break;
+	event.type = ev_keydown;
+	event.data1 = xlatekey(&Event->key.keysym);
+	H2_PostEvent(&event);
+	break;
 
       case SDL_KEYUP:
         event.type = ev_keyup;
