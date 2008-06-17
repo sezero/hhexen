@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-17 12:44:52 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-17 13:04:36 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -453,6 +453,9 @@ extern int     snd_Mport;                              // midi variables
 
 default_t defaults[] =
 {
+/* change of order here affects mn_menu.c :
+ * see, for example, Options3Items there...
+ */
 	{ "mouse_sensitivity", &mouseSensitivity, 5 },
 	{ "sfx_volume", &snd_MaxVolume, 10},
 	{ "music_volume", &snd_MusicVolume, 10},

@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-17 11:26:53 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-17 13:04:36 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -382,16 +382,20 @@ static Menu_t Options2Menu =
 
 static MenuItem_t Options3Items[] =
 {
+/* see defaults[] in m_misc.c for the correct option number:
+ * key_right corresponds to defaults[3], which means that we
+ * are using the (index_number - 3) here.
+ */
 	{ ITT_SETKEY, "TURN RIGHT :", SCSetKey, 0, MENU_NONE },
 	{ ITT_SETKEY, "TURN LEFT :", SCSetKey, 1, MENU_NONE },
 	{ ITT_SETKEY, "MOVE FORWARD :", SCSetKey, 2, MENU_NONE },
 	{ ITT_SETKEY, "MOVE BACK :" , SCSetKey, 3, MENU_NONE },
 	{ ITT_SETKEY, "STRAFE LEFT :", SCSetKey, 4, MENU_NONE },
 	{ ITT_SETKEY, "STRAFE RIGHT :", SCSetKey, 5, MENU_NONE },
-	{ ITT_SETKEY, "FLY UP :", SCSetKey, 6, MENU_NONE },
-	{ ITT_SETKEY, "FLY DOWN :", SCSetKey, 7, MENU_NONE },
-	{ ITT_SETKEY, "FLY CENTER :", SCSetKey, 8, MENU_NONE },
-	{ ITT_SETKEY, "JUMP :", SCSetKey, 9, MENU_NONE },
+	{ ITT_SETKEY, "JUMP :", SCSetKey, 6, MENU_NONE },
+	{ ITT_SETKEY, "FLY UP :", SCSetKey, 7, MENU_NONE },
+	{ ITT_SETKEY, "FLY DOWN :", SCSetKey, 8, MENU_NONE },
+	{ ITT_SETKEY, "FLY CENTER :", SCSetKey, 9, MENU_NONE },
 	{ ITT_SETKEY, "LOOK UP :", SCSetKey, 10, MENU_NONE },
 	{ ITT_SETKEY, "LOOK DOWN :", SCSetKey, 11, MENU_NONE },
 	{ ITT_SETKEY, "LOOK CENTER :", SCSetKey, 12, MENU_NONE },
