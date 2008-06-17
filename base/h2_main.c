@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.18 $
-//** $Date: 2008-06-17 15:02:33 $
+//** $Revision: 1.19 $
+//** $Date: 2008-06-17 17:07:24 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -119,21 +119,14 @@ static int WarpMap;
 static int demosequence;
 static int pagetic;
 static char *pagename;
-#ifdef __NeXT__
-static char *wadfiles[MAXWADFILES] =
-{
-	"/Novell/H2/source/hexen.wad"
-};
-#else
 static char *wadfiles[MAXWADFILES] =
 {
 	"hexen.wad",
 #ifdef ASSASSIN
 	"assassin.wad",
 #endif
-	NULL
+	NULL	/* the last entry MUST be NULL */
 };
-#endif
 static execOpt_t ExecOptions[] =
 {
 	{ "-file", ExecOptionFILE, 1, 0 },
