@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.17 $
-//** $Date: 2008-06-17 14:37:09 $
+//** $Revision: 1.18 $
+//** $Date: 2008-06-17 14:38:09 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1686,6 +1686,7 @@ boolean MN_Responder(event_t *event)
 	{
 		switch(key)
 		{
+			case KEY_ENTER:
 			case 'y':
 				if(askforquit)
 				{
@@ -1920,7 +1921,7 @@ boolean MN_Responder(event_t *event)
 				}
 				return true;
 			case KEY_F10: // quit
-				if(gamestate == GS_LEVEL || gamestate == GS_FINALE)
+				// S.A. if(gamestate == GS_LEVEL || gamestate == GS_FINALE)
 				{
 					SCQuitGame(0);
 					S_StartSound(NULL, SFX_CHAT);
