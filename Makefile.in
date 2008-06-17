@@ -1,8 +1,6 @@
 # This Makefile understands the following targets:
 #
-# x11 (default):	build X11 version
 # sdl			build SDL (software) version
-# svgalib:		build SVGALib version
 # opengl		build OpenGL version
 # clean:		remove all intermediate files
 
@@ -130,18 +128,10 @@ ifeq "$(HAVE_SDL)" "yes"
 sdl: $(SDLOBJS) $(BASEOBJS)
 	$(CC) -o hhexen-sdl $(SDLOBJS) $(BASEOBJS) $(SDLLIBS)
 endif
-x11: 	$(X11OBJS) $(BASEOBJS)
-	$(CC) -o hhexen-x11  $(X11OBJS) $(BASEOBJS) $(XLIBS)
-
-svgalib: $(SVGAOBJS) $(BASEOBJS)
-	$(CC) -o hhexen-vga $(SVGAOBJS) $(BASEOBJS) $(SVGALIBS)
-
 endif
 
 clean:
 	$(RM) base/*.o
-	$(RM) x11/*.o
-	$(RM) svgalib/*.o
 	$(RM) opengl/*.o
 	$(RM) sdl/*.o
 
@@ -150,3 +140,4 @@ clean:
 
 %.o: %.cpp
 	$(CXX) $< -o $@ -c $(CPPFLAGS) $(SDLFLAGS)
+
