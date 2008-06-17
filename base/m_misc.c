@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-17 13:40:33 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-17 13:47:54 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -758,7 +758,7 @@ void M_ScreenShot (void)
 {
 	int     i;
 	byte    *linear;
-	char    lbmname[12];
+	char    lbmname[256], *p;
 	byte *pal;
 
 //
@@ -768,12 +768,12 @@ void M_ScreenShot (void)
 //
 // find a file name to save it to
 //
-	strcpy(lbmname,"HEXEN00.pcx");
-
+	snprintf (lbmname, sizeof(lbmname), "%shexen00.pcx", basePath);
+	p = lbmname + strlen(basePath);
 	for (i=0 ; i<=99 ; i++)
 	{
-		lbmname[5] = i/10 + '0';
-		lbmname[6] = i%10 + '0';
+		p[5] = i/10 + '0';
+		p[6] = i%10 + '0';
 		if (access(lbmname,0) == -1)
 			break;  // file doesn't exist
 	}
@@ -785,8 +785,7 @@ void M_ScreenShot (void)
 // 
 	pal = (byte *)W_CacheLumpName("PLAYPAL", PU_CACHE);
 
-	WritePCXfile (lbmname, linear, SCREENWIDTH, SCREENHEIGHT
-		, pal);
+	WritePCXfile (lbmname, linear, SCREENWIDTH, SCREENHEIGHT, pal);
 
 	P_SetMessage(&players[consoleplayer], "SCREEN SHOT", false);
 }
