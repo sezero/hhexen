@@ -4,8 +4,8 @@
 //** p_spec.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_spec.h,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 11:26:54 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-17 12:00:33 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -246,8 +246,8 @@ typedef enum
 	PLAT_DOWNBYVALUEWAITUPSTAY,
 	PLAT_UPWAITDOWNSTAY,
 	PLAT_UPBYVALUEWAITDOWNSTAY,
-	//PLAT_RAISEANDCHANGE,
-	//PLAT_RAISETONEARESTANDCHANGE
+//	PLAT_RAISEANDCHANGE,
+//	PLAT_RAISETONEARESTANDCHANGE
 } plattype_e;
 
 typedef struct
