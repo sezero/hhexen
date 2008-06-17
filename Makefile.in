@@ -54,7 +54,6 @@ GLBASE = @GLBASE@
 GLOBJS = \
 	opengl/ogl_clip.o \
 	opengl/ogl_draw.o \
-	opengl/ogl_font.o \
 	opengl/ogl_rend.o \
 	opengl/ogl_rl.o \
 	opengl/ogl_scr.o \
