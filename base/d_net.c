@@ -4,8 +4,8 @@
 //** d_net.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: d_net.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-17 09:20:10 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-17 12:11:53 $
 //** $Author: sezero $
 //**
 //** This version has the fixed ticdup code.
@@ -823,8 +823,11 @@ if (debugfile)
 
 	if (!demoplayback)
 	{
+	//=============================================================================
+	//
 	//      ideally nettics[0] should be 1 - 3 tics above lowtic
 	//      if we are consistantly slower, speed up time
+	//
 		for (i=0 ; i<MAXPLAYERS ; i++)
 			if (playeringame[i])
 				break;
@@ -836,14 +839,17 @@ if (debugfile)
 			if (nettics[0] <= nettics[nodeforplayer[i]])
 			{
 				gametime--;
+	//                      printf ("-");
 			}
 			frameskip[frameon&3] = (oldnettics > nettics[nodeforplayer[i]]);
 			oldnettics = nettics[0];
 			if (frameskip[0] && frameskip[1] && frameskip[2] && frameskip[3])
 			{
 				skiptics = 1;
+	//                      printf ("+");
 			}
 		}
+	//=============================================================================
 	}       // demoplayback
 
 	//
@@ -865,7 +871,6 @@ if (debugfile)
 			// don't stay in here forever -- give the menu a chance to work
 			if (I_GetTime ()/ticdup - entertic >= 20)
 			{
-				CON_Ticker ();
 				MN_Ticker ();
 				return;
 			}
@@ -882,7 +887,6 @@ if (debugfile)
 				I_Error ("gametic>lowtic");
 			if (advancedemo)
 				H2_DoAdvanceDemo ();
-			CON_Ticker ();
 			MN_Ticker ();
 			G_Ticker ();
 			gametic++;

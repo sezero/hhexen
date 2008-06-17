@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-17 11:00:36 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-17 12:11:53 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -86,7 +86,6 @@ static void WarpCheck(void);
 
 extern boolean automapactive;
 extern boolean MenuActive;
-extern boolean ConsoleActive;
 extern boolean askforquit;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
@@ -199,9 +198,6 @@ void H2_Main(void)
 #endif
 	ST_Message("Z_Init: Init zone memory allocation daemon.\n");
 	Z_Init();
-
-	ST_Message("CON_Init: Init console.\n");
-	CON_Init();
 
 	ST_Message("MN_Init: Init menu system.\n");
 	MN_Init();
@@ -576,10 +572,6 @@ void H2_ProcessEvents(void)
 		{
 			continue;
 		}
-		if(CON_Responder(ev))
-		{
-			continue;
-		}
 		if(MN_Responder(ev))
 		{
 			continue;
@@ -647,7 +639,7 @@ static void DrawAndBlit(void)
 			break;
 	}
 
-	if(paused && !MenuActive && !ConsoleActive && !askforquit)
+	if(paused && !MenuActive && !askforquit)
 	{
 		if(!netgame)
 		{
@@ -668,9 +660,6 @@ static void DrawAndBlit(void)
 
 	// Draw current message
 	DrawMessage();
-
-	// Draw console
-	CON_Drawer();
 
 	// Draw Menu
 	MN_Drawer();

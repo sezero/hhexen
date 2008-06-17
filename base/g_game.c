@@ -4,8 +4,8 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-17 09:20:10 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-17 12:11:53 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -669,7 +669,6 @@ boolean G_Responder(event_t *ev)
 {
 	player_t *plr;
 	extern boolean MenuActive;
-	extern boolean ConsoleActive;
 
 	plr = &players[consoleplayer];
 	if(ev->type == ev_keyup && ev->data1 == key_useartifact)
@@ -764,7 +763,7 @@ boolean G_Responder(event_t *ev)
 				}
 				return(true);
 			}
-			if(ev->data1 == KEY_PAUSE && !MenuActive && !ConsoleActive)
+			if(ev->data1 == KEY_PAUSE && !MenuActive)
 			{
 				sendpause = true;
 				return(true);

@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-17 11:45:57 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-17 12:11:53 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1448,17 +1448,6 @@ void SB_Drawer(void);
 void Draw_TeleportIcon(void);
 void Draw_SaveIcon(void);
 void Draw_LoadIcon(void);
-
-//----------------------
-// CONSOLE (c_console.c)
-//---------------------
-
-void CON_Init(void);
-void CON_UnInit(void);
-void CON_Ticker(void);
-void CON_Drawer(void);
-void CON_BufInsertLine (const char *line);
-boolean CON_Responder(event_t *event);
 
 //-----------------
 // MENU (MN_menu.c)
