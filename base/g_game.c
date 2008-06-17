@@ -4,8 +4,8 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-06-17 14:10:18 $
+//** $Revision: 1.11 $
+//** $Date: 2008-06-17 14:16:23 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -48,82 +48,88 @@ void H2_AdvanceDemo(void);
 
 extern boolean mn_SuicideConsole;
 
-gameaction_t    gameaction;
-gamestate_t     gamestate;
-skill_t         gameskill;
-//boolean         respawnmonsters;
-int             gameepisode;
-int             gamemap;
-int				 prevmap;
+gameaction_t	gameaction;
+gamestate_t	gamestate;
+skill_t		gameskill;
+//boolean		respawnmonsters;
+int		gameepisode;
+int		gamemap;
+int		prevmap;
 
-boolean         paused;
-boolean         sendpause;              // send a pause event next tic
-boolean         sendsave;               // send a save event next tic
-boolean         usergame;               // ok to save / end game
+boolean		paused;
+boolean		sendpause;		// send a pause event next tic
+boolean		sendsave;		// send a save event next tic
+boolean		usergame;		// ok to save / end game
 
-boolean         timingdemo;             // if true, exit with report on completion
-int             starttime;              // for comparative timing purposes      
+boolean		timingdemo;		// if true, exit with report on completion
+int		starttime;		// for comparative timing purposes      
 
-boolean         viewactive;
+boolean		viewactive;
 
-boolean         deathmatch;             // only if started as net death
-boolean         netgame;                // only true if packets are broadcast
-boolean         playeringame[MAXPLAYERS];
-player_t        players[MAXPLAYERS];
-pclass_t		PlayerClass[MAXPLAYERS];
+boolean		deathmatch;		// only if started as net death
+boolean		netgame;		// only true if packets are broadcast
+boolean		playeringame[MAXPLAYERS];
+player_t	players[MAXPLAYERS];
+pclass_t	PlayerClass[MAXPLAYERS];
 
 // Position indicator for cooperative net-play reborn
-int RebornPosition;
+int		RebornPosition;
 
-int             consoleplayer;          // player taking events and displaying
-int             displayplayer;          // view being displayed
-int             gametic;
-int             levelstarttic;          // gametic at level start
+int		consoleplayer;		// player taking events and displaying
+int		displayplayer;		// view being displayed
+int		gametic;
+int		levelstarttic;		// gametic at level start
 
-char            demoname[32];
-boolean         demorecording;
-boolean         demoplayback;
-byte            *demobuffer, *demo_p;
-boolean         singledemo;             // quit after playing a demo from cmdline
+char		demoname[32];
+boolean		demorecording;
+boolean		demoplayback;
+byte		*demobuffer, *demo_p;
+boolean		singledemo;		// quit after playing a demo from cmdline
 
-boolean         precache = true;        // if true, load all graphics at start
+boolean		precache = true;	// if true, load all graphics at start
 
-short            consistancy[MAXPLAYERS][BACKUPTICS];
+short		consistancy[MAXPLAYERS][BACKUPTICS];
 
 //
 // controls (have defaults)
 //
-int key_right, key_left, key_up, key_down;
-int key_strafeleft, key_straferight, key_jump;
-int key_fire, key_use, key_strafe, key_speed;
+int	key_right, key_left, key_up, key_down;
+int	key_strafeleft, key_straferight, key_jump;
+int	key_fire, key_use, key_strafe, key_speed;
 int	key_flyup, key_flydown, key_flycenter;
 int	key_lookup, key_lookdown, key_lookcenter;
 int	key_invleft, key_invright, key_useartifact;
 
-int mouselook;
-int alwaysrun;	/* boolean */
+int	mouselook;
+int	alwaysrun;	/* boolean */
 
-int mousebfire;
-int mousebstrafe;
-int mousebforward;
-int mousebjump;
+int	mousebfire;
+int	mousebstrafe;
+int	mousebforward;
+int	mousebjump;
 
-int joybfire;
-int joybstrafe;
-int joybuse;
-int joybspeed;
-int joybjump;
+int	joybfire;
+int	joybstrafe;
+int	joybuse;
+int	joybspeed;
+int	joybjump;
 
-int LeaveMap;
+int	LeaveMap;
 static int LeavePosition;
 
 //#define MAXPLMOVE       0x32 // Old Heretic Max move
 
-fixed_t MaxPlayerMove[NUMCLASSES] = { 0x3C, 0x32, 0x2D,
+fixed_t	MaxPlayerMove[NUMCLASSES] =
+{
+		0x3C,
+		0x32,
+		0x2D,
 #ifdef ASSASSIN
-					0x3D,
+		0x3D,
 #endif
-					0x31 };
+		0x31
+};
+
 fixed_t forwardmove[NUMCLASSES][2] = 
 {
 	{ 0x1D, 0x3C },
@@ -146,36 +152,36 @@ fixed_t sidemove[NUMCLASSES][2] =
 	{ 0x17, 0x27 }
 };
 
-fixed_t angleturn[3] = {640, 1280, 320};     // + slow turn
+fixed_t	angleturn[3] = {640, 1280, 320};	// + slow turn
 #define SLOWTURNTICS    6
 
 #define NUMKEYS 256
-boolean         gamekeydown[NUMKEYS];
-int             turnheld;                   // for accelerative turning
-int				 lookheld;
+boolean	gamekeydown[NUMKEYS];
+int	turnheld;			// for accelerative turning
+int	lookheld;
 
-
-boolean         mousearray[4];
-boolean         *mousebuttons = &mousearray[1];
+boolean	mousearray[4];
+boolean	*mousebuttons = &mousearray[1];
 
 	// allow [-1]
-int             mousex, mousey;             // mouse values are used once
-int             dclicktime, dclickstate, dclicks;
-int             dclicktime2, dclickstate2, dclicks2;
+int	mousex, mousey;			// mouse values are used once
+int	dclicktime, dclickstate, dclicks;
+int	dclicktime2, dclickstate2, dclicks2;
 
-int             joyxmove, joyymove;         // joystick values are repeated
-boolean         joyarray[5];
-boolean         *joybuttons = &joyarray[1];     // allow [-1]
+int	joyxmove, joyymove;		// joystick values are repeated
+boolean	joyarray[5];
+boolean	*joybuttons = &joyarray[1];	// allow [-1]
 
-int     savegameslot;
-char    savedescription[32];
+int	savegameslot;
+char	savedescription[32];
 
-int inventoryTics;
+int	inventoryTics;
 
+boolean		usearti = true;
 
-static skill_t TempSkill;
-static int TempEpisode;
-static int TempMap;
+static skill_t	TempSkill;
+static int	TempEpisode;
+static int	TempMap;
 
 //=============================================================================
 /*
