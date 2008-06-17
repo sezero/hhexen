@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-06-17 12:39:22 $
+//** $Revision: 1.10 $
+//** $Date: 2008-06-17 12:41:36 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1084,8 +1084,9 @@ void I_EndRead (void);
 byte	*I_AllocLow (int length);
 // allocates from low memory under dos, just mallocs under unix
 
-//void I_Tactile (int on, int off, int total);
+void I_Tactile (int on, int off, int total);
 
+#if defined(__linux)
 extern boolean useexterndriver;
 
 #define EBT_FIRE			1
@@ -1114,6 +1115,7 @@ typedef struct
 	signed char flyDirection; // flyheight (+1/-1)
 	unsigned short buttons; // EBT_* flags
 } externdata_t;
+#endif
 
 //----
 //GAME
