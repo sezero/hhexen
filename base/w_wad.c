@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.14 $
-//** $Date: 2008-06-17 17:05:34 $
+//** $Revision: 1.15 $
+//** $Date: 2008-06-17 17:19:30 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -121,7 +121,7 @@ void W_AddFile(char *filename)
 	wadinfo_t header;
 	lumpinfo_t *lump_p;
 	unsigned i;
-	char path[128];
+	char path[MAX_OSPATH];
 	int handle, length;
 	int startlump;
 	filelump_t *fileinfo, singleinfo;
