@@ -21,12 +21,12 @@ mandir = $(prefix)/man/man1
 includedir = $(prefix)/include
 
 CC = @CC@
+CXX = @CXX@
 DEFS = @DEFS@
 CPPFLAGS = @CPPFLAGS@ @CFLAGS@
-CFLAGS = $(CPPFLAGS) 
+CFLAGS = $(CPPFLAGS)
 LDFLAGS = @LDFLAGS@
 BLIBS = @BASELIBS@
-XLIBS = $(BLIBS) @LIBS@
 SVGALIBS = $(BLIBS) @SVGALIBS@
 GLLIBS = @GLLIBS@ -L/usr/X11R6/lib -lGL -lGLU
 SDLLIBS = @SDL_LIBS@ 
@@ -47,14 +47,6 @@ INCSUBDIR = include
 CPPFLAGS += -I./include -I/usr/X11R6/include
 
 # Objects to build
-
-X11OBJS = \
-	x11/i_x11.o \
-	x11/x11window.o \
-	x11/xshmext.o
-
-SVGAOBJS = \
-	svgalib/i_svgalib.o
 
 SDLOBJS = \
 	sdl/i_sdl.o
@@ -153,7 +145,7 @@ clean:
 	$(RM) sdl/*.o
 
 %.o: %.c
-	$(CC) $< -o $@ -c $(CFLAGS) 
+	$(CC) $< -o $@ -c $(CFLAGS) $(SDLFLAGS)
 
 %.o: %.cpp
-	$(CXX) $< -o $@ -c $(CPPFLAGS)
+	$(CXX) $< -o $@ -c $(CPPFLAGS) $(SDLFLAGS)
