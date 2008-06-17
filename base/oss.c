@@ -32,6 +32,21 @@
 #include <sys/soundcard.h>
 //#include <machine/soundcard.h>
 
+#ifndef AFMT_U16_NE
+# ifdef WORDS_BIGENDIAN
+#  define AFMT_U16_NE AFMT_U16_BE
+# else
+#  define AFMT_U16_NE AFMT_U16_LE
+# endif
+#endif
+#ifndef AFMT_S16_NE
+# ifdef WORDS_BIGENDIAN
+#  define AFMT_S16_NE AFMT_S16_BE
+# else
+#  define AFMT_S16_NE AFMT_S16_LE
+# endif
+#endif
+
 
 void oss_set_audio_params(void);
 
@@ -440,15 +455,7 @@ int oss_open(AFormat fmt, int rate, int nch)
 			format = AFMT_U16_BE;
 			break;
 		case FMT_U16_NE:
-#ifdef AFMT_U16_NE
 			format = AFMT_U16_NE;
-#else
-#ifdef WORDS_BIGENDIAN
-			format = AFMT_U16_BE;
-#else
-			format = AFMT_U16_LE;
-#endif
-#endif
 			break;
 		case FMT_S16_LE:
 			format = AFMT_S16_LE;
@@ -457,15 +464,7 @@ int oss_open(AFormat fmt, int rate, int nch)
 			format = AFMT_S16_BE;
 			break;
 		case FMT_S16_NE:
-#ifdef AFMT_S16_NE
 			format = AFMT_S16_NE;
-#else
-#ifdef WORDS_BIGENDIAN
-			format = AFMT_S16_BE;
-#else
-			format = AFMT_S16_LE;
-#endif
-#endif
 			break;
 	}
 
