@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.14 $
-//** $Date: 2008-06-17 14:24:19 $
+//** $Revision: 1.15 $
+//** $Date: 2008-06-17 14:30:44 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1669,8 +1669,9 @@ boolean MN_Responder(event_t *event)
 
 	if(ravpic && key == KEY_F1)
 	{
-		G_ScreenShot();
-		return(true);
+		// F12 is now screenshot
+		// G_ScreenShot();
+		// return(true);
 	}
 
 	if(askforquit)
@@ -1919,23 +1920,9 @@ boolean MN_Responder(event_t *event)
 				P_SetMessage(&players[consoleplayer], GammaText[usegamma],
 					false);
 				return true;
-			case KEY_F12: // F12 - reload current map (devmaps mode)
-				if(netgame || DevMaps == false)
-				{
-					return false;
-				}
-				if(gamekeydown[key_speed])
-				{ // Monsters ON
-					nomonsters = false;
-				}
-				if(gamekeydown[key_strafe])
-				{ // Monsters OFF
-					nomonsters = true;
-				}
-				G_DeferedInitNew(gameskill, gameepisode, gamemap);
-				P_SetMessage(&players[consoleplayer], TXT_CHEATWARP,
-					false);
-				return true;
+			case KEY_F12: // F12 Screenshot S.A.
+				G_ScreenShot();
+				return(true);
 #endif
 		}
 
