@@ -67,7 +67,7 @@ int I_CDMusInit(void)
 {
 	//open CD device
 	I_CDGetDiskInfo ();
-	return 0;
+	return -1;	// not implemented yet
 }
 
 //==========================================================================
@@ -164,7 +164,9 @@ int I_CDMusLastTrack(void)
 
 void I_CDMusShutdown(void)
 {
-	if(cdfile) close(cdfile);
+	if (cdfile != -1)
+		close(cdfile);
+	cdfile = -1;
 }
 
 //==========================================================================
