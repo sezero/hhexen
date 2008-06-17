@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-17 09:20:20 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-17 11:45:57 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -23,6 +23,10 @@
 
 #define VERSION 110
 #define VERSION_TEXT "v1.1"
+
+#define VERSION_PLATFORM "Linux"
+#define VERSION_MAJ 1
+#define VERSION_MIN 4
 
 // Uncomment, to enable all timebomb stuff
 //#define TIMEBOMB

@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.5 2008-06-17 11:39:34 sezero Exp $
+//** $Id: i_linux.c,v 1.6 2008-06-17 11:45:56 sezero Exp $
 //**
 //**************************************************************************
 
@@ -1722,14 +1722,48 @@ void I_CheckExternDriver(void)
 	useexterndriver = true;
 }
 
+void PrintHelp(char *name)
+{
+	printf ("HHexen (%s %d.%d)\n", VERSION_PLATFORM,
+			VERSION_MAJ,VERSION_MIN);
+	printf ("http://icculus.org/hast/\n");
+	printf ("Please send bug reports or patches to:\n");
+	printf ("             Dan Olson <theoddone33@icculus.org>\n");
+	printf ("\n");
+	printf ("Usage: %s [options]\n", name);
+	printf ("     [ -h | --help]           Display this help message\n");
+	printf ("     [ -v | --version]        Display the game version\n");
+	printf ("     [ -f | --fullscreen]     Run the game fullscreen\n");
+	printf ("     [ -w | --windowed]       Run the game windowed\n");
+	printf ("     [ -s | --nosound]        Run the game without sound\n");
+	printf ("     [ -g | --nograb]         Disable mouse grabbing\n");
+#ifdef RENDER3D
+	//printf ("     [ -l | --gllibrary]      Select 3D rendering library\n");
+#endif
+	printf ("\n");
+	printf ("You can use the HHEXEN_DATA environment variable to force the\n");
+	printf ("HHexen data directory.\n");
+	printf ("\n");
+}
+
+void PrintVersion (void)
+{
+	printf ("HHexen (%s %d.%d)\n", VERSION_PLATFORM,
+			VERSION_MAJ,VERSION_MIN);
+}
 
 int main( int argc, char** argv )
 {
 	myargc = argc;
 	myargv = argv;
-	if (M_CheckParm("--version"))
+	if (M_CheckParm("--help") || M_CheckParm("-h"))
 	{
-		printf("HHexen version 1.4\n");
+		PrintHelp (argv[0]);
+		return 0;
+	}
+	if (M_CheckParm("--version") || M_CheckParm("-v"))
+	{
+		PrintVersion ();
 		return 0;
 	}
 	H2_Main();
