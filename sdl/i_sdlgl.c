@@ -1,13 +1,13 @@
 //**************************************************************************
 //**
-//** $Id: i_sdlgl.c,v 1.6 2008-06-17 13:41:18 sezero Exp $
+//** $Id: i_sdlgl.c,v 1.7 2008-06-17 14:01:48 sezero Exp $
 //**
 //**************************************************************************
 
 #include "h2stdinc.h"
 #include <unistd.h>
 #include <sys/time.h>
-#include <SDL/SDL.h> 
+#include "SDL.h"
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include "h2def.h"
