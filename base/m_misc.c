@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.12 $
-//** $Date: 2008-06-17 14:02:48 $
+//** $Revision: 1.13 $
+//** $Date: 2008-06-17 14:07:15 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -38,7 +38,7 @@
 
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
 
-static int ReadFile(char const *name, byte **buffer, int mallocType);
+static int ReadFile(char const *name, void **buffer, int mallocType);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
@@ -225,7 +225,7 @@ boolean M_WriteFile (char const *name, void *source, int length)
 //
 //==========================================================================
 
-int M_ReadFile(char const *name, byte **buffer)
+int M_ReadFile(char const *name, void **buffer)
 {
 	return ReadFile(name, buffer, MALLOC_ZONE);
 }
@@ -238,7 +238,7 @@ int M_ReadFile(char const *name, byte **buffer)
 //
 //==========================================================================
 
-int M_ReadFileCLib(char const *name, byte **buffer)
+int M_ReadFileCLib(char const *name, void **buffer)
 {
 	return ReadFile(name, buffer, MALLOC_CLIB);
 }
@@ -249,11 +249,11 @@ int M_ReadFileCLib(char const *name, byte **buffer)
 //
 //==========================================================================
 
-static int ReadFile(char const *name, byte **buffer, int mallocType)
+static int ReadFile(char const *name, void **buffer, int mallocType)
 {
 	int handle, count, length;
 	struct stat fileinfo;
-	byte *buf;
+	void *buf;
 
 	handle = open(name, O_RDONLY|O_BINARY, 0666);
 	if(handle == -1)

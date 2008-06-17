@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.17 $
-//** $Date: 2008-06-17 14:00:33 $
+//** $Revision: 1.18 $
+//** $Date: 2008-06-17 14:07:15 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1311,8 +1311,8 @@ void M_AddToBox (fixed_t *box, fixed_t x, fixed_t y);
 // bounding box functions
 
 boolean M_WriteFile(char const *name, void *source, int length);
-int M_ReadFile(char const *name, byte **buffer);
-int M_ReadFileCLib(char const *name, byte **buffer);
+int M_ReadFile(char const *name, void **buffer);
+int M_ReadFileCLib(char const *name, void **buffer);
 
 void M_ScreenShot (void);
 

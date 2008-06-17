@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-17 14:00:33 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-17 14:07:15 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -142,7 +142,7 @@ static int MobjCount;
 static mobj_t **MobjList;
 static int **TargetPlayerAddrs;
 static int TargetPlayerCount;
-static byte *SaveBuffer;
+static void *SaveBuffer;
 static boolean SavingPlayers;
 static union
 {
@@ -365,7 +365,7 @@ void SV_LoadGame(int slot)
 	M_ReadFile(fileName, &SaveBuffer);
 
 	// Set the save pointer and skip the description field
-	SavePtr.b = SaveBuffer+HXS_DESCRIPTION_LENGTH;
+	SavePtr.b = (byte *)SaveBuffer + HXS_DESCRIPTION_LENGTH;
 
 	// Check the version text
 	if(strcmp((char *)SavePtr.b, HXS_VERSION_TEXT))
@@ -672,7 +672,7 @@ void SV_LoadMap(void)
 
 	// Load the file
 	M_ReadFile(fileName, &SaveBuffer);
-	SavePtr.b = SaveBuffer;
+	SavePtr.b = (byte *) SaveBuffer;
 
 	AssertSegment(ASEG_MAP_HEADER);
 
@@ -1657,7 +1657,7 @@ static void CopySaveSlot(int sourceSlot, int destSlot)
 static void CopyFile(char *sourceName, char *destName)
 {
 	int length;
-	byte *buffer;
+	void *buffer;
 
 	length = M_ReadFile(sourceName, &buffer);
 	M_WriteFile(destName, buffer, length);

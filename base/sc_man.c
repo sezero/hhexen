@@ -4,8 +4,8 @@
 //** sc_man.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sc_man.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-17 13:40:58 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-17 14:07:15 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -51,7 +51,7 @@ char *basePath;
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
 static char ScriptName[16];
-static char *ScriptBuffer;
+static void *ScriptBuffer;
 static char *ScriptPtr;
 static char *ScriptEndPtr;
 static char StringBuffer[MAX_STRING_SIZE];
@@ -135,24 +135,24 @@ static void OpenScript(char *name, int type)
 	SC_Close();
 	if(type == LUMP_SCRIPT)
 	{ // Lump script
-		ScriptBuffer = (char *)W_CacheLumpName(name, PU_STATIC);
+		ScriptBuffer = W_CacheLumpName(name, PU_STATIC);
 		ScriptSize = W_LumpLength(W_GetNumForName(name));
 		strcpy(ScriptName, name);
 		ScriptFreeCLib = false; // De-allocate using Z_Free()
 	}
 	else if(type == FILE_ZONE_SCRIPT)
 	{ // File script - zone
-		ScriptSize = M_ReadFile(name, (byte **)&ScriptBuffer);
+		ScriptSize = M_ReadFile(name, &ScriptBuffer);
 		M_ExtractFileBase(name, ScriptName);
 		ScriptFreeCLib = false; // De-allocate using Z_Free()
 	}
 	else
 	{ // File script - clib
-		ScriptSize = M_ReadFileCLib(name, (byte **)&ScriptBuffer);
+		ScriptSize = M_ReadFileCLib(name, &ScriptBuffer);
 		M_ExtractFileBase(name, ScriptName);
 		ScriptFreeCLib = true; // De-allocate using free()
 	}
-	ScriptPtr = ScriptBuffer;
+	ScriptPtr = (char *) ScriptBuffer;
 	ScriptEndPtr = ScriptPtr+ScriptSize;
 	sc_Line = 1;
 	sc_End = false;
