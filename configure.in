@@ -117,7 +117,7 @@ LIBS=$saved_libs])
 
 dnl **** Check for endianness ****
 
-dnl AC_C_BIGENDIAN
+AC_C_BIGENDIAN
 
 dnl **** Check for functions ****
 

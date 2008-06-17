@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.14 $
-//** $Date: 2008-06-17 13:17:26 $
+//** $Revision: 1.15 $
+//** $Date: 2008-06-17 13:18:33 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -941,9 +941,12 @@ fixed_t	FixedDiv2 (fixed_t a, fixed_t b);
 #define Q_FIX2FLT(x)	((float)((x)>>FRACBITS))
 
 
+short ShortSwap (short);
+int LongSwap (int);
+/*
 #ifdef __BIG_ENDIAN__
-short ShortSwap(short);
-long LongSwap(long);
+*/
+#ifdef WORDS_BIGENDIAN
 #define SHORT(x)	ShortSwap(x)
 #define LONG(x)		LongSwap(x)
 #else
