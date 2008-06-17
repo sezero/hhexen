@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-17 12:28:07 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-17 13:12:11 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -372,7 +372,7 @@ void SV_LoadGame(int slot)
 	SavePtr.b = SaveBuffer+HXS_DESCRIPTION_LENGTH;
 
 	// Check the version text
-	if(strcmp(SavePtr.b, HXS_VERSION_TEXT))
+	if(strcmp((char *)SavePtr.b, HXS_VERSION_TEXT))
 	{ // Bad version
 		return;
 	}

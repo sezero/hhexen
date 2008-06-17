@@ -602,9 +602,9 @@ void OGL_SetRawImage(int lump, int part)
 		// Do a special fill for textures with h<200 (part 0).
 		if(/*lumpinfo[lump].size/320 < 200 &&*/ !part)
 		{
-			int lines = lumpinfo[lump].size/320;
+			int _lines = lumpinfo[lump].size/320;
 			// Copy the missing data from the beginning.
-			memcpy(dat1+lines*256*3, dat1, 3*256*(256-lines));
+			memcpy(dat1 + _lines*256*3, dat1, 3*256*(256 - _lines));
 		}
 			
 		// Generate and load the textures.
@@ -851,16 +851,16 @@ void OGL_UpdateTexParams(int mipmode)
 void OGL_UpdateRawScreenParams(int smoothing)
 {
 	int		i;
-	int		glmode = (smoothing)? GL_LINEAR : GL_NEAREST;
+	int		_glmode = (smoothing)? GL_LINEAR : GL_NEAREST;
 
 	for(i=0; i<numrawlumps; i++)
 	{
 		// First part 1.
 		glBindTexture(GL_TEXTURE_2D, lumptexnames[rawlumps[i]]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glmode);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, _glmode);
 		// Then part 2.
 		glBindTexture(GL_TEXTURE_2D, lumptexnames2[rawlumps[i]]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glmode);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, _glmode);
 	}
 }
 

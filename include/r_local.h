@@ -4,8 +4,8 @@
 //** r_local.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_local.h,v $
-//** $Revision: 1.2 $
-//** $Date: 2008-06-17 09:20:20 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 13:12:12 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -362,7 +362,6 @@ extern  angle_t         rw_normalangle;
 //
 extern  int                             viewwidth, viewheight, viewwindowx, viewwindowy;
 extern  int                             centerx, centery;
-extern  int                             flyheight;
 extern  fixed_t                 centerxfrac;
 extern  fixed_t                 centeryfrac;
 extern  fixed_t                 projection;

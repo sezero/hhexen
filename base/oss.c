@@ -47,7 +47,7 @@ typedef unsigned long   gulong;
 
 #define min(x,y) ((x)<(y)?(x):(y))
 
-static int fd = 0;
+static int audio_fd = 0;
 static void* buffer;
 static gboolean going = FALSE, prebuffer = FALSE, remove_prebuffer = FALSE;
 static gboolean paused = FALSE, unpause = FALSE, do_pause = FALSE;
@@ -84,12 +84,12 @@ int oss_get_output_time(void)
 	audio_buf_info buf_info;
 	int bytes;
 
-	if (!fd || !going)
+	if (!audio_fd || !going)
 		return 0;
 
 	if (!paused)
 	{
-		if (!ioctl(fd, SNDCTL_DSP_GETOSPACE, &buf_info))
+		if (!ioctl(audio_fd, SNDCTL_DSP_GETOSPACE, &buf_info))
 			bytes = output_bytes - ((buf_info.fragstotal - buf_info.fragments) * buf_info.fragsize);
 		else
 			bytes = output_bytes;
@@ -119,7 +119,7 @@ int oss_playing(void)
 	audio_buf_info buf_info;
 	int bytes;
 
-	if (!ioctl(fd, SNDCTL_DSP_GETOSPACE, &buf_info))
+	if (!ioctl(audio_fd, SNDCTL_DSP_GETOSPACE, &buf_info))
 		bytes = ((buf_info.fragstotal - buf_info.fragments - 3) * buf_info.fragsize);
 	else
 		bytes = 0;
@@ -173,7 +173,7 @@ int oss_downsample(guchar * ob, guint length, guint speed, guint espeed)
 			*ptr++ = obuffer[off >> 8];
 			off += d;
 		}
-		w = write(fd, nbuffer, nlen << 2);
+		w = write(audio_fd, nbuffer, nlen << 2);
 		free(nbuffer);
 	}
 	else if (((format == AFMT_U16_BE || format == AFMT_U16_LE || format == AFMT_S16_BE || format == AFMT_S16_LE) && channels == 1)
@@ -193,7 +193,7 @@ int oss_downsample(guchar * ob, guint length, guint speed, guint espeed)
 			*ptr++ = obuffer[off >> 8];
 			off += d;
 		}
-		w = write(fd, nbuffer, nlen << 1);
+		w = write(audio_fd, nbuffer, nlen << 1);
 		free(nbuffer);
 	}
 	else
@@ -211,7 +211,7 @@ int oss_downsample(guchar * ob, guint length, guint speed, guint espeed)
 			*ptr++ = obuffer[off >> 8];
 			off += d;
 		}
-		w = write(fd, nbuffer, nlen);
+		w = write(audio_fd, nbuffer, nlen);
 		free(nbuffer);
 	}
 	return w;
@@ -245,17 +245,17 @@ void oss_write(void *ptr, int length)
 			return;
 
 		if (frequency == efrequency)
-			w = write(fd, ptr, length);
+			w = write(audio_fd, ptr, length);
 		else
 			w = oss_downsample(ptr, length, frequency, efrequency);
 
 		if (w == -1 && errno == EIO)
 		{
-			close(fd);
-			fd = open(device_name, O_WRONLY);
+			close(audio_fd);
+			audio_fd = open(device_name, O_WRONLY);
 			oss_set_audio_params();
 			if (frequency == efrequency)
-				w = write(fd, ptr, length);
+				w = write(audio_fd, ptr, length);
 			else
 				w = oss_downsample(ptr, length, frequency, efrequency);
 		}
@@ -274,8 +274,8 @@ void oss_close(void)
 		pthread_join(buffer_thread, NULL);
 	else
 	{
-		ioctl(fd, SNDCTL_DSP_RESET, 0);
-		close(fd);
+		ioctl(audio_fd, SNDCTL_DSP_RESET, 0);
+		close(audio_fd);
 	}
 }
 
@@ -289,9 +289,9 @@ void oss_flush(int time)
 	}
 	else
 	{
-		ioctl(fd, SNDCTL_DSP_RESET, 0);
-		close(fd);
-		fd = open(device_name, O_WRONLY);
+		ioctl(audio_fd, SNDCTL_DSP_RESET, 0);
+		close(audio_fd);
+		audio_fd = open(device_name, O_WRONLY);
 		oss_set_audio_params();
 		output_time_offset = time;
 		written = (time / 10) * (bps / 100);
@@ -332,16 +332,16 @@ void *oss_loop(void *arg)
 				cnt = min(length, buffer_size - rd_index);
 
 				if (frequency == efrequency)
-					w = write(fd, buffer + rd_index, cnt);
+					w = write(audio_fd, buffer + rd_index, cnt);
 				else
 					w = oss_downsample(buffer + rd_index, cnt, frequency, efrequency);
 				if (w == -1 && errno == EIO)
 				{
-					close(fd);
-					fd = open(device_name, O_WRONLY);
+					close(audio_fd);
+					audio_fd = open(device_name, O_WRONLY);
 					oss_set_audio_params();
 					if (frequency == efrequency)
-						w = write(fd, buffer + rd_index, cnt);
+						w = write(audio_fd, buffer + rd_index, cnt);
 					else
 						w = oss_downsample(buffer + rd_index, cnt, frequency, efrequency);
 				}
@@ -350,7 +350,7 @@ void *oss_loop(void *arg)
 				length -= cnt;
 			}
 /*			if (!oss_used())
-				ioctl(fd, SNDCTL_DSP_POST, 0);*/
+				ioctl(audio_fd, SNDCTL_DSP_POST, 0);*/
 		}
 		else
 			usleep( 10000 );
@@ -358,21 +358,21 @@ void *oss_loop(void *arg)
 		{
 			do_pause = FALSE;
 			paused = TRUE;
-			if (!ioctl(fd, SNDCTL_DSP_GETOSPACE, &abuf_info))
+			if (!ioctl(audio_fd, SNDCTL_DSP_GETOSPACE, &abuf_info))
 			{
 				rd_index -= (abuf_info.fragstotal - abuf_info.fragments) * abuf_info.fragsize;
 				output_bytes -= (abuf_info.fragstotal - abuf_info.fragments) * abuf_info.fragsize;
 			}
 			if (rd_index < 0)
 				rd_index += buffer_size;
-			ioctl(fd, SNDCTL_DSP_RESET, 0);
+			ioctl(audio_fd, SNDCTL_DSP_RESET, 0);
 
 		}
 		if (unpause && paused)
 		{
 			unpause = FALSE;
-			close(fd);
-			fd = open(device_name, O_WRONLY);
+			close(audio_fd);
+			audio_fd = open(device_name, O_WRONLY);
 			oss_set_audio_params();
 			paused = FALSE;
 		}
@@ -384,9 +384,9 @@ void *oss_loop(void *arg)
 			 * cause the driver to get fucked up by a reset
 			 */
 
-			ioctl(fd, SNDCTL_DSP_RESET, 0);
-			close(fd);
-			fd = open(device_name, O_WRONLY);
+			ioctl(audio_fd, SNDCTL_DSP_RESET, 0);
+			close(audio_fd);
+			audio_fd = open(device_name, O_WRONLY);
 			oss_set_audio_params();
 			output_time_offset = flush;
 			written = (flush / 10) * (bps / 100);
@@ -397,8 +397,8 @@ void *oss_loop(void *arg)
 
 	}
 
-	ioctl(fd, SNDCTL_DSP_RESET, 0);
-	close(fd);
+	ioctl(audio_fd, SNDCTL_DSP_RESET, 0);
+	close(audio_fd);
 	munlock( buffer, buffer_size );
 	free(buffer);
 	pthread_exit(NULL);
@@ -408,15 +408,15 @@ void oss_set_audio_params(void)
 {
 	int frag, stereo;
 
-	ioctl(fd, SNDCTL_DSP_RESET, 0);
+	ioctl(audio_fd, SNDCTL_DSP_RESET, 0);
 	frag = (oss_cfg.fragment_count << 16) | fragsize;
-	ioctl(fd, SNDCTL_DSP_SETFRAGMENT, &frag);
-	ioctl(fd, SNDCTL_DSP_SETFMT, &format);
+	ioctl(audio_fd, SNDCTL_DSP_SETFRAGMENT, &frag);
+	ioctl(audio_fd, SNDCTL_DSP_SETFMT, &format);
 	stereo = channels - 1;
-	ioctl(fd, SNDCTL_DSP_STEREO, &stereo);
+	ioctl(audio_fd, SNDCTL_DSP_STEREO, &stereo);
 	efrequency = frequency;
-	ioctl(fd, SNDCTL_DSP_SPEED, &efrequency);
-	ioctl(fd, SNDCTL_DSP_GETBLKSIZE, &blk_size);
+	ioctl(audio_fd, SNDCTL_DSP_SPEED, &efrequency);
+	ioctl(audio_fd, SNDCTL_DSP_GETBLKSIZE, &blk_size);
 
 	ebps = efrequency * channels;
 	if (format == AFMT_U16_BE || format == AFMT_U16_LE || format == AFMT_S16_BE || format == AFMT_S16_LE)
@@ -510,8 +510,8 @@ int oss_open(AFormat fmt, int rate, int nch)
 	else
 		strncpy( device_name, "/dev/dsp", 16 );
 
-	fd = open(device_name, O_WRONLY);
-	if (fd == -1)
+	audio_fd = open(device_name, O_WRONLY);
+	if (audio_fd == -1)
 	{
 		free(buffer);
 		return 0;
@@ -526,27 +526,27 @@ int oss_open(AFormat fmt, int rate, int nch)
 static void scan_devices( char* type )
 {
 	FILE* file;
-	char buffer[256];
-    char* tmp2;
+	char buf[256];
+	char* tmp2;
 	int found = 0;
 	int index = 0;
 
-    printf( "%s\n", type );
+	printf( "%s\n", type );
 
 	file = fopen( "/dev/sndstat", "r" );
 	if( file )
 	{
-		while (fgets(buffer, 255, file))
+		while (fgets(buf, 255, file))
 		{
-			if (found && buffer[0] == '\n')
+			if (found && buf[0] == '\n')
 				break;
-			if (buffer[strlen(buffer) - 1] == '\n')
-				buffer[strlen(buffer) - 1] = '\0';
+			if (buf[strlen(buf) - 1] == '\n')
+				buf[strlen(buf) - 1] = '\0';
 			if (found)
 			{
 				if (index == 0)
 				{
-					tmp2 = strchr(buffer, ':');
+					tmp2 = strchr(buf, ':');
 					if (tmp2)
 					{
 						tmp2++;
@@ -554,16 +554,16 @@ static void scan_devices( char* type )
 							tmp2++;
 					}
 					else
-						tmp2 = buffer;
+						tmp2 = buf;
 
 					printf( "  %s (default)\n", tmp2 );
 				}
 				else
-                {
-					printf( "  %s\n", buffer );
-                }
+				{
+					printf( "  %s\n", buf );
+				}
 			}
-			if( ! strcasecmp(buffer, type) )
+			if( ! strcasecmp(buf, type) )
 				found = 1;
 		}
 		fclose(file);

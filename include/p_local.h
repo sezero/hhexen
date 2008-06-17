@@ -4,8 +4,8 @@
 //** p_local.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_local.h,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 11:26:54 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-17 13:12:12 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -216,7 +216,7 @@ int     P_BoxOnLineSide (fixed_t *tmbox, line_t *ld);
 
 extern  fixed_t opentop, openbottom, openrange;
 extern  fixed_t lowfloor;
-void    P_LineOpening (line_t *linedef);
+void    P_LineOpening (line_t *ld);
 
 boolean P_BlockLinesIterator (int x, int y, boolean(*func)(line_t*) );
 boolean P_BlockThingsIterator (int x, int y, boolean(*func)(mobj_t*) );

@@ -4,8 +4,8 @@
 //** r_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_main.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2008-06-17 09:20:18 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 13:12:11 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -523,7 +523,7 @@ void R_InitTextureMapping (void)
 
 void R_InitLightTables (void)
 {
-	int		i,j, level, startmap;
+	int		i, j, level, start_map;
 	int		scale;
 
 //
@@ -531,12 +531,12 @@ void R_InitLightTables (void)
 //
 	for (i=0 ; i< LIGHTLEVELS ; i++)
 	{
-		startmap = ((LIGHTLEVELS-1-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
+		start_map = ((LIGHTLEVELS-1-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
 		for (j=0 ; j<MAXLIGHTZ ; j++)
 		{
 			scale = FixedDiv ((SCREENWIDTH/2*FRACUNIT), (j+1)<<LIGHTZSHIFT);
 			scale >>= LIGHTSCALESHIFT;
-			level = startmap - scale/DISTMAP;
+			level = start_map - scale/DISTMAP;
 			if (level < 0)
 				level = 0;
 			if (level >= NUMCOLORMAPS)
@@ -579,7 +579,7 @@ void R_SetViewSize (int blocks, int detail)
 void R_ExecuteSetViewSize (void)
 {
 	fixed_t	cosadj, dy;
-	int		i,j, level, startmap;
+	int		i, j, level, start_map;
 
 	setsizeneeded = false;
 
@@ -661,10 +661,10 @@ void R_ExecuteSetViewSize (void)
 //
 	for (i=0 ; i< LIGHTLEVELS ; i++)
 	{
-		startmap = ((LIGHTLEVELS-1-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
+		start_map = ((LIGHTLEVELS-1-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
 		for (j=0 ; j<MAXLIGHTSCALE ; j++)
 		{
-			level = startmap - j*SCREENWIDTH/(viewwidth<<detailshift)/DISTMAP;
+			level = start_map - j*SCREENWIDTH/(viewwidth<<detailshift)/DISTMAP;
 			if (level < 0)
 				level = 0;
 			if (level >= NUMCOLORMAPS)

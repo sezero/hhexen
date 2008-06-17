@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.8 2008-06-17 12:48:07 sezero Exp $
+//** $Id: i_linux.c,v 1.9 2008-06-17 13:12:09 sezero Exp $
 //**
 //**************************************************************************
 
@@ -1324,7 +1324,7 @@ int             basejoyx, basejoyy;
 
 void I_StartupJoystick (void)
 {
-	int     centerx, centery;
+	int     center_x, center_y;
 
 	joystickpresent = 0;
 	if ( M_CheckParm ("-nojoy") || !usejoystick )
@@ -1343,22 +1343,22 @@ void I_StartupJoystick (void)
 	if (!WaitJoyButton ())
 		return;
 	I_ReadJoystick ();
-	centerx = joystickx;
-	centery = joysticky;
+	center_x = joystickx;
+	center_y = joysticky;
 
 	ST_RealMessage("\nPush the joystick to the UPPER LEFT corner and press button 1:");
 	if (!WaitJoyButton ())
 		return;
 	I_ReadJoystick ();
-	joyxl = (centerx + joystickx)/2;
-	joyyl = (centerx + joysticky)/2;
+	joyxl = (center_x + joystickx)/2;
+	joyyl = (center_x + joysticky)/2;
 
 	ST_RealMessage("\nPush the joystick to the LOWER RIGHT corner and press button 1:");
 	if (!WaitJoyButton ())
 		return;
 	I_ReadJoystick ();
-	joyxh = (centerx + joystickx)/2;
-	joyyh = (centery + joysticky)/2;
+	joyxh = (center_x + joystickx)/2;
+	joyyh = (center_y + joysticky)/2;
 	ST_RealMessage("\n");
 }
 

@@ -4,8 +4,8 @@
 //** p_setup.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_setup.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-17 13:00:23 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-17 13:12:10 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -196,7 +196,7 @@ void P_LoadSegs (int lump)
 	mapseg_t        *ml;
 	seg_t           *li;
 	line_t  *ldef;
-	int                     linedef, side;
+	int                     _linedef, side;
 
 	numsegs = W_LumpLength (lump) / sizeof(mapseg_t);
 	segs = Z_Malloc (numsegs*sizeof(seg_t),PU_LEVEL,0);
@@ -212,8 +212,8 @@ void P_LoadSegs (int lump)
 
 		li->angle = (SHORT(ml->angle))<<16;
 		li->offset = (SHORT(ml->offset))<<16;
-		linedef = SHORT(ml->linedef);
-		ldef = &lines[linedef];
+		_linedef = SHORT(ml->linedef);
+		ldef = &lines[_linedef];
 		li->linedef = ldef;
 		side = SHORT(ml->side);
 		li->sidedef = &sides[ldef->sidenum[side]];
