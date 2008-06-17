@@ -4,8 +4,8 @@
 //** p_local.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_local.h,v $
-//** $Revision: 1.2 $
-//** $Date: 2008-06-17 09:20:20 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 11:26:54 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -318,7 +318,7 @@ typedef enum
 {
 	PODOOR_NONE,
 	PODOOR_SLIDE,
-	PODOOR_SWING,
+	PODOOR_SWING
 } podoortype_t;
 
 typedef struct

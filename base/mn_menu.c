@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-17 09:20:11 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-17 11:26:53 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1116,7 +1116,6 @@ static void DrawFileSlots(Menu_t *menu)
 static void DrawOptionsMenu(void)
 {
 	char num[5];
-
 	if(messageson)
 	{
 		MN_DrTextB("ON", 196, 50);
