@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-17 12:44:53 $
+//** $Revision: 1.12 $
+//** $Date: 2008-06-17 12:48:08 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -159,6 +159,10 @@ extern byte *destview, *destscreen;	// PC direct to screen pointers
 #define	FRACBITS		16
 #define	FRACUNIT		(1<<FRACBITS)
 typedef int fixed_t;
+
+#ifndef __linux
+typedef unsigned int uint;
+#endif
 
 //#define ANGLE_1		0x01000000
 #define ANGLE_45	0x20000000
@@ -894,19 +898,6 @@ fixed_t	FixedMul (fixed_t a, fixed_t b);
 fixed_t	FixedDiv (fixed_t a, fixed_t b);
 fixed_t	FixedDiv2 (fixed_t a, fixed_t b);
 
-
-//#ifdef __linux
-#define FixedMul(fa,fb) ({ int __value, __fb = (fb); \
-__asm__("imul %%ebx; shrd $16,%%edx,%%eax" \
-        : "=a" (__value) \
-        : "0" (fa), "b" (__fb) \
-        : "edx" ); __value; })
-#define FixedDiv2(fa,fb) ({ int __value; \
-__asm__("cdq; shld $16,%%eax,%%edx; sall $16,%%eax; idiv %%ebx" \
-        : "=a" (__value) \
-        : "0" (fa), "b" (fb) \
-        : "edx" ); __value; })
-//#endif
 
 #ifdef __BIG_ENDIAN__
 short ShortSwap(short);
