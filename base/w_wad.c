@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-17 09:20:19 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-17 11:03:02 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -90,7 +90,10 @@ boolean AuxiliaryOpened = false;
 void strupr(char *s)
 {
     while(*s)
-	*s++ = toupper(*s);
+    {
+	*s = toupper(*s);
+	s++;
+    }
 }
 
 //==========================================================================
