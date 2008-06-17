@@ -4,8 +4,8 @@
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-17 13:40:58 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-17 14:26:09 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -2169,7 +2169,7 @@ static void CheatIDKFAFunc(player_t *player, Cheat_t *cheat)
 	{
 		return;
 	}
-	for(i = 1; i < 8; i++)
+	for(i = 1; i < NUMWEAPONS; i++)
 	{
 		player->weaponowned[i] = false;
 	}
