@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.15 $
-//** $Date: 2008-06-17 13:45:26 $
+//** $Revision: 1.16 $
+//** $Date: 2008-06-17 13:46:54 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -89,7 +89,7 @@ extern boolean askforquit;
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
 char *basePath;
-char base[121];
+char base[256];
 boolean DevMaps;			// true = Map development mode
 char *DevMapsDir = "";		// development maps directory
 boolean shareware;			// true if only episode 1 present
