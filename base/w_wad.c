@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.16 $
-//** $Date: 2008-06-17 17:32:02 $
+//** $Revision: 1.17 $
+//** $Date: 2008-06-17 17:39:47 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -79,22 +79,25 @@ void W_AddFile(char *filename)
 	wadinfo_t header;
 	lumpinfo_t *lump_p;
 	unsigned i;
-	char path[MAX_OSPATH];
+	char path[MAX_OSPATH], *waddir;
 	int handle, length;
 	int startlump;
 	filelump_t *fileinfo, singleinfo;
 	filelump_t *freeFileInfo;
 
+	handle = -1;
 	/* Add support for HHEXEN_DATA envirionment variable */
-	snprintf (path, sizeof(path), "%s/%s", getenv("HHEXEN_DATA"), filename);
-	if((handle = open(path, O_RDONLY|O_BINARY)) == -1)
+	waddir = getenv("HHEXEN_DATA");
+	if (waddir != NULL)
 	{
-		/* Now try CWD */
-		if((handle = open(filename, O_RDONLY|O_BINARY)) == -1)
-		{ // Didn't find file
-			return;
-		}
+		snprintf (path, sizeof(path), "%s/%s", waddir, filename);
+		handle = open(path, O_RDONLY|O_BINARY);
 	}
+	if (handle == -1)	/* Now try CWD */
+		handle = open(filename, O_RDONLY|O_BINARY);
+	if (handle == -1)
+		return;		/* Didn't find the file. */
+
 	startlump = numlumps;
 	if (strcasecmp(filename + strlen(filename) - 3, "wad") != 0)
 	{ // Single lump file
