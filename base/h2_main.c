@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-17 09:20:10 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-17 11:00:36 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -130,11 +130,11 @@ static char *wadfiles[MAXWADFILES] =
 #else
 static char *wadfiles[MAXWADFILES] =
 {
-	"hexen.wad"
+	"hexen.wad",
 #ifdef ASSASSIN
-	,"assassin.wad"
+	"assassin.wad",
 #endif
-	,NULL
+	NULL
 };
 #endif
 static execOpt_t ExecOptions[] =

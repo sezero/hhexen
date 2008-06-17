@@ -4,8 +4,8 @@
 //** p_user.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_user.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 09:20:17 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-17 11:00:38 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -70,11 +70,12 @@ int PStateAttackEnd[NUMCLASSES] =
 	S_PIGPLAY_ATK1	
 };
 
-int ArmorMax[NUMCLASSES] = { 20, 18, 16
+int ArmorMax[NUMCLASSES] = { 20, 18, 16,
 #ifdef ASSASSIN
-	, 17
+					17,
 #endif
-		, 1 };
+					1 };
+
 /*
 ==================
 =
@@ -769,7 +770,8 @@ void P_PlayerThink(player_t *player)
 				{
 					S_StartSound(player->mo, 
 						SFX_PLAYER_MAGE_FALLING_SCREAM);
-				}			break;
+				}
+			break;
 #endif
 		default:
 			break;

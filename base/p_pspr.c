@@ -4,8 +4,8 @@
 //** p_pspr.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_pspr.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 09:20:12 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-17 11:00:38 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -2643,6 +2643,7 @@ knifedone:
  }
  return;                 
 }
+
 void A_ACrossAttack(player_t *player, pspdef_t *psp)
 {
 	mobj_t *mo;
@@ -2714,5 +2715,5 @@ void A_AStaffAttack(player_t *player, pspdef_t *psp)
 	angle = pmo->angle;
 
 }
-#endif
+#endif	/* ASSASSIN */
 

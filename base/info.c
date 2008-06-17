@@ -31,9 +31,9 @@ char *sprnames[NUMSPRITES] = {
 "BPFX","DRAG","DRFX","ARM1","ARM2","ARM3","ARM4","MAN2","MAN3","KEY1",
 "KEY2","KEY3","KEY4","KEY5","KEY6","KEY7","KEY8","KEY9","KEYA","KEYB",
 "ETTN","ETTB","FDMN","FDMB","ICEY","ICPR","ICWS","SORC","SBMP","SBS4",
-"SBMB","SBS3","SBMG","SBS1","SBS2","SBFX","RADE","WATR","KORX","ABAT"
+"SBMB","SBS3","SBMG","SBS1","SBS2","SBFX","RADE","WATR","KORX","ABAT",
 #ifdef ASSASSIN
-,"AKTR","ACSB","AGRN","ASTF","ASP1","ASP2","ASSN"
+"AKTR","ACSB","AGRN","ASTF","ASP1","ASP2","ASSN"
 #endif
 };
 
@@ -3116,9 +3116,9 @@ state_t	states[NUMSTATES] = {
 {SPR_ABAT,0,2,A_BatMove,S_BAT2,0,0},	// S_BAT1
 {SPR_ABAT,1,2,A_BatMove,S_BAT3,0,0},	// S_BAT2
 {SPR_ABAT,2,2,A_BatMove,S_BAT1,0,0},	// S_BAT3
-{SPR_ABAT,0,2,NULL,S_NULL,0,0}	// S_BAT_DEATH
+{SPR_ABAT,0,2,NULL,S_NULL,0,0},	// S_BAT_DEATH
 #ifdef ASSASSIN
-,{SPR_AKTR,0,1,A_WeaponReady,S_KATARREADY,0,0},	// S_KATARREADY
+{SPR_AKTR,0,1,A_WeaponReady,S_KATARREADY,0,0},	// S_KATARREADY
 {SPR_AKTR,0,1,A_Lower,S_KATARDOWN,0,0},	// S_KATARDOWN
 {SPR_AKTR,0,1,A_Raise,S_KATARUP,0,0},	// S_KATARUP
 {SPR_AKTR,1,4,NULL,S_KATARATK1_2,5,40},	// S_KATARATK1_1
@@ -3294,7 +3294,7 @@ state_t	states[NUMSTATES] = {
 {SPR_ASSN,26,-1,A_AddPlayerCorpse,S_NULL,0,0},	// S_APLAY_XDIE10
 {SPR_ASSN,27,5,A_FreezeDeath,S_APLAY_ICE2,0,0},	// S_APLAY_ICE
 {SPR_ASSN,27,1,A_FreezeDeathChunks,S_APLAY_ICE2,0,0}	// S_APLAY_ICE2
-#endif
+#endif	/* ASSASSIN */
 };
 
 
@@ -10886,6 +10886,7 @@ SFX_NONE,		// activesound
 MF_SOLID|MF_SHOOTABLE|MF_DROPOFF|MF_PICKUP|MF_NOTDMATCH,		// flags
 MF2_WINDTHRUST|MF2_FLOORCLIP|MF2_SLIDE|MF2_PASSMOBJ|MF2_TELESTOMP|MF2_PUSHWALL		// flags2
  },
+
 #ifdef ASSASSIN
 {		// MT_PLAYER_ASS
 -1,		// doomednum
@@ -10913,7 +10914,8 @@ SFX_NONE,		// activesound
 MF_SOLID|MF_SHOOTABLE|MF_DROPOFF|MF_PICKUP|MF_NOTDMATCH,		// flags
 MF2_WINDTHRUST|MF2_FLOORCLIP|MF2_SLIDE|MF2_PASSMOBJ|MF2_TELESTOMP|MF2_PUSHWALL		// flags2
  },
-#endif
+#endif	/* ASSASSIN */
+
 {		// MT_PIGPLAYER
 -1,		// doomednum
 S_PIGPLAY,		// spawnstate
@@ -14073,6 +14075,7 @@ MF_NOBLOCKMAP|MF_NOGRAVITY|MF_MISSILE,		// flags
 MF2_PASSMOBJ|MF2_NOTELEPORT		// flags2
  },
 
+#ifdef ASSASSIN
 {		// MT_AW_CROSSBOW
 10,		// doomednum
 S_CSTAFF,		// spawnstate
@@ -14100,7 +14103,6 @@ MF_SPECIAL,		// flags
 0		// flags2
  },
 
-#ifdef ASSASSIN
   /* jim We need a missile type for it as well! */
 {		// MT_ACROSS_MISSILE
 -1,		// doomednum
@@ -14128,7 +14130,6 @@ SFX_NONE,		// activesound
 MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY,		// flags
 MF2_NOTELEPORT|MF2_IMPACT|MF2_PCROSS		// flags2
  },
-#endif
 
 {		// MT_AW_GRENADES
 8040,		// doomednum
@@ -14156,5 +14157,6 @@ SFX_NONE,		// activesound
 MF_SPECIAL|MF_NOGRAVITY,		// flags
 0		// flags2
 }
+#endif	/* ASSASSIN */
 };
 

@@ -4,8 +4,8 @@
 //** p_inter.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_inter.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-17 09:20:12 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-17 11:00:37 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -444,14 +444,18 @@ static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass,
 		TXT_WEAPON_F4,
 		TXT_WEAPON_C4,
 		TXT_WEAPON_M4,
+#ifdef ASSASSIN
 		TXT_WEAPON_A4
+#endif
 	};
 	static char *weaponPieceText[] =
 	{
 		TXT_QUIETUS_PIECE,
 		TXT_WRAITHVERGE_PIECE,
 		TXT_BLOODSCOURGE_PIECE,
+#ifdef ASSASSIN
 		TXT_STAFFOFSET_PIECE
+#endif
 	};
 	static int pieceValueTrans[] =
 	{
@@ -466,11 +470,11 @@ static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass,
 	checkAssembled = true;
 	gaveWeapon = false;
 	// Allow assassin to pick up any weapons
+	if(player->class != matchClass
 #ifdef ASSASSIN
-	if(player->class != matchClass && player->class != PCLASS_ASS)
-#else
-	if(player->class != matchClass)
+		&& player->class != PCLASS_ASS
 #endif
+		)
 	{ // Wrong class, but try to pick up for mana
 		if(netgame && !deathmatch)
 		{ // Can't pick up wrong-class weapons in coop netplay
@@ -1261,6 +1265,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
 			TryPickupWeaponPiece(player, PCLASS_MAGE, WPIECE3,
 				special);
 			return;
+#ifdef ASSASSIN
 // Don't forget to fix this
 /*		case SPR_WAS1:
 			TryPickupWeaponPiece(player, PCLASS_ASS, WPIECE1,
@@ -1275,7 +1280,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
 				 special);
 			return;
 */
-
+#endif
 		default:
 			I_Error("P_SpecialThing: Unknown gettable thing");
 	}

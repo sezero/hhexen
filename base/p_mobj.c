@@ -4,8 +4,8 @@
 //** p_mobj.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_mobj.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 09:20:12 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-17 11:00:38 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -962,9 +962,14 @@ void P_BlasterMobjThinker(mobj_t *mobj)
 					}
 					P_SpawnMobj(mobj->x, mobj->y, z, MT_MWANDSMOKE);
 				}
-/* jim allow other things to have BlasterMobjThinker()s (crossbow) */
-                               else if((mobj->type == MT_CFLAME_MISSILE) &&
-                                       !--mobj->special1)
+				/*
+				else if(!--mobj->special1)
+
+				jim allow other things to have BlasterMobjThinker()s (crossbow)
+
+				O.S: I don't need an #ifdef ASSASSIN here, I think..
+				*/
+				else if((mobj->type == MT_CFLAME_MISSILE) && !--mobj->special1)
 				{
 					mobj->special1 = 4;
 					z = mobj->z-12*FRACUNIT;
@@ -1392,7 +1397,9 @@ void P_SpawnMapThing(mapthing_t *mthing)
 		MTF_FIGHTER,
 		MTF_CLERIC,
 		MTF_MAGE,
+#ifdef ASSASSIN
 		MTF_CLERIC
+#endif
 	};
 
 	// Count deathmatch start positions
