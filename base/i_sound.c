@@ -1,4 +1,4 @@
-// $Id: i_sound.c,v 1.5 2008-06-17 13:40:30 sezero Exp $
+// $Id: i_sound.c,v 1.6 2008-06-17 14:42:23 sezero Exp $
 
 
 #include "h2stdinc.h"
@@ -375,7 +375,7 @@ void I_StartupSound (void)
 
     snd_MusicDevice = snd_SfxDevice = 0;
 
-    if( M_CheckParm( "-nosound" ) )
+    if( M_CheckParm("--nosound") || M_CheckParm("-s") || M_CheckParm("-nosound") )
     {
         ST_Message("I_StartupSound: Sound Disabled.\n");
         return;
