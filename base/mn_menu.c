@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.18 $
-//** $Date: 2008-06-17 14:38:09 $
+//** $Revision: 1.19 $
+//** $Date: 2008-06-17 14:51:01 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -374,7 +374,7 @@ static MenuItem_t Options3Items[] =
 	{ ITT_SETKEY, "LOOK UP :", SCSetKey, 10, MENU_NONE },
 	{ ITT_SETKEY, "LOOK DOWN :", SCSetKey, 11, MENU_NONE },
 	{ ITT_SETKEY, "LOOK CENTER :", SCSetKey, 12, MENU_NONE },
-	{ ITT_SETKEY, "INVETORY LEFT :", SCSetKey, 13, MENU_NONE },
+	{ ITT_SETKEY, "INVENTORY LEFT :", SCSetKey, 13, MENU_NONE },
 	{ ITT_SETKEY, "INVENTORY RIGHT :", SCSetKey, 14, MENU_NONE },
 	{ ITT_SETKEY, "USE ARTIFACT :", SCSetKey, 15, MENU_NONE },
 	{ ITT_SETKEY, "FIRE :", SCSetKey, 16, MENU_NONE },
