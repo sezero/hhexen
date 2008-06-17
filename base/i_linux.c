@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.4 2008-06-17 09:20:10 sezero Exp $
+//** $Id: i_linux.c,v 1.5 2008-06-17 11:39:34 sezero Exp $
 //**
 //**************************************************************************
 
@@ -1510,65 +1510,59 @@ void I_Error (char *error, ...)
 // goes to text mode, and exits.
 //
 //--------------------------------------------------------------------------
-/*
-// This would be great if I could find the WAD lump that has Hexen's ENDTEXT
-void put_dos2ansi (byte attrib)
+
+#if 0 /* This would be great if I could find the WAD lump that has Hexen's ENDTEXT */
+static void put_dos2ansi (byte attrib)
 {
-        byte fore,back,blink=0,intens=0;
-        int table[] = {30,34,32,36,31,35,33,37};
+	byte	fore, back, blink = 0, intens = 0;
+	int	table[] = { 30, 34, 32, 36, 31, 35, 33, 37 };
 
-        fore = attrib&15;       // bits 0-3
-        back = attrib&112; // bits 4-6
-        blink = attrib&128; // bit 7
+	fore  = attrib & 15;	// bits 0-3
+	back  = attrib & 112;	// bits 4-6
+	blink = attrib & 128;	// bit 7
 
-        // Fix background, blink is either on or off.
-        back = back>>4;
+	// Fix background, blink is either on or off.
+	back = back >> 4;
 
-        // Fix foreground
-        if (fore > 7) {
-                intens = 1;
-                fore-=8;
-        }
+	// Fix foreground
+	if (fore > 7)
+	{
+		intens = 1;
+		fore -= 8;
+	}
 
-        // Convert fore/back
-        fore = table[fore];
-        back = table[back] + 10;
+	// Convert fore/back
+	fore = table[fore];
+	back = table[back] + 10;
 
 	// 'Render'
-        if (blink)
-                printf ("\033[%d;5;%dm\033[%dm", intens, fore, back);
-        else
-                printf ("\033[%d;25;%dm\033[%dm", intens, fore, back);
+	if (blink)
+		printf ("\033[%d;5;%dm\033[%dm", intens, fore, back);
+	else
+		printf ("\033[%d;25;%dm\033[%dm", intens, fore, back);
 }
-*/
+#endif	/* put_dos2ansi */
 
 void I_Quit(void)
 {
-//	int i;
-//	byte *scr;
+#if 0
+	int i;
+	byte *scr = (byte *)W_CacheLumpName("ENDTEXT", PU_CACHE);
+#endif
 
 	D_QuitNetGame();
 	CON_UnInit();
 	M_SaveDefaults();
 	I_Shutdown();
 
-//	scr = (byte *)W_CacheLumpName("ENDTEXT", PU_CACHE);
-/*
-	memcpy((void *)0xb8000, scr, 80*25*2);
-	regs.w.ax = 0x0200;
-	regs.h.bh = 0;
-	regs.h.dl = 0;
-	regs.h.dh = 23;
-	int386(0x10, (const union REGS *)&regs, &regs); // Set text pos
-	_settextposition(24, 1);
-*/
-/*	for (i=0; i < 80*25*2; i+=2) {
+#if 0
+	for (i = 0; i < 80*25*2; i += 2)
+	{
 		put_dos2ansi (scr[i+1]);
 		putchar (scr[i]);
 	}
-	// Cleanup
-	printf ("\033[m");
-*/
+	printf ("\033[m");	/* Cleanup */
+#endif
 	printf("\nHexen: Beyond Heretic\n");
 	exit(0);
 }
