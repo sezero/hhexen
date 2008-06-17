@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-06-17 13:13:19 $
+//** $Revision: 1.10 $
+//** $Date: 2008-06-17 13:14:34 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1318,6 +1318,14 @@ static void SCLoadGame(int option)
 static void SCSaveGame(int option)
 {
 	char *ptr;
+	player_t *player = &players[consoleplayer];
+
+	if(gamestate != GS_LEVEL || demoplayback
+		|| player->playerstate == PST_DEAD)
+	{
+		FileMenuKeySteal = false;
+		return;
+	}
 
 	if(!FileMenuKeySteal)
 	{
