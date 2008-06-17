@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-17 13:06:30 $
+//** $Revision: 1.12 $
+//** $Date: 2008-06-17 13:17:24 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -863,48 +863,6 @@ static void AddWADFile(char *file)
 }
 
 
-#if 0
-// Use these for non-i386 systems.  Lifted from the Doom code.
-
-fixed_t FixedMul (fixed_t a, fixed_t b)
-{
-    return ((long long) a * (long long) b) >> 16;
-}
-
-fixed_t FixedDiv2 (fixed_t a, fixed_t b)
-{
-#if 0
-    long long c;
-    c = ((long long)a<<16) / ((long long)b);
-        return (fixed_t) c;
-#endif
-
-    double c;
-        
-    c = ((double)a) / ((double)b) * FRACUNIT;
-            
-    if (c >= 2147483648.0 || c < -2147483648.0)
-        I_Error("FixedDiv: divide by zero");
-    return (fixed_t) c;
-}
-#endif
-
-//==========================================================================
-//
-// FixedDiv
-//
-//==========================================================================
-
-fixed_t FixedDiv(fixed_t a, fixed_t b)
-{
-	if((abs(a)>>14) >= abs(b))
-	{
-		return((a^b)<0 ? MININT : MAXINT);
-	}
-	return(FixedDiv2(a, b));
-}
-
-
 //==========================================================================
 //
 // CreateBasePath
@@ -916,5 +874,68 @@ static void CreateBasePath(void)
 	sprintf(base,"%s/.hhexen/",getenv("HOME"));
 	basePath = base;
 	mkdir( base, S_IRWXU|S_IRWXG|S_IRWXO );
-} 
+}
+
+
+//==========================================================================
+//
+// Fixed Point math
+//
+//==========================================================================
+
+#if defined(__i386__) || defined(__386__) || defined(_M_IX86)
+#if defined(__GNUC__) && !defined(_INLINE_FIXED_ASM)
+fixed_t	FixedMul (fixed_t a, fixed_t b)
+{
+	fixed_t retval;
+	__asm__ __volatile__(
+		"imull  %%edx			\n\t"
+		"shrdl  $16, %%edx, %%eax	\n\t"
+		: "=a" (retval)
+		: "a" (a), "d" (b)
+		: "cc"
+	);
+	return retval;
+}
+
+fixed_t	FixedDiv2 (fixed_t a, fixed_t b)
+{
+	fixed_t retval;
+	__asm__ __volatile__(
+		"cdq				\n\t"
+		"shldl  $16, %%eax, %%edx	\n\t"
+		"sall   $16, %%eax		\n\t"
+		"idivl  %%ebx			\n\t"
+		: "=a" (retval)
+		: "a" (a), "b" (b)
+		: "%edx", "cc"
+	);
+	return retval;
+}
+#endif	/* GCC and !_INLINE_FIXED_ASM */
+#endif	/* x86 */
+
+
+#if !defined(_HAVE_FIXED_ASM)	/* for non-i386 */
+fixed_t FixedMul (fixed_t a, fixed_t b)
+{
+	return ((long long) a * (long long) b) >> 16;
+}
+
+fixed_t FixedDiv2 (fixed_t a, fixed_t b)
+{
+	if(!b)
+		return 0;
+	return (fixed_t) (((double) a / (double) b) * FRACUNIT);
+}
+#endif
+
+fixed_t FixedDiv (fixed_t a, fixed_t b)
+{
+	if ((abs(a) >> 14) >= abs(b))
+	{
+		return ((a^b) < 0 ? MININT : MAXINT);
+	}
+	return (FixedDiv2(a, b));
+}
 

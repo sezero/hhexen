@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.9 2008-06-17 13:12:09 sezero Exp $
+//** $Id: i_linux.c,v 1.10 2008-06-17 13:17:25 sezero Exp $
 //**
 //**************************************************************************
 
@@ -1769,31 +1769,3 @@ int main( int argc, char** argv )
 	return 0;
 }
 
-
-//EOF
-fixed_t	FixedMul (fixed_t a, fixed_t b)
-{
-	fixed_t retval;
-	__asm__ __volatile__(
-		"imull  %%edx			\n\t"
-		"shrdl  $16, %%edx, %%eax	\n\t"
-		: "=a" (retval)
-		: "a" (a), "d" (b)
-		: "cc"
-	);
-	return retval;
-}
-fixed_t	FixedDiv2 (fixed_t a, fixed_t b)
-{
-	fixed_t retval;
-	__asm__ __volatile__(
-		"cdq				\n\t"
-		"shldl  $16, %%eax, %%edx	\n\t"
-		"sall   $16, %%eax		\n\t"
-		"idivl  %%ebx			\n\t"
-		: "=a" (retval)
-		: "a" (a), "b" (b)
-		: "%edx", "cc"
-	);
-	return retval;
-}

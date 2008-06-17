@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.13 $
-//** $Date: 2008-06-17 13:15:49 $
+//** $Revision: 1.14 $
+//** $Date: 2008-06-17 13:17:26 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -894,6 +894,52 @@ fixed_t	FixedMul (fixed_t a, fixed_t b);
 fixed_t	FixedDiv (fixed_t a, fixed_t b);
 fixed_t	FixedDiv2 (fixed_t a, fixed_t b);
 
+#undef	_HAVE_FIXED_ASM
+
+#if defined(__i386__) || defined(__386__) || defined(_M_IX86)
+#if defined(__WATCOMC__)
+
+#define	_HAVE_FIXED_ASM			1
+
+#pragma aux FixedMul =			\
+	"imul ebx",			\
+	"shrd eax,edx,16"		\
+	parm	[eax] [ebx]		\
+	value	[eax]			\
+	modify exact [eax edx]
+
+#pragma aux FixedDiv2 =			\
+	"cdq",				\
+	"shld edx,eax,16",		\
+	"sal eax,16",			\
+	"idiv ebx"			\
+	parm	[eax] [ebx]		\
+	value	[eax]			\
+	modify exact [eax edx]
+
+#elif defined(__GNUC__)
+
+#define	_HAVE_FIXED_ASM			1
+# if defined(_INLINE_FIXED_ASM)
+# define FixedMul(fa,fb) ({ int __value, __fb = (fb);	\
+	__asm__("imul %%ebx; shrd $16,%%edx,%%eax"	\
+		: "=a" (__value)			\
+		: "0" (fa), "b" (__fb)			\
+		: "edx" ); __value; })
+
+# define FixedDiv2(fa,fb) ({ int __value;		\
+	__asm__("cdq; shld $16,%%eax,%%edx; sall $16,%%eax; idiv %%ebx"	\
+		: "=a" (__value)			\
+		: "0" (fa), "b" (fb)			\
+		: "edx" ); __value; })
+
+# endif	/* _INLINE_FIXED_ASM */
+#endif
+#endif
+
+#define FIX2FLT(x)	((float)((x)>>FRACBITS) + (float)((x)&(FRACUNIT-1)) / (float)(FRACUNIT))
+#define Q_FIX2FLT(x)	((float)((x)>>FRACBITS))
+
 
 #ifdef __BIG_ENDIAN__
 short ShortSwap(short);
@@ -1477,11 +1523,6 @@ void V_BlitToScreen (int x, int y, byte *buffer, int width, int height);
 void V_DrawRawScreen(byte *raw);
 
 #include "sounds.h"
-
-#ifdef RENDER3D
-#define FIX2FLT(x)      ((float)((x)>>FRACBITS) + (float)((x)&(FRACUNIT-1)) / (float)(FRACUNIT))
-#define Q_FIX2FLT(x)    ((float)((x)>>FRACBITS))
-#endif
 
 #endif // __H2DEF__
 
