@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-17 13:04:36 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-17 13:13:19 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -206,7 +206,6 @@ static int slamInTicks = 9;
 #endif
 
 boolean askforquit;
-boolean typeofask;
 static boolean FileMenuKeySteal;
 static boolean slottextloaded;
 static char SlotText[6][SLOTTEXTLEN+2];
@@ -216,6 +215,7 @@ static int slotptr;
 static int currentSlot;
 static int quicksave;
 static int quickload;
+static int typeofask;
 
 static MenuItem_t MainItems[] =
 {
