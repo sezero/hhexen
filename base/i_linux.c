@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.18 2008-06-17 15:02:33 sezero Exp $
+//** $Id: i_linux.c,v 1.19 2008-06-17 17:05:34 sezero Exp $
 //**
 //**************************************************************************
 
@@ -18,7 +18,6 @@
 
 // Macros
 
-#define stricmp strcasecmp
 #define DEFAULT_ARCHIVEPATH     "o:\\sound\\archive\\"
 #define PRIORITY_MAX_ADJUST	10
 #define DIST_ADJUST	(MAX_SND_DIST/PRIORITY_MAX_ADJUST)
@@ -933,12 +932,12 @@ void S_InitScript(void)
 	{
 		if(*sc_String == '$')
 		{
-			if(!stricmp(sc_String, "$ARCHIVEPATH"))
+			if(!strcasecmp(sc_String, "$ARCHIVEPATH"))
 			{
 				SC_MustGetString();
 				strcpy(ArchivePath, sc_String);
 			}
-			else if(!stricmp(sc_String, "$MAP"))
+			else if(!strcasecmp(sc_String, "$MAP"))
 			{
 				SC_MustGetNumber();
 				SC_MustGetString();

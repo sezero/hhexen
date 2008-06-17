@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.13 $
-//** $Date: 2008-06-17 15:02:39 $
+//** $Revision: 1.14 $
+//** $Date: 2008-06-17 17:05:34 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -26,7 +26,6 @@
 #if defined(NeXT) || defined(__linux) || defined(__FreeBSD__)
 // NeXT doesn't need a binary flag in open call
 #define O_BINARY 0
-#define strcmpi strcasecmp
 #endif
 
 // TYPES -------------------------------------------------------------------
@@ -139,7 +138,7 @@ void W_AddFile(char *filename)
 		}
 	}
 	startlump = numlumps;
-	if(strcmpi(filename+strlen(filename)-3, "wad"))
+	if (strcasecmp(filename + strlen(filename) - 3, "wad") != 0)
 	{ // Single lump file
 		fileinfo = &singleinfo;
 		freeFileInfo = NULL;
