@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.14 2008-06-17 14:15:27 sezero Exp $
+//** $Id: i_linux.c,v 1.15 2008-06-17 14:20:03 sezero Exp $
 //**
 //**************************************************************************
 
@@ -9,7 +9,7 @@
 #include <sys/time.h>
 #include "h2def.h"
 #include "r_local.h"
-#include "p_local.h"    // for P_AproxDistance
+#include "p_local.h"	/* for P_AproxDistance */
 #include "sounds.h"
 #include "i_sound.h"
 #include "soundst.h"
@@ -20,25 +20,22 @@
 
 #define stricmp strcasecmp
 #define DEFAULT_ARCHIVEPATH     "o:\\sound\\archive\\"
-#define PRIORITY_MAX_ADJUST 10
-#define DIST_ADJUST (MAX_SND_DIST/PRIORITY_MAX_ADJUST)
+#define PRIORITY_MAX_ADJUST	10
+#define DIST_ADJUST	(MAX_SND_DIST/PRIORITY_MAX_ADJUST)
 
-#define KEY_LSHIFT      0xfe
+#define KEY_LSHIFT	0xfe
 
-#define KEY_INS         (0x80+0x52)
-#define KEY_DEL         (0x80+0x53)
-#define KEY_PGUP        (0x80+0x49)
-#define KEY_PGDN        (0x80+0x51)
-#define KEY_HOME        (0x80+0x47)
-#define KEY_END         (0x80+0x4f)
+#define KEY_INS		(0x80 + 0x52)
+#define KEY_DEL		(0x80 + 0x53)
+#define KEY_PGUP	(0x80 + 0x49)
+#define KEY_PGDN	(0x80 + 0x51)
+#define KEY_HOME	(0x80 + 0x47)
+#define KEY_END		(0x80 + 0x4f)
 
 extern void **lumpcache;
 
 extern void I_StartupMouse(void);
 extern void I_ShutdownGraphics(void);
-
-int i_Vector;
-externdata_t *i_ExternData;
 
 boolean i_CDMusic;
 int i_CDTrack;
@@ -322,203 +319,7 @@ void S_StartSound(mobj_t *origin, int sound_id)
 // S_StartSoundAtVolume
 //
 //==========================================================================
-#if 0
-void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
-{
-	int dist, vol;
-	int i = 0;       /* jim - initialise to avoid gcc warning */
-	int priority;
-	int sep;
-	int angle;
-	int absx;
-	int absy;
 
-	static int sndcount = 0;
-	int chan;
-
-    //printf( "S_StartSoundAtVolume: %d\n", sound_id );
-
-	if(sound_id == 0 || snd_MaxVolume == 0)
-		return;
-	if(origin == NULL)
-	{
-		origin = players[displayplayer].mo;
-	}
-	if(volume == 0)
-	{
-		return;
-	}
-
-    // How does the DOS version work without this check?
-    // players[0].mo does not get set until P_SpawnPlayer. - KR
-
-    if( origin )
-    {
-        // calculate the distance before other stuff so that we can throw out
-        // sounds that are beyond the hearing range.
-        absx = abs(origin->x-players[displayplayer].mo->x);
-        absy = abs(origin->y-players[displayplayer].mo->y);
-        dist = absx+absy-(absx > absy ? absy>>1 : absx>>1);
-        dist >>= FRACBITS;
-        if(dist >= MAX_SND_DIST)
-        {
-          return; // sound is beyond the hearing range...
-        }
-        if(dist < 0)
-        {
-            dist = 0;
-        }
-        priority = S_sfx[sound_id].priority;
-        priority *= (PRIORITY_MAX_ADJUST-(dist/DIST_ADJUST));
-        if(!S_StopSoundID(sound_id, priority))
-        {
-            return; // other sounds have greater priority
-        }
-        for(i = 0; i<snd_Channels; i++)
-        {
-            if(origin->player)
-            {
-                i = snd_Channels;
-                break; // let the player have more than one sound.
-            }
-            if(origin == Channel[i].mo)
-            { // only allow other mobjs one sound
-                S_StopSound(Channel[i].mo);
-                break;
-            }
-        }
-	}
-    else
-    {
-        dist = 0;
-        priority = S_sfx[sound_id].priority;
-        if( ! S_StopSoundID( sound_id, priority ) )
-        {
-            return; // other sounds have greater priority
-        }
-    }
-
-	if(i >= snd_Channels)
-	{
-		for(i = 0; i < snd_Channels; i++)
-		{
-			if(Channel[i].mo == NULL)
-			{
-				break;
-			}
-		}
-		if(i >= snd_Channels)
-		{
-			// look for a lower priority sound to replace.
-			sndcount++;
-			if(sndcount >= snd_Channels)
-			{
-				sndcount = 0;
-			}
-			for(chan = 0; chan < snd_Channels; chan++)
-			{
-				i = (sndcount+chan)%snd_Channels;
-				if(priority >= Channel[i].priority)
-				{
-					chan = -1; //denote that sound should be replaced.
-					break;
-				}
-			}
-			if(chan != -1)
-			{
-				return; //no free channels.
-			}
-			else //replace the lower priority sound.
-			{
-				if(Channel[i].handle)
-				{
-					if(I_SoundIsPlaying(Channel[i].handle))
-					{
-						I_StopSound(Channel[i].handle);
-					}
-					if(S_sfx[Channel[i].sound_id].usefulness > 0)
-					{
-						S_sfx[Channel[i].sound_id].usefulness--;
-					}
-				}
-			}
-		}
-	}
-	if(S_sfx[sound_id].lumpnum == 0)
-	{
-		S_sfx[sound_id].lumpnum = I_GetSfxLumpNum(&S_sfx[sound_id]);
-	}
-	if(S_sfx[sound_id].snd_ptr == NULL)
-	{
-		if(UseSndScript)
-		{
-			char name[128];
-			snprintf(name, 128, "%s%s.lmp", ArchivePath, S_sfx[sound_id].lumpname);
-			M_ReadFile(name, &S_sfx[sound_id].snd_ptr);
-		}
-		else
-		{
-			S_sfx[sound_id].snd_ptr = W_CacheLumpNum(S_sfx[sound_id].lumpnum,
-				PU_SOUND);
-		} 
-	}
-
-	vol = (SoundCurve[dist]*(snd_MaxVolume*8)*volume)>>14;
-	if(origin == players[displayplayer].mo)
-	{
-		sep = 128;
-//              vol = (volume*(snd_MaxVolume+1)*8)>>7;
-	}
-	else
-	{
-#if 1
-        // KR - Channel[i].mo = 0 here!
-        if( Channel[i].mo == NULL )
-        {
-            sep = 128;
-            //printf( " Channel[i].mo not set\n" );
-        }
-        else
-        {
-#endif
-		angle = R_PointToAngle2(players[displayplayer].mo->x,
-			players[displayplayer].mo->y, Channel[i].mo->x, Channel[i].mo->y);
-		angle = (angle-viewangle)>>24;
-		sep = angle*2-128;
-		if(sep < 64)
-			sep = -sep;
-		if(sep > 192)
-			sep = 512-sep;
-//              vol = SoundCurve[dist];
-#if 1
-        }
-#endif
-	}
-
-	if(S_sfx[sound_id].changePitch)
-	{
-		Channel[i].pitch = (byte)(127+(M_Random()&7)-(M_Random()&7));
-	}
-	else
-	{
-		Channel[i].pitch = 127;
-	}
-	Channel[i].handle = I_StartSound( sound_id, S_sfx[sound_id].snd_ptr, vol,
-	                                  sep, Channel[i].pitch, 0 );
-	Channel[i].mo = origin;
-	Channel[i].sound_id = sound_id;
-	Channel[i].priority = priority;
-	Channel[i].volume = volume;
-	if(S_sfx[sound_id].usefulness < 0)
-	{
-		S_sfx[sound_id].usefulness = 1;
-	}
-	else
-	{
-		S_sfx[sound_id].usefulness++;
-	}
-}
-#endif
 void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 {
 	int dist, vol;
@@ -536,9 +337,7 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 		return;
 #if 0
 	if(origin == NULL)
-	{
-// origin = players[displayplayer].mo; bug -- can be uninitialized
-	}
+		origin = players[displayplayer].mo;	// bug -- can be uninitialized
 #endif
 	if(volume == 0)
 	{
@@ -549,16 +348,18 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 	// sounds that are beyond the hearing range.
 	if (origin)
 	{
-	absx = abs(origin->x-players[displayplayer].mo->x);
-	absy = abs(origin->y-players[displayplayer].mo->y);
+		absx = abs(origin->x-players[displayplayer].mo->x);
+		absy = abs(origin->y-players[displayplayer].mo->y);
 	}
 	else
-	  absx = absy = 0;
+	{
+		absx = absy = 0;
+	}
 	dist = absx+absy-(absx > absy ? absy>>1 : absx>>1);
 	dist >>= FRACBITS;
 	if(dist >= MAX_SND_DIST)
 	{
-	  return; // sound is beyond the hearing range...
+		return;	// sound is beyond the hearing range...
 	}
 	if(dist < 0)
 	{
@@ -568,14 +369,14 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 	priority *= (PRIORITY_MAX_ADJUST-(dist/DIST_ADJUST));
 	if(!S_StopSoundID(sound_id, priority))
 	{
-		return; // other sounds have greater priority
+		return;	// other sounds have greater priority
 	}
-	for(i=0; i<snd_Channels; i++)
+	for(i = 0; i < snd_Channels; i++)
 	{
 		if(!origin || origin->player)
 		{
 			i = snd_Channels;
-			break; // let the player have more than one sound.
+			break;	// let the player have more than one sound.
 		}
 		if(origin == Channel[i].mo)
 		{ // only allow other mobjs one sound
@@ -602,18 +403,18 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 			}
 			for(chan = 0; chan < snd_Channels; chan++)
 			{
-				i = (sndcount+chan)%snd_Channels;
+				i = (sndcount + chan) % snd_Channels;
 				if(priority >= Channel[i].priority)
 				{
-					chan = -1; //denote that sound should be replaced.
+					chan = -1;	//denote that sound should be replaced.
 					break;
 				}
 			}
 			if(chan != -1)
 			{
-				return; //no free channels.
+				return;	//no free channels.
 			}
-			else //replace the lower priority sound.
+			else	//replace the lower priority sound.
 			{
 				if(Channel[i].handle)
 				{
@@ -646,30 +447,26 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 			S_sfx[sound_id].snd_ptr = W_CacheLumpNum(S_sfx[sound_id].lumpnum,
 				PU_SOUND);
 		}
-		#ifdef __WATCOMC__
-//		  _dpmi_lockregion(S_sfx[sound_id].snd_ptr,
-//			  lumpinfo[S_sfx[sound_id].lumpnum].size);
-		#endif
 	}
 
 	vol = (SoundCurve[dist]*(snd_MaxVolume*8)*volume)>>14;
 	if (!origin || origin == players[displayplayer].mo)
 	{
 		sep = 128;
-//              vol = (volume*(snd_MaxVolume+1)*8)>>7;
+//		vol = (volume*(snd_MaxVolume+1)*8)>>7;
 	}
 	else
 	{
 		angle = R_PointToAngle2(players[displayplayer].mo->x,
-// bug! 		       players[displayplayer].mo->y, Channel[i].mo->x, Channel[i].mo->y);
-			players[displayplayer].mo->y, origin->x, origin->y);
+				players[displayplayer].mo->y, origin->x, origin->y);
+				/* bug:  *NOT*  Channel[i].mo->x, Channel[i].mo->y); */
 		angle = (angle-viewangle)>>24;
 		sep = angle*2-128;
 		if(sep < 64)
 			sep = -sep;
 		if(sep > 192)
 			sep = 512-sep;
-//              vol = SoundCurve[dist];
+//		vol = SoundCurve[dist];
 	}
 
 	if(S_sfx[sound_id].changePitch)
@@ -681,7 +478,7 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 		Channel[i].pitch = 127;
 	}
 	Channel[i].handle = I_StartSound(sound_id, S_sfx[sound_id].snd_ptr, vol,
-		sep, Channel[i].pitch, 0);
+					 sep, Channel[i].pitch, 0);
 	Channel[i].mo = origin;
 	Channel[i].sound_id = sound_id;
 	Channel[i].priority = priority;
@@ -695,6 +492,7 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 		S_sfx[sound_id].usefulness++;
 	}
 }
+
 //==========================================================================
 //
 // S_StopSoundID
@@ -713,7 +511,7 @@ boolean S_StopSoundID(int sound_id, int priority)
 	}
 	lp = -1; //denote the argument sound_id
 	found = 0;
-	for(i=0; i<snd_Channels; i++)
+	for(i = 0; i < snd_Channels; i++)
 	{
 		if(Channel[i].sound_id == sound_id && Channel[i].mo)
 		{
@@ -758,7 +556,7 @@ void S_StopSound(mobj_t *origin)
 {
 	int i;
 
-	for(i=0;i<snd_Channels;i++)
+	for(i = 0; i < snd_Channels; i++)
 	{
 		if(Channel[i].mo == origin)
 		{
@@ -784,7 +582,7 @@ void S_StopAllSound(void)
 	int i;
 
 	//stop all sounds
-	for(i=0; i < snd_Channels; i++)
+	for(i = 0; i < snd_Channels; i++)
 	{
 		if(Channel[i].handle)
 		{
@@ -804,7 +602,7 @@ void S_SoundLink(mobj_t *oldactor, mobj_t *newactor)
 {
 	int i;
 
-	for(i=0;i<snd_Channels;i++)
+	for(i = 0; i < snd_Channels; i++)
 	{
 		if(Channel[i].mo == oldactor)
 			Channel[i].mo = newactor;
@@ -907,9 +705,9 @@ void S_UpdateSounds(mobj_t *listener)
 				}
 			}
 		}
-		NextCleanup = gametic+35*30; // every 30 seconds
+		NextCleanup = gametic + 35*30;	// every 30 seconds
 	}
-	for(i=0;i<snd_Channels;i++)
+	for(i = 0; i < snd_Channels; i++)
 	{
 		if(!Channel[i].handle || S_sfx[Channel[i].sound_id].usefulness == -1)
 		{
@@ -1211,9 +1009,9 @@ static long _startSec;
 
 void I_StartupTimer(void)
 {
-   struct timeval tv;
-    gettimeofday( &tv, 0 ); 
-    _startSec = tv.tv_sec;
+	struct timeval tv;
+	gettimeofday (&tv, NULL);
+	_startSec = tv.tv_sec;
 }
 
 //--------------------------------------------------------------------------
@@ -1226,14 +1024,13 @@ void I_StartupTimer(void)
 
 int I_GetTime (void)
 {
-    struct timeval tv;
-    gettimeofday( &tv, 0 ); 
+	struct timeval tv;
+	gettimeofday (&tv, NULL);
 
-    //printf( "GT: %lx %lx\n", tv.tv_sec, tv.tv_usec );
-
-//  ticcount = ((tv.tv_sec * 1000000) + tv.tv_usec) / 28571;
-    ticcount = ((tv.tv_sec - _startSec) * 35) + (tv.tv_usec / 28571);
-	return( ticcount );
+//	printf( "GT: %lx %lx\n", tv.tv_sec, tv.tv_usec );
+//	ticcount = ((tv.tv_sec * 1000000) + tv.tv_usec) / 28571;
+	ticcount = ((tv.tv_sec - _startSec) * 35) + (tv.tv_usec / 28571);
+	return ticcount;
 }
 
 
@@ -1245,70 +1042,8 @@ int I_GetTime (void)
 ============================================================================
 */
 
-//==================================================
-//
-// joystick vars
-//
-//==================================================
-
 extern int usejoystick;
 boolean joystickpresent;
-unsigned joystickx, joysticky;
-
-// returns false if not connected
-boolean I_ReadJoystick (void)
-{
-	return false;
-}
-
-
-int     joyxl, joyxh, joyyl, joyyh;
-
-boolean WaitJoyButton (void)
-{
-#if 0
-	int             oldbuttons, buttons;
-
-	oldbuttons = 0;
-	do
-	{
-		I_WaitVBL (1);
-		buttons =  ((inp(0x201) >> 4)&1)^1;
-		if (buttons != oldbuttons)
-		{
-			oldbuttons = buttons;
-			continue;
-		}
-
-		if ( (lastpress& 0x7f) == 1 )
-		{
-			joystickpresent = false;
-			return false;
-		}
-	} while ( !buttons);
-
-	do
-	{
-		I_WaitVBL (1);
-		buttons =  ((inp(0x201) >> 4)&1)^1;
-		if (buttons != oldbuttons)
-		{
-			oldbuttons = buttons;
-			continue;
-		}
-
-		if ( (lastpress& 0x7f) == 1 )
-		{
-			joystickpresent = false;
-			return false;
-		}
-	} while ( buttons);
-
-#endif
-	return true;
-}
-
-
 
 /*
 ===============
@@ -1318,46 +1053,10 @@ boolean WaitJoyButton (void)
 ===============
 */
 
-int             basejoyx, basejoyy;
-
 void I_StartupJoystick (void)
 {
-	int     center_x, center_y;
-
-	joystickpresent = 0;
-	if ( M_CheckParm ("-nojoy") || !usejoystick )
-		return;
-
-	if (!I_ReadJoystick ())
-	{
-		joystickpresent = false;
-		ST_Message("joystick not found\n ");
-		return;
-	}
-	ST_Message("joystick found\n");
-	joystickpresent = true;
-
-	ST_RealMessage("CENTER the joystick and press button 1:");
-	if (!WaitJoyButton ())
-		return;
-	I_ReadJoystick ();
-	center_x = joystickx;
-	center_y = joysticky;
-
-	ST_RealMessage("\nPush the joystick to the UPPER LEFT corner and press button 1:");
-	if (!WaitJoyButton ())
-		return;
-	I_ReadJoystick ();
-	joyxl = (center_x + joystickx)/2;
-	joyyl = (center_x + joysticky)/2;
-
-	ST_RealMessage("\nPush the joystick to the LOWER RIGHT corner and press button 1:");
-	if (!WaitJoyButton ())
-		return;
-	I_ReadJoystick ();
-	joyxh = (center_x + joystickx)/2;
-	joyyh = (center_y + joysticky)/2;
-	ST_RealMessage("\n");
+// NOTHING HERE YET: TOBE IMPLEMENTED IN i_sdl.c
+	joystickpresent = false;
 }
 
 /*
@@ -1370,60 +1069,21 @@ void I_StartupJoystick (void)
 
 void I_JoystickEvents (void)
 {
-	event_t ev;
-
-//
-// joystick events
-//
-	if (!joystickpresent)
-		return;
-
-	I_ReadJoystick();
-	ev.type = ev_joystick;
-	ev.data1 =  0;  //((inp(0x201) >> 4)&15)^15;
-
-	if (joystickx < joyxl)
-		ev.data2 = -1;
-	else if (joystickx > joyxh)
-		ev.data2 = 1;
-	else
-		ev.data2 = 0;
-	if (joysticky < joyyl)
-		ev.data3 = -1;
-	else if (joysticky > joyyh)
-		ev.data3 = 1;
-	else
-		ev.data3 = 0;
-
-	H2_PostEvent (&ev);
 }
 
 
 /*
-   ===============
-   =
-   = I_StartFrame
-   =
-   ===============
-   */
- 
-void I_StartFrame (void)
-{
-    I_JoystickEvents();
-}
-
-
-/*
-============================================================================
-
-					DPMI STUFF
-
-============================================================================
+===============
+=
+= I_StartFrame
+=
+===============
 */
 
-void I_DivException (void);
-int I_SetDivException (void);
-
+void I_StartFrame (void)
+{
+	I_JoystickEvents();
+}
 
 
 /*
@@ -1447,18 +1107,14 @@ int I_SetDivException (void);
 
 void I_Init (void)
 {
-	void I_StartupTimer(void);
-
 	novideo = M_CheckParm("novideo");
-	//ST_Message("  I_StartupMouse ");
 	I_StartupMouse();
-//	tprintf("I_StartupJoystick ",1);
-//	I_StartupJoystick();
+	I_StartupJoystick();
 	ST_Message("  S_Init... ");
 	S_Init();
 	S_Start();
 
-    I_StartupTimer();
+	I_StartupTimer();
 }
 
 
@@ -1541,7 +1197,7 @@ static void put_dos2ansi (byte attrib)
 }
 #endif	/* put_dos2ansi */
 
-void I_Quit(void)
+void I_Quit (void)
 {
 #if 0
 	int i;
@@ -1577,13 +1233,12 @@ byte *I_ZoneBase (int *size)
 	byte *ptr;
 	int heap = 0x800000;
 
-	ptr = malloc ( heap );
+	ptr = (byte *) malloc (heap);
+	if (ptr == NULL)
+		I_Error ("I_ZoneBase: Insufficient memory!");
 
-	ST_Message ("  0x%x allocated for zone, ", heap);
+	ST_Message ("0x%x allocated for zone, ", heap);
 	ST_Message ("ZoneBase: %p\n", ptr);
-
-	if ( ! ptr )
-		I_Error ("  Insufficient DPMI memory!");
 
 	*size = heap;
 	return ptr;
@@ -1599,7 +1254,13 @@ byte *I_ZoneBase (int *size)
 
 byte *I_AllocLow (int length)
 {
-	return malloc( length );
+	byte *ptr;
+
+	ptr = (byte *) malloc (length);
+	if (ptr == NULL)
+		I_Error ("I_AllocLow: Insufficient memory!");
+
+	return ptr;
 }
 
 /*
@@ -1641,7 +1302,8 @@ void I_InitNetwork (void)
 		doomcom->extratics = 0;
 		return;
 	}
-	I_Error ("NET GAME NOT IMPLEMENTED !!!");
+
+#if 0
 	// THIS IS DOS-ISH AND BROKEN ON UNIX!!!
 	doomcom = (doomcom_t *)atoi(myargv[i+1]);
 	netgame = true;
@@ -1650,6 +1312,8 @@ void I_InitNetwork (void)
 	doomcom->episode = startepisode;
 	doomcom->map = startmap;
 	doomcom->deathmatch = deathmatch;
+#endif
+	I_Error ("NET GAME NOT IMPLEMENTED !!!");
 }
 
 void I_NetCmd (void)
@@ -1657,6 +1321,7 @@ void I_NetCmd (void)
 	if (!netgame)
 		I_Error ("I_NetCmd when not in netgame");
 }
+
 
 //=========================================================================
 //
@@ -1666,16 +1331,27 @@ void I_NetCmd (void)
 //			have been passed.
 //=========================================================================
 
-void I_CheckExternDriver(void)
+void I_CheckExternDriver (void)
 {
 // THIS IS FOR DOS, ONLY. NOTHING ON UNIX.
 	useexterndriver = false;
 }
 
+
+//=========================================================================
+//
+//		MAIN
+//
+//=========================================================================
+
+void PrintVersion (void)
+{
+	printf ("HHexen (%s %d.%d)\n", VERSION_PLATFORM, VERSION_MAJ, VERSION_MIN);
+}
+
 void PrintHelp(char *name)
 {
-	printf ("HHexen (%s %d.%d)\n", VERSION_PLATFORM,
-			VERSION_MAJ,VERSION_MIN);
+	printf ("HHexen (%s %d.%d)\n", VERSION_PLATFORM, VERSION_MAJ, VERSION_MIN);
 	printf ("http://icculus.org/hast/\n");
 	printf ("Please send bug reports or patches to:\n");
 	printf ("             Dan Olson <theoddone33@icculus.org>\n");
@@ -1688,7 +1364,7 @@ void PrintHelp(char *name)
 	printf ("     [ -s | --nosound]        Run the game without sound\n");
 	printf ("     [ -g | --nograb]         Disable mouse grabbing\n");
 #ifdef RENDER3D
-	//printf ("     [ -l | --gllibrary]      Select 3D rendering library\n");
+//	printf ("     [ -l | --gllibrary]      Select 3D rendering library\n");
 #endif
 	printf ("\n");
 	printf ("You can use the HHEXEN_DATA environment variable to force the\n");
@@ -1696,13 +1372,7 @@ void PrintHelp(char *name)
 	printf ("\n");
 }
 
-void PrintVersion (void)
-{
-	printf ("HHexen (%s %d.%d)\n", VERSION_PLATFORM,
-			VERSION_MAJ,VERSION_MIN);
-}
-
-int main( int argc, char** argv )
+int main (int argc, char** argv)
 {
 	myargc = argc;
 	myargv = argv;
