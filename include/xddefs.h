@@ -4,9 +4,9 @@
 //** xddefs.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: xddefs.h,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:18 $
-//** $Author: theoddone33 $
+//** $Revision: 1.2 $
+//** $Date: 2008-06-17 09:20:20 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -233,3 +233,4 @@ typedef struct
 } pic_t;
 
 #endif // __XDDEFS__
+

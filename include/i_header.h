@@ -75,3 +75,4 @@ int I_SoundIsPlaying(channel_t *c);
 // if no longer playing, 1 if playing.
 
 #endif
+

@@ -4,9 +4,9 @@
 //** a_action.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: a_action.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:01 $
-//** $Author: theoddone33 $
+//** $Revision: 1.2 $
+//** $Date: 2008-06-17 09:20:10 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -1317,3 +1317,4 @@ void A_NoGravity(mobj_t *actor)
 {
 	actor->flags |= MF_NOGRAVITY;
 }
+

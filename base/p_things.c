@@ -4,9 +4,9 @@
 //** p_things.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_things.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:12 $
-//** $Author: theoddone33 $
+//** $Revision: 1.2 $
+//** $Date: 2008-06-17 09:20:17 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -531,3 +531,4 @@ static boolean DeactivateThing(mobj_t *mobj)
 	}
 	return true;
 }
+

@@ -4,9 +4,9 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2000-07-25 22:27:08 $
-//** $Author: theoddone33 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-17 09:20:11 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -40,7 +40,6 @@ extern void OGL_GrabScreen();
 static int ReadFile(char const *name, byte **buffer, int mallocType);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
-
 extern char *basePath;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
@@ -130,7 +129,6 @@ void M_ExtractFileBase(char *path, char *dest)
 =
 ===============
 */
-
 
 // This is the new flat distribution table
 unsigned char rndtable[256] = {
@@ -502,6 +500,7 @@ default_t defaults[] =
 	{ "snd_mport", &snd_Mport, -1 },
 
 	{ "usegamma", &usegamma, 0 },
+
 	{ "messageson", (int *) &messageson, 1 },
 
 	{ "chatmacro0", (int *) &chat_macros[0], (int) HUSTR_CHATMACRO0 },
@@ -783,3 +782,4 @@ void M_ScreenShot (void)
 	P_SetMessage(&players[consoleplayer], "SCREEN SHOT", false);
 }
 #endif
+

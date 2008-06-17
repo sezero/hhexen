@@ -4,9 +4,9 @@
 //** p_inter.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_inter.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2001-01-08 22:24:25 $
-//** $Author: theoddone33 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-17 09:20:12 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -2284,3 +2284,4 @@ void P_PoisonDamage(player_t *player, mobj_t *source, int damage,
 	}
 */
 }
+

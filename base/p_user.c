@@ -4,9 +4,9 @@
 //** p_user.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_user.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2001-01-08 22:24:25 $
-//** $Author: theoddone33 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 09:20:17 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -774,7 +774,6 @@ void P_PlayerThink(player_t *player)
 		default:
 			break;
 	}
-
 	if(cmd->arti)
 	{ // Use an artifact
 		if((cmd->arti&AFLAG_JUMP) && onground && !player->jumpTics)
@@ -1686,3 +1685,4 @@ void A_SpeedFade(mobj_t *actor)
 	actor->flags &= ~MF_ALTSHADOW;
 	actor->sprite = actor->target->sprite;
 }
+

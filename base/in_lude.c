@@ -4,9 +4,9 @@
 //** in_lude.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: in_lude.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2000-07-25 22:27:08 $
-//** $Author: theoddone33 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-17 09:20:11 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -595,3 +595,4 @@ static void DrawHubText(void)
 		cx += w->width;
 	}
 }
+

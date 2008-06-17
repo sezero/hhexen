@@ -4,9 +4,9 @@
 //** p_floor.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_floor.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:09 $
-//** $Author: theoddone33 $
+//** $Revision: 1.2 $
+//** $Date: 2008-06-17 09:20:12 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -929,3 +929,4 @@ boolean EV_StartFloorWaggle(int tag, int height, int speed, int offset,
 	}
 	return retCode;
 }
+

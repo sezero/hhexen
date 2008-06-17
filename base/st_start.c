@@ -4,9 +4,9 @@
 //** st_start.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: st_start.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2000-07-25 22:27:08 $
-//** $Author: theoddone33 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-17 09:20:19 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -318,3 +318,4 @@ char *ST_LoadScreen(void)
 	W_ReadLump(lump, buffer);
 	return(buffer);
 }
+

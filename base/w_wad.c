@@ -4,9 +4,9 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2000-07-25 22:27:08 $
-//** $Author: theoddone33 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-17 09:20:19 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -653,13 +653,12 @@ void W_CheckForOldFiles (void)
 {
 	if(W_CheckNumForName("clus1msg") == -1)
 	{
-	ST_Message ("It appears that you are using a Version 1.0 \'hexen.wad\' file. Running HHexen\n");
-	ST_Message ("without a Version 1.1 wadfile can cause many problems. Please download the\n");
-	ST_Message ("wadfile patch from http://www.raven-games.com/hhexen\n");
-	ST_Message ("Press <ENTER> to continue.\n");
-	getchar();
+		ST_Message ("\nIt appears that you are using a Version 1.0 \'hexen.wad\' file. Running HHexen\n");
+		ST_Message ("without a Version 1.1 wadfile can cause many problems.\n");
+		ST_Message ("\nPress <ENTER> to continue.\n");
+		getchar();
 	}
-}	
+}
 
 //==========================================================================
 //
@@ -721,3 +720,4 @@ void W_Profile (void)
 	fclose (f);
 }
 */
+

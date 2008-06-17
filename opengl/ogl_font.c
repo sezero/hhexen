@@ -291,3 +291,4 @@ int FR_GetCurrent()
 	if(current == -1) return 0;
 	return fonts[current].id;
 }
+

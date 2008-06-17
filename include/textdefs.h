@@ -4,9 +4,9 @@
 //** textdefs.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: textdefs.h,v $
-//** $Revision: 1.2 $
-//** $Date: 2000-05-05 00:51:25 $
-//** $Author: theoddone33 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 09:20:20 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -169,3 +169,4 @@
 
 #define AMSTR_FOLLOWON		"FOLLOW MODE ON"
 #define AMSTR_FOLLOWOFF		"FOLLOW MODE OFF"
+

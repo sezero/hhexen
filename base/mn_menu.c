@@ -3,9 +3,9 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2001-01-08 22:24:25 $
-//** $Author: theoddone33 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-17 09:20:11 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -2260,3 +2260,4 @@ static void DrawSlider(Menu_t *menu, int item, int width, int slot)
 	V_DrawPatch(x+4+slot*8, y+7, W_CacheLumpName("M_SLDKB", PU_CACHE));
 #endif
 }
+

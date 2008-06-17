@@ -4,9 +4,9 @@
 //** p_telept.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_telept.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:12 $
-//** $Author: theoddone33 $
+//** $Revision: 1.2 $
+//** $Date: 2008-06-17 09:20:17 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -175,3 +175,4 @@ boolean EV_Teleport(int tid, mobj_t *thing, boolean fog)
 	if (!mo) I_Error("Can't find teleport mapspot\n");
 	return P_Teleport(thing, mo->x, mo->y, mo->angle, fog);
 }
+

@@ -2,7 +2,7 @@
 #define XSHMEXT_H
 //============================================================================
 //
-// $Id: xshmext.h,v 1.1.1.1 2000-04-11 17:38:18 theoddone33 Exp $
+// $Id: xshmext.h,v 1.2 2008-06-17 09:20:21 sezero Exp $
 //
 // MIT Shared Memory Extension for X
 //
@@ -75,3 +75,4 @@ private:
 
 
 #endif // XSHMEXT_H
+

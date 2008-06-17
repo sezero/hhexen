@@ -4,9 +4,9 @@
 //** sc_man.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sc_man.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2000-07-25 22:27:08 $
-//** $Author: theoddone33 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 09:20:19 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -46,7 +46,7 @@ int sc_Line;
 boolean sc_End;
 boolean sc_Crossed;
 boolean sc_FileScripts = false;
-char *sc_ScriptsDir = "scripts/";
+char *sc_ScriptsDir = "";	// "scripts/";
 char *basePath;
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
@@ -485,3 +485,4 @@ static void CheckOpen(void)
 		I_Error("SC_ call before SC_Open().");
 	}
 }
+

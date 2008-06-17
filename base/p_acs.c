@@ -4,9 +4,9 @@
 //** p_acs.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_acs.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2000-07-25 22:27:08 $
-//** $Author: theoddone33 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 09:20:11 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -1780,3 +1780,4 @@ static int CmdSetLineSpecial(void)
 	}
 	return SCRIPT_CONTINUE;
 }
+

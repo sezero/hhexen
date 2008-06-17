@@ -4,9 +4,9 @@
 //** p_doors.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_doors.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:08 $
-//** $Author: theoddone33 $
+//** $Revision: 1.2 $
+//** $Date: 2008-06-17 09:20:12 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -312,3 +312,4 @@ void P_SpawnDoorRaiseIn5Mins(sector_t *sec, int secnum)
 	door->topcountdown = 5*60*35;
 }
 */
+

@@ -4,9 +4,9 @@
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2001-01-08 22:24:25 $
-//** $Author: theoddone33 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-17 09:20:18 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -2350,3 +2350,4 @@ static void CheatTrackFunc2(player_t *player, Cheat_t *cheat)
 		i_CDCurrentTrack = track;
 	}
 }
+

@@ -4,9 +4,9 @@
 //** d_net.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: d_net.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2001-01-08 22:24:25 $
-//** $Author: theoddone33 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-17 09:20:10 $
+//** $Author: sezero $
 //**
 //** This version has the fixed ticdup code.
 //**
@@ -908,3 +908,4 @@ if (debugfile)
 		NetUpdate ();                                   // check for new console commands
 	}
 }
+

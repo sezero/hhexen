@@ -4,9 +4,9 @@
 //** p_mobj.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_mobj.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2001-01-08 22:24:25 $
-//** $Author: theoddone33 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 09:20:12 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -2461,3 +2461,4 @@ mobj_t *P_SpawnKoraxMissile(fixed_t x, fixed_t y, fixed_t z,
 	th->momz = (dest->z-z+(30*FRACUNIT))/dist;
 	return(P_CheckMissileSpawn(th) ? th : NULL);
 }
+

@@ -164,3 +164,4 @@ typedef struct
 void R_RenderSkyHemispheres(int hemis);
 
 #endif
+

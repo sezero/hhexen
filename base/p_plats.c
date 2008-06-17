@@ -4,9 +4,9 @@
 //** p_plats.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_plats.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:11 $
-//** $Author: theoddone33 $
+//** $Revision: 1.2 $
+//** $Date: 2008-06-17 09:20:12 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -266,3 +266,4 @@ void P_RemoveActivePlat(plat_t *plat)
 		}
 	I_Error ("P_RemoveActivePlat: can't find plat!");
 }
+

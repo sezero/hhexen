@@ -44,3 +44,4 @@ int FR_TextHeight(char *text);
 int FR_TextOut(int x, int y, char *text);
 
 #endif // __OGL_FONT_RENDERER_H__
+

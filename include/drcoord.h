@@ -4,9 +4,9 @@
 //** DRCoord.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: drcoord.h,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:16 $
-//** $Author: theoddone33 $
+//** $Revision: 1.2 $
+//** $Date: 2008-06-17 09:20:19 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -27,3 +27,4 @@
 - scale4: sender;
 
 @end
+

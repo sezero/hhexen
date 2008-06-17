@@ -4,9 +4,9 @@
 //** v_video.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: v_video.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2001-01-08 22:24:25 $
-//** $Author: theoddone33 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 09:20:19 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -318,3 +318,4 @@ void V_Init(void)
 	// I_AllocLow will put screen in low dos memory on PCs.
 	screen = I_AllocLow(SCREENWIDTH*SCREENHEIGHT);
 }
+

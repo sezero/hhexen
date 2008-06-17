@@ -4,9 +4,9 @@
 //** ct_chat.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: ct_chat.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:02 $
-//** $Author: theoddone33 $
+//** $Revision: 1.2 $
+//** $Date: 2008-06-17 09:20:10 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -502,3 +502,4 @@ void CT_ClearChatMessage(int player)
 	msgptr[player] = 0;
 	msglen[player] = 0;
 }
+

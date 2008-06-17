@@ -4,9 +4,9 @@
 //** r_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_main.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:13 $
-//** $Author: theoddone33 $
+//** $Revision: 1.2 $
+//** $Date: 2008-06-17 09:20:18 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -912,3 +912,4 @@ void R_RenderPlayerView (player_t *player)
     OGL_Restore2DState(2);
 #endif
 }
+

@@ -373,3 +373,4 @@ int OGL_DrawFilter()
 	glEnable( GL_TEXTURE_2D );
 	return 1;
 }
+

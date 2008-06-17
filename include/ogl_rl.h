@@ -50,3 +50,4 @@ void RL_RenderAllLists();
 void SetVertexColor(float light, float dist, float alpha);
 
 #endif
+

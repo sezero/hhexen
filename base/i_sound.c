@@ -1,4 +1,5 @@
-// $Id: i_sound.c,v 1.3 2001-01-08 22:24:25 theoddone33 Exp $
+// $Id: i_sound.c,v 1.4 2008-06-17 09:20:10 sezero Exp $
+
 
 #include <stdio.h>
 #include <math.h>       // pow()
@@ -460,3 +461,4 @@ void I_SetChannels(int channels)
 
 
 /* EOF */
+

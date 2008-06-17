@@ -4,9 +4,9 @@
 //** z_zone.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: z_zone.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:16 $
-//** $Author: theoddone33 $
+//** $Revision: 1.2 $
+//** $Date: 2008-06-17 09:20:19 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -394,3 +394,4 @@ int Z_FreeMemory (void)
 	return free;
 }
 */
+

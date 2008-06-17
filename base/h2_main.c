@@ -4,9 +4,9 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2001-01-08 22:24:25 $
-//** $Author: theoddone33 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-17 09:20:10 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -909,7 +909,7 @@ fixed_t FixedDiv(fixed_t a, fixed_t b)
 
 //==========================================================================
 //
-// CreateBasePath 
+// CreateBasePath
 //
 //==========================================================================
 
@@ -918,4 +918,5 @@ void CreateBasePath(void)
 	snprintf(base, 128, "%s/.hhexen/", getenv("HOME"));
 	basePath = base;
 	mkdir( base, S_IRWXU|S_IRWXG|S_IRWXO );
-}
+} 
+

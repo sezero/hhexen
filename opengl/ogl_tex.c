@@ -851,3 +851,4 @@ void OGL_UpdateRawScreenParams(int smoothing)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glmode);
 	}
 }
+

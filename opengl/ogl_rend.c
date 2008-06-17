@@ -1106,3 +1106,4 @@ void OGL_DrawPSprite(int x, int y, float scale, int flip, int lump)
 
 	glEnd();
 }
+

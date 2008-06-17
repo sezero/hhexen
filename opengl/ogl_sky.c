@@ -257,3 +257,4 @@ void R_RenderSkyHemispheres(int hemis)
 	glPopAttrib();
 	glDepthMask(GL_TRUE);
 }
+

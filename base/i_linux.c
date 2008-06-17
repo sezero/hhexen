@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.3 2001-01-08 22:24:25 theoddone33 Exp $
+//** $Id: i_linux.c,v 1.4 2008-06-17 09:20:10 sezero Exp $
 //**
 //**************************************************************************
 
@@ -35,8 +35,8 @@
 
 extern void **lumpcache;
 
-extern void I_StartupMouse();
-extern void I_ShutdownGraphics();
+extern void I_StartupMouse(void);
+extern void I_ShutdownGraphics(void);
 
 int i_Vector;
 externdata_t *i_ExternData;
@@ -1742,5 +1742,3 @@ int main( int argc, char** argv )
 	return 0;
 }
 
-
-//EOF

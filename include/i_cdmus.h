@@ -24,3 +24,4 @@ int I_CDMusLastTrack(void);
 int I_CDMusTrackLength(int track);
 
 #endif
+

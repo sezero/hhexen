@@ -4,9 +4,9 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.5 $
-//** $Date: 2001-01-08 22:24:25 $
-//** $Author: theoddone33 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-17 09:20:20 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -1497,3 +1497,4 @@ void V_DrawRawScreen(byte *raw);
 #endif
 
 #endif // __H2DEF__
+

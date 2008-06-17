@@ -4,9 +4,9 @@
 //** p_spec.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_spec.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2000-07-25 22:27:08 $
-//** $Author: theoddone33 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-17 09:20:17 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -1150,3 +1150,4 @@ line_t *P_FindLine(int lineTag, int *searchPosition)
 	*searchPosition = -1;
 	return NULL;
 }
+

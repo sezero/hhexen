@@ -4,9 +4,9 @@
 //** p_anim.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_anim.c,v $
-//** $Revision: 1.1.1.1 $
-//** $Date: 2000-04-11 17:38:08 $
-//** $Author: theoddone33 $
+//** $Revision: 1.2 $
+//** $Date: 2008-06-17 09:20:11 $
+//** $Author: sezero $
 //**
 //**************************************************************************
 
@@ -471,3 +471,4 @@ void P_InitFTAnims(void)
 	}
 	SC_Close();
 }
+
