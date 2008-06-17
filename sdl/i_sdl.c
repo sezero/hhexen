@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdl.c,v 1.7 2008-06-17 14:24:19 sezero Exp $
+//** $Id: i_sdl.c,v 1.8 2008-06-17 14:25:13 sezero Exp $
 //**
 //**************************************************************************
 
@@ -10,7 +10,6 @@
 #include "SDL.h"
 #include "h2def.h"
 #include "r_local.h"
-#include "p_local.h"    // for P_AproxDistance
 #include "sounds.h"
 #include "i_sound.h"
 #include "soundst.h"
@@ -22,29 +21,20 @@ int DisplayTicker = 0;
 
 
 // Code
-
-void I_StartupNet (void);
-void I_ShutdownNet (void);
-void I_ReadExternDriver(void);
+extern void **lumpcache;
 
 extern int usemouse, usejoystick;
 
-extern void **lumpcache;
-
-int i_Vector;
-externdata_t *i_ExternData;
 boolean useexterndriver;
+boolean mousepresent;
 
 SDL_Surface* sdl_screen;
-
-boolean mousepresent;
 
 //===============================
 
 int ticcount;
 
-
-boolean novideo; // if true, stay in text mode for debugging
+boolean novideo;	// if true, stay in text mode for debugging
 
 /*
 ============================================================================
@@ -62,13 +52,13 @@ boolean novideo; // if true, stay in text mode for debugging
 
 void I_WaitVBL(int vbls)
 {
-	if( novideo )
+	if (novideo)
 	{
 		return;
 	}
-	while( vbls-- )
+	while (vbls--)
 	{
-        SDL_Delay( 16667/1000 );
+		SDL_Delay (16667 / 1000);
 	}
 }
 
@@ -82,27 +72,24 @@ void I_WaitVBL(int vbls)
 
 void I_SetPalette(byte *palette)
 {
-    SDL_Color* c;
-    SDL_Color* cend;
-    SDL_Color cmap[ 256 ];
+	SDL_Color* c;
+	SDL_Color* cend;
+	SDL_Color cmap[256];
 
-	if(novideo)
-	{
+	if (novideo)
 		return;
-	}
+
 	I_WaitVBL(1);
 
-    c = cmap;
-    cend = c + 256;
-	for( ; c != cend; c++ )
+	c = cmap;
+	cend = c + 256;
+	for ( ; c != cend; c++)
 	{
-		//_outbyte(PEL_DATA, (gammatable[usegamma][*palette++])>>2);
-
-        c->r = gammatable[usegamma][*palette++];
-        c->g = gammatable[usegamma][*palette++];
-        c->b = gammatable[usegamma][*palette++];
+		c->r = gammatable[usegamma][*palette++];
+		c->g = gammatable[usegamma][*palette++];
+		c->b = gammatable[usegamma][*palette++];
 	}
-    SDL_SetColors( sdl_screen, cmap, 0, 256 );
+	SDL_SetColors (sdl_screen, cmap, 0, 256);
 }
 
 /*
@@ -164,7 +151,7 @@ void I_Update (void)
 		}
 	}
 
-	//memset(pcscreen, 255, SCREENHEIGHT*SCREENWIDTH);
+//	memset(pcscreen, 255, SCREENHEIGHT*SCREENWIDTH);
 
 	if(UpdateState == I_NOUPDATE)
 	{
@@ -175,7 +162,7 @@ void I_Update (void)
 		memcpy(pcscreen, screen, SCREENWIDTH*SCREENHEIGHT);
 		UpdateState = I_NOUPDATE; // clear out all draw types
 
-        SDL_UpdateRect( sdl_screen, 0, 0, SCREENWIDTH, SCREENHEIGHT );
+		SDL_UpdateRect( sdl_screen, 0, 0, SCREENWIDTH, SCREENHEIGHT );
 	}
 	if(UpdateState&I_FULLVIEW)
 	{
@@ -188,8 +175,8 @@ void I_Update (void)
 			}
 			UpdateState &= ~(I_FULLVIEW|I_MESSAGES);
 
-            SDL_UpdateRect( sdl_screen, 0, 0, SCREENWIDTH,
-                            viewwindowy+viewheight );
+			SDL_UpdateRect (sdl_screen, 0, 0, SCREENWIDTH,
+					viewwindowy + viewheight);
 		}
 		else
 		{
@@ -200,8 +187,8 @@ void I_Update (void)
 			}
 			UpdateState &= ~I_FULLVIEW;
 
-            SDL_UpdateRect( sdl_screen, viewwindowx, viewwindowy, viewwidth,
-                            viewheight );
+			SDL_UpdateRect (sdl_screen, viewwindowx, viewwindowy, viewwidth,
+					viewheight);
 		}
 	}
 	if(UpdateState&I_STATBAR)
@@ -211,15 +198,15 @@ void I_Update (void)
 			SCREENWIDTH*SBARHEIGHT);
 		UpdateState &= ~I_STATBAR;
 
-        SDL_UpdateRect( sdl_screen, 0, SCREENHEIGHT-SBARHEIGHT,
-                        SCREENWIDTH, SBARHEIGHT );
+		SDL_UpdateRect (sdl_screen, 0, SCREENHEIGHT-SBARHEIGHT,
+				SCREENWIDTH, SBARHEIGHT);
 	}
 	if(UpdateState&I_MESSAGES)
 	{
 		memcpy(pcscreen, screen, SCREENWIDTH*28);
 		UpdateState &= ~I_MESSAGES;
 
-        SDL_UpdateRect( sdl_screen, 0, 0, SCREENWIDTH, 28 );
+		SDL_UpdateRect (sdl_screen, 0, 0, SCREENWIDTH, 28);
 	}
 }
 
@@ -233,36 +220,33 @@ void I_InitGraphics(void)
 {
 	char text[20];
 
-	if( novideo )
-	{
+	if (novideo)
 		return;
+
+	// SDL_DOUBLEBUF does not work in full screen mode.  Does not seem to
+	// be necessary anyway.
+	sdl_screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, 8, SDL_SWSURFACE);
+
+	if (sdl_screen == NULL)
+	{
+		fprintf (stderr, "Couldn't set video mode %dx%d: %s\n",
+			 SCREENWIDTH, SCREENHEIGHT, SDL_GetError());
+		exit (3);
 	}
-    
-    // SDL_DOUBLEBUF does not work in full screen mode.  Does not seem to
-    // be necessary anyway.
 
-    sdl_screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, 8, SDL_SWSURFACE);
+	// Only grab if we want to
+	if (!M_CheckParm ("--nograb") && !M_CheckParm ("-g"))
+	{
+		SDL_WM_GrabInput (SDL_GRAB_ON);
+	}
 
-    if( sdl_screen == NULL )
-    {
-        fprintf( stderr, "Couldn't set video mode %dx%d: %s\n",
-                 SCREENWIDTH, SCREENHEIGHT, SDL_GetError() );
-        exit( 3 );
-    }
-
-    // Only grab if we want to
-    if (!M_CheckParm ("--nograb") && !M_CheckParm ("-g")) {
-	    SDL_WM_GrabInput (SDL_GRAB_ON);
-    }
-
-    SDL_ShowCursor( 0 );
-    snprintf (text, 20, "HHexen v%s", HHEXEN_VERSION);
-    SDL_WM_SetCaption( text, "HHEXEN" );
-
+	SDL_ShowCursor (0);
+	snprintf (text, 20, "HHexen v%s", HHEXEN_VERSION);
+	SDL_WM_SetCaption (text, "HHEXEN");
 
 	pcscreen = destscreen = sdl_screen->pixels;
 
-	I_SetPalette( W_CacheLumpName("PLAYPAL", PU_CACHE) );
+	I_SetPalette (W_CacheLumpName("PLAYPAL", PU_CACHE));
 }
 
 //--------------------------------------------------------------------------
@@ -275,21 +259,6 @@ void I_ShutdownGraphics(void)
 {
 	SDL_Quit ();
 }
-
-//--------------------------------------------------------------------------
-//
-// PROC I_ReadScreen
-//
-// Reads the screen currently displayed into a linear buffer.
-//
-//--------------------------------------------------------------------------
-
-/*
-void I_ReadScreen(byte *scr)
-{
-	memcpy(scr, screen, SCREENWIDTH*SCREENHEIGHT);
-}
-*/
 
 //===========================================================================
 
@@ -410,81 +379,77 @@ static int xlatekey (SDL_keysym *key)
 	}
 }
 
-
 /* This processes SDL events */
 void I_GetEvent(SDL_Event *Event)
 {
-    Uint8 buttonstate;
-    event_t event;
-    SDLMod mod;
+	Uint8 buttonstate;
+	event_t event;
+	SDLMod mod;
 
-    switch (Event->type)
-    {
-      case SDL_KEYDOWN:
-	mod = SDL_GetModState ();
-	if (mod & (KMOD_RCTRL|KMOD_LCTRL))
+	switch (Event->type)
 	{
-		if (Event->key.keysym.sym == 'g')
+	case SDL_KEYDOWN:
+		mod = SDL_GetModState ();
+		if (mod & (KMOD_RCTRL|KMOD_LCTRL))
 		{
-			if (SDL_WM_GrabInput (SDL_GRAB_QUERY) == SDL_GRAB_OFF)
-				SDL_WM_GrabInput (SDL_GRAB_ON);
-			else
-				SDL_WM_GrabInput (SDL_GRAB_OFF);
-			break;
+			if (Event->key.keysym.sym == 'g')
+			{
+				if (SDL_WM_GrabInput (SDL_GRAB_QUERY) == SDL_GRAB_OFF)
+					SDL_WM_GrabInput (SDL_GRAB_ON);
+				else
+					SDL_WM_GrabInput (SDL_GRAB_OFF);
+				break;
+			}
 		}
-	}
-	else if (mod & (KMOD_RALT|KMOD_LALT))
-	{
-		if (Event->key.keysym.sym == SDLK_RETURN)
+		else if (mod & (KMOD_RALT|KMOD_LALT))
 		{
-			SDL_WM_ToggleFullScreen(SDL_GetVideoSurface());
-			break;
+			if (Event->key.keysym.sym == SDLK_RETURN)
+			{
+				SDL_WM_ToggleFullScreen(SDL_GetVideoSurface());
+				break;
+			}
 		}
+		event.type = ev_keydown;
+		event.data1 = xlatekey(&Event->key.keysym);
+		H2_PostEvent(&event);
+		break;
+
+	case SDL_KEYUP:
+		event.type = ev_keyup;
+		event.data1 = xlatekey(&Event->key.keysym);
+		H2_PostEvent(&event);
+		break;
+
+	case SDL_MOUSEBUTTONDOWN:
+	case SDL_MOUSEBUTTONUP:
+		buttonstate = SDL_GetMouseState(NULL, NULL);
+		event.type = ev_mouse;
+		event.data1 = 0	| (buttonstate & SDL_BUTTON(1) ? 1 : 0)
+				| (buttonstate & SDL_BUTTON(2) ? 2 : 0)
+				| (buttonstate & SDL_BUTTON(3) ? 4 : 0);
+		event.data2 = event.data3 = 0;
+		H2_PostEvent(&event);
+		break;
+
+	case SDL_MOUSEMOTION:
+		/* Ignore mouse warp events */
+		if ( (Event->motion.x != sdl_screen->w/2) ||
+		     (Event->motion.y != sdl_screen->h/2) )
+		{
+		/* Warp the mouse back to the center */
+			event.type = ev_mouse;
+			event.data1 = 0	| (Event->motion.state & SDL_BUTTON(1) ? 1 : 0)
+					| (Event->motion.state & SDL_BUTTON(2) ? 2 : 0)
+					| (Event->motion.state & SDL_BUTTON(3) ? 4 : 0);
+			event.data2 = Event->motion.xrel << 3;
+			event.data3 = -Event->motion.yrel << 3;
+			H2_PostEvent(&event);
+		}
+		break;
+
+	case SDL_QUIT:
+		I_Quit();
 	}
-	event.type = ev_keydown;
-	event.data1 = xlatekey(&Event->key.keysym);
-	H2_PostEvent(&event);
-	break;
-
-      case SDL_KEYUP:
-        event.type = ev_keyup;
-        event.data1 = xlatekey(&Event->key.keysym);
-        H2_PostEvent(&event);
-        break;
-
-      case SDL_MOUSEBUTTONDOWN:
-      case SDL_MOUSEBUTTONUP:
-        buttonstate = SDL_GetMouseState(NULL, NULL);
-        event.type = ev_mouse;
-        event.data1 = 0
-            | (buttonstate & SDL_BUTTON(1) ? 1 : 0)
-            | (buttonstate & SDL_BUTTON(2) ? 2 : 0)
-            | (buttonstate & SDL_BUTTON(3) ? 4 : 0);
-        event.data2 = event.data3 = 0;
-        H2_PostEvent(&event);
-        break;
-
-      case SDL_MOUSEMOTION:
-        /* Ignore mouse warp events */
-        if ( (Event->motion.x != sdl_screen->w/2) ||
-             (Event->motion.y != sdl_screen->h/2) )
-        {
-            /* Warp the mouse back to the center */
-            event.type = ev_mouse;
-            event.data1 = 0
-                | (Event->motion.state & SDL_BUTTON(1) ? 1 : 0)
-                | (Event->motion.state & SDL_BUTTON(2) ? 2 : 0)
-                | (Event->motion.state & SDL_BUTTON(3) ? 4 : 0);
-            event.data2 = Event->motion.xrel << 3;
-            event.data3 = -Event->motion.yrel << 3;
-            H2_PostEvent(&event);
-        }
-        break;
-
-      case SDL_QUIT:
-        I_Quit();
-    }
-
 }
 
 //
@@ -492,10 +457,9 @@ void I_GetEvent(SDL_Event *Event)
 //
 void I_StartTic (void)
 {
-    SDL_Event Event;
-
-    while ( SDL_PollEvent(&Event) )
-        I_GetEvent(&Event);
+	SDL_Event Event;
+	while ( SDL_PollEvent(&Event) )
+		I_GetEvent(&Event);
 }
 
 
@@ -539,7 +503,6 @@ int I_TimerISR (void)
 =
 ================
 */
-
 
 void I_StartupMouse (void)
 {

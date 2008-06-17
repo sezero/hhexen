@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdlgl.c,v 1.8 2008-06-17 14:24:19 sezero Exp $
+//** $Id: i_sdlgl.c,v 1.9 2008-06-17 14:25:13 sezero Exp $
 //**
 //**************************************************************************
 
@@ -12,7 +12,7 @@
 #include <GL/glu.h>
 #include "h2def.h"
 #include "r_local.h"
-#include "p_local.h"    // for P_AproxDistance
+#include "ogl_def.h"
 #include "sounds.h"
 #include "i_sound.h"
 #include "soundst.h"
@@ -23,35 +23,23 @@
 int screenWidth  = SCREENWIDTH*2;
 int screenHeight = SCREENHEIGHT*2;
 int maxTexSize = 256;
-int ratioLimit = 0;             // Zero if none.
+int ratioLimit = 0;	// Zero if none.
 int test3dfx = 0;
 
 int DisplayTicker = 0;
 
 
 // Code
-extern void OGL_InitData();
-extern void OGL_InitRenderer();
-extern void OGL_ResetData();
-extern void OGL_ResetLumpTexData();
-
-void I_StartupNet (void);
-void I_ShutdownNet (void);
-void I_ReadExternDriver(void);
+extern void **lumpcache;
 
 extern int usemouse, usejoystick;
 
-extern void **lumpcache;
-
-int i_Vector;
-externdata_t *i_ExternData;
 boolean useexterndriver;
-
 boolean mousepresent;
 
 int ticcount;
 
-boolean novideo; // if true, stay in text mode for debugging
+boolean novideo;	// if true, stay in text mode for debugging
 
 //--------------------------------------------------------------------------
 //
@@ -61,13 +49,13 @@ boolean novideo; // if true, stay in text mode for debugging
 
 void I_WaitVBL(int vbls)
 {
-	if( novideo )
+	if (novideo)
 	{
 		return;
 	}
-	while( vbls-- )
+	while (vbls--)
 	{
-        SDL_Delay( 16667/1000 );
+		SDL_Delay (16667 / 1000);
 	}
 }
 
@@ -81,29 +69,6 @@ void I_WaitVBL(int vbls)
 
 void I_SetPalette(byte *palette)
 {
-/*
-    SDL_Color* c;
-    SDL_Color* cend;
-    SDL_Color cmap[ 256 ];
-
-	if(novideo)
-	{
-		return;
-	}
-	I_WaitVBL(1);
-
-    c = cmap;
-    cend = c + 256;
-	for( ; c != cend; c++ )
-	{
-		//_outbyte(PEL_DATA, (gammatable[usegamma][*palette++])>>2);
-
-        c->r = gammatable[usegamma][*palette++];
-        c->g = gammatable[usegamma][*palette++];
-        c->b = gammatable[usegamma][*palette++];
-	}
-    SDL_SetColors( sdl_screen, cmap, 0, 256 );
-*/
 }
 
 /*
@@ -113,8 +78,6 @@ void I_SetPalette(byte *palette)
 
 ============================================================================
 */
-
-byte *pcscreen, *destscreen, *destview;
 
 /*
 ==============
@@ -144,76 +107,76 @@ void I_Update (void)
 
 void I_InitGraphics(void)
 {
-    int p;
-    char text[20];
-    Uint32 flags = SDL_OPENGL;
+	int p;
+	char text[20];
+	Uint32 flags = SDL_OPENGL;
 
-    if( novideo )
-    {
-	return;
-    }
+	if (novideo)
+		return;
 
-    if (M_CheckParm("-f") || M_CheckParm("--fullscreen")) {
-	flags |= SDL_FULLSCREEN;
-	setenv ("MESA_GLX_FX","fullscreen", 1);
-    } else {
-	setenv ("MESA_GLX_FX","disable",1);
-    }	
-    p = M_CheckParm ("-height");
-    if (p && p < myargc - 1)
-    {
-	screenHeight = atoi (myargv[p+1]);
-    }
-    p = M_CheckParm ("-width");
-    if (p && p < myargc - 1) {
-	screenWidth = atoi(myargv[p+1]);
-    }
-    ST_Message("Screen size:  %dx%d\n",screenWidth, screenHeight);
+	if (M_CheckParm("-f") || M_CheckParm("--fullscreen"))
+	{
+		flags |= SDL_FULLSCREEN;
+		setenv ("MESA_GLX_FX", "fullscreen", 1);
+	}
+	else
+	{
+		setenv ("MESA_GLX_FX", "disable", 1);
+	}
+	p = M_CheckParm ("-height");
+	if (p && p < myargc - 1)
+	{
+		screenHeight = atoi (myargv[p+1]);
+	}
+	p = M_CheckParm ("-width");
+	if (p && p < myargc - 1)
+	{
+		screenWidth = atoi(myargv[p+1]);
+	}
+	ST_Message("Screen size:  %dx%d\n", screenWidth, screenHeight);
 
-    if(SDL_SetVideoMode(screenWidth, screenHeight, 8, flags) == NULL)
-    {
-        fprintf( stderr, "Couldn't set video mode %dx%d: %s\n",
-                 screenWidth, screenHeight, SDL_GetError() );
-        exit( 3 );
-    }
+	if (SDL_SetVideoMode(screenWidth, screenHeight, 8, flags) == NULL)
+	{
+		fprintf(stderr, "Couldn't set video mode %dx%d: %s\n",
+			screenWidth, screenHeight, SDL_GetError());
+		exit (3);
+	}
 
-    OGL_InitRenderer ();
+	OGL_InitRenderer ();
 
-    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Print some OpenGL information.
-    ST_Message( "I_InitGraphics: OpenGL information:\n" );
-    ST_Message( "  Vendor: %s\n", glGetString(GL_VENDOR) );
-    ST_Message( "  Renderer: %s\n", glGetString(GL_RENDERER) );
-    ST_Message( "  Version: %s\n", glGetString(GL_VERSION) );
-    ST_Message( "  GLU Version: %s\n", gluGetString((GLenum)GLU_VERSION) );
+	// Print some OpenGL information.
+	ST_Message ("I_InitGraphics: OpenGL information:\n");
+	ST_Message ("  Vendor: %s\n", glGetString(GL_VENDOR));
+	ST_Message ("  Renderer: %s\n", glGetString(GL_RENDERER));
+	ST_Message ("  Version: %s\n", glGetString(GL_VERSION));
+	ST_Message ("  GLU Version: %s\n", gluGetString((GLenum)GLU_VERSION));
 
-    // Check the maximum texture size.
-    glGetIntegerv( GL_MAX_TEXTURE_SIZE, &maxTexSize );
-    ST_Message("  Maximum texture size: %d\n", maxTexSize);
-    if( maxTexSize == 256 )
-    {
-            //ST_Message("  Is this Voodoo? Using size ratio limit.\n");
-            ratioLimit = 8;
-    }
+	// Check the maximum texture size.
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
+	ST_Message ("  Maximum texture size: %d\n", maxTexSize);
+	if (maxTexSize == 256)
+	{
+	//	ST_Message("  Is this Voodoo? Using size ratio limit.\n");
+		ratioLimit = 8;
+	}
 
-    if( M_CheckParm("-3dfxtest") )
-    {
-            test3dfx = 1;
-            ST_Message("  3dfx test mode.\n");
-    }
+	if (M_CheckParm("-3dfxtest"))
+	{
+		test3dfx = 1;
+		ST_Message ("  3dfx test mode.\n");
+	}
 
-    // Only grab if we want to
-    if (!M_CheckParm ("--nograb") && !M_CheckParm ("-g")) {
-            SDL_WM_GrabInput (SDL_GRAB_ON);
-    }
+	// Only grab if we want to
+	if (!M_CheckParm ("--nograb") && !M_CheckParm ("-g"))
+	{
+		SDL_WM_GrabInput (SDL_GRAB_ON);
+	}
 
-    SDL_ShowCursor( 0 );
-    snprintf (text, 20, "HHexen v%s", HHEXEN_VERSION);
-    SDL_WM_SetCaption( text, "HHEXEN" );
-
-
-    //I_SetPalette( W_CacheLumpName("PLAYPAL", PU_CACHE) );
+	SDL_ShowCursor (0);
+	snprintf (text, 20, "HHexen v%s", HHEXEN_VERSION);
+	SDL_WM_SetCaption (text, "HHEXEN");
 }
 
 //--------------------------------------------------------------------------
@@ -224,9 +187,9 @@ void I_InitGraphics(void)
 
 void I_ShutdownGraphics(void)
 {
-    OGL_ResetData ();
-    OGL_ResetLumpTexData ();
-    SDL_Quit ();
+	OGL_ResetData ();
+	OGL_ResetLumpTexData ();
+	SDL_Quit ();
 }
 
 //===========================================================================
@@ -348,81 +311,77 @@ static int xlatekey (SDL_keysym *key)
 	}
 }
 
-
 /* This processes SDL events */
 void I_GetEvent(SDL_Event *Event)
 {
-    Uint8 buttonstate;
-    event_t event;
-    SDLMod mod;
+	Uint8 buttonstate;
+	event_t event;
+	SDLMod mod;
 
-    switch (Event->type)
-    {
-      case SDL_KEYDOWN:
-	mod = SDL_GetModState ();
-	if (mod & (KMOD_RCTRL|KMOD_LCTRL))
+	switch (Event->type)
 	{
-		if (Event->key.keysym.sym == 'g')
+	case SDL_KEYDOWN:
+		mod = SDL_GetModState ();
+		if (mod & (KMOD_RCTRL|KMOD_LCTRL))
 		{
-			if (SDL_WM_GrabInput (SDL_GRAB_QUERY) == SDL_GRAB_OFF)
-				SDL_WM_GrabInput (SDL_GRAB_ON);
-			else
-				SDL_WM_GrabInput (SDL_GRAB_OFF);
-			break;
+			if (Event->key.keysym.sym == 'g')
+			{
+				if (SDL_WM_GrabInput (SDL_GRAB_QUERY) == SDL_GRAB_OFF)
+					SDL_WM_GrabInput (SDL_GRAB_ON);
+				else
+					SDL_WM_GrabInput (SDL_GRAB_OFF);
+				break;
+			}
 		}
-	}
-	else if (mod & (KMOD_RALT|KMOD_LALT))
-	{
-		if (Event->key.keysym.sym == SDLK_RETURN)
+		else if (mod & (KMOD_RALT|KMOD_LALT))
 		{
-			SDL_WM_ToggleFullScreen(SDL_GetVideoSurface());
-			break;
+			if (Event->key.keysym.sym == SDLK_RETURN)
+			{
+				SDL_WM_ToggleFullScreen(SDL_GetVideoSurface());
+				break;
+			}
 		}
+		event.type = ev_keydown;
+		event.data1 = xlatekey(&Event->key.keysym);
+		H2_PostEvent(&event);
+		break;
+
+	case SDL_KEYUP:
+		event.type = ev_keyup;
+		event.data1 = xlatekey(&Event->key.keysym);
+		H2_PostEvent(&event);
+		break;
+
+	case SDL_MOUSEBUTTONDOWN:
+	case SDL_MOUSEBUTTONUP:
+		buttonstate = SDL_GetMouseState(NULL, NULL);
+		event.type = ev_mouse;
+		event.data1 = 0	| (buttonstate & SDL_BUTTON(1) ? 1 : 0)
+				| (buttonstate & SDL_BUTTON(2) ? 2 : 0)
+				| (buttonstate & SDL_BUTTON(3) ? 4 : 0);
+		event.data2 = event.data3 = 0;
+		H2_PostEvent(&event);
+		break;
+
+	case SDL_MOUSEMOTION:
+		/* Ignore mouse warp events */
+		if ((Event->motion.x != SCREENWIDTH/2) ||
+		    (Event->motion.y != SCREENHEIGHT/2) )
+		{
+		/* Warp the mouse back to the center */
+			event.type = ev_mouse;
+			event.data1 = 0	| (Event->motion.state & SDL_BUTTON(1) ? 1 : 0)
+					| (Event->motion.state & SDL_BUTTON(2) ? 2 : 0)
+					| (Event->motion.state & SDL_BUTTON(3) ? 4 : 0);
+			event.data2 = Event->motion.xrel << 3;
+			event.data3 = -Event->motion.yrel << 3;
+			H2_PostEvent(&event);
+		}
+		break;
+
+	case SDL_QUIT:
+		I_Quit();
 	}
-	event.type = ev_keydown;
-	event.data1 = xlatekey(&Event->key.keysym);
-	H2_PostEvent(&event);
-	break;
-
-      case SDL_KEYUP:
-        event.type = ev_keyup;
-        event.data1 = xlatekey(&Event->key.keysym);
-        H2_PostEvent(&event);
-        break;
-
-      case SDL_MOUSEBUTTONDOWN:
-      case SDL_MOUSEBUTTONUP:
-        buttonstate = SDL_GetMouseState(NULL, NULL);
-        event.type = ev_mouse;
-        event.data1 = 0
-            | (buttonstate & SDL_BUTTON(1) ? 1 : 0)
-            | (buttonstate & SDL_BUTTON(2) ? 2 : 0)
-            | (buttonstate & SDL_BUTTON(3) ? 4 : 0);
-        event.data2 = event.data3 = 0;
-        H2_PostEvent(&event);
-        break;
-
-      case SDL_MOUSEMOTION:
-        /* Ignore mouse warp events */
-        if ( (Event->motion.x != SCREENWIDTH/2) ||
-             (Event->motion.y != SCREENHEIGHT/2) )
-        {
-            /* Warp the mouse back to the center */
-            event.type = ev_mouse;
-            event.data1 = 0
-                | (Event->motion.state & SDL_BUTTON(1) ? 1 : 0)
-                | (Event->motion.state & SDL_BUTTON(2) ? 2 : 0)
-                | (Event->motion.state & SDL_BUTTON(3) ? 4 : 0);
-            event.data2 = Event->motion.xrel << 3;
-            event.data3 = -Event->motion.yrel << 3;
-            H2_PostEvent(&event);
-        }
-        break;
-
-      case SDL_QUIT:
-        I_Quit();
-    }
-
 }
 
 //
@@ -430,10 +389,9 @@ void I_GetEvent(SDL_Event *Event)
 //
 void I_StartTic (void)
 {
-    SDL_Event Event;
-
-    while ( SDL_PollEvent(&Event) )
-        I_GetEvent(&Event);
+	SDL_Event Event;
+	while ( SDL_PollEvent(&Event) )
+		I_GetEvent(&Event);
 }
 
 
