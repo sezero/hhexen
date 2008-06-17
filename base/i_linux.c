@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.17 2008-06-17 14:34:23 sezero Exp $
+//** $Id: i_linux.c,v 1.18 2008-06-17 15:02:33 sezero Exp $
 //**
 //**************************************************************************
 
@@ -163,7 +163,7 @@ void S_StartSong(int song, boolean loop)
 		if(UseSndScript)
 		{
 			char name[128];
-			snprintf(name, 128, "%s%s.lmp", ArchivePath, songLump);
+			snprintf(name, sizeof(name), "%s%s.lmp", ArchivePath, songLump);
 			M_ReadFile(name, &Mus_SndPtr);
 		}
 		else
@@ -260,7 +260,7 @@ void S_StartSongName(char *songLump, boolean loop)
 		if(UseSndScript)
 		{
 			char name[128];
-			snprintf(name, 128, "%s%s.lmp", ArchivePath, songLump);
+			snprintf(name, sizeof(name), "%s%s.lmp", ArchivePath, songLump);
 			M_ReadFile(name, &Mus_SndPtr);
 		}
 		else
@@ -430,7 +430,7 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 		if(UseSndScript)
 		{
 			char name[128];
-			snprintf(name, 128, "%s%s.lmp", ArchivePath, S_sfx[sound_id].lumpname);
+			snprintf(name, sizeof(name), "%s%s.lmp", ArchivePath, S_sfx[sound_id].lumpname);
 			M_ReadFile(name, &S_sfx[sound_id].snd_ptr);
 		}
 		else

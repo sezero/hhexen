@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.12 $
-//** $Date: 2008-06-17 13:41:07 $
+//** $Revision: 1.13 $
+//** $Date: 2008-06-17 15:02:39 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -129,7 +129,7 @@ void W_AddFile(char *filename)
 	filelump_t *freeFileInfo;
 
 	/* Add support for HHEXEN_DATA envirionment variable */
-	snprintf (path, 128, "%s/%s", getenv("HHEXEN_DATA"), filename);
+	snprintf (path, sizeof(path), "%s/%s", getenv("HHEXEN_DATA"), filename);
 	if((handle = open(path, O_RDONLY|O_BINARY)) == -1)
 	{
 		/* Now try CWD */

@@ -4,8 +4,8 @@
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-17 14:26:09 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-17 15:02:38 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -955,20 +955,20 @@ static void DrawSoundInfo(void)
 			MN_DrTextA("------", xPos[0], y);
 			continue;
 		}
-		snprintf(text, 32, "%s", c->name);
+		snprintf(text, sizeof(text), "%s", c->name);
 		M_ForceUppercase(text);
 		MN_DrTextA(text, xPos[x++], y);
-		snprintf(text, 32, "%d", c->mo->type);
+		snprintf(text, sizeof(text), "%d", c->mo->type);
 		MN_DrTextA(text, xPos[x++], y);
-		snprintf(text, 32, "%d", c->mo->x>>FRACBITS);
+		snprintf(text, sizeof(text), "%d", c->mo->x>>FRACBITS);
 		MN_DrTextA(text, xPos[x++], y);
-		snprintf(text, 32, "%d", c->mo->y>>FRACBITS);
+		snprintf(text, sizeof(text), "%d", c->mo->y>>FRACBITS);
 		MN_DrTextA(text, xPos[x++], y);
-		snprintf(text, 32, "%d", c->id);
+		snprintf(text, sizeof(text), "%d", c->id);
 		MN_DrTextA(text, xPos[x++], y);
-		snprintf(text, 32, "%d", c->priority);
+		snprintf(text, sizeof(text), "%d", c->priority);
 		MN_DrTextA(text, xPos[x++], y);
-		snprintf(text, 32, "%d", c->distance);
+		snprintf(text, sizeof(text), "%d", c->distance);
 		MN_DrTextA(text, xPos[x++], y);
 	}
 	UpdateState |= I_FULLSCRN;
@@ -2112,7 +2112,7 @@ static void CheatWarpFunc(player_t *player, Cheat_t *cheat)
 	}
 	if(DevMaps)
 	{ // Search map development directory
-		snprintf(auxName, 128, "%sMAP%02d.WAD", DevMapsDir, map);
+		snprintf(auxName, sizeof(auxName), "%sMAP%02d.WAD", DevMapsDir, map);
 		fp = fopen(auxName, "rb");
 		if(fp)
 		{
@@ -2126,7 +2126,7 @@ static void CheatWarpFunc(player_t *player, Cheat_t *cheat)
 	}
 	else
 	{ // Search primary lumps
-		snprintf(mapName, 9, "MAP%02d", map);
+		snprintf(mapName, sizeof(mapName), "MAP%02d", map);
 		if(W_CheckNumForName(mapName) == -1)
 		{ // Can't find
 			P_SetMessage(player, TXT_CHEATNOMAP, true);
@@ -2158,7 +2158,7 @@ static void CheatMassacreFunc(player_t *player, Cheat_t *cheat)
 	char buffer[80];
 
 	count = P_Massacre();
-	snprintf(buffer, 80, "%d MONSTERS KILLED\n", count);
+	snprintf(buffer, sizeof(buffer), "%d MONSTERS KILLED\n", count);
 	P_SetMessage(player, buffer, true);
 }
 
@@ -2241,7 +2241,7 @@ static void CheatVersionFunc(player_t *player, Cheat_t *cheat)
 static void CheatDebugFunc(player_t *player, Cheat_t *cheat)
 {
 	char textBuffer[50];
-	snprintf(textBuffer, 50, "MAP %d (%d)  X:%5d  Y:%5d  Z:%5d",
+	snprintf(textBuffer, sizeof(textBuffer), "MAP %d (%d)  X:%5d  Y:%5d  Z:%5d",
 				P_GetMapWarpTrans(gamemap),
 				gamemap,
 				player->mo->x >> FRACBITS,
@@ -2276,7 +2276,7 @@ static void CheatScriptFunc3(player_t *player, Cheat_t *cheat)
 
 	if(P_StartACS(script, 0, args, player->mo, NULL, 0))
 	{
-		snprintf(textBuffer, 40, "RUNNING SCRIPT %.2d", script);
+		snprintf(textBuffer, sizeof(textBuffer), "RUNNING SCRIPT %.2d", script);
 		P_SetMessage(player, textBuffer, true);
 	}
 }
@@ -2306,8 +2306,8 @@ static void CheatTrackFunc1(player_t *player, Cheat_t *cheat)
 	{
 		P_SetMessage(player, "ERROR INITIALIZING CD", true);
 	}
-	snprintf(buffer, 80, "ENTER DESIRED CD TRACK (%.2d - %.2d):\n",
-		I_CDMusFirstTrack(), I_CDMusLastTrack());	
+	snprintf(buffer, sizeof(buffer), "ENTER DESIRED CD TRACK (%.2d - %.2d):\n",
+		 I_CDMusFirstTrack(), I_CDMusLastTrack());	
 	P_SetMessage(player, buffer, true);
 }
 
@@ -2338,12 +2338,12 @@ static void CheatTrackFunc2(player_t *player, Cheat_t *cheat)
 	}
 	if(I_CDMusPlay(track))
 	{
-		snprintf(buffer, 80, "ERROR WHILE TRYING TO PLAY CD TRACK: %.2d\n", track);
+		snprintf(buffer, sizeof(buffer), "ERROR WHILE TRYING TO PLAY CD TRACK: %.2d\n", track);
 		P_SetMessage(player, buffer, true);
 	}
 	else
 	{ // No error encountered while attempting to play the track
-		snprintf(buffer, 80, "PLAYING TRACK: %.2d\n", track);
+		snprintf(buffer, sizeof(buffer), "PLAYING TRACK: %.2d\n", track);
 		P_SetMessage(player, buffer, true);	
 //		i_CDMusicLength = 35*I_CDMusTrackLength(track);
 //		oldTic = gametic;

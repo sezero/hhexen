@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.19 $
-//** $Date: 2008-06-17 14:51:01 $
+//** $Revision: 1.20 $
+//** $Date: 2008-06-17 15:02:37 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1135,8 +1135,8 @@ static void DrawOptionsMenu(void)
 	}
 	MN_DrTextB(mlooktext[mouselook], 208, 110);
 
-	snprintf(num, 5, "%d", mouseSensitivity);
-	MN_DrTextB(num, 265, 71); 
+	snprintf(num, sizeof(num), "%d", mouseSensitivity);
+	MN_DrTextB(num, 265, 71);
 
 	if(alwaysrun)
 	{

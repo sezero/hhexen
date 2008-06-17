@@ -504,9 +504,12 @@ int oss_open(AFormat fmt, int rate, int nch)
 	realtime = TRUE;
 
 	if (oss_cfg.audio_device > 0)
-		snprintf( device_name, 16, "/dev/dsp%d", oss_cfg.audio_device );
+		snprintf(device_name, sizeof(device_name), "/dev/dsp%d", oss_cfg.audio_device);
 	else
-		strncpy( device_name, "/dev/dsp", 16 );
+	{
+		strncpy(device_name, "/dev/dsp", sizeof(device_name) - 1);
+		device_name[sizeof(device_name) - 1] = '\0';
+	}
 
 	audio_fd = open(device_name, O_WRONLY);
 	if (audio_fd == -1)
@@ -620,9 +623,12 @@ void oss_get_volume(int *l, int *r)
 	char devname[ 20 ];
 
 	if (oss_cfg.mixer_device > 0)
-		snprintf( devname, 20, "/dev/mixer%d", oss_cfg.mixer_device );
+		snprintf(devname, sizeof(devname), "/dev/mixer%d", oss_cfg.mixer_device);
 	else
-		strncpy( devname, "/dev/mixer", 20 );
+	{
+		strncpy(devname, "/dev/mixer", sizeof(devname) - 1);
+		devname[sizeof(devname) - 1] = '\0';
+	}
 
 	fd = open(devname, O_RDONLY);
 	if (fd != -1)
@@ -651,9 +657,12 @@ void oss_set_volume(int l, int r)
 	char devname[ 20 ];
 
 	if (oss_cfg.mixer_device > 0)
-		snprintf( devname, 20, "/dev/mixer%d", oss_cfg.mixer_device );
+		snprintf(devname, sizeof(devname), "/dev/mixer%d", oss_cfg.mixer_device);
 	else
-		strncpy( devname, "/dev/mixer", 20 );
+	{
+		strncpy(devname, "/dev/mixer", sizeof(devname) - 1);
+		devname[sizeof(devname) - 1] = '\0';
+	}
 
 	fd = open(devname, O_RDONLY);
 	if (fd != -1)

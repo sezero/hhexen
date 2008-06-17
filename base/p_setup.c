@@ -4,8 +4,8 @@
 //** p_setup.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_setup.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-17 13:40:47 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-17 15:02:38 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1063,10 +1063,10 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
 
 	if(DevMaps)
 	{
-		snprintf(auxName, 128, "%sMAP%02d.WAD", DevMapsDir, map);
+		snprintf(auxName, sizeof(auxName), "%sMAP%02d.WAD", DevMapsDir, map);
 		W_OpenAuxiliary(auxName);
 	}
-	snprintf(lumpname, 9, "MAP%02d", map);
+	snprintf(lumpname, sizeof(lumpname), "MAP%02d", map);
 	lumpnum = W_GetNumForName(lumpname);
 	//
 	// Begin processing map lumps

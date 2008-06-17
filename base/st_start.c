@@ -4,8 +4,8 @@
 //** st_start.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: st_start.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-17 13:41:03 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-17 15:02:39 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -280,7 +280,7 @@ void ST_Message(char *message, ...)
 	char buffer[80];
 
 	va_start(argptr, message);
-	vsnprintf(buffer, 80, message, argptr);
+	vsnprintf(buffer, sizeof(buffer), message, argptr);
 	va_end(argptr);
 
 	printf(buffer); 
@@ -298,7 +298,7 @@ void ST_RealMessage(char *message, ...)
 	char buffer[80];
 
 	va_start(argptr, message);
-	vsnprintf(buffer, 80, message, argptr);
+	vsnprintf(buffer, sizeof(buffer), message, argptr);
 	va_end(argptr);
 
 	printf(buffer);		// Always print these messages

@@ -4,8 +4,8 @@
 //** in_lude.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: in_lude.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-17 13:40:31 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-17 15:02:33 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -520,7 +520,7 @@ static void DrNumber(int val, int x, int y, int wrapThresh)
 
 	if(!(val < -9 && wrapThresh < 1000))
 	{
-		snprintf(buff, 8, "%d", val >= wrapThresh ? val%wrapThresh : val);
+		snprintf(buff, sizeof(buff), "%d", val >= wrapThresh ? val%wrapThresh : val);
 	}
 	MN_DrTextA(buff, x-MN_TextAWidth(buff)/2, y);
 }
@@ -537,7 +537,7 @@ static void DrNumberBold(int val, int x, int y, int wrapThresh)
 
 	if(!(val < -9 && wrapThresh < 1000))
 	{
-		snprintf(buff, 8, "%d", val >= wrapThresh ? val%wrapThresh : val);
+		snprintf(buff, sizeof(buff), "%d", val >= wrapThresh ? val%wrapThresh : val);
 	}
 	MN_DrTextAYellow(buff, x-MN_TextAWidth(buff)/2, y);
 }

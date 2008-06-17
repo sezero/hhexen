@@ -4,8 +4,8 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-17 14:16:23 $
+//** $Revision: 1.12 $
+//** $Date: 2008-06-17 15:02:32 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -201,19 +201,19 @@ extern int inv_ptr;
 
 void G_BuildTiccmd (ticcmd_t *cmd)
 {
-	int             i;
-	boolean         strafe, bstrafe;
-	int             speed, tspeed, lspeed;
-	int             forward, side;
-	int look, arti;
-	int flyheight;
-	int pClass;
+	int	i;
+	boolean	strafe, bstrafe;
+	int	speed, tspeed, lspeed;
+	int	forward, side;
+	int	look, arti;
+	int	flyheight;
+	int	pClass;
 
 	extern boolean artiskip;
 
 
 	pClass = players[consoleplayer].class;
-	memset (cmd,0,sizeof(*cmd));
+	memset (cmd, 0, sizeof(*cmd));
 
 //	cmd->consistancy =
 //		consistancy[consoleplayer][(maketic*ticdup)%BACKUPTICS];
@@ -222,20 +222,16 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 		consistancy[consoleplayer][maketic%BACKUPTICS];
 
 //printf ("cons: %i\n",cmd->consistancy);
-	strafe = gamekeydown[key_strafe] || mousebuttons[mousebstrafe]
-		|| joybuttons[joybstrafe];
-
-	speed = gamekeydown[key_speed] || joybuttons[joybspeed]
-		|| joybuttons[joybspeed];
-	if(alwaysrun && !demoplayback && !demorecording)
+	strafe = gamekeydown[key_strafe] || mousebuttons[mousebstrafe] || joybuttons[joybstrafe];
+	speed = gamekeydown[key_speed] || joybuttons[joybspeed] || joybuttons[joybspeed];
+	if (alwaysrun && !demoplayback && !demorecording)
 		speed = !speed;
 	forward = side = look = arti = flyheight = 0;
-	
+
 //
 // use two stage accelerative turning on the keyboard and joystick
 //
-	if (joyxmove < 0 || joyxmove > 0 
-	|| gamekeydown[key_right] || gamekeydown[key_left])
+	if (joyxmove < 0 || joyxmove > 0 || gamekeydown[key_right] || gamekeydown[key_left])
 		turnheld += ticdup;
 	else
 		turnheld = 0;
@@ -244,7 +240,7 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 	else
 		tspeed = speed;
 
-	if(gamekeydown[key_lookdown] || gamekeydown[key_lookup])
+	if (gamekeydown[key_lookdown] || gamekeydown[key_lookup])
 	{
 		lookheld += ticdup;
 	}
@@ -252,7 +248,7 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 	{
 		lookheld = 0;
 	}
-	if(lookheld < SLOWTURNTICS)
+	if (lookheld < SLOWTURNTICS)
 	{
 		lspeed = 1; // 3;
 	}
@@ -264,7 +260,7 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 //
 // let movement keys cancel each other out
 //
-	if(strafe)
+	if (strafe)
 	{
 		if (gamekeydown[key_right])
 		{
@@ -321,39 +317,39 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 	}
 
 	// Look up/down/center keys
-	if(gamekeydown[key_lookup])
+	if (gamekeydown[key_lookup])
 	{
 		look = lspeed;
 	}
-	if(gamekeydown[key_lookdown])
+	if (gamekeydown[key_lookdown])
 	{
 		look = -lspeed;
 	} 
-	if(gamekeydown[key_lookcenter])
+	if (gamekeydown[key_lookcenter])
 	{
 		look = TOCENTER;
 	}
 
 	// Fly up/down/drop keys
-	if(gamekeydown[key_flyup])
+	if (gamekeydown[key_flyup])
 	{
 		flyheight = 5; // note that the actual flyheight will be twice this
 	}
-	if(gamekeydown[key_flydown])
+	if (gamekeydown[key_flydown])
 	{
 		flyheight = -5;
 	}
-	if(gamekeydown[key_flycenter])
+	if (gamekeydown[key_flycenter])
 	{
 		flyheight = TOCENTER; 
 		look = TOCENTER; 
 	}
 	// Use artifact key
-	if(gamekeydown[key_useartifact])
+	if (gamekeydown[key_useartifact])
 	{
-		if(gamekeydown[key_speed] && artiskip)
+		if (gamekeydown[key_speed] && artiskip)
 		{
-			if(players[consoleplayer].inventory[inv_ptr].type != arti_none)
+			if (players[consoleplayer].inventory[inv_ptr].type != arti_none)
 			{ // Skip an artifact
 				gamekeydown[key_useartifact] = false;
 				P_PlayerNextArtifact(&players[consoleplayer]);			
@@ -361,7 +357,7 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 		}
 		else
 		{
-			if(inventory)
+			if (inventory)
 			{
 				players[consoleplayer].readyArtifact =
 					players[consoleplayer].inventory[inv_ptr].type;
@@ -369,7 +365,7 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 				cmd->arti = 0;
 				usearti = false;
 			}
-			else if(usearti)
+			else if (usearti)
 			{
 				cmd->arti |= 
 					players[consoleplayer].inventory[inv_ptr].type&AFLAG_MASK;
@@ -377,56 +373,53 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 			}
 		}
 	}
-	if(gamekeydown[key_jump] || mousebuttons[mousebjump]
-		|| joybuttons[joybjump])
+	if (gamekeydown[key_jump] || mousebuttons[mousebjump] || joybuttons[joybjump])
 	{
 		cmd->arti |= AFLAG_JUMP;
 	}
-	if(mn_SuicideConsole)
+	if (mn_SuicideConsole)
 	{
 		cmd->arti |= AFLAG_SUICIDE;
 		mn_SuicideConsole = false;
 	}
 
 	// Artifact hot keys
-	if(gamekeydown[KEY_BACKSPACE] && !cmd->arti)
+	if (gamekeydown[KEY_BACKSPACE] && !cmd->arti)
 	{
 		gamekeydown[KEY_BACKSPACE] = false; 	// Use one of each artifact
 		cmd->arti = NUMARTIFACTS;
 	}
-	else if(gamekeydown[KEY_BACKSLASH] && !cmd->arti 
-	&& (players[consoleplayer].mo->health < MAXHEALTH))
+	else if (gamekeydown[KEY_BACKSLASH] && !cmd->arti && (players[consoleplayer].mo->health < MAXHEALTH))
 	{
 		gamekeydown[KEY_BACKSLASH] = false;
 		cmd->arti = arti_health;						
 	}
-	else if(gamekeydown[KEY_ZERO] && !cmd->arti)
+	else if (gamekeydown[KEY_ZERO] && !cmd->arti)
 	{
-	gamekeydown[KEY_ZERO] = false;
+		gamekeydown[KEY_ZERO] = false;
 		cmd->arti = arti_poisonbag;						
 	}
-	else if(gamekeydown[KEY_NINE] && !cmd->arti)
+	else if (gamekeydown[KEY_NINE] && !cmd->arti)
 	{
 		gamekeydown[KEY_NINE] = false;
 		cmd->arti = arti_blastradius;					
 	}
-	else if(gamekeydown[KEY_EIGHT] && !cmd->arti)
+	else if (gamekeydown[KEY_EIGHT] && !cmd->arti)
 	{
 		gamekeydown[KEY_EIGHT] = false;
 		cmd->arti = arti_teleport;						
 	}
-	else if(gamekeydown[KEY_SEVEN] && !cmd->arti)
+	else if (gamekeydown[KEY_SEVEN] && !cmd->arti)
 	{
 		gamekeydown[KEY_SEVEN] = false;
 		cmd->arti = arti_teleportother;						
 	}
-	else if(gamekeydown[KEY_SIX] && !cmd->arti)
+	else if (gamekeydown[KEY_SIX] && !cmd->arti)
 	{
 		gamekeydown[KEY_SIX] = false;
 		cmd->arti = arti_egg;						
 	}
-	else if(gamekeydown[KEY_FIVE] && !cmd->arti
-	&& !players[consoleplayer].powers[pw_invulnerability])
+	else if (gamekeydown[KEY_FIVE] && !cmd->arti && !players[consoleplayer].powers[pw_invulnerability])
 	{
 		gamekeydown[KEY_FIVE] = false;
 		cmd->arti = arti_invulnerability;				
@@ -445,10 +438,10 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 		cmd->buttons |= BT_USE;
 		dclicks = 0;                    // clear double clicks if hit use button
 	}
-	
-	for(i = 0; i < NUMWEAPONS; i++)
+
+	for (i = 0; i < NUMWEAPONS; i++)
 	{
-		if(gamekeydown['1'+i])
+		if (gamekeydown['1'+i])
 		{
 			cmd->buttons |= BT_CHANGE;
 			cmd->buttons |= i<<BT_WEAPONSHIFT;
@@ -460,7 +453,7 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 // mouse
 //
 #if 0
-    printf( "%d %d %d %d <%d %d>\n",
+	printf( "%d %d %d %d <%d %d>\n",
             mousebuttons[mousebfire], mousebuttons[mousebforward],
             mousebuttons[mousebjump], mousebuttons[mousebstrafe],
             mousex, mousey );
@@ -499,8 +492,7 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 //
 // strafe double click
 //
-	bstrafe = mousebuttons[mousebstrafe]
-|| joybuttons[joybstrafe];
+	bstrafe = mousebuttons[mousebstrafe] || joybuttons[joybstrafe];
 	if (bstrafe != dclickstate2 && dclicktime2 > 1 )
 	{
 		dclickstate2 = bstrafe;
@@ -532,37 +524,34 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 		cmd->angleturn -= mousex*0x8;
 	}	
 
-    if( demorecording || demoplayback || (mouselook == 0) )
-    {
-        forward += mousey;
-    }
-    else if( mousey )
-    {
-	    if (!paused)	// Mouselook was going when paused :/
-	    {
+	if (demorecording || demoplayback || (mouselook == 0))
+	{
+		forward += mousey;
+	}
+	else if (mousey && !paused)	/* mouselook, but not when paused */
+	{
 		// We'll directly change the viewing pitch of the console player.
-		float adj = ((mousey*0x4)<<16) / (float) ANGLE_180*180*110.0/85.0;
+		float adj = ((mousey*0x4) << 16) / (float) ANGLE_180*180*110.0/85.0;
 		float newlookdir = 0; /* jim initialiser added to prevent warning */
 
-		adj *= 2;	//Speed up the X11 mlook a little.
+		adj *= 2;	// Speed up the X11 mlook a little.
 
-		if(mouselook == 1)
+		if (mouselook == 1)
 			newlookdir = players[consoleplayer].lookdir + adj;
-		else if(mouselook == 2)
+		else if (mouselook == 2)
 			newlookdir = players[consoleplayer].lookdir - adj;
 
 		// vertical view angle taken from p_user.c line 249.
-		if( newlookdir > 90 )
-		    newlookdir = 90;
-		if( newlookdir < -110 )
-		    newlookdir = -110;
+		if (newlookdir > 90)
+			newlookdir = 90;
+		else if (newlookdir < -110)
+			newlookdir = -110;
 
 		players[consoleplayer].lookdir = newlookdir;
-	    }
-    }
+	}
 
 	mousex = mousey = 0;
-	
+
 	if (forward > MaxPlayerMove[pClass])
 	{
 		forward = MaxPlayerMove[pClass];
@@ -579,23 +568,22 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 	{
 		side = -MaxPlayerMove[pClass];
 	}
-	if(players[consoleplayer].powers[pw_speed]
-		&& !players[consoleplayer].morphTics)
+	if (players[consoleplayer].powers[pw_speed] && !players[consoleplayer].morphTics)
 	{ // Adjust for a player with a speed artifact
 		forward = (3*forward)>>1;
 		side = (3*side)>>1;
 	}
 	cmd->forwardmove += forward;
 	cmd->sidemove += side;
-	if(players[consoleplayer].playerstate == PST_LIVE)
+	if (players[consoleplayer].playerstate == PST_LIVE)
 	{
-		if(look < 0)
+		if (look < 0)
 		{
 			look += 16;
 		}
 		cmd->lookfly = look;
 	}
-	if(flyheight < 0)
+	if (flyheight < 0)
 	{
 		flyheight += 16;
 	}

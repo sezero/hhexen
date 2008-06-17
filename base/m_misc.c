@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.17 $
-//** $Date: 2008-06-17 14:39:15 $
+//** $Revision: 1.18 $
+//** $Date: 2008-06-17 15:02:33 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -587,7 +587,7 @@ void M_LoadDefaults(char *fileName)
 	i = M_CheckParm("-config");
 	if(i && i < myargc-1)
 	{
-		snprintf(defaultfile, sizeof(defaultfile), "%s%s", basePath, myargv[i+1]);
+		snprintf(defaultfile, sizeof(defaultfile), "%s%s", basePath, myargv[i + 1]);
 		ST_Message("config file: %s\n", defaultfile);
 	}
 	else

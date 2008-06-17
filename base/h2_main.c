@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.17 $
-//** $Date: 2008-06-17 14:00:32 $
+//** $Revision: 1.18 $
+//** $Date: 2008-06-17 15:02:33 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -413,7 +413,7 @@ static void ExecOptionPLAYDEMO(char **args, int tag)
 {
 	char file[256];
 
-	sprintf(file, "%s.lmp", args[1]);
+	snprintf(file, sizeof(file), "%s.lmp", args[1]);
 	AddWADFile(file);
 	ST_Message("Playing demo %s.lmp.\n", args[1]);
 }
@@ -520,7 +520,7 @@ void H2_GameLoop(void)
 	if(M_CheckParm("-debugfile"))
 	{
 		char filename[20];
-		sprintf(filename, "debug%i.txt", consoleplayer);
+		snprintf(filename, sizeof(filename), "debug%i.txt", consoleplayer);
 		debugfile = fopen(filename,"w");
 	}
 	I_InitGraphics();
@@ -597,7 +597,7 @@ void H2_PostEvent(event_t *ev)
 {
 	events[eventhead] = *ev;
 	eventhead++;
-	eventhead &= (MAXEVENTS-1);
+	eventhead &= (MAXEVENTS - 1);
 }
 
 //==========================================================================

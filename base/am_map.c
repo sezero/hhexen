@@ -4,8 +4,8 @@
 //** am_map.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: am_map.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-17 14:35:39 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-17 15:02:32 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1514,7 +1514,7 @@ void AM_DrawDeathmatchStats(void)
 		else
 		{
 			MN_DrTextA(PlayerColorText[order[i]], 8, yPosition);
-			snprintf(textBuffer, 80, "%d", fragCount[order[i]]);
+			snprintf(textBuffer, sizeof(textBuffer), "%d", fragCount[order[i]]);
 			MN_DrTextA(textBuffer, 80, yPosition);
 			yPosition += 10;
 		}
@@ -1548,18 +1548,18 @@ static void DrawWorldTimer(void)
 	worldTimer -= minutes*60;
 	seconds = worldTimer;
 
-	snprintf(timeBuffer, 15, "%.2d : %.2d : %.2d", hours, minutes,seconds);
+	snprintf(timeBuffer, sizeof(timeBuffer), "%.2d : %.2d : %.2d", hours, minutes,seconds);
 	MN_DrTextA(timeBuffer, 240, 8);
 
 	if (days)
 	{
-		if (days==1)
+		if (days == 1)
 		{
-			snprintf(dayBuffer, 20, "%.2d DAY", days);
+			snprintf(dayBuffer, sizeof(dayBuffer), "%.2d DAY", days);
 		}
 		else
 		{
-			snprintf(dayBuffer, 20, "%.2d DAYS", days);
+			snprintf(dayBuffer, sizeof(dayBuffer), "%.2d DAYS", days);
 		}
 		MN_DrTextA(dayBuffer, 240, 20);
 		if (days >= 5)

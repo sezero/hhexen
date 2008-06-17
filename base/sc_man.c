@@ -4,8 +4,8 @@
 //** sc_man.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sc_man.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-17 14:07:15 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-17 15:02:39 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -46,7 +46,6 @@ boolean sc_End;
 boolean sc_Crossed;
 boolean sc_FileScripts = false;
 char *sc_ScriptsDir = "";	// "scripts/";
-char *basePath;
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
@@ -70,11 +69,11 @@ static boolean AlreadyGot = false;
 
 void SC_Open(char *name)
 {
-	char fileName[256];
+	char fileName[MAX_OSPATH];
 
 	if(sc_FileScripts == true)
 	{
-		snprintf(fileName, 256, "%s/%s%s.txt", basePath, sc_ScriptsDir, name);
+		sprintf(fileName, "%s%s.txt", sc_ScriptsDir, name);
 		SC_OpenFile(fileName);
 	}
 	else
