@@ -4,8 +4,8 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-17 12:11:53 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-17 12:51:09 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -192,8 +192,6 @@ static int TempMap;
 extern boolean inventory;
 extern int curpos;
 extern int inv_ptr;
-
-boolean usearti = true;
 
 void G_BuildTiccmd (ticcmd_t *cmd)
 {
