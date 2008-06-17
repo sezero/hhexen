@@ -377,8 +377,9 @@ int C_CheckSubsector(subsector_t *ssec)
 {
 	int			i;
 //	clipnode_t	*cnode=0;
-	binangle	*anglist = _alloca(sizeof(binangle)*ssec->numedgeverts);
+	binangle	*anglist = (binangle*)malloc(sizeof(binangle)*ssec->numedgeverts);
 
+	if (anglist == NULL) I_Error ("Couldn't allocate memory");
 //	extern perfclock_t miscclock;
 
 	//PC_Start(&miscclock);
@@ -427,14 +428,15 @@ int C_CheckSubsector(subsector_t *ssec)
 		// Choose the start and end points so that length is < 180.
 		if(angLen < BANG_180)
 		{
-			if(C_SafeCheckRange(anglist[i], anglist[end])) return 1;
+			if(C_SafeCheckRange(anglist[i], anglist[end])) { free(anglist); return 1; }
 		}
 		else
 		{
-			if(C_SafeCheckRange(anglist[end], anglist[i])) return 1;
+			if(C_SafeCheckRange(anglist[end], anglist[i])) { free(anglist); return 1; }
 		}
 	}
 	// All the edges were clipped totally away.
+	free (anglist);
 	return 0;
 /*
 truexit:

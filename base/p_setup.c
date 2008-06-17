@@ -4,8 +4,8 @@
 //** p_setup.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_setup.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 09:20:16 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-17 13:00:23 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -728,8 +728,7 @@ void P_ConvexCarver(subsector_t *ssec, int num, divline_t *list)
     //extern void OGL_DrawEdges(int num,fvertex_t *list,int,fdivline_t*,int);
  
     int         numclippers = num+ssec->numlines;
-    fdivline_t  *clippers =
-(fdivline_t*)_alloca(numclippers*sizeof(fdivline_t));
+    fdivline_t  *clippers = (fdivline_t*)malloc(numclippers*sizeof(fdivline_t));
     int         i, k, numedgepoints;
     fvertex_t   *edgepoints;
     unsigned char sidelist[MAX_CC_SIDES];
@@ -816,8 +815,7 @@ void P_ConvexCarver(subsector_t *ssec, int num, divline_t *list)
                 // Add the new vertex. Also modify the sidelist.
                 edgepoints =
 (fvertex_t*)realloc(edgepoints,(++numedgepoints)*sizeof(fvertex_t));
-                if(numedgepoints >= MAX_CC_SIDES) I_Error("Too many points in
-carver.\n");
+                if(numedgepoints >= MAX_CC_SIDES) I_Error("Too many points in carver.\n");
  
                 // Make room for the new vertex.
                 memmove(edgepoints+endIdx+1, edgepoints+endIdx,
@@ -925,6 +923,7 @@ edgepoints[i].y;
     }
  
     // We're done, free the edgepoints memory.
+    free(clippers);
     free(edgepoints);
 }
 

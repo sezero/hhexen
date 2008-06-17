@@ -12,8 +12,6 @@ GLLIBS=""
 BASELIBS=""
 SVGALIBS=""
 LIBS="-L/usr/X11R6/lib"
-HAVESVGA="no"
-HAVEX11="yes"
 HAVEGL="no"
 GLBASE="opengl/i_gl.cpp"
 BUILDNAMES=""
@@ -48,14 +46,6 @@ dnl Check for pthread
 AC_CHECK_LIB(pthread, pthread_join, [BASELIBS="-lpthread"])
 
 AC_SUBST(BASELIBS)
-
-dnl Check for SvgaLib
-AC_CHECK_LIB(vga, vga_setmode, [SVGALIBS="-lvga"; HAVESVGA="yes"; BUILDNAMES="vga"])
-
-dnl Check for all libs needed by X11 version
-AC_CHECK_LIB(Xext,XShmQueryExtension, [LIBS="$LIBS -lXext"],[HAVEX11="no"])
-AC_CHECK_LIB(X11, main, [LIBS="$LIBS -lX11"; BUILDNAMES="x11 $BUILDNAMES"], [HAVEX11="no"])
-GLLIBS="$LIBS"
 
 dnl Check for SDL
 AM_PATH_SDL($SDL_VERSION,
@@ -130,8 +120,6 @@ dnl **** Check for endianness ****
 dnl AC_C_BIGENDIAN
 
 dnl **** Check for functions ****
-
-AC_FUNC_ALLOCA()
 
 dnl **** Check for header files ****
 

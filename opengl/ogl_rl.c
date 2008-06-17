@@ -230,11 +230,11 @@ void RL_AddFlatQuads(rendquad_t *base, GLuint quadtex, int numvrts,
 	}
 
 	// Calculate the distance to each vertex.
-	distances = _alloca(sizeof(float)*numvrts);
+	distances = (float *)malloc(sizeof(float)*numvrts);
 	for(i=0; i<numvrts; i++) distances[i] = PointDist2D(&origvrts[i].x);
 	
 	// Make a distance modification.
-	vrts = _alloca(sizeof(fvertex_t)*numvrts);
+	vrts = (fvertex_t *)malloc(sizeof(fvertex_t)*numvrts);
 	memcpy(vrts, origvrts, sizeof(fvertex_t)*numvrts);	
 	middist = PointDist2D(&currentssec->midpoint.x);
 	if(!(base->flags & RQF_LIGHT) && middist > 256)
@@ -301,6 +301,8 @@ void RL_AddFlatQuads(rendquad_t *base, GLuint quadtex, int numvrts,
 			if(base->flags & RQF_LIGHT) RL_DynLightQuad(qi, (lumobj_t*)quadtex);
 		}
 	}	
+	free (vrts);
+	free (distances);
 }
 
 void SetVertexColor(float light, float dist, float alpha)

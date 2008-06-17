@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-06-17 12:36:26 $
+//** $Revision: 1.11 $
+//** $Date: 2008-06-17 13:00:23 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -18,14 +18,7 @@
 #include <fcntl.h>
 #include <unistd.h> /* jim open() etc. */
 #include <ctype.h>  /* jim toupper() */
-#include <malloc.h>
-//#include <io.h>
-#include <fcntl.h>
-#ifndef HAVE_ALLOCA_H 
-#include <alloca.h>
-#else
 #define O_BINARY 0
-#endif
 #include "h2def.h"
 
 // MACROS ------------------------------------------------------------------
@@ -275,7 +268,7 @@ void W_MergeLumps(char *start, char *end)
 	int in_block = 0;
 	int i;
 
-	newlumpinfo = (lumpinfo_t *) alloca(numlumps * sizeof(lumpinfo_t));
+	newlumpinfo = (lumpinfo_t *) malloc(numlumps * sizeof(lumpinfo_t));
 	oldlumps = newlumps = 0;
 
 	for(i=0;i < numlumps;i++)
@@ -338,6 +331,7 @@ void W_MergeLumps(char *start, char *end)
 	lumpinfo[numlumps].position = lumpinfo[numlumps].size = 0;
 	numlumps++;
     }
+    free (newlumpinfo);
 }
 					
 //==========================================================================
