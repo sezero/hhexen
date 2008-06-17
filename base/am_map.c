@@ -4,8 +4,8 @@
 //** am_map.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: am_map.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-17 13:45:26 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-17 14:11:14 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -615,14 +615,14 @@ void AM_Ticker (void)
 
 void AM_clearFB(int color)
 {
-#ifndef RENDER3D
-	int i, j;
-#endif
 	int dmapx;
 	int dmapy;
 #ifdef RENDER3D
-    float scaler;
-    int lump;
+	float scaler;
+	int lump;
+#endif
+#if !defined(RENDER3D) && 0	/* bbm 3/9/2003: Makes map transparent */
+	int i, j;
 #endif
 
 	if(followplayer)
