@@ -4,8 +4,8 @@
 //** p_inter.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_inter.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-17 11:00:37 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-17 13:07:29 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -78,8 +78,8 @@ void P_SetMessage(player_t *player, char *message, boolean ultmsg)
 	}
 	if(strlen(message) > 79)
 	{
-		memcpy(player->message, message, 80);
-		player->message[80] = 0;
+		memcpy(player->message, message, 79);
+		player->message[79] = 0;
 	}
 	else
 	{
@@ -114,8 +114,8 @@ void P_SetYellowMessage(player_t *player, char *message, boolean ultmsg)
 	}
 	if(strlen(message) > 79)
 	{
-		memcpy(player->message, message, 80);
-		player->message[80] = 0;
+		memcpy(player->message, message, 79);
+		player->message[79] = 0;
 	}
 	else
 	{
