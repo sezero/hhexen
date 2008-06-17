@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdl.c,v 1.4 2008-06-17 13:03:44 sezero Exp $
+//** $Id: i_sdl.c,v 1.5 2008-06-17 13:05:23 sezero Exp $
 //**
 //**************************************************************************
 
@@ -319,7 +319,10 @@ int xlatekey(SDL_keysym *key)
       case SDLK_DOWN:	rc = KEY_DOWNARROW;	break;
       case SDLK_UP:	rc = KEY_UPARROW;	break;
       case SDLK_ESCAPE:	rc = KEY_ESCAPE;	break;
+
+      case SDLK_KP_ENTER:
       case SDLK_RETURN:	rc = KEY_ENTER;		break;
+
       case SDLK_F1:	rc = KEY_F1;		break;
       case SDLK_F2:	rc = KEY_F2;		break;
       case SDLK_F3:	rc = KEY_F3;		break;
