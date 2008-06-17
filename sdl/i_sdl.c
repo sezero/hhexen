@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdl.c,v 1.13 2008-06-17 18:00:21 sezero Exp $
+//** $Id: i_sdl.c,v 1.14 2008-06-17 18:10:34 sezero Exp $
 //**
 //**************************************************************************
 
@@ -251,7 +251,8 @@ void I_InitGraphics(void)
 	}
 
 	SDL_ShowCursor (0);
-	snprintf (text, 20, "HHexen v%s", HHEXEN_VERSION);
+	snprintf (text, sizeof(text), "HHexen v%d.%d.%d",
+		  VERSION_MAJ, VERSION_MIN, VERSION_PATCH);
 	SDL_WM_SetCaption (text, "HHEXEN");
 
 	pcscreen = destscreen = sdl_screen->pixels;

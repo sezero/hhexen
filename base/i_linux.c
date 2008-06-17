@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.22 2008-06-17 18:00:21 sezero Exp $
+//** $Id: i_linux.c,v 1.23 2008-06-17 18:10:34 sezero Exp $
 //**
 //**************************************************************************
 
@@ -1349,14 +1349,14 @@ static void CreateBasePath (void)
 }
 
 
-void PrintVersion (void)
+static void PrintVersion (void)
 {
-	printf ("HHexen (%s %d.%d)\n", VERSION_PLATFORM, VERSION_MAJ, VERSION_MIN);
+	printf ("HHexen (%s) v%d.%d.%d\n", VERSION_PLATFORM, VERSION_MAJ, VERSION_MIN, VERSION_PATCH);
 }
 
-void PrintHelp(char *name)
+static void PrintHelp(char *name)
 {
-	printf ("HHexen (%s %d.%d)\n", VERSION_PLATFORM, VERSION_MAJ, VERSION_MIN);
+	PrintVersion ();
 	printf ("http://sourceforge.net/projects/hhexen\n");
 	printf ("http://icculus.org/hast\n");
 	printf ("\n");
