@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdl.c,v 1.10 2008-06-17 14:40:31 sezero Exp $
+//** $Id: i_sdl.c,v 1.11 2008-06-17 17:51:22 sezero Exp $
 //**
 //**************************************************************************
 
@@ -31,8 +31,6 @@ boolean mousepresent;
 SDL_Surface* sdl_screen;
 
 //===============================
-
-int ticcount;
 
 boolean novideo;	// if true, stay in text mode for debugging
 

@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdlgl.c,v 1.10 2008-06-17 14:33:07 sezero Exp $
+//** $Id: i_sdlgl.c,v 1.11 2008-06-17 17:51:22 sezero Exp $
 //**
 //**************************************************************************
 
@@ -37,7 +37,6 @@ extern int usemouse, usejoystick;
 boolean useexterndriver;
 boolean mousepresent;
 
-int ticcount;
 
 boolean novideo;	// if true, stay in text mode for debugging
 

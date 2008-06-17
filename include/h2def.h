@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.26 $
-//** $Date: 2008-06-17 17:45:13 $
+//** $Revision: 1.27 $
+//** $Date: 2008-06-17 17:51:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -897,6 +897,8 @@ extern	int			gamemap;
 extern 	int 			prevmap;
 extern	int			levelstarttic;		// gametic at level start
 extern	int			leveltime;			// tics in game play for par
+
+extern	int			ticcount;
 
 extern	ticcmd_t	netcmds[MAXPLAYERS][BACKUPTICS];
 extern int ticdup;
