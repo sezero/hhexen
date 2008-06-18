@@ -4,8 +4,8 @@
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-17 17:21:06 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-18 13:40:59 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -616,13 +616,11 @@ void SB_Init(void)
 void SB_SetClassData(void)
 {
 	int class;
-#ifdef ASSASSIN
-	if(PlayerClass[consoleplayer] != PCLASS_ASS) 
-#endif
+
 	class = PlayerClass[consoleplayer]; // original player class (not pig)
 #ifdef ASSASSIN
-	else
-	class = 0; // Use FIghter chain and gem for now
+	if(class == PCLASS_ASS)
+		class = PCLASS_FIGHTER;	// Use FIghter chain and gem for now
 #endif
 	PatchWEAPONSLOT = WR_CacheLumpNum(W_GetNumForName("wpslot0")
 		+class, PU_STATIC);
