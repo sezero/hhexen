@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.17 $
-//** $Date: 2008-06-17 17:39:47 $
+//** $Revision: 1.18 $
+//** $Date: 2008-06-18 06:32:33 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -19,6 +19,12 @@
 #include "h2def.h"
 
 // MACROS ------------------------------------------------------------------
+
+#define	DEMO_LUMPS	2856
+#define	DEMO_WADSIZE	10644136
+
+#define	MACDEMO_LUMPS	3500
+#define	MACDEMO_WADSIZE	13596228
 
 // TYPES -------------------------------------------------------------------
 
@@ -80,10 +86,14 @@ void W_AddFile(char *filename)
 	lumpinfo_t *lump_p;
 	unsigned i;
 	char path[MAX_OSPATH], *waddir;
-	int handle, length;
+	int handle, length, flength;
 	int startlump;
 	filelump_t *fileinfo, singleinfo;
 	filelump_t *freeFileInfo;
+
+	int	fixlumpnames = 0;
+	byte	*c;
+
 
 	handle = -1;
 	/* Add support for HHEXEN_DATA envirionment variable */
@@ -98,13 +108,14 @@ void W_AddFile(char *filename)
 	if (handle == -1)
 		return;		/* Didn't find the file. */
 
+	flength = filelength(handle);
 	startlump = numlumps;
 	if (strcasecmp(filename + strlen(filename) - 3, "wad") != 0)
 	{ // Single lump file
 		fileinfo = &singleinfo;
 		freeFileInfo = NULL;
 		singleinfo.filepos = 0;
-		singleinfo.size = LONG(filelength(handle));
+		singleinfo.size = LONG(flength);
 		M_ExtractFileBase(filename, singleinfo.name);
 		numlumps++;
 	}
@@ -122,6 +133,23 @@ void W_AddFile(char *filename)
 		header.numlumps = LONG(header.numlumps);
 		header.infotableofs = LONG(header.infotableofs);
 		length = header.numlumps*sizeof(filelump_t);
+		if(strncmp(header.identification,"IWAD",4) == 0 &&
+		   header.numlumps == DEMO_LUMPS && flength == DEMO_WADSIZE)
+		{
+			shareware = true;
+			ST_Message("Shareware WAD detected (4 level 1.0 PC version).\n");
+		}
+		else if(strncmp(header.identification,"IWAD",4) == 0 &&
+		   header.numlumps == MACDEMO_LUMPS && flength == MACDEMO_WADSIZE)
+		{
+			/* in the Mac demo wad, some of the lump names begin
+			 * with a character that has the high bit (0x80) set,
+			 * for reasons unknown to me. we must clear the high
+			 * bit for this wad to work in this engine. */
+			fixlumpnames = 1;
+			shareware = true;
+			ST_Message("Shareware WAD detected (4 level 1.1 Mac version).\n");
+		}
 //		fileinfo = alloca(length);
 		if(!(fileinfo = malloc(length)))
 		{
@@ -146,10 +174,23 @@ void W_AddFile(char *filename)
 		lump_p->position = LONG(fileinfo->filepos);
 		lump_p->size = LONG(fileinfo->size);
 		strncpy(lump_p->name, fileinfo->name, 8);
+		if (fixlumpnames)
+		{
+			c = (byte *)lump_p->name;
+			if (*c > 127)
+			{
+				*c -= 128;
+				fixlumpnames++;
+			}
+		}
 	}
 	if(freeFileInfo)
 	{
 		free(freeFileInfo);
+	}
+	if (--fixlumpnames > 0)
+	{
+		ST_Message("Cleared highbit (0x80) from %i lump names.\n", fixlumpnames);
 	}
 }
 
