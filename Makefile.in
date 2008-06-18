@@ -68,8 +68,6 @@ BASEOBJS = \
 	base/am_map.o \
 	base/a_action.o \
 	base/ct_chat.o \
-	base/c_console.o \
-	base/c_cvar.o \
 	base/d_net.o \
 	base/f_finale.o \
 	base/g_game.o \
@@ -117,6 +115,9 @@ BASEOBJS = \
 	base/v_video.o \
 	base/w_wad.o \
 	base/z_zone.o
+#	base/c_console.o \
+#	base/c_cvar.o \
+#	base/i_action.o \
 
 ifeq "$(GLHEXEN)" "true"
 opengl: $(GLBASE) $(GLOBJS) $(BASEOBJS)
