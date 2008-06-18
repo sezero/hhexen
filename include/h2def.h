@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.29 $
-//** $Date: 2008-06-17 18:11:55 $
+//** $Revision: 1.30 $
+//** $Date: 2008-06-18 06:35:16 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -31,7 +31,7 @@
 
 #define VERSION_MAJ	1
 #define VERSION_MIN	4
-#define VERSION_PATCH	0
+#define VERSION_PATCH	1
 #define HHEXEN_VERSION	"v" STRINGIFY(VERSION_MAJ) "." STRINGIFY(VERSION_MIN) "." STRINGIFY(VERSION_PATCH)
 
 // if rangecheck is undefined, most parameter validation debugging code
