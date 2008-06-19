@@ -1,0 +1,44 @@
+This, from the CVS log, from June 19, 2008:
+
+--------------------------------------------------------------------------------
+
+version 1.0 and demo wad files support:
+
+the demo wad file support doesn't need a special configuration anymore.
+besides, the --enable-demowad configuration option isn't an end-user
+switch anymore:  it makes the compiled binary to work only with demo
+(PC or Mac) version wad files and error-out otherwise.
+
+added new configuration option, --enable-oldwad :  compiles the exe to
+specifically use the 1.0 (shareware or retail) wad files, 1.1 wads are
+rejected and errors out.  it configures the engine to MAXPLAYERS == 4
+instead of the normal 8 value, it also makes the saved games signed with
+2.36 instead of 2.37.
+
+The striking difference between versions 1.0 and 1.1 is the MAXPLAYER
+change: 1.0 supports 4 and 1.1 supports 8 players, and this results in
+subtle problems.
+
+Saves across different versions are not compatible. We are now signing
+saves made with binaries configured with the oldwad option with 2.36
+instead of 2.37: 2.36 is the signature which the 1.0 version used, but
+remember, this doesn't mean the saves from those old dos versions are
+supported, they are NOT.  The normal 8-player binary will sign the saves
+with 2.37 as usual, and it will not care about with which wad it is
+running with.
+
+The worst thing is the recorded demos:  since there are no versioning
+mechanisms, the demos saved with 4-player and 8-player versions are
+incompatible.  I hacked a few things here:  basically, if a version-1.0
+wad is detected, demo playback and recording is done according to 4
+players.  but this isn't accurate, either.
+
+in short, it seems like there are no problems with the binaries configured
+with the demowad option (the 4-player binaries).  but if one is running
+the normal 8-player binary with a 1.0 wad file, there may still be problems,
+especially in the multiplayer code which we can't test at the moment.
+another option would be to make the 8-player binary to error out with
+version 1.0 (demo or full) wad files.  I'm open to ideas.
+
+--------------------------------------------------------------------------------
+

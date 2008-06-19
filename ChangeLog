@@ -1,8 +1,30 @@
 HHexen ChangeLog
 
+v1.4.1
+ - Added support for the Mac version of the
+   demo hexen.wad file.
+ - The demo wad files support doesn't need a
+   special configuration anymore.
+ - Various hacks and/or fixes for the proper
+   handling of different 1.0 and 1.1, demo or
+   retail wad files (see the WADFILES document
+   for technical details.)
+ - Many other bugfixes
+
 v1.4
  - Configs and savegames stored in ~/.hhexen/
  - SDL and SDL/GL support
+ - X11 and SVGALib targets are removed
+ - OpenGL screenshots (now bound to F12)
+ - Screenshots are now saved to ~/.hhexen/
+ - Transparent map feature (TAB key)
+ - Fixed broken keybinding in the menu
+ - More complete support for punctuation keys
+   in the control-setup menu.
+ - The config files from the previous hhexen
+   versions are now invalid: delete your configs
+   and bind your keys again from the menu system.
+ - Many GCC/C/portability bugfixes
 
 v1.3
  - OpenGL support
