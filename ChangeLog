@@ -3,12 +3,14 @@ HHexen ChangeLog
 v1.4.1
  - Added support for the Mac version of the
    demo hexen.wad file.
- - The demo wad files support doesn't need a
-   special configuration anymore.
- - Various hacks and/or fixes for the proper
-   handling of different 1.0 and 1.1, demo or
-   retail wad files (see the WADFILES document
-   for technical details.)
+ - The demo wad files doesn't need a special
+   configuration anymore.
+ - Various hacks/fixes for the proper handling
+   of different 1.0 and 1.1 wad file versions;
+   read WADFILES for technical details.
+ - Incomplete assassin class is now disabled
+   by default. If you want it, configure with
+   --enable-assassin
  - Many other bugfixes
 
 v1.4

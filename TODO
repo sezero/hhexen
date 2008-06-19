@@ -1,20 +1,29 @@
 TODO for HHexen
 
+ - Add networking (multiplayer) support.
+ - Make sure big endian and non-intel compilations work.
+ - 64 bit compatibility (broken at present).
+ - Make a menu item for mouse buttons... or, for better:
  - Change input system to allow for Quake style key binding.
- - Nix all #ifdef RENDER3D's
- - Fix screenshots for OpenGL version.
+ - Fix OpenGL for the episode endings and finale screens.
+ - A thorough re-visit / clean-up of all #ifdef RENDER3D's.
+ - In-game resolution and fullscreen/windowed switching
+ - Re-visit all file creating / deleting procedures and do
+   proper changes for userdir (~/.hhexen) usage.
  - Midi Music.
  - CD Audio.
  - 3D sound support.
  - ALSA sound support.
  - In-game MP3 music.
- - High resolution support for X11 version.
- - Linux joystick support.
- - More eye candy (lens flares, dynamic lights) 
+ - High resolution support for software renderer.
+ - SDL joystick support.
+ - More eye candy (lens flares, dynamic lights)
+ - More bug fixes (if there aren't any, add some ;)
 
 TODO for Assassin
 
  - Finish third and fourth weapons.
  - Sound effects.
 
-Send patches or ideas to Dan Olson <theoddone33@icculus.org>
+Sending patches or ideas: http://sourceforge.net/projects/hhexen/
+
