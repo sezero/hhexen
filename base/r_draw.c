@@ -4,8 +4,8 @@
 //** r_draw.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_draw.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 13:40:53 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-19 06:23:21 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -331,6 +331,24 @@ void R_DrawTranslatedAltFuzzColumn (void)
 //
 //--------------------------------------------------------------------------
 
+/* version 1.0 wad has 9 lumps: trantbl0 ... trantbl8 */
+#if 0
+static byte transtable10[256 * 3 * (MAXPLAYERS_10 - 1)] =
+{
+#  include "transtb10.h"
+};
+#endif
+/* version 1.1 wad has 21 lumps: trantbl0 .. trantbl9 
+			    and  trantbla .. trantblk */
+#if (MAXPLAYERS == MAXPLAYERS_11)
+static byte transtable11[256 * 3 * (MAXPLAYERS_11 - 1)] =
+{
+#  include "transtb11.h"
+};
+#define TRANTBL11_OFS	(256 * 3 * (MAXPLAYERS_10 - 1))
+#define TRANTBL11_CNT	(256 * 3 * (MAXPLAYERS_11 - MAXPLAYERS_10))
+#endif
+
 void R_InitTranslationTables (void)
 {
 	int i;
@@ -340,14 +358,24 @@ void R_InitTranslationTables (void)
 	tinttable = W_CacheLumpName("TINTTAB", PU_STATIC);
 
 	// Allocate translation tables
-	translationtables = Z_Malloc(256*3*(MAXPLAYERS-1)+255, 
-		PU_STATIC, 0);
-	translationtables = (byte *)(((int)translationtables+255)&~255);
+	translationtables = Z_Malloc(256 * 3 * (MAXPLAYERS - 1) + 255, PU_STATIC, 0);
+	translationtables = (byte *)(((int)translationtables + 255) & ~255);
 
-	for(i = 0; i < 3*(MAXPLAYERS-1); i++)
+	for (i = 0; i < 3 * (MAXPLAYERS - 1); i++)
 	{
+#if (MAXPLAYERS == MAXPLAYERS_11)
+		if (oldwad_10 && i == 3 * (MAXPLAYERS_10 - 1))
+		{
+			/* HACK !! ---  old 1.0 wad doesn't have TRANTBL9
+			 *		to TRANTBLK. Let's just copy from
+			 *		the extracted v1.1 data.	*/
+			memcpy (translationtables + TRANTBL11_OFS,
+				transtable11 + TRANTBL11_OFS, TRANTBL11_CNT);
+			break;
+		}
+#endif	/* 8-players */
 		transLump = W_CacheLumpNum(W_GetNumForName("trantbl0")+i, PU_STATIC);
-		memcpy(translationtables+i*256, transLump, 256);
+		memcpy(translationtables + i*256, transLump, 256);
 		Z_Free(transLump);
 	}
 }

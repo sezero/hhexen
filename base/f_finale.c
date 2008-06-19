@@ -4,8 +4,8 @@
 //** f_finale.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: f_finale.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-17 13:40:25 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-19 06:23:20 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -36,7 +36,6 @@ static void DrawPic(void);
 static void InitializeFade(boolean fadeIn);
 static void DeInitializeFade(void);
 static void FadePic(void);
-static char *GetFinaleText(int sequence);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
@@ -352,34 +351,5 @@ void F_Drawer(void)
 			break;
 	}
 	UpdateState |= I_FULLSCRN;	
-}
-
-//==========================================================================
-//
-// GetFinaleText
-//
-//==========================================================================
-
-static char *GetFinaleText(int sequence)
-{
-	char *msgLumpName;
-	int msgSize;
-	int msgLump;
-	static char *winMsgLumpNames[] =
-	{
-		"win1msg",
-		"win2msg",
-		"win3msg"
-	};
-	msgLumpName = winMsgLumpNames[sequence];
-	msgLump = W_GetNumForName(msgLumpName);
-	msgSize = W_LumpLength(msgLump);
-	if(msgSize >= MAX_INTRMSN_MESSAGE_SIZE)
-	{
-		I_Error("Finale message too long (%s)", msgLumpName);
-	}
-	W_ReadLump(msgLump, ClusterMessage);
-	ClusterMessage[msgSize] = 0; // Append terminator
-	return ClusterMessage;
 }
 

@@ -72,6 +72,7 @@ BASEOBJS = \
 	base/f_finale.o \
 	base/g_game.o \
 	base/h2_main.o \
+	base/h_hubmsg.o \
 	base/info.o \
 	base/in_lude.o \
 	base/mn_menu.o \

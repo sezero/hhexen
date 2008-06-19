@@ -4,8 +4,8 @@
 //** ct_chat.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: ct_chat.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-17 14:03:38 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-19 06:23:20 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -29,10 +29,12 @@ enum
 	CT_PLR_RED,
 	CT_PLR_YELLOW,
 	CT_PLR_GREEN,
+#if (MAXPLAYERS >= MAXPLAYERS_11)
 	CT_PLR_PLAYER5,
 	CT_PLR_PLAYER6,
 	CT_PLR_PLAYER7,
 	CT_PLR_PLAYER8,
+#endif
 	CT_PLR_ALL
 };
 
@@ -77,7 +79,7 @@ boolean cheated;
 
 static int FontABaseLump;
 
-char *CT_FromPlrText[MAXPLAYERS] =
+char *CT_FromPlrText[MAXPLAYERS_11] =
 {
 	"BLUE:  ",
 	"RED:  ",
@@ -187,6 +189,7 @@ boolean CT_Responder(event_t *ev)
 		{
 			sendto = CT_PLR_BLUE;
 		}
+#if (MAXPLAYERS == MAXPLAYERS_11)
 		else if(ev->data1 == CT_KEY_PLAYER5)
 		{
 			sendto = CT_PLR_PLAYER5;
@@ -203,6 +206,7 @@ boolean CT_Responder(event_t *ev)
 		{
 			sendto = CT_PLR_PLAYER8;
 		}
+#endif	/* 8-players */
 		if(sendto == 0 || (sendto != CT_PLR_ALL && !playeringame[sendto-1])
 			|| sendto == consoleplayer+1)
 		{

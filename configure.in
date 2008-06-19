@@ -21,8 +21,12 @@ AC_ARG_ENABLE(gl,
 [SDL_VERSION="1.1.0"])
 
 AC_ARG_ENABLE(demowad,
-[  --enable-demowad		Enable compilation with the demo wadfile],
-[ AC_DEFINE(DEMO_WAD)])
+[  --enable-demowad		Compile for the demo version wadfile only],
+[ AC_DEFINE(DEMO_VERSION)])
+
+AC_ARG_ENABLE(oldwad,
+[  --enable-oldwad		Compile for the version 1.0 wadfiles only],
+[ AC_DEFINE(VERSION10_WAD)])
 
 AC_ARG_ENABLE(assassin,
 [  --enable-assassin		Compile HHexen with support for the assassin],

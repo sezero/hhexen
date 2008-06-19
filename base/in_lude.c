@@ -4,8 +4,8 @@
 //** in_lude.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: in_lude.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-17 15:02:33 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-19 06:23:20 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -54,7 +54,6 @@ static void DrawHubText(void);
 // PUBLIC DATA DECLARATIONS ------------------------------------------------
 
 boolean intermission;
-char ClusterMessage[MAX_INTRMSN_MESSAGE_SIZE];
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
@@ -146,15 +145,6 @@ static void Stop(void)
 // 	Initializes the stats for single player mode
 //========================================================================
 
-static char *ClusMsgLumpNames[] =
-{
-	"clus1msg",
-	"clus2msg", 
-	"clus3msg",
-	"clus4msg", 
-	"clus5msg"
-};
-
 static void InitStats(void)
 {
 	int i;
@@ -164,9 +154,6 @@ static void InitStats(void)
 	int posnum;
 	int slaughtercount;
 	int playercount;
-	char *msgLumpName;
-	int msgSize;
-	int msgLump;
 
 	extern int LeaveMap;
 
@@ -179,16 +166,7 @@ static void InitStats(void)
 		{
 			if(oldCluster >= 1 && oldCluster <= 5)
 			{
-				msgLumpName = ClusMsgLumpNames[oldCluster-1];
-				msgLump = W_GetNumForName(msgLumpName);
-				msgSize = W_LumpLength(msgLump);
-				if(msgSize >= MAX_INTRMSN_MESSAGE_SIZE)
-				{
-					I_Error("Cluster message too long (%s)", msgLumpName);
-				}
-				W_ReadLump(msgLump, ClusterMessage);
-				ClusterMessage[msgSize] = 0; // Append terminator
-				HubText = ClusterMessage;
+				HubText = GetClusterText(oldCluster-1);
 				HubCount = strlen(HubText)*TEXTSPEED+TEXTWAIT;
 				S_StartSongName("hub", true);
 			}

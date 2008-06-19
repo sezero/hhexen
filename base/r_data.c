@@ -4,8 +4,8 @@
 //** r_data.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_data.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-17 13:40:52 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-19 06:23:20 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -575,20 +575,11 @@ int	R_CheckTextureNumForName (char *name)
 int	R_TextureNumForName (char *name)
 {
 	int		i;
-	//char	namet[9];
-	
+
 	i = R_CheckTextureNumForName (name);
-	if (i==-1)
-    {
-#ifdef DEMO_WAD
-        printf("R_TextureNumForName: %s not found!  Assuming shareware wad.\n",
-                name);
-        return 1;
-#else
+	if (i == -1)
 		I_Error ("R_TextureNumForName: %s not found",name);
-#endif
-    }
-	
+
 	return i;
 }
 

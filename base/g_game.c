@@ -4,8 +4,8 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.12 $
-//** $Date: 2008-06-17 15:02:32 $
+//** $Revision: 1.13 $
+//** $Date: 2008-06-19 06:23:20 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1384,6 +1384,13 @@ void G_SecretExitLevel (void)
 
 void G_Completed(int map, int position)
 {
+	if(shareware && map > 4)
+	{
+		// Not possible in the 4-level demo.
+		P_SetMessage(&players[consoleplayer], "ACCESS DENIED -- DEMO", true);
+		return;
+	}
+
 	gameaction = ga_completed;
 	LeaveMap = map;
 	LeavePosition = position;
@@ -1731,11 +1738,21 @@ void G_RecordDemo (skill_t skill, int numplayers, int episode, int map, char *na
 	*demo_p++ = episode;
 	*demo_p++ = map;
 	
-	for (i=0 ; i<MAXPLAYERS ; i++)
+	for (i = 0; i < MAXPLAYERS; i++)
 	{
+#if (MAXPLAYERS > MAXPLAYERS_10)
+	/* 8-player support is added to Hexen starting
+	 * with version 1.1.  If using 1.0 wad files,
+	 * don't write player data > 4 to the demo...
+	 * See also G_DoPlayDemo() below.
+	 * FIXME: What if the player count is > 4 ???
+	 */
+		if (oldwad_10 && i >= MAXPLAYERS_10)
+			break;
+#endif
 		*demo_p++ = playeringame[i];
 		*demo_p++ = PlayerClass[i];
-	}		
+	}
 	demorecording = true;
 }
 
@@ -1767,8 +1784,24 @@ void G_DoPlayDemo (void)
 	episode = *demo_p++;
 	map = *demo_p++;
 
-	for (i=0 ; i<MAXPLAYERS ; i++)
+	for (i = 0; i < MAXPLAYERS; i++)
 	{
+#if (MAXPLAYERS > MAXPLAYERS_10)
+	/* here is the tricky part: the demos in the
+	 * version 1.0 wad files are for MAXPLAYERS 4,
+	 * not 8. the check that I added below is not
+	 * accurate, though, because the demo may be
+	 * recorded using MAXPLAYERS == 8, ie. it may
+	 * not be from the wad file..
+	 * See also G_RecordDemo() above.
+	 */
+		if (oldwad_10 && i >= MAXPLAYERS_10)
+		{
+			playeringame[i] = 0;
+			PlayerClass[i] = 0;
+			continue;
+		}
+#endif
 		playeringame[i] = *demo_p++;
 		PlayerClass[i] = *demo_p++;
 	}

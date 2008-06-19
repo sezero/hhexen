@@ -4,8 +4,8 @@
 //** p_switch.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_switch.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 13:40:48 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-19 06:23:20 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -20,20 +20,31 @@
 //      CHANGE THE TEXTURE OF A WALL SWITCH TO ITS OPPOSITE
 //
 //==================================================================
-switchlist_t alphSwitchList[] =
+
+switchlist_t alphSwitchListDemo[] =
 {
 	{ "SW_1_UP", "SW_1_DN", SFX_SWITCH1 },
 	{ "SW_2_UP", "SW_2_DN", SFX_SWITCH1 },
-  	{ "VALVE1", "VALVE2", SFX_VALVE_TURN },     // Not in in demo wad - KR
-  	{ "SW51_OFF", "SW51_ON", SFX_SWITCH2 },     //
 	{ "SW52_OFF", "SW52_ON", SFX_SWITCH2 },
-  	{ "SW53_UP", "SW53_DN", SFX_ROPE_PULL },    //
-  	{ "PUZZLE5", "PUZZLE9", SFX_SWITCH1 },      //
-  	{ "PUZZLE6", "PUZZLE10", SFX_SWITCH1 },     //
-  	{ "PUZZLE7", "PUZZLE11", SFX_SWITCH1 },     //
-  	{ "PUZZLE8", "PUZZLE12", SFX_SWITCH1 },     //
 	{"\0", "\0", 0}
 };
+
+switchlist_t alphSwitchListFull[] =
+{
+	{ "SW_1_UP", "SW_1_DN", SFX_SWITCH1 },
+	{ "SW_2_UP", "SW_2_DN", SFX_SWITCH1 },
+ 	{ "VALVE1", "VALVE2", SFX_VALVE_TURN },
+	{ "SW51_OFF", "SW51_ON", SFX_SWITCH2 },
+	{ "SW52_OFF", "SW52_ON", SFX_SWITCH2 },
+	{ "SW53_UP", "SW53_DN", SFX_ROPE_PULL },
+	{ "PUZZLE5", "PUZZLE9", SFX_SWITCH1 },
+	{ "PUZZLE6", "PUZZLE10", SFX_SWITCH1 },
+	{ "PUZZLE7", "PUZZLE11", SFX_SWITCH1 },
+	{ "PUZZLE8", "PUZZLE12", SFX_SWITCH1 },
+	{"\0", "\0", 0}
+};
+
+switchlist_t *alphSwitchList = NULL;
 
 int switchlist[MAXSWITCHES * 2];
 int numswitches;
@@ -53,6 +64,11 @@ void P_InitSwitchList(void)
 {
 	int             i;
 	int             index;
+
+	if (alphSwitchList == NULL)
+	{
+		alphSwitchList = (shareware && oldwad_10) ? alphSwitchListDemo : alphSwitchListFull;
+	}
 
 	for (index = 0, i = 0; i < MAXSWITCHES; i++)
 	{

@@ -4,8 +4,8 @@
 //** am_map.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: am_map.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-06-18 20:35:45 $
+//** $Revision: 1.11 $
+//** $Date: 2008-06-19 06:23:20 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1524,7 +1524,7 @@ void AM_Drawer (void)
 
 // 8-player note:  Proper player color names here, too
 
-static char *PlayerColorText[MAXPLAYERS] =
+static char *PlayerColorText[MAXPLAYERS_11] =
 {
 	"BLUE:",
 	"RED:",

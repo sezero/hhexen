@@ -9,8 +9,11 @@
 /* Define if building for OpenGL */
 #undef RENDER3D
 
-/* Define if building for demo wadfile */
-#undef DEMO_WAD
+/* Define if building for demo (4 level 4-player) wadfile only */
+#undef DEMO_VERSION
+
+/* Define if building for version 1.0 (4-player) wadfiles only */
+#undef VERSION10_WAD
 
 /* Needed for something or other */
 #undef _REENTRANT

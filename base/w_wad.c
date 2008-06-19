@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.18 $
-//** $Date: 2008-06-18 06:32:33 $
+//** $Revision: 1.19 $
+//** $Date: 2008-06-19 06:23:21 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -557,13 +557,8 @@ int	W_GetNumForName (char *name)
 	{
 		return i;
 	}
-#ifdef DEMO_WAD
-	printf("W_GetNumForName: %s not found!  Assuming shareware wad.\n", name);
-	return 1;
-#else
 	I_Error("W_GetNumForName: %s not found!", name);
 	return -1;
-#endif
 }
 
 //==========================================================================
@@ -651,13 +646,52 @@ void *W_CacheLumpName(char *name, int tag)
 
 void W_CheckForOldFiles (void)
 {
-	if(W_CheckNumForName("clus1msg") == -1)
+	char	lumpmsg[10];
+	int		i;
+
+	for (i = 1; i <= 4 && oldwad_10 != true; i++)
 	{
-		ST_Message ("\nIt appears that you are using a Version 1.0 \'hexen.wad\' file. Running HHexen\n");
-		ST_Message ("without a Version 1.1 wadfile can cause many problems.\n");
+		sprintf (lumpmsg, "clus%imsg", i);
+		if (W_CheckNumForName(lumpmsg) == -1)
+			oldwad_10 = true;
+	}
+	for (i = 1; i <= 3 && oldwad_10 != true; i++)
+	{
+		sprintf (lumpmsg, "win%imsg", i);
+		if (W_CheckNumForName(lumpmsg) == -1)
+			oldwad_10 = true;
+	}
+
+#if 0
+	if (shareware)
+	{
+		ST_Message ("\n========================================================================\n");
+		ST_Message ("                      Hexen:  Beyond Heretic\n\n");
+		ST_Message ("                       4 Level Demo Version\n");
+		ST_Message ("                    Press any key to continue.\n");
+		ST_Message ("========================================================================\n\n");
+		getchar();
+	}
+#endif
+
+#if defined(DEMO_VERSION)
+	if (shareware != true)
+		I_Error ("\nShareware WAD not detected.\nThis exe is configured only for the DEMO version of Hexen!\n");
+#endif	/* Shareware-only */
+
+#if defined(VERSION10_WAD)
+	if (oldwad_10 != true)
+		I_Error ("\nThis exe is configured only for Hexen 1.0 (4-player-only) wad files!\n");
+	ST_Message ("Running with 4-player-only Version 1.0 hexen.wad files.\n");
+#else
+	if (oldwad_10 == true)
+	{
+		ST_Message ("\nIt appears that you are using a 4-player-only Version 1.0 hexen.wad.\n");
+		ST_Message ("Running HHexen without a Version 1.1 wadfile can cause many problems.\n");
 		ST_Message ("\nPress <ENTER> to continue.\n");
 		getchar();
 	}
+#endif
 }
 
 //==========================================================================

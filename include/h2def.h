@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.30 $
-//** $Date: 2008-06-18 06:35:16 $
+//** $Revision: 1.31 $
+//** $Date: 2008-06-19 06:23:21 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -16,17 +16,21 @@
 #define __STRINGIFY(x) #x
 #define STRINGIFY(x) __STRINGIFY(x)
 
-#define VERSION 110
-#define VERSION_TEXT "v1.1"
-
-#if defined(__linux)
-#define VERSION_PLATFORM "Linux"
-#elif defined (__FreeBSD__)
-#define VERSION_PLATFORM "FreeBSD"
-#elif defined (WIN32)
-#define VERSION_PLATFORM "Windows"
+/* 8-player support is added by hexen version 1.1 */
+#define MAXPLAYERS_10	4
+#define MAXPLAYERS_11	8
+#if defined(VERSION10_WAD)
+#define MAXPLAYERS	(MAXPLAYERS_10)
 #else
-#define VERSION_PLATFORM "Unknown"
+#define MAXPLAYERS	(MAXPLAYERS_11)
+#endif
+
+#if (MAXPLAYERS == MAXPLAYERS_10)
+#define VERSION		100
+#define VERSION_TEXT	"v1.0"
+#else
+#define VERSION		110
+#define VERSION_TEXT	"v1.1"
 #endif
 
 #define VERSION_MAJ	1
@@ -47,15 +51,32 @@
 //#define VERSIONTEXT "DVL BETA 10 07 95" // Just an update for Romero
 //#define VERSIONTEXT "FINAL 1.0 (10 13 95)" // Just an update for Romero
 
-//#define VER_ID		"DVL"
 //#define VER_ID		"RETAIL"
-#ifdef RANGECHECK
-#define VER_ID		"DVL +R"
-#else
 #define VER_ID		"DVL"
+
+#if (MAXPLAYERS == MAXPLAYERS_10)
+#define VER_ID2		VER_ID "/4PLYR"
+#else
+#define VER_ID2		VER_ID "/8PLYR"
 #endif
 
-#define VERSIONTEXT "Version " HHEXEN_VERSION " " __DATE__ " (" VER_ID ")"
+#ifdef RANGECHECK
+#define VER_ID_FINAL	VER_ID2 "+R"
+#else
+#define VER_ID_FINAL	VER_ID2
+#endif
+
+#define VERSIONTEXT	HHEXEN_VERSION " " __DATE__ " (" VER_ID_FINAL ")"
+
+#if defined(__linux)
+#define VERSION_PLATFORM "Linux"
+#elif defined (__FreeBSD__)
+#define VERSION_PLATFORM "FreeBSD"
+#elif defined (WIN32)
+#define VERSION_PLATFORM "Windows"
+#else
+#define VERSION_PLATFORM "Unknown"
+#endif
 
 /* max length of a filesystem pathname	*/
 #define	MAX_OSPATH		256
@@ -217,7 +238,7 @@ extern byte *destview, *destscreen;	// PC direct to screen pointers
 */
 
 //#define NUMARTIFCTS	28
-#define MAXPLAYERS	8
+
 #define TICRATE		35			// number of tics / second
 #define TICSPERSEC	35
 
@@ -846,6 +867,7 @@ extern gameaction_t gameaction;
 extern boolean paused;
 
 extern boolean shareware; // true if other episodes not present
+extern boolean oldwad_10; // true if version 1.0 wad files (shareware or full)
 
 extern boolean DevMaps; // true = map development mode
 extern char *DevMapsDir; // development maps directory
@@ -1282,7 +1304,11 @@ void G_ScreenShot (void);
 //SV_SAVE
 //-------
 
+#if (MAXPLAYERS == MAXPLAYERS_10)
+#define HXS_VERSION_TEXT "HXS Ver 2.36"
+#else
 #define HXS_VERSION_TEXT "HXS Ver 2.37"
+#endif
 #define HXS_VERSION_TEXT_LENGTH 16
 #define HXS_DESCRIPTION_LENGTH 24
 
@@ -1521,18 +1547,23 @@ extern int globheight;
 extern int globwidth; 
 extern int lu2sux(int x);
 extern int lu2suy(int y);
+
 //----------------------
 // Interlude (IN_lude.c)
 //----------------------
 
-#define MAX_INTRMSN_MESSAGE_SIZE 1024
-
 extern boolean intermission;
-extern char ClusterMessage[MAX_INTRMSN_MESSAGE_SIZE];
 
 void IN_Start(void);
 void IN_Ticker(void);
 void IN_Drawer(void);
+
+//----------------------
+// Interlude (hubmsg.c)
+//----------------------
+
+char *GetClusterText(int sequence);
+char *GetFinaleText (int sequence);
 
 //----------------------
 // Chat mode (CT_chat.c)

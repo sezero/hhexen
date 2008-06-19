@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.22 $
-//** $Date: 2008-06-17 17:45:13 $
+//** $Revision: 1.23 $
+//** $Date: 2008-06-19 06:23:20 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -91,6 +91,7 @@ const char *basePath = "";
 boolean DevMaps;			// true = Map development mode
 char *DevMapsDir = "";		// development maps directory
 boolean shareware;			// true if only episode 1 present
+boolean oldwad_10;			// true if version 1.0 wad files
 boolean nomonsters;			// checkparm of -nomonsters
 boolean respawnparm;		// checkparm of -respawn
 boolean randomclass;		// checkparm of -randclass
@@ -194,12 +195,6 @@ void H2_Main(void)
 	startskill = sk_medium;
 	startmap = 1;
 
-#ifdef DEMO_WAD
-	shareware = true;
-#else
-	shareware = false; // Always false for Hexen
-#endif
-
 	HandleArgs();
 
 	// Initialize subsystems
@@ -217,12 +212,7 @@ void H2_Main(void)
 	// WAD files BEFORE the zone memory initialization.
 	ST_Message("W_Init: Init WADfiles.\n");
 	W_InitMultipleFiles(wadfiles);
-
-
-#ifndef DEMO_WAD
 	W_CheckForOldFiles();
-#endif
-	
 
 	ST_Message("Z_Init: Init zone memory allocation daemon.\n");
 	Z_Init();

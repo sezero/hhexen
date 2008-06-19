@@ -4,8 +4,8 @@
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-06-18 13:40:59 $
+//** $Revision: 1.10 $
+//** $Date: 2008-06-19 06:23:21 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -616,6 +616,7 @@ void SB_Init(void)
 void SB_SetClassData(void)
 {
 	int class;
+	int max_players;
 
 	class = PlayerClass[consoleplayer]; // original player class (not pig)
 #ifdef ASSASSIN
@@ -634,15 +635,18 @@ void SB_SetClassData(void)
 		+class, PU_STATIC);
 	PatchCHAIN = WR_CacheLumpNum(W_GetNumForName("chain")
 		+class, PU_STATIC);
+
+	max_players = ((MAXPLAYERS > MAXPLAYERS_10) && oldwad_10) ? MAXPLAYERS_10 : MAXPLAYERS;
+
 	if(!netgame)
 	{ // single player game uses red life gem (the second gem)
 		PatchLIFEGEM = WR_CacheLumpNum(W_GetNumForName("lifegem")
-			+4*class+1, PU_STATIC);
+			+ max_players*class + 1, PU_STATIC);
 	}
 	else
 	{
 		PatchLIFEGEM = WR_CacheLumpNum(W_GetNumForName("lifegem")
-			+MAXPLAYERS*class+consoleplayer, PU_STATIC);
+			+ max_players*class + consoleplayer, PU_STATIC);
 	}
 	SB_state = -1;
 	UpdateState |= I_FULLSCRN;

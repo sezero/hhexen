@@ -4,8 +4,8 @@
 //** p_setup.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_setup.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-17 15:02:38 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-19 06:23:20 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -43,7 +43,8 @@ float AccurateDistance(fixed_t dx,fixed_t dy);
 #define MCMD_CD_TITLETRACK 15
 
 #define UNKNOWN_MAP_NAME "DEVELOPMENT MAP"
-#define DEFAULT_SKY_NAME "SKY1"         // "SKY1" not in demo wad - KR
+#define DEFAULT_SKY_NAME "SKY1"
+#define DEFAULT_SKY_DEMO "SKY2"
 #define DEFAULT_SONG_LUMP "DEFSONG"
 #define DEFAULT_FADE_TABLE "COLORMAP"
 
@@ -1197,7 +1198,7 @@ static void InitMapInfo(void)
 	info->warpTrans = 0;
 	info->nextMap = 1; // Always go to map 1 if not specified
 	info->cdTrack = 1;
-	info->sky1Texture = R_TextureNumForName(DEFAULT_SKY_NAME);
+	info->sky1Texture = R_TextureNumForName((shareware && oldwad_10) ? DEFAULT_SKY_DEMO : DEFAULT_SKY_NAME);
 	info->sky2Texture = info->sky1Texture;
 	info->sky1ScrollDelta = 0;
 	info->sky2ScrollDelta = 0;
