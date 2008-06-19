@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.20 $
-//** $Date: 2008-06-17 15:02:37 $
+//** $Revision: 1.21 $
+//** $Date: 2008-06-19 06:11:34 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1649,14 +1649,7 @@ boolean MN_Responder(event_t *event)
 	key = event->data1;
 	if(InfoType)
 	{
-		if(shareware)
-		{
-			InfoType = (InfoType+1)%5;
-		}
-		else
-		{
-			InfoType = (InfoType+1)%4;
-		}
+		InfoType = (InfoType + 1) % 4;
 		if(key == KEY_ESCAPE)
 		{
 			InfoType = 0;
