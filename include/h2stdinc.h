@@ -3,7 +3,7 @@
 	includes the minimum necessary stdc headers,
 	defines common and / or missing types.
 
-	$Id: h2stdinc.h,v 1.2 2008-06-17 17:32:03 sezero Exp $
+	$Id: h2stdinc.h,v 1.3 2008-06-20 07:04:27 sezero Exp $
 */
 
 #ifndef __H2STDINC_H
@@ -116,6 +116,23 @@ typedef int	fixed_t;
 #define	APIENTRY
 
 #endif	/* ! WINDOWS */
+
+/*==========================================================================*/
+
+/* compiler specific definitions */
+
+#if !defined(__GNUC__)
+#define	__attribute__(x)
+#endif	/* __GNUC__ */
+
+/* argument format attributes for function
+ * pointers are supported for gcc >= 3.1
+ */
+#if defined(__GNUC__) && (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ > 0))
+#define	__fp_attribute__	__attribute__
+#else
+#define	__fp_attribute__(x)
+#endif
 
 /*==========================================================================*/
 

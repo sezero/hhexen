@@ -4,8 +4,8 @@
 //** st_start.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: st_start.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-17 17:32:02 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-20 07:04:27 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -273,7 +273,7 @@ void ST_NetDone(void)
 //
 //==========================================================================
 
-void ST_Message(char *message, ...)
+void ST_Message(const char *message, ...)
 {
 	va_list argptr;
 	char buffer[80];
@@ -291,7 +291,7 @@ void ST_Message(char *message, ...)
 //
 //==========================================================================
 
-void ST_RealMessage(char *message, ...)
+void ST_RealMessage(const char *message, ...)
 {
 	va_list argptr;
 	char buffer[80];

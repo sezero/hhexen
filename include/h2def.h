@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.31 $
-//** $Date: 2008-06-19 06:23:21 $
+//** $Revision: 1.32 $
+//** $Date: 2008-06-20 07:04:27 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1189,11 +1189,11 @@ void I_NetCmd (void);
 
 void I_CheckExternDriver(void);
 
-void I_Error (char *error, ...);
+void I_Error (const char *error, ...) __attribute__((format(printf,1,2), noreturn));
 // called by anything that can generate a terminal error
 // bad exit with diagnostic message
 
-void I_Quit (void);
+void I_Quit (void) __attribute__((noreturn));
 // called by M_Responder when quit is selected
 // clean exit, displays sell blurb
 
