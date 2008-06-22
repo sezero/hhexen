@@ -4,8 +4,8 @@
 //** p_local.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_local.h,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-22 16:32:45 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-22 21:40:13 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -174,7 +174,6 @@ int P_Massacre(void);
 boolean A_RaiseMobj(mobj_t *actor);
 boolean A_SinkMobj(mobj_t *actor);
 void A_NoBlocking(mobj_t *actor);
-boolean P_LookForMonsters(mobj_t *actor);
 void P_InitCreatureCorpseQueue(boolean corpseScan);
 void A_DeQueueCorpse(mobj_t *actor);
 
