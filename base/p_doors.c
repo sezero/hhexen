@@ -4,8 +4,8 @@
 //** p_doors.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_doors.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-22 21:35:52 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -52,7 +52,7 @@ void T_VerticalDoor(vldoor_t *door)
 		}
 		break;
 	case 2: // INITIAL WAIT
-		if(!--door->topcountdown)
+		if (!--door->topcountdown)
 		{
 			switch (door->type)
 			{

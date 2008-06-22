@@ -436,7 +436,7 @@ int C_CheckSubsector(subsector_t *ssec)
 		anglist[i] = bamsAtan2((int)((vtx->y - vz)*100), (int)((vtx->x - vx)*100));
 
 		/*
-		if(!i)
+		if (!i)
 			minAngle = maxAngle = anglist[i];
 		else
 		{

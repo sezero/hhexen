@@ -4,8 +4,8 @@
 //** r_plane.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_plane.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-22 21:35:52 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -348,12 +348,12 @@ void R_MakeSpans(int x, int t1, int b1, int t2, int b2)
 		R_MapPlane(b1, spanstart[b1], x - 1);
 		b1--;
 	}
-	while(t2 < t1 && t2 <= b2)
+	while (t2 < t1 && t2 <= b2)
 	{
 		spanstart[t2] = x;
 		t2++;
 	}
-	while(b2 > b1 && b2 >= t2)
+	while (b2 > b1 && b2 >= t2)
 	{
 		spanstart[b2] = x;
 		b2--;

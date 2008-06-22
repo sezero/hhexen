@@ -527,7 +527,7 @@ void RL_RenderSkyMaskLists(void)
 
 void RL_RenderDynLightLists(void)
 {
-	int			i;
+	int		i;
 	rendlist_t	*frl = &dlflat_rlist, *wrl = &dlwall_rlist;
 	rendquad_t	*cq;
 
@@ -551,7 +551,7 @@ void RL_RenderDynLightLists(void)
 	if (frl->numquads)
 	{
 		glBegin(GL_TRIANGLES);
-		for(i = 0; i < frl->numquads; i++)
+		for (i = 0; i < frl->numquads; i++)
 		{
 			cq = frl->quads + i;
 			// Set the color.

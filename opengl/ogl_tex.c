@@ -294,7 +294,7 @@ static int DrawRealPatch(byte *rgbflat, byte *rgbaflat, byte *palette, int texwi
 						PalIdxToRGB(palette, palidx, dest1);
 					dest1 += texwidth*3;
 				}
-				if(rgbaflat)
+				if (rgbaflat)
 				{
 					if (!maskZero || palidx)
 					{

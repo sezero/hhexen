@@ -203,7 +203,7 @@ void OGL_HandleColoredFadeOut(int skynum)
 		// Determine if it should be used.
 		for (currentFO->use = false, i = 0; i < 3; i++)
 		{
-			if(currentFO->rgb[i] > .3)
+			if (currentFO->rgb[i] > .3)
 			{
 				// Colored fadeout is needed.
 				currentFO->use = true;
