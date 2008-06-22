@@ -549,12 +549,14 @@ unsigned int OGL_PrepareSprite(int pnum)
 	{
 		// There's no name for this patch, load it in.
 		patch_t *patch = W_CacheLumpNum(firstspritelump + pnum, PU_CACHE);
-		int	p2width = FindNextPower2(patch->width),
-			p2height = OGL_ValidTexHeight2(patch->width, patch->height);
+		int	w = SHORT(patch->width),
+			h = SHORT(patch->height);
+		int	p2width = FindNextPower2(w),
+			p2height = OGL_ValidTexHeight2(w, h);
 		int	flatsize = 4*p2width*p2height;
 		byte	*rgbaflat = (byte *)malloc(flatsize);
 
-		OGL_DEBUG("orig: %d x %d => %d x %d\n", patch->width, patch->height, p2width, p2height);
+		OGL_DEBUG("orig: %d x %d => %d x %d\n", w, h, p2width, p2height);
 
 		memset(rgbaflat, 0, flatsize);
 		DrawRealPatch(NULL, rgbaflat, W_CacheLumpNum(pallump,PU_CACHE),
@@ -570,7 +572,7 @@ unsigned int OGL_PrepareSprite(int pnum)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-		spriteheights[pnum] = patch->height;
+		spriteheights[pnum] = h;
 		free (rgbaflat);
 	}
 	return spritenames[pnum];
@@ -718,8 +720,10 @@ void OGL_SetPatch(int lump)	// No mipmaps are generated.
 	{
 		// Load the patch.
 		patch_t	*patch = W_CacheLumpNum(lump, PU_CACHE);
-		int	p2width = FindNextPower2(patch->width),
-			p2height = OGL_ValidTexHeight2(patch->width, patch->height);
+		int	w = SHORT(patch->width),
+			h = SHORT(patch->height);
+		int	p2width = FindNextPower2(w),
+			p2height = OGL_ValidTexHeight2(w, h);
 		int	numpels = p2width*p2height;
 		byte	*rgbflat = (byte *)malloc(3*numpels),
 			*rgbaflat = (byte*)malloc(4*numpels);
@@ -735,10 +739,10 @@ void OGL_SetPatch(int lump)	// No mipmaps are generated.
 			// Notice: This is only vertical splitting, p2height 
 			// applies to both parts. 
 			// The width of the first part is maxTexSize.
-			int part2width = FindNextPower2(patch->width - maxTexSize);
+			int part2width = FindNextPower2(w - maxTexSize);
 			byte *tempbuff = (byte*)malloc(4*maxTexSize*p2height);
 			if (part2width > maxTexSize)
-				I_Error("OGL_SetPatch: Too wide texture (really: %d, pow2: %d).\n", patch->width, p2width);
+				I_Error("OGL_SetPatch: Too wide texture (really: %d, pow2: %d).\n", w, p2width);
 			// We'll use a temporary buffer for doing to splitting.
 			// First, part one.
 			pixBlt(ptype == GL_RGB ? rgbflat : rgbaflat, p2width, tempbuff,
@@ -773,7 +777,7 @@ void OGL_SetPatch(int lump)	// No mipmaps are generated.
 			OGL_BindTexture(lumptexnames[lump]);
 
 			lumptexsizes[lump].w = maxTexSize;
-			lumptexsizes[lump].w2 = patch->width - maxTexSize;
+			lumptexsizes[lump].w2 = w - maxTexSize;
 			free (tempbuff);
 		}
 		else // We can use the normal one-part method.
@@ -787,13 +791,13 @@ void OGL_SetPatch(int lump)	// No mipmaps are generated.
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			lumptexsizes[lump].w = patch->width;
+			lumptexsizes[lump].w = w;
 			lumptexsizes[lump].w2 = 0;
 		}
 		// The rest of the size information.
-		lumptexsizes[lump].h = patch->height;
-		lumptexsizes[lump].offx = -patch->leftoffset;
-		lumptexsizes[lump].offy = -patch->topoffset;
+		lumptexsizes[lump].h = h;
+		lumptexsizes[lump].offx = -SHORT(patch->leftoffset);
+		lumptexsizes[lump].offy = -SHORT(patch->topoffset);
 		free (rgbflat);
 		free (rgbaflat);
 	}
