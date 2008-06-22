@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.21 $
-//** $Date: 2008-06-19 06:11:34 $
+//** $Revision: 1.22 $
+//** $Date: 2008-06-22 16:20:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -24,16 +24,16 @@
 
 // MACROS ------------------------------------------------------------------
 
-#define LEFT_DIR 0
-#define RIGHT_DIR 1
-#define ITEM_HEIGHT 20
-#define SMALL_ITEM_HEIGHT 9
-#define MENU_MAX_MOUSE_SENS 50
+#define LEFT_DIR		0
+#define RIGHT_DIR		1
+#define ITEM_HEIGHT		20
+#define SMALL_ITEM_HEIGHT	9
+#define MENU_MAX_MOUSE_SENS	50
 
-#define SELECTOR_XOFFSET (-28)
-#define SELECTOR_YOFFSET (-1)
-#define SLOTTEXTLEN	16
-#define ASCII_CURSOR '['
+#define SELECTOR_XOFFSET	(-28)
+#define SELECTOR_YOFFSET	(-1)
+#define SLOTTEXTLEN		16
+#define ASCII_CURSOR		'['
 
 // TYPES -------------------------------------------------------------------
 
@@ -84,8 +84,8 @@ typedef struct
 
 // EXTERNAL FUNCTION PROTOTYPES --------------------------------------------
 
-extern int I_CDMusInit( void );
-extern int I_CDMusStop( void );
+extern int I_CDMusInit(void);
+extern int I_CDMusStop(void);
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
@@ -215,9 +215,9 @@ static MenuItem_t ClassItems[] =
 {
 	{ ITT_EFUNC, "FIGHTER", SCClass, 0, MENU_NONE },
 	{ ITT_EFUNC, "CLERIC", SCClass, 1, MENU_NONE },
-	{ ITT_EFUNC, "MAGE", SCClass, 2, MENU_NONE }
-#ifdef ASSASSIN 
-	,{ ITT_EFUNC, "ASSASSIN", SCClass, 3, MENU_NONE }
+	{ ITT_EFUNC, "MAGE", SCClass, 2, MENU_NONE },
+#ifdef ASSASSIN
+	{ ITT_EFUNC, "ASSASSIN", SCClass, 3, MENU_NONE }
 #endif
 };
 
@@ -225,12 +225,12 @@ static Menu_t ClassMenu =
 {
 	66, 66,
 	DrawClassMenu,
-#ifdef ASSASSIN 
-	4
+#ifdef ASSASSIN
+	4,
 #else 
-	3
+	3,
 #endif
-	, ClassItems,
+	ClassItems,
 	0,
 	ITEM_HEIGHT,
 	MENU_MAIN
@@ -383,9 +383,9 @@ static MenuItem_t Options3Items[] =
 	{ ITT_SETKEY, "SPEED :", SCSetKey, 19, MENU_NONE }
 };
 
-static Menu_t Options3Menu = 
+static Menu_t Options3Menu =
 {
-	70,20,
+	70, 20,
 	DrawOptions3Menu,
 	15, Options3Items,
 	0,
@@ -424,7 +424,7 @@ static char *stupidtable[] =
 };
 
 #if defined(__linux) || defined(__FreeBSD__)
-static char *GammaText[] = 
+static char *GammaText[] =
 {
 	TXT_GAMMA_LEVEL_OFF,
 	TXT_GAMMA_LEVEL_1,
@@ -519,9 +519,9 @@ void MN_Init(void)
 
 static void InitFonts(void)
 {
-	FontABaseLump = W_GetNumForName("FONTA_S")+1;
-	FontAYellowBaseLump = W_GetNumForName("FONTAY_S")+1;
-	FontBBaseLump = W_GetNumForName("FONTB_S")+1;
+	FontABaseLump = W_GetNumForName("FONTA_S") + 1;
+	FontAYellowBaseLump = W_GetNumForName("FONTAY_S") + 1;
+	FontBBaseLump = W_GetNumForName("FONTB_S") + 1;
 }
 
 //---------------------------------------------------------------------------
@@ -538,24 +538,24 @@ void MN_DrTextA(char *text, int x, int y)
 	patch_t *p;
 
 #ifdef RENDER3D
-    OGL_SetColorAndAlpha( 1, 1, 1, 1 );
+	OGL_SetColorAndAlpha(1, 1, 1, 1);
 #endif
 
-	while((c = *text++) != 0)
+	while ((c = *text++) != 0)
 	{
-		if(c < 33)
+		if (c < 33)
 		{
 			x += 5;
 		}
 		else
 		{
-			p = W_CacheLumpNum(FontABaseLump+c-33, PU_CACHE);
+			p = W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
 #ifdef RENDER3D
-            OGL_DrawPatch_CS(x, y, FontABaseLump+c-33);
+			OGL_DrawPatch_CS(x, y, FontABaseLump + c - 33);
 #else
 			V_DrawPatch(x, y, p);
 #endif
-			x += p->width-1;
+			x += p->width - 1;
 		}
 	}
 }
@@ -572,24 +572,24 @@ void MN_DrTextAYellow(char *text, int x, int y)
 	patch_t *p;
 
 #ifdef RENDER3D
-    OGL_SetColorAndAlpha( 1, 1, 1, 1 );
+	OGL_SetColorAndAlpha(1, 1, 1, 1);
 #endif
 
-	while((c = *text++) != 0)
+	while ((c = *text++) != 0)
 	{
-		if(c < 33)
+		if (c < 33)
 		{
 			x += 5;
 		}
 		else
 		{
-			p = W_CacheLumpNum(FontAYellowBaseLump+c-33, PU_CACHE);
+			p = W_CacheLumpNum(FontAYellowBaseLump + c - 33, PU_CACHE);
 #ifdef RENDER3D
-            OGL_DrawPatch_CS(x, y, FontAYellowBaseLump+c-33);
+			OGL_DrawPatch_CS(x, y, FontAYellowBaseLump + c - 33);
 #else
 			V_DrawPatch(x, y, p);
 #endif
-			x += p->width-1;
+			x += p->width - 1;
 		}
 	}
 }
@@ -609,19 +609,19 @@ int MN_TextAWidth(char *text)
 	patch_t *p;
 
 	width = 0;
-	while((c = *text++) != 0)
+	while ((c = *text++) != 0)
 	{
-		if(c < 33)
+		if (c < 33)
 		{
 			width += 5;
 		}
 		else
 		{
-			p = W_CacheLumpNum(FontABaseLump+c-33, PU_CACHE);
-			width += p->width-1;
+			p = W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
+			width += p->width - 1;
 		}
 	}
-	return(width);
+	return (width);
 }
 
 //---------------------------------------------------------------------------
@@ -638,24 +638,24 @@ void MN_DrTextB(char *text, int x, int y)
 	patch_t *p;
 
 #ifdef RENDER3D
-    OGL_SetColorAndAlpha( 1, 1, 1, 1 );
+	OGL_SetColorAndAlpha(1, 1, 1, 1);
 #endif
 
-	while((c = *text++) != 0)
+	while ((c = *text++) != 0)
 	{
-		if(c < 33)
+		if (c < 33)
 		{
 			x += 8;
 		}
 		else
 		{
-			p = W_CacheLumpNum(FontBBaseLump+c-33, PU_CACHE);
+			p = W_CacheLumpNum(FontBBaseLump + c - 33, PU_CACHE);
 #ifdef RENDER3D
-            OGL_DrawPatch_CS(x, y, FontBBaseLump+c-33);
+			OGL_DrawPatch_CS(x, y, FontBBaseLump + c - 33);
 #else
 			V_DrawPatch(x, y, p);
 #endif
-			x += p->width-1;
+			x += p->width - 1;
 		}
 	}
 }
@@ -668,26 +668,26 @@ void MN_DrTextB(char *text, int x, int y)
 //
 //---------------------------------------------------------------------------
 
-int MN_TextBWidth(char *text)
+int MN_TextBWidth(const char *text)
 {
 	char c;
 	int width;
 	patch_t *p;
 
 	width = 0;
-	while((c = *text++) != 0)
+	while ((c = *text++) != 0)
 	{
-		if(c < 33)
+		if (c < 33)
 		{
 			width += 5;
 		}
 		else
 		{
-			p = W_CacheLumpNum(FontBBaseLump+c-33, PU_CACHE);
-			width += p->width-1;
+			p = W_CacheLumpNum(FontBBaseLump + c - 33, PU_CACHE);
+			width += p->width - 1;
 		}
 	}
-	return(width);
+	return (width);
 }
 
 //---------------------------------------------------------------------------
@@ -698,19 +698,21 @@ int MN_TextBWidth(char *text)
 
 void MN_Ticker(void)
 {
-	if(MenuActive == false)
+	if (MenuActive == false)
 	{
 #ifdef RENDER3D
-        if(bgAlpha > 0)
-        {
-            bgAlpha -= .5/(float)menuDarkTicks;
-            if(bgAlpha < 0) bgAlpha = 0;
-        }
-        if(fadingOut)
-        {
-            outFade += 1/(float)slamInTicks;
-            if(outFade > 1) fadingOut = false;
-        }
+		if (bgAlpha > 0)
+		{
+			bgAlpha -= .5 / (float)menuDarkTicks;
+			if (bgAlpha < 0)
+				bgAlpha = 0;
+		}
+		if (fadingOut)
+		{
+			outFade += 1 / (float)slamInTicks;
+			if (outFade > 1)
+				fadingOut = false;
+		}
 #endif
 		return;
 	}
@@ -719,31 +721,31 @@ void MN_Ticker(void)
 
 
 #ifdef RENDER3D
-void MN_OGL_SetupState(float time)
+static void MN_OGL_SetupState(float time)
 {
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
- 
-    if(time > 1 && time <= 2)
-    {
-        time = 2-time;
-        glTranslatef(160, 100, 0);
-        glScalef(.9+time*.1, .9+time*.1, 1);
-        glTranslatef(-160, -100, 0);
-        glColor4f(1, 1, 1, time);
-        return;
-    }
- 
-    glTranslatef(160, 100, 0);
-    glScalef(2-time, 2-time, 1);
-    glTranslatef(-160, -100, 0);
-    glColor4f(1, 1, 1, time*time);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+
+	if (time > 1 && time <= 2)
+	{
+		time = 2 - time;
+		glTranslatef(160, 100, 0);
+		glScalef(.9 + time*.1, .9 + time*.1, 1);
+		glTranslatef(-160, -100, 0);
+		glColor4f(1, 1, 1, time);
+		return;
+	}
+
+	glTranslatef(160, 100, 0);
+	glScalef(2-time, 2-time, 1);
+	glTranslatef(-160, -100, 0);
+	glColor4f(1, 1, 1, time*time);
 }
- 
-void MN_OGL_RestoreState()
+
+static void MN_OGL_RestoreState(void)
 {
-    glMatrixMode(GL_MODELVIEW);
-    glPopMatrix();                                                              
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
 }
 #endif
 
@@ -754,7 +756,7 @@ void MN_OGL_RestoreState()
 //
 //---------------------------------------------------------------------------
 
-char *QuitEndMsg[] =
+static char *QuitEndMsg[] =
 {
 	"ARE YOU SURE YOU WANT TO QUIT?",
 	"ARE YOU SURE YOU WANT TO END THE GAME?",
@@ -764,8 +766,6 @@ char *QuitEndMsg[] =
 };
 
 
-#define BETA_FLASH_TEXT "BETA"
-
 void MN_Drawer(void)
 {
 	int i;
@@ -774,149 +774,144 @@ void MN_Drawer(void)
 	MenuItem_t *item;
 	char *selName;
 
-
-	if(MenuActive == false)
+	if (MenuActive == false)
 	{
 #ifdef RENDER3D
-        if(bgAlpha > 0)
-        {
-            UpdateState |= I_FULLSCRN;
-            BorderNeedRefresh = true;
-            //OGL_SetNoTexture();
-            glDisable( GL_TEXTURE_2D );
-            OGL_DrawRect(0,0,320,200,0,0,0,bgAlpha);
-            glEnable( GL_TEXTURE_2D );
-        }
-#endif
-		if(askforquit)
+		if (bgAlpha > 0)
 		{
-			MN_DrTextA(QuitEndMsg[typeofask-1], 160-
-				MN_TextAWidth(QuitEndMsg[typeofask-1])/2, 80);
-			if(typeofask == 3)
+			UpdateState |= I_FULLSCRN;
+			BorderNeedRefresh = true;
+		//	OGL_SetNoTexture();
+			glDisable(GL_TEXTURE_2D);
+			OGL_DrawRect(0, 0, 320, 200, 0, 0, 0, bgAlpha);
+			glEnable(GL_TEXTURE_2D);
+		}
+#endif
+		if (askforquit)
+		{
+			MN_DrTextA(QuitEndMsg[typeofask-1], 160 - MN_TextAWidth(QuitEndMsg[typeofask-1])/2, 80);
+			if (typeofask == 3)
 			{
-				MN_DrTextA(SlotText[quicksave-1], 160-
-					MN_TextAWidth(SlotText[quicksave-1])/2, 90);
-				MN_DrTextA("?", 160+
-					MN_TextAWidth(SlotText[quicksave-1])/2, 90);
+				MN_DrTextA(SlotText[quicksave-1], 160 - MN_TextAWidth(SlotText[quicksave-1])/2, 90);
+				MN_DrTextA("?", 160 + MN_TextAWidth(SlotText[quicksave-1])/2, 90);
 			}
-			if(typeofask == 4)
+			if (typeofask == 4)
 			{
-				MN_DrTextA(SlotText[quickload-1], 160-
-					MN_TextAWidth(SlotText[quickload-1])/2, 90);
-				MN_DrTextA("?", 160+
-					MN_TextAWidth(SlotText[quicksave-1])/2, 90);
+				MN_DrTextA(SlotText[quickload-1], 160 - MN_TextAWidth(SlotText[quickload-1])/2, 90);
+				MN_DrTextA("?", 160 + MN_TextAWidth(SlotText[quicksave-1])/2, 90);
 			}
 			UpdateState |= I_FULLSCRN;
 		}
 	}
 #ifdef RENDER3D
-    if( MenuActive || fadingOut )
-    {
-        int effTime = (MenuTime>menuDarkTicks)? menuDarkTicks : MenuTime;
-        float temp = .5 * effTime/(float)menuDarkTicks;
- 
-        UpdateState |= I_FULLSCRN;
- 
-        if(!fadingOut)
-        {
-            if(temp > bgAlpha) bgAlpha = temp;
-            effTime = (MenuTime>slamInTicks)? slamInTicks : MenuTime;
-            temp = effTime / (float)slamInTicks;
- 
-            // Draw a dark background. It makes it easier to read the menus.
-            //OGL_SetNoTexture();
-            glDisable( GL_TEXTURE_2D );
-            OGL_DrawRect(0,0,320,200,0,0,0,bgAlpha);
-            glEnable( GL_TEXTURE_2D );
-        }
-        else temp = outFade+1;
-        MN_OGL_SetupState(temp);
- 
-        if(InfoType)
-        {
-            MN_DrawInfo();
-            MN_OGL_RestoreState();
-            return;
-        }
-        //if(screenblocks < 10)
-        //{
-        BorderNeedRefresh = true;
-        //}
-        if(CurrentMenu->drawFunc != NULL)
-        {
-            CurrentMenu->drawFunc();
-        }
-        x = CurrentMenu->x;
-        y = CurrentMenu->y;
-        item = CurrentMenu->items;
-	if(item->type == ITT_SETKEY)
-		item += FirstKey;
-        for(i = 0; i < CurrentMenu->itemCount; i++)
-        {
-			switch(item->type)
-			{
-				case (ITT_EMPTY):
-					break;
-				case (ITT_SETKEY):
-					if(item->text) 
-						MN_DrTextA(item->text, x, y+6);
-					break;
-				default:
-					if(item->text)
-						MN_DrTextB(item->text, x, y);
-			}
-			y += CurrentMenu->step;
-            item++;
-        }
-		y = CurrentMenu->y+(CurrentItPos*CurrentMenu->step)+SELECTOR_YOFFSET;
-        selName = MenuTime&16 ? "M_SLCTR1" : "M_SLCTR2";
-        OGL_DrawPatch_CS(x+SELECTOR_XOFFSET, y, W_GetNumForName(selName));
- 
-        MN_OGL_RestoreState();
-    }
-#else
-	else
+	if (MenuActive || fadingOut)
 	{
+		int effTime = (MenuTime > menuDarkTicks) ? menuDarkTicks : MenuTime;
+		float temp = .5 * effTime / (float)menuDarkTicks;
+
 		UpdateState |= I_FULLSCRN;
-		if(InfoType)
+
+		if (!fadingOut)
+		{
+			if (temp > bgAlpha)
+				bgAlpha = temp;
+			effTime = (MenuTime>slamInTicks) ? slamInTicks : MenuTime;
+			temp = effTime / (float)slamInTicks;
+
+			// Draw a dark background. It makes it easier to read the menus.
+			//OGL_SetNoTexture();
+			glDisable(GL_TEXTURE_2D);
+			OGL_DrawRect(0, 0, 320, 200, 0, 0, 0, bgAlpha);
+			glEnable(GL_TEXTURE_2D);
+		}
+		else
+			temp = outFade + 1;
+		MN_OGL_SetupState(temp);
+
+		if (InfoType)
 		{
 			MN_DrawInfo();
+			MN_OGL_RestoreState();
 			return;
 		}
-		if(screenblocks < 10)
-		{
+	//	if (screenblocks < 10)
+	//	{
 			BorderNeedRefresh = true;
-		}
-		if(CurrentMenu->drawFunc != NULL)
+	//	}
+		if (CurrentMenu->drawFunc != NULL)
 		{
 			CurrentMenu->drawFunc();
 		}
 		x = CurrentMenu->x;
 		y = CurrentMenu->y;
 		item = CurrentMenu->items;
-		if(item->type == ITT_SETKEY)
+		if (item->type == ITT_SETKEY)
 			item += FirstKey;
-		for(i = 0; i < CurrentMenu->itemCount; i++)
+		for (i = 0; i < CurrentMenu->itemCount; i++)
 		{
-			switch(item->type)
+			switch (item->type)
 			{
-				case (ITT_EMPTY):
-					break;
-				case (ITT_SETKEY):
-					if(item->text) 
-						MN_DrTextA(item->text, x, y+6);
-					break;
-				default:
-					if(item->text)
-						MN_DrTextB(item->text, x, y);
+			case (ITT_EMPTY):
+				break;
+			case (ITT_SETKEY):
+				if (item->text)
+					MN_DrTextA(item->text, x, y+6);
+				break;
+			default:
+				if (item->text)
+					MN_DrTextB(item->text, x, y);
 			}
 			y += CurrentMenu->step;
 			item++;
 		}
-		y = CurrentMenu->y+(CurrentItPos*CurrentMenu->step)+SELECTOR_YOFFSET;
-		selName = MenuTime&16 ? "M_SLCTR1" : "M_SLCTR2";
-		V_DrawPatch(x+SELECTOR_XOFFSET, y,
-			W_CacheLumpName(selName, PU_CACHE));
+		y = CurrentMenu->y + (CurrentItPos * CurrentMenu->step) + SELECTOR_YOFFSET;
+		selName = (MenuTime & 16) ? "M_SLCTR1" : "M_SLCTR2";
+		OGL_DrawPatch_CS(x + SELECTOR_XOFFSET, y, W_GetNumForName(selName));
+
+		MN_OGL_RestoreState();
+	}
+#else
+	else
+	{
+		UpdateState |= I_FULLSCRN;
+		if (InfoType)
+		{
+			MN_DrawInfo();
+			return;
+		}
+		if (screenblocks < 10)
+		{
+			BorderNeedRefresh = true;
+		}
+		if (CurrentMenu->drawFunc != NULL)
+		{
+			CurrentMenu->drawFunc();
+		}
+		x = CurrentMenu->x;
+		y = CurrentMenu->y;
+		item = CurrentMenu->items;
+		if (item->type == ITT_SETKEY)
+			item += FirstKey;
+		for (i = 0; i < CurrentMenu->itemCount; i++)
+		{
+			switch (item->type)
+			{
+			case (ITT_EMPTY):
+				break;
+			case (ITT_SETKEY):
+				if (item->text)
+					MN_DrTextA(item->text, x, y+6);
+				break;
+			default:
+				if (item->text)
+					MN_DrTextB(item->text, x, y);
+			}
+			y += CurrentMenu->step;
+			item++;
+		}
+		y = CurrentMenu->y + (CurrentItPos * CurrentMenu->step) + SELECTOR_YOFFSET;
+		selName = (MenuTime & 16) ? "M_SLCTR1" : "M_SLCTR2";
+		V_DrawPatch(x + SELECTOR_XOFFSET, y, W_CacheLumpName(selName, PU_CACHE));
 	}
 #endif
 }
@@ -931,18 +926,17 @@ static void DrawMainMenu(void)
 {
 	int frame;
 
-	frame = (MenuTime/5)%7;
+	frame = (MenuTime / 5) % 7;
 
 #ifdef RENDER3D
-    OGL_DrawPatch_CS( 88, 0, W_GetNumForName("M_HTIC") );
-    OGL_DrawPatch_CS( 37, 80, MauloBaseLump+(frame+2)%7 );
-    OGL_DrawPatch_CS( 278, 80, MauloBaseLump+frame );
+	OGL_DrawPatch_CS(88, 0, W_GetNumForName("M_HTIC") );
+	OGL_DrawPatch_CS(37, 80, MauloBaseLump + (frame + 2) % 7);
+	OGL_DrawPatch_CS(278, 80, MauloBaseLump + frame);
 #else
 	V_DrawPatch(88, 0, W_CacheLumpName("M_HTIC", PU_CACHE));
 // Old Gold skull positions: (40, 10) and (232, 10)
-	V_DrawPatch(37, 80, W_CacheLumpNum(MauloBaseLump+(frame+2)%7, 
-		PU_CACHE));
-	V_DrawPatch(278, 80, W_CacheLumpNum(MauloBaseLump+frame, PU_CACHE));
+	V_DrawPatch(37, 80, W_CacheLumpNum(MauloBaseLump + (frame + 2) % 7, PU_CACHE));
+	V_DrawPatch(278, 80, W_CacheLumpNum(MauloBaseLump + frame, PU_CACHE));
 #endif
 }
 
@@ -973,14 +967,13 @@ static void DrawClassMenu(void)
 	MN_DrTextB("CHOOSE CLASS:", 34, 24);
 	class = (pclass_t)CurrentMenu->items[CurrentItPos].option;
 #ifdef RENDER3D
-    OGL_DrawPatch_CS(174, 8, W_GetNumForName(boxLumpName[class]));
-    OGL_DrawPatch_CS(174+24, 8+12,
-            W_GetNumForName(walkLumpName[class])+((MenuTime>>3)&3));
+	OGL_DrawPatch_CS(174, 8, W_GetNumForName(boxLumpName[class]));
+	OGL_DrawPatch_CS(174+24, 8+12,
+			 W_GetNumForName(walkLumpName[class]) + ((MenuTime>>3) & 3));
 #else
 	V_DrawPatch(174, 8, W_CacheLumpName(boxLumpName[class], PU_CACHE));
 	V_DrawPatch(174+24, 8+12,
-		W_CacheLumpNum(W_GetNumForName(walkLumpName[class])
-		+((MenuTime>>3)&3), PU_CACHE));
+		W_CacheLumpNum(W_GetNumForName(walkLumpName[class]) + ((MenuTime>>3) & 3), PU_CACHE));
 #endif
 }
 
@@ -1017,8 +1010,8 @@ static void DrawFilesMenu(void)
 
 static void DrawLoadMenu(void)
 {
-	MN_DrTextB("LOAD GAME", 160-MN_TextBWidth("LOAD GAME")/2, 10);
-	if(!slottextloaded)
+	MN_DrTextB("LOAD GAME", 160 - MN_TextBWidth("LOAD GAME")/2, 10);
+	if (!slottextloaded)
 	{
 		MN_LoadSlotText();
 	}
@@ -1033,8 +1026,8 @@ static void DrawLoadMenu(void)
 
 static void DrawSaveMenu(void)
 {
-	MN_DrTextB("SAVE GAME", 160-MN_TextBWidth("SAVE GAME")/2, 10);
-	if(!slottextloaded)
+	MN_DrTextB("SAVE GAME", 160 - MN_TextBWidth("SAVE GAME")/2, 10);
+	if (!slottextloaded)
 	{
 		MN_LoadSlotText();
 	}
@@ -1058,22 +1051,22 @@ static void MN_LoadSlotText(void)
 	char description[HXS_DESCRIPTION_LENGTH];
 	boolean found;
 
-	for(slot = 0; slot < 6; slot++)
+	for (slot = 0; slot < 6; slot++)
 	{
 		found = false;
 		snprintf(name, sizeof(name), "%shex%d.hxs", basePath, slot);
 		fp = fopen(name, "rb");
-		if(fp)
+		if (fp)
 		{
 			fread(description, HXS_DESCRIPTION_LENGTH, 1, fp);
 			fread(versionText, HXS_VERSION_TEXT_LENGTH, 1, fp);
 			fclose(fp);
-			if(!strcmp(versionText, HXS_VERSION_TEXT))
+			if (!strcmp(versionText, HXS_VERSION_TEXT))
 			{
 				found = true;
 			}
 		}
-		if(found)
+		if (found)
 		{
 			memcpy(SlotText[slot], description, SLOTTEXTLEN);
 			SlotStatus[slot] = 1;
@@ -1101,14 +1094,14 @@ static void DrawFileSlots(Menu_t *menu)
 
 	x = menu->x;
 	y = menu->y;
-	for(i = 0; i < 6; i++)
+	for (i = 0; i < 6; i++)
 	{
 #ifdef RENDER3D
-        OGL_DrawPatch_CS(x, y, W_GetNumForName("M_FSLOT"));
+		OGL_DrawPatch_CS(x, y, W_GetNumForName("M_FSLOT"));
 #else
 		V_DrawPatch(x, y, W_CacheLumpName("M_FSLOT", PU_CACHE));
 #endif
-		if(SlotStatus[i])
+		if (SlotStatus[i])
 		{
 			MN_DrTextA(SlotText[i], x+5, y+5);
 		}
@@ -1125,7 +1118,8 @@ static void DrawFileSlots(Menu_t *menu)
 static void DrawOptionsMenu(void)
 {
 	char num[5];
-	if(messageson)
+
+	if (messageson)
 	{
 		MN_DrTextB("ON", 196, 50);
 	}
@@ -1138,7 +1132,7 @@ static void DrawOptionsMenu(void)
 	snprintf(num, sizeof(num), "%d", mouseSensitivity);
 	MN_DrTextB(num, 265, 71);
 
-	if(alwaysrun)
+	if (alwaysrun)
 	{
 		MN_DrTextB("ON", 208, 130);
 	}
@@ -1159,7 +1153,7 @@ static void DrawOptions2Menu(void)
 	DrawSlider(&Options2Menu, 1, 9, screenblocks-3);
 	DrawSlider(&Options2Menu, 3, 16, snd_MaxVolume);
 	DrawSlider(&Options2Menu, 5, 16, snd_MusicVolume);
-	if(cdaudio)
+	if (cdaudio)
 	{
 		MN_DrTextB("ON", 196, 140);
 	}
@@ -1169,14 +1163,13 @@ static void DrawOptions2Menu(void)
 	}
 }
 
-
 static void DrawOptions3Menu(void)
 {
 	int i;
 
 	for (i = 0; i < 15; i++)
 	{
-		if(askforkey && keyaskedfor == i)
+		if (askforkey && keyaskedfor == i)
 		{
 			MN_DrTextAYellow("???", 195, (i*SMALL_ITEM_HEIGHT+26));
 		}
@@ -1199,7 +1192,7 @@ static void SCQuitGame(int option)
 	MenuActive = false;
 	askforquit = true;
 	typeofask = 1; //quit game
-	if(!netgame && !demoplayback)
+	if (!netgame && !demoplayback)
 	{
 		paused = true;
 	}
@@ -1213,16 +1206,16 @@ static void SCQuitGame(int option)
 
 static void SCEndGame(int option)
 {
-	if(demoplayback)
+	if (demoplayback)
 	{
 		return;
 	}
-	if(SCNetCheck(3))
+	if (SCNetCheck(3))
 	{
 		MenuActive = false;
 		askforquit = true;
 		typeofask = 2; //endgame
-		if(!netgame && !demoplayback)
+		if (!netgame && !demoplayback)
 		{
 			paused = true;
 		}
@@ -1238,7 +1231,7 @@ static void SCEndGame(int option)
 static void SCMessages(int option)
 {
 	messageson ^= 1;
-	if(messageson)
+	if (messageson)
 	{
 		P_SetMessage(&players[consoleplayer], "MESSAGES ON", true);
 	}
@@ -1257,24 +1250,24 @@ static void SCMessages(int option)
 
 static boolean SCNetCheck(int option)
 {
-	if(!netgame)
+	if (!netgame)
 	{
 		return true;
 	}
-	switch(option)
+	switch (option)
 	{
-		case 1: // new game
-			P_SetMessage(&players[consoleplayer],
-				"YOU CAN'T START A NEW GAME IN NETPLAY!", true);
-			break;
-		case 2: // load game
-			P_SetMessage(&players[consoleplayer],
-				"YOU CAN'T LOAD A GAME IN NETPLAY!", true);
-			break;
-		case 3: // end game
-			P_SetMessage(&players[consoleplayer],
-				"YOU CAN'T END A GAME IN NETPLAY!", true);
-			break;
+	case 1: // new game
+		P_SetMessage(&players[consoleplayer],
+			"YOU CAN'T START A NEW GAME IN NETPLAY!", true);
+		break;
+	case 2: // load game
+		P_SetMessage(&players[consoleplayer],
+			"YOU CAN'T LOAD A GAME IN NETPLAY!", true);
+		break;
+	case 3: // end game
+		P_SetMessage(&players[consoleplayer],
+			"YOU CAN'T END A GAME IN NETPLAY!", true);
+		break;
 	}
 	MenuActive = false;
 	S_StartSound(NULL, SFX_CHAT);
@@ -1301,14 +1294,14 @@ static void SCNetCheck2(int option)
 
 static void SCLoadGame(int option)
 {
-	if(!SlotStatus[option])
+	if (!SlotStatus[option])
 	{ // Don't try to load from an empty slot
 		return;
 	}
 	G_LoadGame(option);
 	MN_DeactivateMenu();
 	BorderNeedRefresh = true;
-	if(quickload == -1)
+	if (quickload == -1)
 	{
 		quickload = option+1;
 		P_ClearMessage(&players[consoleplayer]);
@@ -1326,19 +1319,19 @@ static void SCSaveGame(int option)
 	char *ptr;
 	player_t *player = &players[consoleplayer];
 
-	if(gamestate != GS_LEVEL || demoplayback
+	if (gamestate != GS_LEVEL || demoplayback
 		|| player->playerstate == PST_DEAD)
 	{
 		FileMenuKeySteal = false;
 		return;
 	}
 
-	if(!FileMenuKeySteal)
+	if (!FileMenuKeySteal)
 	{
 		FileMenuKeySteal = true;
 		strcpy(oldSlotText, SlotText[option]);
 		ptr = SlotText[option];
-		while(*ptr)
+		while (*ptr)
 		{
 			ptr++;
 		}
@@ -1356,7 +1349,7 @@ static void SCSaveGame(int option)
 		MN_DeactivateMenu();
 	}
 	BorderNeedRefresh = true;
-	if(quicksave == -1)
+	if (quicksave == -1)
 	{
 		quicksave = option+1;
 		P_ClearMessage(&players[consoleplayer]);
@@ -1371,48 +1364,48 @@ static void SCSaveGame(int option)
 
 static void SCClass(int option)
 {
-	if(netgame)
+	if (netgame)
 	{
 		P_SetMessage(&players[consoleplayer],
 			"YOU CAN'T START A NEW GAME FROM WITHIN A NETGAME!", true);
 		return;
 	}
 	MenuPClass = option;
-	switch(MenuPClass)
+	switch (MenuPClass)
 	{
-		case PCLASS_FIGHTER:
-			SkillMenu.x = 120;
-			SkillItems[0].text = "SQUIRE";
-			SkillItems[1].text = "KNIGHT";
-			SkillItems[2].text = "WARRIOR";
-			SkillItems[3].text = "BERSERKER";
-			SkillItems[4].text = "TITAN";
-			break;
-		case PCLASS_CLERIC:
-			SkillMenu.x = 116;
-			SkillItems[0].text = "ALTAR BOY";
-			SkillItems[1].text = "ACOLYTE";
-			SkillItems[2].text = "PRIEST";
-			SkillItems[3].text = "CARDINAL";
-			SkillItems[4].text = "POPE";
-			break;
-		case PCLASS_MAGE:
-			SkillMenu.x = 112;
-			SkillItems[0].text = "APPRENTICE";
-			SkillItems[1].text = "ENCHANTER";
-			SkillItems[2].text = "SORCERER";
-			SkillItems[3].text = "WARLOCK";
-			SkillItems[4].text = "ARCHIMAGE";
-			break;
+	case PCLASS_FIGHTER:
+		SkillMenu.x = 120;
+		SkillItems[0].text = "SQUIRE";
+		SkillItems[1].text = "KNIGHT";
+		SkillItems[2].text = "WARRIOR";
+		SkillItems[3].text = "BERSERKER";
+		SkillItems[4].text = "TITAN";
+		break;
+	case PCLASS_CLERIC:
+		SkillMenu.x = 116;
+		SkillItems[0].text = "ALTAR BOY";
+		SkillItems[1].text = "ACOLYTE";
+		SkillItems[2].text = "PRIEST";
+		SkillItems[3].text = "CARDINAL";
+		SkillItems[4].text = "POPE";
+		break;
+	case PCLASS_MAGE:
+		SkillMenu.x = 112;
+		SkillItems[0].text = "APPRENTICE";
+		SkillItems[1].text = "ENCHANTER";
+		SkillItems[2].text = "SORCERER";
+		SkillItems[3].text = "WARLOCK";
+		SkillItems[4].text = "ARCHIMAGE";
+		break;
 #ifdef ASSASSIN
-		case PCLASS_ASS:
-			SkillMenu.x = 116;
-			SkillItems[0].text = "KNAVE";
-			SkillItems[1].text = "ROUGE";
-			SkillItems[2].text = "CUTTHROAT";
-			SkillItems[3].text = "EXECUTIONER";
-			SkillItems[4].text = "WIDOW MAKER";
-			break;
+	case PCLASS_ASS:
+		SkillMenu.x = 116;
+		SkillItems[0].text = "KNAVE";
+		SkillItems[1].text = "ROUGE";
+		SkillItems[2].text = "CUTTHROAT";
+		SkillItems[3].text = "EXECUTIONER";
+		SkillItems[4].text = "WIDOW MAKER";
+		break;
 #endif
 	}
 	SetMenu(MENU_SKILL);
@@ -1443,14 +1436,14 @@ static void SCSkill(int option)
 
 static void SCMouseSensi(int option)
 {
-	if(option == RIGHT_DIR)
+	if (option == RIGHT_DIR)
 	{
-		if(mouseSensitivity < MENU_MAX_MOUSE_SENS)
+		if (mouseSensitivity < MENU_MAX_MOUSE_SENS)
 		{
 			mouseSensitivity++;
 		}
 	}
-	else if(mouseSensitivity)
+	else if (mouseSensitivity)
 	{
 		mouseSensitivity--;
 	}
@@ -1464,14 +1457,14 @@ static void SCMouseSensi(int option)
 
 static void SCSfxVolume(int option)
 {
-	if(option == RIGHT_DIR)
+	if (option == RIGHT_DIR)
 	{
-		if(snd_MaxVolume < 15)
+		if (snd_MaxVolume < 15)
 		{
 			snd_MaxVolume++;
 		}
 	}
-	else if(snd_MaxVolume)
+	else if (snd_MaxVolume)
 	{
 		snd_MaxVolume--;
 	}
@@ -1486,14 +1479,14 @@ static void SCSfxVolume(int option)
 
 static void SCMusicVolume(int option)
 {
-	if(option == RIGHT_DIR)
+	if (option == RIGHT_DIR)
 	{
-		if(snd_MusicVolume < 15)
+		if (snd_MusicVolume < 15)
 		{
 			snd_MusicVolume++;
 		}
 	}
-	else if(snd_MusicVolume)
+	else if (snd_MusicVolume)
 	{
 		snd_MusicVolume--;
 	}
@@ -1508,14 +1501,14 @@ static void SCMusicVolume(int option)
 
 static void SCScreenSize(int option)
 {
-	if(option == RIGHT_DIR)
+	if (option == RIGHT_DIR)
 	{
-		if(screenblocks < 11)
+		if (screenblocks < 11)
 		{
 			screenblocks++;
 		}
 	}
-	else if(screenblocks > 3)
+	else if (screenblocks > 3)
 	{
 		screenblocks--;
 	}
@@ -1532,7 +1525,7 @@ static void SCInfo(int option)
 {
 	InfoType = 1;
 	S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
-	if(!netgame && !demoplayback)
+	if (!netgame && !demoplayback)
 	{
 		paused = true;
 	}
@@ -1543,11 +1536,12 @@ static void SCInfo(int option)
 // PROC SCSetKey
 //
 //---------------------------------------------------------------------------
+
 static void SCSetKey(int option)
 {
 	askforkey = true;
 	keyaskedfor = option;
-	if(!netgame && !demoplayback)
+	if (!netgame && !demoplayback)
 	{
 		paused = true;
 	}
@@ -1558,14 +1552,16 @@ static void SCSetKey(int option)
 // PROC SCMouslook(int option)
 //
 //---------------------------------------------------------------------------
+
 static void SCMouselook(int option)
 {
-	if(option == RIGHT_DIR)
+	if (option == RIGHT_DIR)
 	{
-		if(mouselook < 2) mouselook++;
-		
+		if (mouselook < 2)
+			mouselook++;
 	}
-	else if(mouselook) mouselook--;
+	else if (mouselook)
+		mouselook--;
 }
 
 static void SCAlwaysRun(int option)
@@ -1575,7 +1571,7 @@ static void SCAlwaysRun(int option)
 
 static void SCCDAudio(int option)
 {
-	if(cdaudio)
+	if (cdaudio)
 	{
 		cdaudio = 0;
 		I_CDMusStop();
@@ -1585,22 +1581,22 @@ static void SCCDAudio(int option)
 	{
 		cdaudio = 1;
 		ST_Message("Attempting to initialize CD Music: ");
-                if(!cdrom)
-                {
-                        i_CDMusic = (I_CDMusInit() != -1);
-                }
-                else
-                { // The user is trying to use the cdrom for both game and music
-                        i_CDMusic = false;
-                }
-                if(i_CDMusic)
-                {
-                        ST_Message("initialized.\n");
-                }
-                else
-                {
-                        ST_Message("failed.\n");
-                }
+		if (!cdrom)
+		{
+			i_CDMusic = (I_CDMusInit() != -1);
+		}
+		else
+		{ // The user is trying to use the cdrom for both game and music
+			i_CDMusic = false;
+		}
+		if (i_CDMusic)
+		{
+			ST_Message("initialized.\n");
+		}
+		else
+		{
+			ST_Message("failed.\n");
+		}
 	}
 }
 
@@ -1621,42 +1617,42 @@ boolean MN_Responder(event_t *event)
 	extern void G_CheckDemoStatus(void);
 	char *textBuffer;
 
-	if(askforkey && event->type == ev_keydown)
+	if (askforkey && event->type == ev_keydown)
 	{
 		ClearControls(event->data1);
-		*defaults[keyaskedfor+3+FirstKey].location = event->data1;
+		*defaults[keyaskedfor + 3 + FirstKey].location = event->data1;
 		askforkey = false;
-		return(true);
+		return true;
 	}
-	if(askforkey && event->type == ev_mouse)
+	if (askforkey && event->type == ev_mouse)
 	{
-		if(event->data1&1)
-			return(true);
-		if(event->data1&2)
-			return(true);
-		if(event->data1&4)
-			return(true);
-		return(false);
+		if (event->data1 & 1)
+			return true;
+		if (event->data1 & 2)
+			return true;
+		if (event->data1 & 4)
+			return true;
+		return false;
 	}
-	if(event->data1 == KEY_RSHIFT)
+	if (event->data1 == KEY_RSHIFT)
 	{
 		shiftdown = (event->type == ev_keydown);
 	}
-	if(event->type != ev_keydown)
+	if (event->type != ev_keydown)
 	{
-		return(false);
+		return false;
 	}
 	key = event->data1;
-	if(InfoType)
+	if (InfoType)
 	{
 		InfoType = (InfoType + 1) % 4;
-		if(key == KEY_ESCAPE)
+		if (key == KEY_ESCAPE)
 		{
 			InfoType = 0;
 		}
-		if(!InfoType)
+		if (!InfoType)
 		{
-			if(!netgame && !demoplayback)
+			if (!netgame && !demoplayback)
 			{
 				paused = false;
 			}
@@ -1665,483 +1661,483 @@ boolean MN_Responder(event_t *event)
 			BorderNeedRefresh = true;
 		}
 		S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
-		return(true); //make the info screen eat the keypress
+		return true; //make the info screen eat the keypress
 	}
 
-	if(ravpic && key == KEY_F1)
+	if (ravpic && key == KEY_F1)
 	{
-		// F12 is now screenshot
-		// G_ScreenShot();
-		// return(true);
+	// F12 is now screenshot
+	//	G_ScreenShot();
+	//	return true;
 	}
 
-	if(askforquit)
+	if (askforquit)
 	{
-		switch(key)
+		switch (key)
 		{
-			case KEY_ENTER:
-			case 'y':
-				if(askforquit)
+		case KEY_ENTER:
+		case 'y':
+			if (askforquit)
+			{
+				switch (typeofask)
 				{
-					switch(typeofask)
-					{
-						case 1:
-							G_CheckDemoStatus(); 
-							I_Quit();
-							break;
-						case 2:
-							P_ClearMessage(&players[consoleplayer]);
-							typeofask = 0;
-							askforquit = false;
-							paused = false;
-							I_SetPalette(W_CacheLumpName("PLAYPAL", PU_CACHE));
-							H2_StartTitle(); // go to intro/demo mode.
-							break;
-						case 3:
-							P_SetMessage(&players[consoleplayer], 
-								"QUICKSAVING....", false);
-							FileMenuKeySteal = true;
-							SCSaveGame(quicksave-1);
-							askforquit = false;
-							typeofask = 0;
-							BorderNeedRefresh = true;
-							return true;
-						case 4:
-							P_SetMessage(&players[consoleplayer], 
-								"QUICKLOADING....", false);
-							SCLoadGame(quickload-1);
-							askforquit = false;
-							typeofask = 0;
-							BorderNeedRefresh = true;
-							return true;
-						case 5:
-							askforquit = false;
-							typeofask = 0;	
-							BorderNeedRefresh = true;
-							mn_SuicideConsole = true;
-							return true;
-							break;
-						default:
-							return true; // eat the 'y' keypress
-					}
-				}
-				return false;
-			case 'n':
-			case KEY_ESCAPE:
-				if(askforquit)
-				{
-					players[consoleplayer].messageTics = 0;
+				case 1:
+					G_CheckDemoStatus(); 
+					I_Quit();
+					break;
+				case 2:
+					P_ClearMessage(&players[consoleplayer]);
+					typeofask = 0;
+					askforquit = false;
+					paused = false;
+					I_SetPalette(W_CacheLumpName("PLAYPAL", PU_CACHE));
+					H2_StartTitle(); // go to intro/demo mode.
+					break;
+				case 3:
+					P_SetMessage(&players[consoleplayer], 
+						"QUICKSAVING....", false);
+					FileMenuKeySteal = true;
+					SCSaveGame(quicksave-1);
 					askforquit = false;
 					typeofask = 0;
-					paused = false;
-					UpdateState |= I_FULLSCRN;
 					BorderNeedRefresh = true;
 					return true;
+				case 4:
+					P_SetMessage(&players[consoleplayer], 
+						"QUICKLOADING....", false);
+					SCLoadGame(quickload-1);
+					askforquit = false;
+					typeofask = 0;
+					BorderNeedRefresh = true;
+					return true;
+				case 5:
+					askforquit = false;
+					typeofask = 0;
+					BorderNeedRefresh = true;
+					mn_SuicideConsole = true;
+					return true;
+				default:
+					return true; // eat the 'y' keypress
 				}
-				return false;
+			}
+			return false;
+
+		case 'n':
+		case KEY_ESCAPE:
+			if (askforquit)
+			{
+				players[consoleplayer].messageTics = 0;
+				askforquit = false;
+				typeofask = 0;
+				paused = false;
+				UpdateState |= I_FULLSCRN;
+				BorderNeedRefresh = true;
+				return true;
+			}
+			return false;
 		}
 		return false; // don't let the keys filter thru
 	}
-	if(MenuActive == false && !chatmodeon)
+	if (MenuActive == false && !chatmodeon)
 	{
-		switch(key)
+		switch (key)
 		{
-			case KEY_MINUS:
-				if(automapactive)
-				{ // Don't screen size in automap
-					return(false);
-				}
-				SCScreenSize(LEFT_DIR);
-				S_StartSound(NULL, SFX_PICKUP_KEY);
-				BorderNeedRefresh = true;
-				UpdateState |= I_FULLSCRN;
-				return(true);
-			case KEY_EQUALS:
-				if(automapactive)
-				{ // Don't screen size in automap
-					return(false);
-				}
-				SCScreenSize(RIGHT_DIR);
-				S_StartSound(NULL, SFX_PICKUP_KEY);
-				BorderNeedRefresh = true;
-				UpdateState |= I_FULLSCRN;
-				return(true);
+		case KEY_MINUS:
+			if (automapactive)
+			{ // Don't screen size in automap
+				return false;
+			}
+			SCScreenSize(LEFT_DIR);
+			S_StartSound(NULL, SFX_PICKUP_KEY);
+			BorderNeedRefresh = true;
+			UpdateState |= I_FULLSCRN;
+			return true;
+		case KEY_EQUALS:
+			if (automapactive)
+			{ // Don't screen size in automap
+				return false;
+			}
+			SCScreenSize(RIGHT_DIR);
+			S_StartSound(NULL, SFX_PICKUP_KEY);
+			BorderNeedRefresh = true;
+			UpdateState |= I_FULLSCRN;
+			return true;
 #ifdef __NeXT__
-			case 'q':
-				MenuActive = false;
-				askforquit = true;
-				typeofask = 5; // suicide
-				return true;
+		case 'q':
+			MenuActive = false;
+			askforquit = true;
+			typeofask = 5; // suicide
+			return true;
 #endif
 #ifndef __NeXT__
-			case KEY_F1: // help screen
-				SCInfo(0); // start up info screens
+		case KEY_F1: // help screen
+			SCInfo(0); // start up info screens
+			MenuActive = true;
+			return true;
+		case KEY_F2: // save game
+			if (gamestate == GS_LEVEL && !demoplayback)
+			{
 				MenuActive = true;
-				return(true);
-			case KEY_F2: // save game
-				if(gamestate == GS_LEVEL && !demoplayback)
+				FileMenuKeySteal = false;
+				MenuTime = 0;
+				CurrentMenu = &SaveMenu;
+				CurrentItPos = CurrentMenu->oldItPos;
+				if (!netgame && !demoplayback)
+				{
+					paused = true;
+				}
+				S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
+				slottextloaded = false; //reload the slot text, when needed
+			}
+			return true;
+		case KEY_F3: // load game
+			if (SCNetCheck(2))
+			{
+				MenuActive = true;
+				FileMenuKeySteal = false;
+				MenuTime = 0;
+				CurrentMenu = &LoadMenu;
+				CurrentItPos = CurrentMenu->oldItPos;
+				if (!netgame && !demoplayback)
+				{
+					paused = true;
+				}
+				S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
+				slottextloaded = false; //reload the slot text, when needed
+			}
+			return true;
+		case KEY_F5: // volume
+			MenuActive = true;
+			FileMenuKeySteal = false;
+			MenuTime = 0;
+			CurrentMenu = &Options2Menu;
+			CurrentItPos = CurrentMenu->oldItPos;
+			if (!netgame && !demoplayback)
+			{
+				paused = true;
+			}
+			S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
+			slottextloaded = false; //reload the slot text, when needed
+			return true;
+		case KEY_F4: //controls S.A.
+			MenuActive = true;
+			FileMenuKeySteal = false;
+			MenuTime = 0;
+			CurrentMenu = &OptionsMenu;
+			CurrentItPos = CurrentMenu->oldItPos;
+			if (!netgame && !demoplayback)
+			{
+				paused = true;
+			}
+			S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
+			slottextloaded = false; //reload the slot text, when needed
+			return true;
+		case KEY_F6: // quicksave
+			if (gamestate == GS_LEVEL && !demoplayback)
+			{
+				if (!quicksave || quicksave == -1)
 				{
 					MenuActive = true;
 					FileMenuKeySteal = false;
 					MenuTime = 0;
 					CurrentMenu = &SaveMenu;
 					CurrentItPos = CurrentMenu->oldItPos;
-					if(!netgame && !demoplayback)
+					if (!netgame && !demoplayback)
 					{
 						paused = true;
 					}
 					S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
-					slottextloaded = false; //reload the slot text, when needed
+					slottextloaded = false; //reload the slot text
+					quicksave = -1;
+					P_SetMessage(&players[consoleplayer],
+						"CHOOSE A QUICKSAVE SLOT", true);
 				}
-				return true;
-			case KEY_F3: // load game
-				if(SCNetCheck(2))
+				else
+				{
+					askforquit = true;
+					typeofask = 3;
+					if (!netgame && !demoplayback)
+					{
+						paused = true;
+					}
+					S_StartSound(NULL, SFX_CHAT);
+				}
+			}
+			return true;
+		case KEY_F7: // endgame
+			if (SCNetCheck(3))
+			{
+				if (gamestate == GS_LEVEL && !demoplayback)
+				{
+					S_StartSound(NULL, SFX_CHAT);
+					SCEndGame(0);
+				}
+			}
+			return true;
+		case KEY_F8: // toggle messages
+			SCMessages(0);
+			return true;
+		case KEY_F9: // quickload
+			if (SCNetCheck(2))
+			{
+				if (!quickload || quickload == -1)
 				{
 					MenuActive = true;
 					FileMenuKeySteal = false;
 					MenuTime = 0;
 					CurrentMenu = &LoadMenu;
 					CurrentItPos = CurrentMenu->oldItPos;
-					if(!netgame && !demoplayback)
+					if (!netgame && !demoplayback)
 					{
 						paused = true;
 					}
 					S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
-					slottextloaded = false; //reload the slot text, when needed
-				}
-				return true;
-			case KEY_F5: // volume
-				MenuActive = true;
-				FileMenuKeySteal = false;
-				MenuTime = 0;
-				CurrentMenu = &Options2Menu;
-				CurrentItPos = CurrentMenu->oldItPos;
-				if(!netgame && !demoplayback)
-				{
-					paused = true;
-				}
-				S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
-				slottextloaded = false; //reload the slot text, when needed
-				return true;
-			case KEY_F4: //controls S.A.
-				MenuActive = true;
-				FileMenuKeySteal = false;
-				MenuTime = 0;
-				CurrentMenu = &OptionsMenu;
-				CurrentItPos = CurrentMenu->oldItPos;
-				if(!netgame && !demoplayback)
-				{
-					paused = true;
-				}
-				S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
-				slottextloaded = false; //reload the slot text, when needed
-				return true;
-			case KEY_F6: // quicksave
-				if(gamestate == GS_LEVEL && !demoplayback)
-				{
-					if(!quicksave || quicksave == -1)
-					{
-						MenuActive = true;
-						FileMenuKeySteal = false;
-						MenuTime = 0;
-						CurrentMenu = &SaveMenu;
-						CurrentItPos = CurrentMenu->oldItPos;
-						if(!netgame && !demoplayback)
-						{
-							paused = true;
-						}
-						S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
-						slottextloaded = false; //reload the slot text
-						quicksave = -1;
-						P_SetMessage(&players[consoleplayer],
-							"CHOOSE A QUICKSAVE SLOT", true);
-					}
-					else
-					{
-						askforquit = true;
-						typeofask = 3;
-						if(!netgame && !demoplayback)
-						{
-							paused = true;
-						}
-						S_StartSound(NULL, SFX_CHAT);
-					}
-				}
-				return true;
-			case KEY_F7: // endgame
-				if(SCNetCheck(3))
-				{
-					if(gamestate == GS_LEVEL && !demoplayback)
-					{
-						S_StartSound(NULL, SFX_CHAT);
-						SCEndGame(0);
-					}
-				}
-				return true;
-			case KEY_F8: // toggle messages
-				SCMessages(0);
-				return true;
-			case KEY_F9: // quickload
-				if(SCNetCheck(2))
-				{
-					if(!quickload || quickload == -1)
-					{
-						MenuActive = true;
-						FileMenuKeySteal = false;
-						MenuTime = 0;
-						CurrentMenu = &LoadMenu;
-						CurrentItPos = CurrentMenu->oldItPos;
-						if(!netgame && !demoplayback)
-						{
-							paused = true;
-						}
-						S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
-						slottextloaded = false; // reload the slot text
-						quickload = -1;
-						P_SetMessage(&players[consoleplayer],
-							"CHOOSE A QUICKLOAD SLOT", true);
-					}
-					else
-					{
-						askforquit = true;
-						if(!netgame && !demoplayback)
-						{
-							paused = true;
-						}
-						typeofask = 4;
-						S_StartSound(NULL, SFX_CHAT);
-					}
-				}
-				return true;
-			case KEY_F10: // quit
-				// S.A. if(gamestate == GS_LEVEL || gamestate == GS_FINALE)
-				{
-					SCQuitGame(0);
-					S_StartSound(NULL, SFX_CHAT);
-				}
-				return true;
-			case KEY_F11: // F11 - gamma mode correction
-				usegamma++;
-				if(usegamma > 4)
-				{
-					usegamma = 0;
-				}
-				SB_PaletteFlash(true); // force change
-				P_SetMessage(&players[consoleplayer], GammaText[usegamma],
-					false);
-				return true;
-			case KEY_F12: // F12 Screenshot S.A.
-				G_ScreenShot();
-				return(true);
-#endif
-		}
-
-	}
-
-	if(MenuActive == false)
-	{
-		if(key == KEY_ESCAPE || gamestate == GS_DEMOSCREEN || demoplayback)
-		{
-			MN_ActivateMenu();
-			return(true);
-		}
-		return(false);
-	}
-	if(!FileMenuKeySteal)
-	{
-		item = &CurrentMenu->items[CurrentItPos];
-		switch(key)
-		{
-			case KEY_DOWNARROW:
-				do
-				{
-					if(CurrentMenu->items[CurrentItPos].type == ITT_SETKEY
-						&& CurrentItPos+1 > CurrentMenu->itemCount-1)
-					{
-						if(FirstKey == 5)
-						{
-							CurrentItPos = 0;  //End of Key menu
-							FirstKey = 0;
-						}
-						else
-						{
-							FirstKey++;
-						}
-					}
-					else if(CurrentItPos+1 > CurrentMenu->itemCount-1)
-					{
-						CurrentItPos = 0;
-					}
-					else
-					{
-						CurrentItPos++;
-					}
-				} while(CurrentMenu->items[CurrentItPos].type == ITT_EMPTY);
-				S_StartSound(NULL, SFX_FIGHTER_HAMMER_HITWALL);
-				return(true);
-			case KEY_UPARROW:
-				do
-				{
-					if(CurrentMenu->items[CurrentItPos].type == ITT_SETKEY && CurrentItPos==0)
-					{
-						if(FirstKey == 0)
-						{
-							CurrentItPos = 14;  //End of Key menu
-							FirstKey = 5;
-						}
-						else
-						{
-							FirstKey--;
-						}
-					}
-					else if(CurrentItPos == 0)
-					{
-						CurrentItPos = CurrentMenu->itemCount-1;
-					}
-					else
-					{
-						CurrentItPos--;
-					}
-				} while(CurrentMenu->items[CurrentItPos].type == ITT_EMPTY);
-				S_StartSound(NULL, SFX_FIGHTER_HAMMER_HITWALL);
-				return(true);
-			case KEY_LEFTARROW:
-				if(item->type == ITT_LRFUNC && item->func != NULL)
-				{
-					item->func(LEFT_DIR);
-					S_StartSound(NULL, SFX_PICKUP_KEY);
-				}
-				return(true);
-			case KEY_RIGHTARROW:
-				if(item->type == ITT_LRFUNC && item->func != NULL)
-				{
-					item->func(RIGHT_DIR);
-					S_StartSound(NULL, SFX_PICKUP_KEY);
-				}
-				return(true);
-			case KEY_ENTER:
-				if(item->type == ITT_SETMENU)
-				{
-					if(item->func != NULL)	
-					{
-						item->func(item->option);
-					}
-					SetMenu(item->menu);
-				}
-				else if(item->func != NULL)
-				{
-					CurrentMenu->oldItPos = CurrentItPos;
-					if(item->type == ITT_LRFUNC)
-					{
-						item->func(RIGHT_DIR);
-					}
-					else if(item->type == ITT_EFUNC)
-					{
-						item->func(item->option);
-					}
-					else if(item->type == ITT_SETKEY)
-					{
-						item->func(item->option);
-					}
-				}
-				S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
-				return(true);
-			case KEY_ESCAPE:
-				MN_DeactivateMenu();
-				return(true);
-			case KEY_BACKSPACE:
-				S_StartSound(NULL, SFX_PICKUP_KEY);
-				if(CurrentMenu->prevMenu == MENU_NONE)
-				{
-					MN_DeactivateMenu();
+					slottextloaded = false; // reload the slot text
+					quickload = -1;
+					P_SetMessage(&players[consoleplayer],
+						"CHOOSE A QUICKLOAD SLOT", true);
 				}
 				else
 				{
-					SetMenu(CurrentMenu->prevMenu);
-				}
-				return(true);
-			default:
-				for(i = 0; i < CurrentMenu->itemCount; i++)
-				{
-					if(CurrentMenu->items[i].text)
+					askforquit = true;
+					if (!netgame && !demoplayback)
 					{
-						if(toupper(key)
-							== toupper(CurrentMenu->items[i].text[0]))
-						{
-							CurrentItPos = i;
-							return(true);
-						}
+						paused = true;
+					}
+					typeofask = 4;
+					S_StartSound(NULL, SFX_CHAT);
+				}
+			}
+			return true;
+		case KEY_F10: // quit
+			// S.A. if (gamestate == GS_LEVEL || gamestate == GS_FINALE)
+			{
+				SCQuitGame(0);
+				S_StartSound(NULL, SFX_CHAT);
+			}
+			return true;
+		case KEY_F11: // F11 - gamma mode correction
+			usegamma++;
+			if (usegamma > 4)
+			{
+				usegamma = 0;
+			}
+			SB_PaletteFlash(true); // force change
+			P_SetMessage(&players[consoleplayer], GammaText[usegamma], false);
+			return true;
+		case KEY_F12: // F12 Screenshot S.A.
+			G_ScreenShot();
+			return true;
+#endif
+		}
+	}
+
+	if (MenuActive == false)
+	{
+		if (key == KEY_ESCAPE || gamestate == GS_DEMOSCREEN || demoplayback)
+		{
+			MN_ActivateMenu();
+			return true;
+		}
+		return false;
+	}
+	if (!FileMenuKeySteal)
+	{
+		item = &CurrentMenu->items[CurrentItPos];
+		switch (key)
+		{
+		case KEY_DOWNARROW:
+			do
+			{
+				if (CurrentMenu->items[CurrentItPos].type == ITT_SETKEY
+					&& CurrentItPos+1 > CurrentMenu->itemCount-1)
+				{
+					if (FirstKey == 5)
+					{
+						CurrentItPos = 0;  //End of Key menu
+						FirstKey = 0;
+					}
+					else
+					{
+						FirstKey++;
 					}
 				}
-				break;
+				else if (CurrentItPos+1 > CurrentMenu->itemCount-1)
+				{
+					CurrentItPos = 0;
+				}
+				else
+				{
+					CurrentItPos++;
+				}
+			}
+			while (CurrentMenu->items[CurrentItPos].type == ITT_EMPTY);
+			S_StartSound(NULL, SFX_FIGHTER_HAMMER_HITWALL);
+			return true;
+		case KEY_UPARROW:
+			do
+			{
+				if (CurrentMenu->items[CurrentItPos].type == ITT_SETKEY && CurrentItPos == 0)
+				{
+					if (FirstKey == 0)
+					{
+						CurrentItPos = 14;  //End of Key menu
+						FirstKey = 5;
+					}
+					else
+					{
+						FirstKey--;
+					}
+				}
+				else if (CurrentItPos == 0)
+				{
+					CurrentItPos = CurrentMenu->itemCount-1;
+				}
+				else
+				{
+					CurrentItPos--;
+				}
+			}
+			while (CurrentMenu->items[CurrentItPos].type == ITT_EMPTY);
+			S_StartSound(NULL, SFX_FIGHTER_HAMMER_HITWALL);
+			return true;
+		case KEY_LEFTARROW:
+			if (item->type == ITT_LRFUNC && item->func != NULL)
+			{
+				item->func(LEFT_DIR);
+				S_StartSound(NULL, SFX_PICKUP_KEY);
+			}
+			return true;
+		case KEY_RIGHTARROW:
+			if (item->type == ITT_LRFUNC && item->func != NULL)
+			{
+				item->func(RIGHT_DIR);
+				S_StartSound(NULL, SFX_PICKUP_KEY);
+			}
+			return true;
+		case KEY_ENTER:
+			if (item->type == ITT_SETMENU)
+			{
+				if (item->func != NULL)	
+				{
+					item->func(item->option);
+				}
+				SetMenu(item->menu);
+			}
+			else if (item->func != NULL)
+			{
+				CurrentMenu->oldItPos = CurrentItPos;
+				if (item->type == ITT_LRFUNC)
+				{
+					item->func(RIGHT_DIR);
+				}
+				else if (item->type == ITT_EFUNC)
+				{
+					item->func(item->option);
+				}
+				else if (item->type == ITT_SETKEY)
+				{
+					item->func(item->option);
+				}
+			}
+			S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
+			return true;
+		case KEY_ESCAPE:
+			MN_DeactivateMenu();
+			return true;
+		case KEY_BACKSPACE:
+			S_StartSound(NULL, SFX_PICKUP_KEY);
+			if (CurrentMenu->prevMenu == MENU_NONE)
+			{
+				MN_DeactivateMenu();
+			}
+			else
+			{
+				SetMenu(CurrentMenu->prevMenu);
+			}
+			return true;
+		default:
+			for (i = 0; i < CurrentMenu->itemCount; i++)
+			{
+				if (CurrentMenu->items[i].text)
+				{
+					if (toupper(key)
+						== toupper(CurrentMenu->items[i].text[0]))
+					{
+						CurrentItPos = i;
+						return true;
+					}
+				}
+			}
+			break;
 		}
-		return(false);
+		return false;
 	}
 	else
 	{ // Editing file names
 		textBuffer = &SlotText[currentSlot][slotptr];
-		if(key == KEY_BACKSPACE)
+		if (key == KEY_BACKSPACE)
 		{
-			if(slotptr)
+			if (slotptr)
 			{
 				*textBuffer-- = 0;
 				*textBuffer = ASCII_CURSOR;
 				slotptr--;
 			}
-			return(true);
+			return true;
 		}
-		if(key == KEY_ESCAPE)
+		if (key == KEY_ESCAPE)
 		{
 			memset(SlotText[currentSlot], 0, SLOTTEXTLEN+2);
 			strcpy(SlotText[currentSlot], oldSlotText);
 			SlotStatus[currentSlot]--;
 			MN_DeactivateMenu();
-			return(true);
+			return true;
 		}
-		if(key == KEY_ENTER)
+		if (key == KEY_ENTER)
 		{
 			SlotText[currentSlot][slotptr] = 0; // clear the cursor
 			item = &CurrentMenu->items[CurrentItPos];
 			CurrentMenu->oldItPos = CurrentItPos;
-			if(item->type == ITT_EFUNC)
+			if (item->type == ITT_EFUNC)
 			{
 				item->func(item->option);
-				if(item->menu != MENU_NONE)
+				if (item->menu != MENU_NONE)
 				{
 					SetMenu(item->menu);
 				}
 			}
-			return(true);
+			return true;
 		}
-		if(slotptr < SLOTTEXTLEN && key != KEY_BACKSPACE)
+		if (slotptr < SLOTTEXTLEN && key != KEY_BACKSPACE)
 		{
-			if((key >= 'a' && key <= 'z'))
+			if ((key >= 'a' && key <= 'z'))
 			{
 				*textBuffer++ = key-32;
 				*textBuffer = ASCII_CURSOR;
 				slotptr++;
-				return(true);
+				return true;
 			}
-			if(((key >= '0' && key <= '9') || key == ' '
+			if (((key >= '0' && key <= '9') || key == ' '
 				|| key == ',' || key == '.' || key == '-')
 				&& !shiftdown)
 			{
 				*textBuffer++ = key;
 				*textBuffer = ASCII_CURSOR;
 				slotptr++;
-				return(true);
+				return true;
 			}
-			if(shiftdown && key == '1')
+			if (shiftdown && key == '1')
 			{
 				*textBuffer++ = '!';
 				*textBuffer = ASCII_CURSOR;
 				slotptr++;
-				return(true);
+				return true;
 			}
 		}
-		return(true);
+		return true;
 	}
-	return(false);
+	return false;
 }
 
 //---------------------------------------------------------------------------
@@ -2152,11 +2148,11 @@ boolean MN_Responder(event_t *event)
 
 void MN_ActivateMenu(void)
 {
-	if(MenuActive)
+	if (MenuActive)
 	{
 		return;
 	}
-	if(paused)
+	if (paused)
 	{
 		S_ResumeSound();
 	}
@@ -2165,7 +2161,7 @@ void MN_ActivateMenu(void)
 	MenuTime = 0;
 	CurrentMenu = &MainMenu;
 	CurrentItPos = CurrentMenu->oldItPos;
-	if(!netgame && !demoplayback)
+	if (!netgame && !demoplayback)
 	{
 		paused = true;
 	}
@@ -2183,7 +2179,7 @@ void MN_DeactivateMenu(void)
 {
 	CurrentMenu->oldItPos = CurrentItPos;
 	MenuActive = false;
-	if(!netgame)
+	if (!netgame)
 	{
 		paused = false;
 	}
@@ -2200,8 +2196,8 @@ void MN_DeactivateMenu(void)
 void MN_DrawInfo(void)
 {
 #ifdef RENDER3D
-    OGL_SetFilter( 0 );
-    OGL_DrawRawScreen( W_GetNumForName("TITLE")+InfoType );
+	OGL_SetFilter(0);
+	OGL_DrawRawScreen(W_GetNumForName("TITLE")+InfoType);
 #else
 	I_SetPalette(W_CacheLumpName("PLAYPAL", PU_CACHE));
 	memcpy(screen, (byte *)W_CacheLumpNum(W_GetNumForName("TITLE")+InfoType,
@@ -2238,27 +2234,25 @@ static void DrawSlider(Menu_t *menu, int item, int width, int slot)
 	int x2;
 	int count;
 
-	x = menu->x+24;
-	y = menu->y+2+(item*ITEM_HEIGHT);
+	x = menu->x + 24;
+	y = menu->y + 2 + (item*ITEM_HEIGHT);
 
 #ifdef RENDER3D
-    OGL_DrawPatch_CS(x-32, y, W_GetNumForName("M_SLDLT"));
-    for(x2 = x, count = width; count--; x2 += 8)
-    {
-        OGL_DrawPatch_CS( x2, y, W_GetNumForName(count&1 ? "M_SLDMD1" :
-                          "M_SLDMD2") );
-    }
-    OGL_DrawPatch_CS(x2, y, W_GetNumForName("M_SLDRT"));
-    OGL_DrawPatch_CS(x+4+slot*8, y+7, W_GetNumForName("M_SLDKB"));
+	OGL_DrawPatch_CS(x-32, y, W_GetNumForName("M_SLDLT"));
+	for (x2 = x, count = width; count--; x2 += 8)
+	{
+		OGL_DrawPatch_CS(x2, y, W_GetNumForName((count & 1) ? "M_SLDMD1" : "M_SLDMD2"));
+	}
+	OGL_DrawPatch_CS(x2, y, W_GetNumForName("M_SLDRT"));
+	OGL_DrawPatch_CS(x + 4 + slot*8, y + 7, W_GetNumForName("M_SLDKB"));
 #else
 	V_DrawPatch(x-32, y, W_CacheLumpName("M_SLDLT", PU_CACHE));
-	for(x2 = x, count = width; count--; x2 += 8)
+	for (x2 = x, count = width; count--; x2 += 8)
 	{
-		V_DrawPatch(x2, y, W_CacheLumpName(count&1 ? "M_SLDMD1"
-			: "M_SLDMD2", PU_CACHE));
+		V_DrawPatch(x2, y, W_CacheLumpName((count & 1) ? "M_SLDMD1" : "M_SLDMD2", PU_CACHE));
 	}
 	V_DrawPatch(x2, y, W_CacheLumpName("M_SLDRT", PU_CACHE));
-	V_DrawPatch(x+4+slot*8, y+7, W_CacheLumpName("M_SLDKB", PU_CACHE));
+	V_DrawPatch(x + 4 + slot*8, y + 7, W_CacheLumpName("M_SLDKB", PU_CACHE));
 #endif
 }
 

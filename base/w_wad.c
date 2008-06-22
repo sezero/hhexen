@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.19 $
-//** $Date: 2008-06-19 06:23:21 $
+//** $Revision: 1.20 $
+//** $Date: 2008-06-22 16:20:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -48,7 +48,7 @@ typedef struct
 
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
 
-void	W_MergeLumps(char *start, char *end);
+static void W_MergeLumps(char *start, char *end);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
@@ -122,25 +122,24 @@ void W_AddFile(char *filename)
 	else
 	{ // WAD file
 		read(handle, &header, sizeof(header));
-		if(strncmp(header.identification, "IWAD", 4))
+		if (strncmp(header.identification, "IWAD", 4) != 0)
 		{
-			if(strncmp(header.identification, "PWAD", 4))
+			if (strncmp(header.identification, "PWAD", 4) != 0)
 			{ // Bad file id
-				I_Error("Wad file %s doesn't have IWAD or PWAD id\n",
-					filename);
+				I_Error("Wad file %s doesn't have IWAD or PWAD id\n", filename);
 			}
 		}
 		header.numlumps = LONG(header.numlumps);
 		header.infotableofs = LONG(header.infotableofs);
-		length = header.numlumps*sizeof(filelump_t);
-		if(strncmp(header.identification,"IWAD",4) == 0 &&
-		   header.numlumps == DEMO_LUMPS && flength == DEMO_WADSIZE)
+		length = header.numlumps * sizeof(filelump_t);
+		if (strncmp(header.identification, "IWAD", 4) == 0 &&
+		    header.numlumps == DEMO_LUMPS && flength == DEMO_WADSIZE)
 		{
 			shareware = true;
 			ST_Message("Shareware WAD detected (4 level 1.0 PC version).\n");
 		}
-		else if(strncmp(header.identification,"IWAD",4) == 0 &&
-		   header.numlumps == MACDEMO_LUMPS && flength == MACDEMO_WADSIZE)
+		else if (strncmp(header.identification, "IWAD", 4) == 0 &&
+			 header.numlumps == MACDEMO_LUMPS && flength == MACDEMO_WADSIZE)
 		{
 			/* in the Mac demo wad, some of the lump names begin
 			 * with a character that has the high bit (0x80) set,
@@ -150,10 +149,10 @@ void W_AddFile(char *filename)
 			shareware = true;
 			ST_Message("Shareware WAD detected (4 level 1.1 Mac version).\n");
 		}
-//		fileinfo = alloca(length);
-		if(!(fileinfo = malloc(length)))
+		fileinfo = (filelump_t *) malloc(length);
+		if (!fileinfo)
 		{
-			I_Error("W_AddFile:  fileinfo malloc failed\n");
+			I_Error("W_AddFile: fileinfo malloc failed\n");
 		}
 		freeFileInfo = fileinfo;
 		lseek(handle, header.infotableofs, SEEK_SET);
@@ -162,13 +161,13 @@ void W_AddFile(char *filename)
 	}
 
 	// Fill in lumpinfo
-	lumpinfo = realloc(lumpinfo, numlumps*sizeof(lumpinfo_t));
-	if(!lumpinfo)
+	lumpinfo = (lumpinfo_t *) realloc(lumpinfo, numlumps * sizeof(lumpinfo_t));
+	if (!lumpinfo)
 	{
 		I_Error("Couldn't realloc lumpinfo");
 	}
 	lump_p = &lumpinfo[startlump];
-	for(i = startlump; i < numlumps; i++, lump_p++, fileinfo++)
+	for (i = startlump; i < numlumps; i++, lump_p++, fileinfo++)
 	{
 		lump_p->handle = handle;
 		lump_p->position = LONG(fileinfo->filepos);
@@ -184,7 +183,7 @@ void W_AddFile(char *filename)
 			}
 		}
 	}
-	if(freeFileInfo)
+	if (freeFileInfo)
 	{
 		free(freeFileInfo);
 	}
@@ -211,13 +210,13 @@ void W_InitMultipleFiles(char **filenames)
 
 	// Open all the files, load headers, and count lumps
 	numlumps = 0;
-	lumpinfo = malloc(1); // Will be realloced as lumps are added
+	lumpinfo = (lumpinfo_t *) malloc(1); // Will be realloced as lumps are added
 
-	for(; *filenames; filenames++)
+	for ( ; *filenames; filenames++)
 	{
 		W_AddFile(*filenames);
 	}
-	if(!numlumps)
+	if (!numlumps)
 	{
 		I_Error("W_InitMultipleFiles: no files found");
 	}
@@ -227,9 +226,9 @@ void W_InitMultipleFiles(char **filenames)
 	W_MergeLumps("F_START","F_END");
 
 	// Set up caching
-	size = numlumps*sizeof(*lumpcache);
-	lumpcache = malloc(size);
-	if(!lumpcache)
+	size = numlumps * sizeof(*lumpcache);
+	lumpcache = (void **) malloc(size);
+	if (!lumpcache)
 	{
 		I_Error("Couldn't allocate lumpcache");
 	}
@@ -251,7 +250,7 @@ void W_InitMultipleFiles(char **filenames)
 static int IsMarker(char *marker, char *name)
 {
 	return !strncasecmp(name, marker, 8) ||
-		(*name == *marker && !strncasecmp(name+1,marker,7));
+		(*name == *marker && !strncasecmp(name + 1, marker, 7));
 }
 
 //==========================================================================
@@ -262,79 +261,82 @@ static int IsMarker(char *marker, char *name)
 //
 //==========================================================================
 
-void W_MergeLumps(char *start, char *end)
+static void W_MergeLumps(char *start, char *end)
 {
 	lumpinfo_t *newlumpinfo;
 	int newlumps, oldlumps;
 	int in_block = 0;
 	int i;
 
-	newlumpinfo = (lumpinfo_t *) malloc(numlumps * sizeof(lumpinfo_t));
 	oldlumps = newlumps = 0;
+	newlumpinfo = (lumpinfo_t *) malloc(numlumps * sizeof(lumpinfo_t));
+	if (!newlumpinfo)
+	{
+		I_Error("W_MergeLumps: newlumpinfo malloc failed");
+	}
 
-	for(i=0;i < numlumps;i++)
+	for (i = 0; i < numlumps; i++)
 	{
 		//process lumps in global namespace
-		if(!in_block)
+		if (!in_block)
 		{
 			//check for start of block
 			if (IsMarker(start, lumpinfo[i].name))
 			{
-				in_block=1;
-				if(!newlumps)
+				in_block = 1;
+				if (!newlumps)
 				{
 					newlumps++;
-					memset(newlumpinfo[0].name,0,8);
-		    strcpy(newlumpinfo[0].name, start);
-		    newlumpinfo[0].handle = -1;
-		    newlumpinfo[0].position = newlumpinfo[0].size = 0;
+					memset(newlumpinfo[0].name, 0, 8);
+					strcpy(newlumpinfo[0].name, start);
+					newlumpinfo[0].handle = -1;
+					newlumpinfo[0].position = newlumpinfo[0].size = 0;
+				}
+			}
+			// else copy it
+			else
+			{
+				lumpinfo[oldlumps++] = lumpinfo[i];
+			}
 		}
-	    }
-	    // else copy it
-	    else
-	    {
-		lumpinfo[oldlumps++] = lumpinfo[i];
-	    }
+		// process lumps in sprites or flats namespace
+		else
+		{
+			// check for end of block
+			if (IsMarker(end, lumpinfo[i].name))
+			{
+				in_block = 0;
+			}
+			else if (i && lumpinfo[i].handle != lumpinfo[i-1].handle)
+			{
+				in_block = 0;
+				lumpinfo[oldlumps++] = lumpinfo[i];
+			}
+			else
+			{
+				newlumpinfo[newlumps++] = lumpinfo[i];
+			}
+		}
 	}
-	// process lumps in sprites or flats namespace
-	else
+
+	// now copy the merged lumps to the end of the old list
+	if (newlumps)
 	{
-	    // check for end of block
-	    if (IsMarker(end, lumpinfo[i].name))
-	    {
-		in_block = 0;
-	    }
-	    else if (i && lumpinfo[i].handle != lumpinfo[i-1].handle)
-	    {
-		in_block = 0;
-		lumpinfo[oldlumps++] = lumpinfo[i];
-	    }
-	    else
-	    {
-		newlumpinfo[newlumps++] = lumpinfo[i];
-	    }
+		if (oldlumps + newlumps > numlumps)
+			lumpinfo = realloc(lumpinfo, (oldlumps + newlumps) * sizeof(lumpinfo_t));
+		memcpy(lumpinfo + oldlumps, newlumpinfo, sizeof(lumpinfo_t) * newlumps);
+
+		numlumps = oldlumps + newlumps;
+
+		memset(lumpinfo[numlumps].name, 0, 8);
+		strcpy(lumpinfo[numlumps].name, end);
+		lumpinfo[numlumps].handle = -1;
+		lumpinfo[numlumps].position = lumpinfo[numlumps].size = 0;
+		numlumps++;
 	}
-    }
-
-    // now copy the merged lumps to the end of the old list
-    if (newlumps)
-    {
-	if (oldlumps + newlumps > numlumps)
-	    lumpinfo = realloc(lumpinfo, (oldlumps + newlumps) *
-				 sizeof(lumpinfo_t));
-	memcpy(lumpinfo + oldlumps, newlumpinfo, sizeof(lumpinfo_t) * newlumps);
-
-	numlumps = oldlumps + newlumps;
-
-	memset(lumpinfo[numlumps].name, 0, 8);
-	strcpy(lumpinfo[numlumps].name, end);
-	lumpinfo[numlumps].handle = -1;
-	lumpinfo[numlumps].position = lumpinfo[numlumps].size = 0;
-	numlumps++;
-    }
-    free (newlumpinfo);
+	free (newlumpinfo);
 }
-					
+
 //==========================================================================
 //
 // W_InitFile
@@ -369,20 +371,20 @@ void W_OpenAuxiliary(char *filename)
 	filelump_t *sourceLump;
 	lumpinfo_t *destLump;
 
-	if(AuxiliaryOpened)
+	if (AuxiliaryOpened)
 	{
 		W_CloseAuxiliary();
 	}
-	if((handle = open(filename, O_RDONLY|O_BINARY)) == -1)
+	if ((handle = open(filename, O_RDONLY|O_BINARY)) == -1)
 	{
 		I_Error("W_OpenAuxiliary: %s not found.", filename);
 		return;
 	}
 	AuxiliaryHandle = handle;
 	read(handle, &header, sizeof(header));
-	if(strncmp(header.identification, "IWAD", 4))
+	if (strncmp(header.identification, "IWAD", 4))
 	{
-		if(strncmp(header.identification, "PWAD", 4))
+		if (strncmp(header.identification, "PWAD", 4))
 		{ // Bad file id
 			I_Error("Wad file %s doesn't have IWAD or PWAD id\n",
 				filename);
@@ -400,7 +402,7 @@ void W_OpenAuxiliary(char *filename)
 	lumpinfo = Z_Malloc(numlumps*sizeof(lumpinfo_t), PU_STATIC, 0);
 	sourceLump = fileinfo;
 	destLump = lumpinfo;
-	for(i = 0; i < numlumps; i++, destLump++, sourceLump++)
+	for (i = 0; i < numlumps; i++, destLump++, sourceLump++)
 	{
 		destLump->handle = handle;
 		destLump->position = LONG(sourceLump->filepos);
@@ -430,12 +432,12 @@ void W_CloseAuxiliary(void)
 {
 	int i;
 
-	if(AuxiliaryOpened)
+	if (AuxiliaryOpened)
 	{
 		W_UseAuxiliary();
-		for(i = 0; i < numlumps; i++)
+		for (i = 0; i < numlumps; i++)
 		{
-			if(lumpcache[i])
+			if (lumpcache[i])
 			{
 				Z_Free(lumpcache[i]);
 			}
@@ -459,7 +461,7 @@ void W_CloseAuxiliary(void)
 
 void W_CloseAuxiliaryFile(void)
 {
-	if(AuxiliaryHandle)
+	if (AuxiliaryHandle)
 	{
 		close(AuxiliaryHandle);
 		AuxiliaryHandle = 0;
@@ -487,7 +489,7 @@ void W_UsePrimary(void)
 
 void W_UseAuxiliary(void)
 {
-	if(AuxiliaryOpened == false)
+	if (AuxiliaryOpened == false)
 	{
 		I_Error("W_UseAuxiliary: WAD not opened.");
 	}
@@ -530,9 +532,9 @@ int W_CheckNumForName(char *name)
 
 	// Scan backwards so patch lump files take precedence
 	lump_p = lumpinfo+numlumps;
-	while(lump_p-- != lumpinfo)
+	while (lump_p-- != lumpinfo)
 	{
-		if(*(int *)lump_p->name == v1 && *(int *)&lump_p->name[4] == v2)
+		if (*(int *)lump_p->name == v1 && *(int *)&lump_p->name[4] == v2)
 		{
 			return lump_p-lumpinfo;
 		}
@@ -553,7 +555,7 @@ int	W_GetNumForName (char *name)
 	int	i;
 
 	i = W_CheckNumForName(name);
-	if(i != -1)
+	if (i != -1)
 	{
 		return i;
 	}
@@ -571,7 +573,7 @@ int	W_GetNumForName (char *name)
 
 int W_LumpLength(int lump)
 {
-	if(lump >= numlumps)
+	if (lump >= numlumps)
 	{
 		I_Error("W_LumpLength: %i >= numlumps", lump);
 	}
@@ -591,7 +593,7 @@ void W_ReadLump(int lump, void *dest)
 	int c;
 	lumpinfo_t *l;
 
-	if(lump >= numlumps)
+	if (lump >= numlumps)
 	{
 		I_Error("W_ReadLump: %i >= numlumps", lump);
 	}
@@ -599,7 +601,7 @@ void W_ReadLump(int lump, void *dest)
 	//I_BeginRead();
 	lseek(l->handle, l->position, SEEK_SET);
 	c = read(l->handle, dest, l->size);
-	if(c < l->size)
+	if (c < l->size)
 	{
 		I_Error("W_ReadLump: only read %i of %i on lump %i",
 			c, l->size, lump);
@@ -617,11 +619,11 @@ void *W_CacheLumpNum(int lump, int tag)
 {
 	byte *ptr;
 
-	if((unsigned)lump >= numlumps)
+	if ((unsigned)lump >= numlumps)
 	{
 		I_Error("W_CacheLumpNum: %i >= numlumps", lump);
 	}
-	if(!lumpcache[lump])
+	if (!lumpcache[lump])
 	{ // Need to read the lump in
 		ptr = Z_Malloc(W_LumpLength(lump), tag, &lumpcache[lump]);
 		W_ReadLump(lump, lumpcache[lump]);
@@ -714,10 +716,9 @@ void W_Profile (void)
 	FILE	*f;
 	int		j;
 	char	name[9];
-	
-	
-	for (i=0 ; i<numlumps ; i++)
-	{	
+
+	for (i = 0; i < numlumps; i++)
+	{
 		ptr = lumpcache[i];
 		if (!ptr)
 		{
@@ -735,19 +736,19 @@ void W_Profile (void)
 		info[i][profilecount] = ch;
 	}
 	profilecount++;
-	
+
 	f = fopen ("waddump.txt","w");
 	name[8] = 0;
-	for (i=0 ; i<numlumps ; i++)
+	for (i = 0; i < numlumps; i++)
 	{
-		memcpy (name,lumpinfo[i].name,8);
-		for (j=0 ; j<8 ; j++)
+		memcpy (name, lumpinfo[i].name, 8);
+		for (j = 0; j < 8; j++)
 			if (!name[j])
 				break;
-		for ( ; j<8 ; j++)
+		for ( ; j < 8; j++)
 			name[j] = ' ';
 		fprintf (f,"%s ",name);
-		for (j=0 ; j<profilecount ; j++)
+		for (j = 0; j < profilecount; j++)
 			fprintf (f,"    %c",info[i][j]);
 		fprintf (f,"\n");
 	}

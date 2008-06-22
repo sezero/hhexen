@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.19 $
-//** $Date: 2008-06-17 17:32:02 $
+//** $Revision: 1.20 $
+//** $Date: 2008-06-22 16:20:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -15,7 +15,7 @@
 #include "h2stdinc.h"
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h>    /* jim write() read() close() */
+#include <unistd.h>
 #include <ctype.h>
 #include "h2def.h"
 #include "p_local.h"
@@ -27,8 +27,8 @@
 
 // MACROS ------------------------------------------------------------------
 
-#define MALLOC_CLIB 1
-#define MALLOC_ZONE 2
+#define MALLOC_CLIB	1
+#define MALLOC_ZONE	2
 
 // TYPES -------------------------------------------------------------------
 
@@ -44,8 +44,8 @@ static int ReadFile(char const *name, void **buffer, int mallocType);
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
-int myargc;
-char **myargv;
+int		myargc;
+char		**myargv;
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
@@ -64,9 +64,9 @@ int M_CheckParm(char *check)
 {
 	int i;
 
-	for(i = 1; i < myargc; i++)
+	for (i = 1; i < myargc; i++)
 	{
-		if(!strcasecmp(check, myargv[i]))
+		if (!strcasecmp(check, myargv[i]))
 		{
 			return i;
 		}
@@ -99,20 +99,23 @@ void M_ExtractFileBase(char *path, char *dest)
 	char *src;
 	int length;
 
-	src = path+strlen(path)-1;
+	src = path + strlen(path) - 1;
+	if (src <= path)
+	{
+		*dest = '\0';
+		return;
+	}
 
 	// Back up until a \ or the start
-	while(src != path && *(src-1) != '\\' && *(src-1) != '/')
-	{
+	while (src != path && src[-1] != '/' && src[-1] != '\\')
 		src--;
-	}
 
 	// Copy up to eight characters
 	memset(dest, 0, 8);
 	length = 0;
-	while(*src && *src != '.')
+	while (*src && *src != '.')
 	{
-		if(++length == 9)
+		if (++length == 9)
 		{
 			I_Error("Filename base of %s > 8 chars", path);
 		}
@@ -131,7 +134,8 @@ void M_ExtractFileBase(char *path, char *dest)
 */
 
 // This is the new flat distribution table
-unsigned char rndtable[256] = {
+unsigned char rndtable[256] =
+{
 	201,  1,243, 19, 18, 42,183,203,101,123,154,137, 34,118, 10,216,
 	135,246,  0,107,133,229, 35,113,177,211,110, 17,139, 84,251,235,
 	182,166,161,230,143, 91, 24, 81, 22, 94,  7, 51,232,104,122,248,
@@ -150,18 +154,17 @@ unsigned char rndtable[256] = {
 	 23, 25, 48,218,120,147,208, 36,226,223,193,238,157,204,146, 31
 };
 
-
 int rndindex = 0;
 int prndindex = 0;
 
 unsigned char P_Random (void)
 {
-	return rndtable[(++prndindex)&0xff];
+	return rndtable[(++prndindex) & 0xff];
 }
 
 int M_Random (void)
 {
-	rndindex = (rndindex+1)&0xff;
+	rndindex = (rndindex + 1) & 0xff;
 	return rndtable[rndindex];
 }
 
@@ -179,13 +182,13 @@ void M_ClearBox (fixed_t *box)
 
 void M_AddToBox (fixed_t *box, fixed_t x, fixed_t y)
 {
-	if (x<box[BOXLEFT])
+	if (x < box[BOXLEFT])
 		box[BOXLEFT] = x;
-	else if (x>box[BOXRIGHT])
+	else if (x > box[BOXRIGHT])
 		box[BOXRIGHT] = x;
-	if (y<box[BOXBOTTOM])
+	if (y < box[BOXBOTTOM])
 		box[BOXBOTTOM] = y;
-	else if (y>box[BOXTOP])
+	else if (y > box[BOXTOP])
 		box[BOXTOP] = y;
 }
 
@@ -252,23 +255,23 @@ static int ReadFile(char const *name, void **buffer, int mallocType)
 	void *buf;
 
 	handle = open(name, O_RDONLY|O_BINARY, 0666);
-	if(handle == -1)
+	if (handle == -1)
 	{
 		I_Error("Couldn't read file %s", name);
 	}
-	if(fstat(handle, &fileinfo) == -1)
+	if (fstat(handle, &fileinfo) == -1)
 	{
 		I_Error("Couldn't read file %s", name);
 	}
 	length = fileinfo.st_size;
-	if(mallocType == MALLOC_ZONE)
+	if (mallocType == MALLOC_ZONE)
 	{ // Use zone memory allocation
 		buf = Z_Malloc(length, PU_STATIC, NULL);
 	}
 	else
 	{ // Use c library memory allocation
 		buf = malloc(length);
-		if(buf == NULL)
+		if (buf == NULL)
 		{
 			I_Error("Couldn't malloc buffer %d for file %s.",
 				length, name);
@@ -276,7 +279,7 @@ static int ReadFile(char const *name, void **buffer, int mallocType)
 	}
 	count = read(handle, buf, length);
 	close(handle);
-	if(count < length)
+	if (count < length)
 	{
 		I_Error("Couldn't read file %s", name);
 	}
@@ -290,15 +293,15 @@ static int ReadFile(char const *name, void **buffer, int mallocType)
 //
 //---------------------------------------------------------------------------
 
-#define MAXARGVS 100
+#define MAXARGVS	100
 
 void M_FindResponseFile(void)
 {
 	int i;
 
-	for(i = 1; i < myargc; i++)
+	for (i = 1; i < myargc; i++)
 	{
-		if(myargv[i][0] == '@')
+		if (myargv[i][0] == '@')
 		{
 			FILE *handle;
 			int size;
@@ -312,52 +315,48 @@ void M_FindResponseFile(void)
 
 			// READ THE RESPONSE FILE INTO MEMORY
 			handle = fopen(&myargv[i][1], "rb");
-			if(!handle)
+			if (!handle)
 			{
 				printf("\nNo such response file!");
 				exit(1);
 			}
 			ST_Message("Found response file %s!\n",&myargv[i][1]);
-			fseek (handle,0,SEEK_END);
+			fseek (handle, 0, SEEK_END);
 			size = ftell(handle);
-			fseek (handle,0,SEEK_SET);
+			fseek (handle, 0, SEEK_SET);
 			file = malloc (size);
-			fread (file,size,1,handle);
+			fread (file, size, 1, handle);
 			fclose (handle);
 
 			// KEEP ALL CMDLINE ARGS FOLLOWING @RESPONSEFILE ARG
-			for (index = 0,k = i+1; k < myargc; k++)
+			for (index = 0, k = i + 1; k < myargc; k++)
 				moreargs[index++] = myargv[k];
-			
+
 			firstargv = myargv[0];
-			myargv = malloc(sizeof(char *)*MAXARGVS);
-			memset(myargv,0,sizeof(char *)*MAXARGVS);
+			myargv = (char **) calloc(1, sizeof(char *) * MAXARGVS);
 			myargv[0] = firstargv;
-			
+
 			infile = file;
 			indexinfile = k = 0;
-			indexinfile++;  // SKIP PAST ARGV[0] (KEEP IT)
+			indexinfile++;	// SKIP PAST ARGV[0] (KEEP IT)
 			do
 			{
-				myargv[indexinfile++] = infile+k;
-				while(k < size &&  
+				myargv[indexinfile++] = infile + k;
+				while (k < size && ((*(infile + k) >= ' ' + 1) && (*(infile + k) <= 'z')))
+					k++;
+				*(infile + k) = 0;
+				while (k < size && ((*(infile + k) <= ' ') || (*(infile + k) > 'z')))
+					k++;
+			} while (k < size);
 
-					((*(infile+k)>= ' '+1) && (*(infile+k)<='z')))
-					k++;
-				*(infile+k) = 0;
-				while(k < size &&
-					((*(infile+k)<= ' ') || (*(infile+k)>'z')))
-					k++;
-			} while(k < size);
-			
-			for (k = 0;k < index;k++)
+			for (k = 0; k < index; k++)
 				myargv[indexinfile++] = moreargs[k];
 			myargc = indexinfile;
 			// DISPLAY ARGS
-			if(M_CheckParm("-debug"))
+			if (M_CheckParm("-debug"))
 			{
 				ST_Message("%d command-line args:\n", myargc);
-				for(k = 1; k < myargc; k++)
+				for (k = 1; k < myargc; k++)
 				{
 					ST_Message("%s\n", myargv[k]);
 				}
@@ -379,9 +378,9 @@ void M_ForceUppercase(char *text)
 {
 	char c;
 
-	while((c = *text) != 0)
+	while ((c = *text) != 0)
 	{
-		if(c >= 'a' && c <= 'z')
+		if (c >= 'a' && c <= 'z')
 		{
 			*text++ = c-('a'-'A');
 		}
@@ -434,7 +433,6 @@ extern int viewwidth, viewheight;
 extern int screenblocks;
 
 extern char *chat_macros[10];
-
 
 #ifndef __NeXT__
 extern int snd_Channels;
@@ -514,8 +512,8 @@ default_t defaults[] =
 	{ "alwaysrun", &alwaysrun, 0 }
 };
 
-int numdefaults;
-char defaultfile[MAX_OSPATH];
+static int numdefaults;
+static char defaultfile[MAX_OSPATH];
 
 /*
 ==============
@@ -527,25 +525,25 @@ char defaultfile[MAX_OSPATH];
 
 void M_SaveDefaults (void)
 {
-	int     i,v;
-	FILE    *f;
+	int	i,v;
+	FILE	*f;
 
 	f = fopen (defaultfile, "w");
 	if (!f)
 		return;	// can't write the file, but don't complain
 
-	for (i=0 ; i<numdefaults ; i++)
-	{ 
-		if (defaults[i].defaultvalue > -0xfff
-		  && defaults[i].defaultvalue < 0xfff)
+	for (i = 0; i < numdefaults; i++)
+	{
+		if (defaults[i].defaultvalue > -0xfff  &&
+		    defaults[i].defaultvalue < 0xfff)
 		{
 			v = *defaults[i].location;
-			fprintf (f,"%s\t\t%i\n",defaults[i].name,v);
+			fprintf (f, "%s\t\t%i\n", defaults[i].name, v);
 		}
 		else
 		{
-			fprintf (f,"%s\t\t\"%s\"\n",defaults[i].name,
-				  *(char **) (defaults[i].location));
+			fprintf (f, "%s\t\t\"%s\"\n", defaults[i].name,
+					*(char **)(defaults[i].location));
 		}
 	}
 
@@ -558,8 +556,6 @@ void M_SaveDefaults (void)
 //
 //==========================================================================
 
-extern byte scantokey[128];
-
 void M_LoadDefaults(char *fileName)
 {
 	int i;
@@ -567,21 +563,21 @@ void M_LoadDefaults(char *fileName)
 	FILE *f;
 	char def[80];
 	char strparm[100];
-	char *newstring = NULL;  /* jim initialiser added */
+	char *newstring = NULL;
 	int parm;
 	boolean isstring;
 
 	// Set everything to base values
-	numdefaults = sizeof(defaults)/sizeof(defaults[0]);
+	numdefaults = sizeof(defaults) / sizeof(defaults[0]);
 	ST_Message("M_LoadDefaults: %d default settings loaded\n", numdefaults);
-	for(i = 0; i < numdefaults; i++)
+	for (i = 0; i < numdefaults; i++)
 	{
 		*defaults[i].location = defaults[i].defaultvalue;
 	}
 
 	// Check for a custom config file
 	i = M_CheckParm("-config");
-	if(i && i < myargc-1)
+	if (i && i < myargc-1)
 	{
 		snprintf(defaultfile, sizeof(defaultfile), "%s%s", basePath, myargv[i + 1]);
 		ST_Message("config file: %s\n", defaultfile);
@@ -593,14 +589,14 @@ void M_LoadDefaults(char *fileName)
 
 	// Scan the config file
 	f = fopen(defaultfile, "r");
-	if(f)
+	if (f)
 	{
-		while(!feof(f))
+		while (!feof(f))
 		{
 			isstring = false;
-			if(fscanf(f, "%79s %[^\n]\n", def, strparm) == 2)
+			if (fscanf(f, "%79s %[^\n]\n", def, strparm) == 2)
 			{
-				if(strparm[0] == '"')
+				if (strparm[0] == '"')
 				{
 					// Get a string default
 					isstring = true;
@@ -608,22 +604,22 @@ void M_LoadDefaults(char *fileName)
 					newstring = (char *)malloc(len);
 					if (newstring == NULL)
 						I_Error("can't malloc newstring");
-					strparm[len-1] = 0;
-					strcpy(newstring, strparm+1);
+					strparm[len - 1] = 0;
+					strcpy(newstring, strparm + 1);
 				}
-				else if(strparm[0] == '0' && strparm[1] == 'x')
+				else if (strparm[0] == '0' && strparm[1] == 'x')
 				{
-					sscanf(strparm+2, "%x", &parm);
+					sscanf(strparm + 2, "%x", &parm);
 				}
 				else
 				{
 					sscanf(strparm, "%i", &parm);
 				}
-				for(i = 0; i < numdefaults; i++)
+				for (i = 0; i < numdefaults; i++)
 				{
-					if(!strcmp(def, defaults[i].name))
+					if (!strcmp(def, defaults[i].name))
 					{
-						if(!isstring)
+						if (!isstring)
 						{
 							*defaults[i].location = parm;
 						}
@@ -640,6 +636,7 @@ void M_LoadDefaults(char *fileName)
 	}
 }
 
+
 /*
 ==============================================================================
 
@@ -648,22 +645,21 @@ void M_LoadDefaults(char *fileName)
 ==============================================================================
 */
 
-
 typedef struct
 {
-	char    manufacturer;
-	char    version;
-	char    encoding;
-	char    bits_per_pixel;
-	unsigned short  xmin,ymin,xmax,ymax;
-	unsigned short  hres,vres;
-	unsigned char   palette[48];
-	char    reserved;
-	char    color_planes;
-	unsigned short  bytes_per_line;
-	unsigned short  palette_type;
-	char    filler[58];
-	unsigned char   data;           // unbounded
+	char	manufacturer;
+	char	version;
+	char	encoding;
+	char	bits_per_pixel;
+	unsigned short	xmin,ymin,xmax,ymax;
+	unsigned short	hres,vres;
+	unsigned char	palette[48];
+	char	reserved;
+	char	color_planes;
+	unsigned short	bytes_per_line;
+	unsigned short	palette_type;
+	char	filler[58];
+	unsigned char	data;	// unbounded
 } pcx_t;
 
 /*
@@ -676,27 +672,27 @@ typedef struct
 
 void WritePCXfile (char *filename, byte *data, int width, int height, byte *palette)
 {
-	int     i, length;
-	pcx_t   *pcx;
-	byte        *pack;
-	
+	int	i, length;
+	pcx_t	*pcx;
+	byte	*pack;
+
 	pcx = Z_Malloc (width*height*2+1000, PU_STATIC, NULL);
 
-	pcx->manufacturer = 0x0a;   // PCX id
-	pcx->version = 5;           // 256 color
-	pcx->encoding = 1;      // uncompressed
-	pcx->bits_per_pixel = 8;        // 256 color
+	pcx->manufacturer = 0x0a;	// PCX id
+	pcx->version = 5;		// 256 color
+	pcx->encoding = 1;		// uncompressed
+	pcx->bits_per_pixel = 8;	// 256 color
 	pcx->xmin = 0;
 	pcx->ymin = 0;
-	pcx->xmax = SHORT(width-1);
-	pcx->ymax = SHORT(height-1);
+	pcx->xmax = SHORT(width - 1);
+	pcx->ymax = SHORT(height - 1);
 	pcx->hres = SHORT(width);
 	pcx->vres = SHORT(height);
-	memset (pcx->palette,0,sizeof(pcx->palette));
-	pcx->color_planes = 1;      // chunky image
+	memset (pcx->palette, 0, sizeof(pcx->palette));
+	pcx->color_planes = 1;		// chunky image
 	pcx->bytes_per_line = SHORT(width);
-	pcx->palette_type = SHORT(2);       // not a grey scale
-	memset (pcx->filler,0,sizeof(pcx->filler));
+	pcx->palette_type = SHORT(2);	// not a grey scale
+	memset (pcx->filler, 0, sizeof(pcx->filler));
 
 //
 // pack the image
@@ -705,7 +701,7 @@ void WritePCXfile (char *filename, byte *data, int width, int height, byte *pale
 
 	for (i = 0; i < width*height; i++)
 	{
-		if ( (*data & 0xc0) != 0xc0)
+		if ((*data & 0xc0) != 0xc0)
 			*pack++ = *data++;
 		else
 		{
@@ -717,7 +713,7 @@ void WritePCXfile (char *filename, byte *data, int width, int height, byte *pale
 //
 // write the palette
 //
-	*pack++ = 0x0c; // palette ID byte
+	*pack++ = 0x0c;		// palette ID byte
 	for (i = 0; i < 768; i++)
 		*pack++ = *palette++;
 
@@ -748,15 +744,15 @@ void M_ScreenShot (void)
 #else
 void M_ScreenShot (void)
 {
-	int     i;
-	byte    *linear;
-	char    lbmname[MAX_OSPATH], *p;
-	byte *pal;
+	int	i;
+	byte	*linear;
+	char	lbmname[MAX_OSPATH], *p;
+	byte	*pal;
 
 //
 // munge planar buffer to linear
 // 
-	linear = screen; 
+	linear = screen;
 //
 // find a file name to save it to
 //
@@ -777,7 +773,7 @@ void M_ScreenShot (void)
 
 //
 // save the pcx file
-// 
+//
 	pal = (byte *)W_CacheLumpName("PLAYPAL", PU_CACHE);
 
 	WritePCXfile (lbmname, linear, SCREENWIDTH, SCREENHEIGHT, pal);

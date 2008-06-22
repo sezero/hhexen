@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdl.c,v 1.14 2008-06-17 18:10:34 sezero Exp $
+//** $Id: i_sdl.c,v 1.15 2008-06-22 16:20:46 sezero Exp $
 //**
 //**************************************************************************
 
@@ -120,15 +120,15 @@ void I_Update (void)
 	int tics;
 	static int lasttic;
 
-	if(!vid_initialized)
+	if (!vid_initialized)
 		return;
 
 //
 // blit screen to video
 //
-	if(DisplayTicker)
+	if (DisplayTicker)
 	{
-		if(screenblocks > 9 || UpdateState&(I_FULLSCRN|I_MESSAGES))
+		if (screenblocks > 9 || UpdateState&(I_FULLSCRN|I_MESSAGES))
 		{
 			dest = (byte *)screen;
 		}
@@ -136,18 +136,18 @@ void I_Update (void)
 		{
 			dest = (byte *)pcscreen;
 		}
-		tics = ticcount-lasttic;
+		tics = ticcount - lasttic;
 		lasttic = ticcount;
-		if(tics > 20)
+		if (tics > 20)
 		{
 			tics = 20;
 		}
-		for(i = 0; i < tics; i++)
+		for (i = 0; i < tics; i++)
 		{
 			*dest = 0xff;
 			dest += 2;
 		}
-		for(i = tics; i < 20; i++)
+		for (i = tics; i < 20; i++)
 		{
 			*dest = 0x00;
 			dest += 2;
@@ -156,55 +156,51 @@ void I_Update (void)
 
 //	memset(pcscreen, 255, SCREENHEIGHT*SCREENWIDTH);
 
-	if(UpdateState == I_NOUPDATE)
+	if (UpdateState == I_NOUPDATE)
 	{
 		return;
 	}
-	if(UpdateState&I_FULLSCRN)
+	if (UpdateState & I_FULLSCRN)
 	{
 		memcpy(pcscreen, screen, SCREENWIDTH*SCREENHEIGHT);
 		UpdateState = I_NOUPDATE; // clear out all draw types
 
-		SDL_UpdateRect( sdl_screen, 0, 0, SCREENWIDTH, SCREENHEIGHT );
+		SDL_UpdateRect(sdl_screen, 0, 0, SCREENWIDTH, SCREENHEIGHT);
 	}
-	if(UpdateState&I_FULLVIEW)
+	if (UpdateState & I_FULLVIEW)
 	{
-		if(UpdateState&I_MESSAGES && screenblocks > 7)
+		if (UpdateState & I_MESSAGES && screenblocks > 7)
 		{
-			for(i = 0; i <
-				(viewwindowy+viewheight)*SCREENWIDTH; i += SCREENWIDTH)
+			for (i = 0; i < (viewwindowy + viewheight)*SCREENWIDTH; i += SCREENWIDTH)
 			{
-				memcpy(pcscreen+i, screen+i, SCREENWIDTH);
+				memcpy(pcscreen + i, screen + i, SCREENWIDTH);
 			}
 			UpdateState &= ~(I_FULLVIEW|I_MESSAGES);
 
-			SDL_UpdateRect (sdl_screen, 0, 0, SCREENWIDTH,
-					viewwindowy + viewheight);
+			SDL_UpdateRect (sdl_screen, 0, 0, SCREENWIDTH, viewwindowy + viewheight);
 		}
 		else
 		{
-			for(i = viewwindowy*SCREENWIDTH+viewwindowx; i <
-				(viewwindowy+viewheight)*SCREENWIDTH; i += SCREENWIDTH)
+			for (i = viewwindowy*SCREENWIDTH + viewwindowx;
+			     i < (viewwindowy+viewheight)*SCREENWIDTH; i += SCREENWIDTH)
 			{
-				memcpy(pcscreen+i, screen+i, viewwidth);
+				memcpy(pcscreen + i, screen + i, viewwidth);
 			}
 			UpdateState &= ~I_FULLVIEW;
 
-			SDL_UpdateRect (sdl_screen, viewwindowx, viewwindowy, viewwidth,
-					viewheight);
+			SDL_UpdateRect (sdl_screen, viewwindowx, viewwindowy, viewwidth, viewheight);
 		}
 	}
-	if(UpdateState&I_STATBAR)
+	if (UpdateState & I_STATBAR)
 	{
-		memcpy(pcscreen+SCREENWIDTH*(SCREENHEIGHT-SBARHEIGHT),
-			screen+SCREENWIDTH*(SCREENHEIGHT-SBARHEIGHT),
+		memcpy(pcscreen + SCREENWIDTH*(SCREENHEIGHT-SBARHEIGHT),
+			screen + SCREENWIDTH*(SCREENHEIGHT-SBARHEIGHT),
 			SCREENWIDTH*SBARHEIGHT);
 		UpdateState &= ~I_STATBAR;
 
-		SDL_UpdateRect (sdl_screen, 0, SCREENHEIGHT-SBARHEIGHT,
-				SCREENWIDTH, SBARHEIGHT);
+		SDL_UpdateRect (sdl_screen, 0, SCREENHEIGHT-SBARHEIGHT, SCREENWIDTH, SBARHEIGHT);
 	}
-	if(UpdateState&I_MESSAGES)
+	if (UpdateState & I_MESSAGES)
 	{
 		memcpy(pcscreen, screen, SCREENWIDTH*28);
 		UpdateState &= ~I_MESSAGES;

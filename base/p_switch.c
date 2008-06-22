@@ -4,8 +4,8 @@
 //** p_switch.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_switch.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-19 06:23:20 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-22 16:20:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -21,19 +21,19 @@
 //
 //==================================================================
 
-switchlist_t alphSwitchListDemo[] =
+static switchlist_t alphSwitchListDemo[] =
 {
 	{ "SW_1_UP", "SW_1_DN", SFX_SWITCH1 },
 	{ "SW_2_UP", "SW_2_DN", SFX_SWITCH1 },
 	{ "SW52_OFF", "SW52_ON", SFX_SWITCH2 },
-	{"\0", "\0", 0}
+	{ "\0", "\0", 0}
 };
 
-switchlist_t alphSwitchListFull[] =
+static switchlist_t alphSwitchListFull[] =
 {
 	{ "SW_1_UP", "SW_1_DN", SFX_SWITCH1 },
 	{ "SW_2_UP", "SW_2_DN", SFX_SWITCH1 },
- 	{ "VALVE1", "VALVE2", SFX_VALVE_TURN },
+	{ "VALVE1", "VALVE2", SFX_VALVE_TURN },
 	{ "SW51_OFF", "SW51_ON", SFX_SWITCH2 },
 	{ "SW52_OFF", "SW52_ON", SFX_SWITCH2 },
 	{ "SW53_UP", "SW53_DN", SFX_ROPE_PULL },
@@ -41,14 +41,16 @@ switchlist_t alphSwitchListFull[] =
 	{ "PUZZLE6", "PUZZLE10", SFX_SWITCH1 },
 	{ "PUZZLE7", "PUZZLE11", SFX_SWITCH1 },
 	{ "PUZZLE8", "PUZZLE12", SFX_SWITCH1 },
-	{"\0", "\0", 0}
+	{ "\0", "\0", 0}
 };
 
-switchlist_t *alphSwitchList = NULL;
+static switchlist_t *alphSwitchList = NULL;
 
-int switchlist[MAXSWITCHES * 2];
-int numswitches;
-button_t buttonlist[MAXBUTTONS];
+static int switchlist[MAXSWITCHES * 2];
+static int numswitches;
+
+button_t	buttonlist[MAXBUTTONS];
+
 
 /*
 ===============
@@ -62,8 +64,8 @@ button_t buttonlist[MAXBUTTONS];
 
 void P_InitSwitchList(void)
 {
-	int             i;
-	int             index;
+	int		i;
+	int		index;
 
 	if (alphSwitchList == NULL)
 	{
@@ -72,7 +74,7 @@ void P_InitSwitchList(void)
 
 	for (index = 0, i = 0; i < MAXSWITCHES; i++)
 	{
-		if(!alphSwitchList[i].soundID)
+		if (!alphSwitchList[i].soundID)
 		{
 			numswitches = index/2;
 			switchlist[index] = -1;
@@ -85,12 +87,13 @@ void P_InitSwitchList(void)
 
 //==================================================================
 //
-//      Start a button counting down till it turns off.
+// Start a button counting down till it turns off.
 //
 //==================================================================
+
 void P_StartButton(line_t *line,bwhere_e w,int texture,int time)
 {
-	int             i;
+	int		i;
 
 	for (i = 0;i < MAXBUTTONS;i++)
 	{
@@ -109,16 +112,17 @@ void P_StartButton(line_t *line,bwhere_e w,int texture,int time)
 
 //==================================================================
 //
-//      Function that changes wall texture.
-//      Tell it if switch is ok to use again (1=yes, it's a button).
+// Function that changes wall texture.
+// Tell it if switch is ok to use again (1=yes, it's a button).
 //
 //==================================================================
+
 void P_ChangeSwitchTexture(line_t *line, int useAgain)
 {
-	int     texTop;
-	int     texMid;
-	int     texBot;
-	int     i;
+	int	texTop;
+	int	texMid;
+	int	texBot;
+	int	i;
 
 	texTop = sides[line->sidenum[0]].toptexture;
 	texMid = sides[line->sidenum[0]].midtexture;
@@ -128,10 +132,9 @@ void P_ChangeSwitchTexture(line_t *line, int useAgain)
 	{
 		if (switchlist[i] == texTop)
 		{
-			S_StartSound((mobj_t *)&line->frontsector->soundorg, 
-				alphSwitchList[i/2].soundID);
+			S_StartSound((mobj_t *)&line->frontsector->soundorg, alphSwitchList[i/2].soundID);
 			sides[line->sidenum[0]].toptexture = switchlist[i^1];
-			if(useAgain)
+			if (useAgain)
 			{
 				P_StartButton(line, SWTCH_TOP, switchlist[i], BUTTONTIME);
 			}
@@ -139,10 +142,9 @@ void P_ChangeSwitchTexture(line_t *line, int useAgain)
 		}
 		else if (switchlist[i] == texMid)
 		{
-			S_StartSound((mobj_t *)&line->frontsector->soundorg,
-				alphSwitchList[i/2].soundID);
+			S_StartSound((mobj_t *)&line->frontsector->soundorg, alphSwitchList[i/2].soundID);
 			sides[line->sidenum[0]].midtexture = switchlist[i^1];
-			if(useAgain)
+			if (useAgain)
 			{
 				P_StartButton(line, SWTCH_MIDDLE, switchlist[i], BUTTONTIME);
 			}
@@ -150,10 +152,9 @@ void P_ChangeSwitchTexture(line_t *line, int useAgain)
 		}
 		else if (switchlist[i] == texBot)
 		{
-			S_StartSound((mobj_t *)&line->frontsector->soundorg,
-				alphSwitchList[i/2].soundID);
+			S_StartSound((mobj_t *)&line->frontsector->soundorg, alphSwitchList[i/2].soundID);
 			sides[line->sidenum[0]].bottomtexture = switchlist[i^1];
-			if(useAgain)
+			if (useAgain)
 			{
 				P_StartButton(line, SWTCH_BOTTOM, switchlist[i], BUTTONTIME);
 			}

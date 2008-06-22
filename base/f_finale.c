@@ -4,8 +4,8 @@
 //** f_finale.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: f_finale.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-19 06:23:20 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-22 16:20:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -78,7 +78,7 @@ void F_StartFinale (void)
 	FinaleText = GetFinaleText(0);
 	FinaleEndCount = 70;
 	FinaleLumpNum = W_GetNumForName("FINALE1");
-	FontABaseLump = W_GetNumForName("FONTA_S")+1;
+	FontABaseLump = W_GetNumForName("FONTA_S") + 1;
 	InitializeFade(1);
 
 //	S_ChangeMusic(mus_victor, true);
@@ -105,43 +105,43 @@ boolean F_Responder(event_t *event)
 void F_Ticker (void)
 {
 	FinaleCount++;
-	if(FinaleStage < 5 && FinaleCount >= FinaleEndCount)
+	if (FinaleStage < 5 && FinaleCount >= FinaleEndCount)
 	{
 		FinaleCount = 0;
 		FinaleStage++;
-		switch(FinaleStage)
+		switch (FinaleStage)
 		{
-			case 1: // Text 1
-				FinaleEndCount = strlen(FinaleText)*TEXTSPEED+TEXTWAIT;
-				break;
-			case 2: // Pic 2, Text 2
-				FinaleText = GetFinaleText(1);
-				FinaleEndCount = strlen(FinaleText)*TEXTSPEED+TEXTWAIT;
-				FinaleLumpNum = W_GetNumForName("FINALE2");
-				S_StartSongName("orb", false);
-				break;
-			case 3: // Pic 2 -- Fade out
-				FinaleEndCount = 70;
-				DeInitializeFade();
-				InitializeFade(0);
-				break;
-			case 4: // Pic 3 -- Fade in
-				FinaleLumpNum = W_GetNumForName("FINALE3");
-				FinaleEndCount = 71;
-				DeInitializeFade();
-				InitializeFade(1);
-				S_StartSongName("chess", true);
-				break;
-			case 5: // Pic 3 , Text 3
-				FinaleText = GetFinaleText(2);
-				DeInitializeFade();
-				break;
-			default:
-				 break;
+		case 1: // Text 1
+			FinaleEndCount = strlen(FinaleText)*TEXTSPEED + TEXTWAIT;
+			break;
+		case 2: // Pic 2, Text 2
+			FinaleText = GetFinaleText(1);
+			FinaleEndCount = strlen(FinaleText)*TEXTSPEED + TEXTWAIT;
+			FinaleLumpNum = W_GetNumForName("FINALE2");
+			S_StartSongName("orb", false);
+			break;
+		case 3: // Pic 2 -- Fade out
+			FinaleEndCount = 70;
+			DeInitializeFade();
+			InitializeFade(0);
+			break;
+		case 4: // Pic 3 -- Fade in
+			FinaleLumpNum = W_GetNumForName("FINALE3");
+			FinaleEndCount = 71;
+			DeInitializeFade();
+			InitializeFade(1);
+			S_StartSongName("chess", true);
+			break;
+		case 5: // Pic 3 , Text 3
+			FinaleText = GetFinaleText(2);
+			DeInitializeFade();
+			break;
+		default:
+			break;
 		}
 		return;
 	}
-	if(FinaleStage == 0 || FinaleStage == 3 || FinaleStage == 4)
+	if (FinaleStage == 0 || FinaleStage == 3 || FinaleStage == 4)
 	{
 		FadePic();
 	}
@@ -156,35 +156,33 @@ void F_Ticker (void)
 static void TextWrite (void)
 {
 	int		count;
-	char	*ch;
+	char		*ch;
 	int		c;
 	int		cx, cy;
 	patch_t *w;
 
-	memcpy(screen, W_CacheLumpNum(FinaleLumpNum, PU_CACHE), 
-		SCREENWIDTH*SCREENHEIGHT);
-	if(FinaleStage == 5)
+	memcpy(screen, W_CacheLumpNum(FinaleLumpNum, PU_CACHE), SCREENWIDTH*SCREENHEIGHT);
+
+	if (FinaleStage == 5)
 	{ // Chess pic, draw the correct character graphic
-		if(netgame)
+		if (netgame)
 		{
 			V_DrawPatch(20, 0, W_CacheLumpName("chessall", PU_CACHE));
 		}
 #ifdef ASSASSIN
-		/* jim Looks like Dan got this one wrong! 8-) */
-/*  		else if(PlayerClass[consoleplayer] = PCLASS_ASS) */
-  		else if(PlayerClass[consoleplayer] == PCLASS_ASS)
+		else if (PlayerClass[consoleplayer] == PCLASS_ASS)
 		{
 			V_DrawPatch(60,0, W_CacheLumpNum(W_GetNumForName("chessa"), PU_CACHE));
 		}
 #endif
-		else if(PlayerClass[consoleplayer])
+		else if (PlayerClass[consoleplayer])
 		{
 			V_DrawPatch(60, 0, W_CacheLumpNum(W_GetNumForName("chessc")
-				+PlayerClass[consoleplayer]-1, PU_CACHE));
+						+ PlayerClass[consoleplayer] - 1, PU_CACHE));
 		}
 	}
 	// Draw the actual text
-	if(FinaleStage == 5)
+	if (FinaleStage == 5)
 	{
 		cy = 135;
 	}
@@ -194,36 +192,36 @@ static void TextWrite (void)
 	}
 	cx = 20;
 	ch = FinaleText;
-	count = (FinaleCount-10)/TEXTSPEED;
+	count = (FinaleCount - 10) / TEXTSPEED;
 	if (count < 0)
 	{
 		count = 0;
 	}
-	for(; count; count--)
+	for ( ; count; count--)
 	{
 		c = *ch++;
-		if(!c)
+		if (!c)
 		{
 			break;
 		}
-		if(c == '\n')
+		if (c == '\n')
 		{
 			cx = 20;
 			cy += 9;
 			continue;
 		}
-		if(c < 32)
+		if (c < 32)
 		{
 			continue;
 		}
 		c = toupper(c);
-		if(c == 32)
+		if (c == 32)
 		{
 			cx += 5;
 			continue;
 		}
-		w = W_CacheLumpNum(FontABaseLump+c-33, PU_CACHE);
-		if(cx+w->width > SCREENWIDTH)
+		w = W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
+		if (cx + w->width > SCREENWIDTH)
 		{
 			break;
 		}
@@ -246,21 +244,20 @@ static void InitializeFade(boolean fadeIn)
 	PaletteDelta = Z_Malloc(768*sizeof(fixed_t), PU_STATIC, 0);
 	RealPalette = Z_Malloc(768*sizeof(byte), PU_STATIC, 0);
 
-	if(fadeIn)
+	if (fadeIn)
 	{
 		memset(RealPalette, 0, 768*sizeof(byte));
-		for(i = 0; i < 768; i++)
+		for (i = 0; i < 768; i++)
 		{
 			Palette[i] = 0;
-			PaletteDelta[i] = FixedDiv((*((byte *)W_CacheLumpName("playpal", 
-				PU_CACHE)+i))<<FRACBITS, 70*FRACUNIT);
+			PaletteDelta[i] = FixedDiv((*((byte *)W_CacheLumpName("playpal", PU_CACHE) + i))<<FRACBITS, 70*FRACUNIT);
 		}
 	}
 	else
 	{
-		for(i = 0; i < 768; i++)
+		for (i = 0; i < 768; i++)
 		{
-			RealPalette[i] = *((byte *)W_CacheLumpName("playpal", PU_CACHE)+i);
+			RealPalette[i] = *((byte *)W_CacheLumpName("playpal", PU_CACHE) + i);
 			Palette[i] = RealPalette[i]<<FRACBITS;
 			PaletteDelta[i] = FixedDiv(Palette[i], -70*FRACUNIT);
 		}
@@ -291,7 +288,7 @@ static void FadePic(void)
 {
 	unsigned i;
 
-	for(i = 0; i < 768; i++)
+	for (i = 0; i < 768; i++)
 	{
 		Palette[i] += PaletteDelta[i];
 		RealPalette[i] = Palette[i]>>FRACBITS;
@@ -307,18 +304,16 @@ static void FadePic(void)
 
 static void DrawPic(void)
 {
-	memcpy(screen, W_CacheLumpNum(FinaleLumpNum, PU_CACHE), 
-		SCREENWIDTH*SCREENHEIGHT);
-	if(FinaleStage == 4 || FinaleStage == 5)
+	memcpy(screen, W_CacheLumpNum(FinaleLumpNum, PU_CACHE), SCREENWIDTH*SCREENHEIGHT);
+	if (FinaleStage == 4 || FinaleStage == 5)
 	{ // Chess pic, draw the correct character graphic
-		if(netgame)
+		if (netgame)
 		{
 			V_DrawPatch(20, 0, W_CacheLumpName("chessall", PU_CACHE));
 		}
-		else if(PlayerClass[consoleplayer])
+		else if (PlayerClass[consoleplayer])
 		{
-			V_DrawPatch(60, 0, W_CacheLumpNum(W_GetNumForName("chessc")
-				+PlayerClass[consoleplayer]-1, PU_CACHE));
+			V_DrawPatch(60, 0, W_CacheLumpNum(W_GetNumForName("chessc") + PlayerClass[consoleplayer] - 1, PU_CACHE));
 		}
 	}
 }
@@ -331,25 +326,25 @@ static void DrawPic(void)
 
 void F_Drawer(void)
 {
-	switch(FinaleStage)
+	switch (FinaleStage)
 	{
-		case 0: // Fade in initial finale screen
-			DrawPic();
-			break;
-		case 1:
-		case 2:
-			TextWrite();
-			break;
-		case 3: // Fade screen out
-			DrawPic();
-			break;
-		case 4: // Fade in chess screen
-			DrawPic();
-			break;
-		case 5:
-			TextWrite();
-			break;
+	case 0: // Fade in initial finale screen
+		DrawPic();
+		break;
+	case 1:
+	case 2:
+		TextWrite();
+		break;
+	case 3: // Fade screen out
+		DrawPic();
+		break;
+	case 4: // Fade in chess screen
+		DrawPic();
+		break;
+	case 5:
+		TextWrite();
+		break;
 	}
-	UpdateState |= I_FULLSCRN;	
+	UpdateState |= I_FULLSCRN;
 }
 

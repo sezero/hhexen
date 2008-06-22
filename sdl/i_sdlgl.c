@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdlgl.c,v 1.14 2008-06-17 18:10:34 sezero Exp $
+//** $Id: i_sdlgl.c,v 1.15 2008-06-22 16:20:46 sezero Exp $
 //**
 //**************************************************************************
 
@@ -93,9 +93,9 @@ extern int screenblocks;
 
 void I_Update (void)
 {
-	if(!vid_initialized)
+	if (!vid_initialized)
 		return;
-	if(UpdateState == I_NOUPDATE)
+	if (UpdateState == I_NOUPDATE)
 		return;
 
 	SDL_GL_SwapBuffers();

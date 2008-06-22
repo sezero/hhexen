@@ -4,8 +4,8 @@
 //** a_action.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: a_action.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 13:40:10 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-22 16:20:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -28,82 +28,84 @@
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
+
 extern fixed_t FloatBobOffsets[64];
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
-int orbitTableX[256]=
-{
-983025, 982725, 981825, 980340, 978255, 975600, 972330, 968490,
-964065, 959070, 953475, 947325, 940590, 933300, 925440, 917025,
-908055, 898545, 888495, 877905, 866775, 855135, 842985, 830310,
-817155, 803490, 789360, 774735, 759660, 744120, 728130, 711690,
-694845, 677565, 659880, 641805, 623340, 604500, 585285, 565725,
-545820, 525600, 505050, 484200, 463065, 441645, 419955, 398010,
-375840, 353430, 330810, 307995, 285000, 261825, 238485, 215010,
-191400, 167685, 143865, 119955, 95970, 71940, 47850, 23745,
--375, -24495, -48600, -72690, -96720, -120705, -144600, -168420,
--192150, -215745, -239220, -262545, -285720, -308715, -331530, -354135,
--376530, -398700, -420630, -442320, -463725, -484860, -505695, -526230,
--546450, -566340, -585885, -605085, -623925, -642375, -660435, -678105,
--695370, -712215, -728625, -744600, -760125, -775200, -789795, -803925,
--817575, -830715, -843375, -855510, -867135, -878235, -888810, -898845,
--908340, -917295, -925695, -933540, -940815, -947520, -953670, -959235,
--964215, -968625, -972450, -975690, -978330, -980400, -981870, -982740,
--983025, -982725, -981825, -980340, -978255, -975600, -972330, -968490,
--964065, -959070, -953475, -947325, -940590, -933300, -925440, -917025,
--908055, -898545, -888495, -877905, -866775, -855135, -842985, -830310,
--817155, -803490, -789360, -774735, -759660, -744120, -728130, -711690,
--694845, -677565, -659880, -641805, -623340, -604485, -585285, -565725,
--545820, -525600, -505050, -484200, -463065, -441645, -419955, -398010,
--375840, -353430, -330810, -307995, -285000, -261825, -238485, -215010,
--191400, -167685, -143865, -119955, -95970, -71940, -47850, -23745,
-375, 24495, 48600, 72690, 96720, 120705, 144600, 168420,
-192150, 215745, 239220, 262545, 285720, 308715, 331530, 354135,
-376530, 398700, 420630, 442320, 463725, 484860, 505695, 526230,
-546450, 566340, 585885, 605085, 623925, 642375, 660435, 678105,
-695370, 712215, 728625, 744600, 760125, 775200, 789795, 803925,
-817575, 830715, 843375, 855510, 867135, 878235, 888810, 898845,
-908340, 917295, 925695, 933540, 940815, 947520, 953670, 959235,
-964215, 968625, 972450, 975690, 978330, 980400, 981870, 982740
-};
-
-int orbitTableY[256]=
-{
-375, 24495, 48600, 72690, 96720, 120705, 144600, 168420,
-192150, 215745, 239220, 262545, 285720, 308715, 331530, 354135,
-376530, 398700, 420630, 442320, 463725, 484860, 505695, 526230,
-546450, 566340, 585885, 605085, 623925, 642375, 660435, 678105,
-695370, 712215, 728625, 744600, 760125, 775200, 789795, 803925,
-817575, 830715, 843375, 855510, 867135, 878235, 888810, 898845,
-908340, 917295, 925695, 933540, 940815, 947520, 953670, 959235,
-964215, 968625, 972450, 975690, 978330, 980400, 981870, 982740,
-983025, 982725, 981825, 980340, 978255, 975600, 972330, 968490,
-964065, 959070, 953475, 947325, 940590, 933300, 925440, 917025,
-908055, 898545, 888495, 877905, 866775, 855135, 842985, 830310,
-817155, 803490, 789360, 774735, 759660, 744120, 728130, 711690,
-694845, 677565, 659880, 641805, 623340, 604500, 585285, 565725,
-545820, 525600, 505050, 484200, 463065, 441645, 419955, 398010,
-375840, 353430, 330810, 307995, 285000, 261825, 238485, 215010,
-191400, 167685, 143865, 119955, 95970, 71940, 47850, 23745,
--375, -24495, -48600, -72690, -96720, -120705, -144600, -168420,
--192150, -215745, -239220, -262545, -285720, -308715, -331530, -354135,
--376530, -398700, -420630, -442320, -463725, -484860, -505695, -526230,
--546450, -566340, -585885, -605085, -623925, -642375, -660435, -678105,
--695370, -712215, -728625, -744600, -760125, -775200, -789795, -803925,
--817575, -830715, -843375, -855510, -867135, -878235, -888810, -898845,
--908340, -917295, -925695, -933540, -940815, -947520, -953670, -959235,
--964215, -968625, -972450, -975690, -978330, -980400, -981870, -982740,
--983025, -982725, -981825, -980340, -978255, -975600, -972330, -968490,
--964065, -959070, -953475, -947325, -940590, -933300, -925440, -917025,
--908055, -898545, -888495, -877905, -866775, -855135, -842985, -830310,
--817155, -803490, -789360, -774735, -759660, -744120, -728130, -711690,
--694845, -677565, -659880, -641805, -623340, -604485, -585285, -565725,
--545820, -525600, -505050, -484200, -463065, -441645, -419955, -398010,
--375840, -353430, -330810, -307995, -285000, -261825, -238485, -215010,
--191400, -167685, -143865, -119955, -95970, -71940, -47850, -23745
-};
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
+
+static int orbitTableX[256] =
+{
+	983025, 982725, 981825, 980340, 978255, 975600, 972330, 968490,
+	964065, 959070, 953475, 947325, 940590, 933300, 925440, 917025,
+	908055, 898545, 888495, 877905, 866775, 855135, 842985, 830310,
+	817155, 803490, 789360, 774735, 759660, 744120, 728130, 711690,
+	694845, 677565, 659880, 641805, 623340, 604500, 585285, 565725,
+	545820, 525600, 505050, 484200, 463065, 441645, 419955, 398010,
+	375840, 353430, 330810, 307995, 285000, 261825, 238485, 215010,
+	191400, 167685, 143865, 119955, 95970, 71940, 47850, 23745,
+	-375, -24495, -48600, -72690, -96720, -120705, -144600, -168420,
+	-192150, -215745, -239220, -262545, -285720, -308715, -331530, -354135,
+	-376530, -398700, -420630, -442320, -463725, -484860, -505695, -526230,
+	-546450, -566340, -585885, -605085, -623925, -642375, -660435, -678105,
+	-695370, -712215, -728625, -744600, -760125, -775200, -789795, -803925,
+	-817575, -830715, -843375, -855510, -867135, -878235, -888810, -898845,
+	-908340, -917295, -925695, -933540, -940815, -947520, -953670, -959235,
+	-964215, -968625, -972450, -975690, -978330, -980400, -981870, -982740,
+	-983025, -982725, -981825, -980340, -978255, -975600, -972330, -968490,
+	-964065, -959070, -953475, -947325, -940590, -933300, -925440, -917025,
+	-908055, -898545, -888495, -877905, -866775, -855135, -842985, -830310,
+	-817155, -803490, -789360, -774735, -759660, -744120, -728130, -711690,
+	-694845, -677565, -659880, -641805, -623340, -604485, -585285, -565725,
+	-545820, -525600, -505050, -484200, -463065, -441645, -419955, -398010,
+	-375840, -353430, -330810, -307995, -285000, -261825, -238485, -215010,
+	-191400, -167685, -143865, -119955, -95970, -71940, -47850, -23745,
+	375, 24495, 48600, 72690, 96720, 120705, 144600, 168420,
+	192150, 215745, 239220, 262545, 285720, 308715, 331530, 354135,
+	376530, 398700, 420630, 442320, 463725, 484860, 505695, 526230,
+	546450, 566340, 585885, 605085, 623925, 642375, 660435, 678105,
+	695370, 712215, 728625, 744600, 760125, 775200, 789795, 803925,
+	817575, 830715, 843375, 855510, 867135, 878235, 888810, 898845,
+	908340, 917295, 925695, 933540, 940815, 947520, 953670, 959235,
+	964215, 968625, 972450, 975690, 978330, 980400, 981870, 982740
+};
+
+static int orbitTableY[256] =
+{
+	375, 24495, 48600, 72690, 96720, 120705, 144600, 168420,
+	192150, 215745, 239220, 262545, 285720, 308715, 331530, 354135,
+	376530, 398700, 420630, 442320, 463725, 484860, 505695, 526230,
+	546450, 566340, 585885, 605085, 623925, 642375, 660435, 678105,
+	695370, 712215, 728625, 744600, 760125, 775200, 789795, 803925,
+	817575, 830715, 843375, 855510, 867135, 878235, 888810, 898845,
+	908340, 917295, 925695, 933540, 940815, 947520, 953670, 959235,
+	964215, 968625, 972450, 975690, 978330, 980400, 981870, 982740,
+	983025, 982725, 981825, 980340, 978255, 975600, 972330, 968490,
+	964065, 959070, 953475, 947325, 940590, 933300, 925440, 917025,
+	908055, 898545, 888495, 877905, 866775, 855135, 842985, 830310,
+	817155, 803490, 789360, 774735, 759660, 744120, 728130, 711690,
+	694845, 677565, 659880, 641805, 623340, 604500, 585285, 565725,
+	545820, 525600, 505050, 484200, 463065, 441645, 419955, 398010,
+	375840, 353430, 330810, 307995, 285000, 261825, 238485, 215010,
+	191400, 167685, 143865, 119955, 95970, 71940, 47850, 23745,
+	-375, -24495, -48600, -72690, -96720, -120705, -144600, -168420,
+	-192150, -215745, -239220, -262545, -285720, -308715, -331530, -354135,
+	-376530, -398700, -420630, -442320, -463725, -484860, -505695, -526230,
+	-546450, -566340, -585885, -605085, -623925, -642375, -660435, -678105,
+	-695370, -712215, -728625, -744600, -760125, -775200, -789795, -803925,
+	-817575, -830715, -843375, -855510, -867135, -878235, -888810, -898845,
+	-908340, -917295, -925695, -933540, -940815, -947520, -953670, -959235,
+	-964215, -968625, -972450, -975690, -978330, -980400, -981870, -982740,
+	-983025, -982725, -981825, -980340, -978255, -975600, -972330, -968490,
+	-964065, -959070, -953475, -947325, -940590, -933300, -925440, -917025,
+	-908055, -898545, -888495, -877905, -866775, -855135, -842985, -830310,
+	-817155, -803490, -789360, -774735, -759660, -744120, -728130, -711690,
+	-694845, -677565, -659880, -641805, -623340, -604485, -585285, -565725,
+	-545820, -525600, -505050, -484200, -463065, -441645, -419955, -398010,
+	-375840, -353430, -330810, -307995, -285000, -261825, -238485, -215010,
+	-191400, -167685, -143865, -119955, -95970, -71940, -47850, -23745
+};
 
 // CODE --------------------------------------------------------------------
 
@@ -143,11 +145,11 @@ void A_PotteryExplode(mobj_t *actor)
 	mobj_t *mo=NULL;
 	int i;
 
-	for(i = (P_Random()&3)+3; i; i--)
+	for (i = (P_Random()&3)+3; i; i--)
 	{
 		mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_POTTERYBIT1);
 		P_SetMobjState(mo, mo->info->spawnstate+(P_Random()%5));
-		if(mo)
+		if (mo)
 		{
 			mo->momz = ((P_Random()&7)+5)*(3*FRACUNIT/4);
 			mo->momx = (P_Random()-P_Random())<<(FRACBITS-6);
@@ -155,13 +157,13 @@ void A_PotteryExplode(mobj_t *actor)
 		}
 	}
 	S_StartSound(mo, SFX_POTTERY_EXPLODE);
-	if(actor->args[0])
+	if (actor->args[0])
 	{ // Spawn an item
-		if(!nomonsters 
-		|| !(mobjinfo[TranslateThingType[actor->args[0]]].flags&MF_COUNTKILL))
+		if (!nomonsters ||
+		    !(mobjinfo[TranslateThingType[actor->args[0]]].flags & MF_COUNTKILL))
 		{ // Only spawn monsters if not -nomonsters
 			P_SpawnMobj(actor->x, actor->y, actor->z,
-				TranslateThingType[actor->args[0]]);
+				    TranslateThingType[actor->args[0]]);
 		}
 	}
 	P_RemoveMobj(actor);
@@ -175,8 +177,8 @@ void A_PotteryExplode(mobj_t *actor)
 
 void A_PotteryChooseBit(mobj_t *actor)
 {
-	P_SetMobjState(actor, actor->info->deathstate+(P_Random()%5)+1);
-	actor->tics = 256+(P_Random()<<1);
+	P_SetMobjState(actor, actor->info->deathstate + (P_Random()%5) + 1);
+	actor->tics = 256 + (P_Random()<<1);
 }
 
 //============================================================================
@@ -190,11 +192,11 @@ void A_PotteryCheck(mobj_t *actor)
 	int i;
 	mobj_t *pmo;
 
-	if(!netgame)
+	if (!netgame)
 	{
 		pmo = players[consoleplayer].mo;
-		if(P_CheckSight(actor, pmo) && (abs(R_PointToAngle2(pmo->x,
-			pmo->y, actor->x, actor->y)-pmo->angle) <= ANGLE_45))
+		if (P_CheckSight(actor, pmo) &&
+		    abs(R_PointToAngle2(pmo->x, pmo->y, actor->x, actor->y)-pmo->angle) <= ANGLE_45)
 		{ // Previous state (pottery bit waiting state)
 			P_SetMobjState(actor, actor->state-&states[0]-1);
 		}
@@ -205,21 +207,21 @@ void A_PotteryCheck(mobj_t *actor)
 	}
 	else
 	{
-		for(i = 0; i < MAXPLAYERS; i++)
+		for (i = 0; i < MAXPLAYERS; i++)
 		{
-			if(!playeringame[i])
+			if (!playeringame[i])
 			{
 				continue;
 			}
 			pmo = players[i].mo;
-			if(P_CheckSight(actor, pmo) && (abs(R_PointToAngle2(pmo->x,
-				pmo->y, actor->x, actor->y)-pmo->angle) <= ANGLE_45))
+			if (P_CheckSight(actor, pmo) &&
+			    abs(R_PointToAngle2(pmo->x, pmo->y, actor->x, actor->y)-pmo->angle) <= ANGLE_45)
 			{ // Previous state (pottery bit waiting state)
 				P_SetMobjState(actor, actor->state-&states[0]-1);
 				return;
 			}
 		}
-	}		
+	}
 }
 
 //============================================================================
@@ -230,12 +232,11 @@ void A_PotteryCheck(mobj_t *actor)
 
 void A_CorpseBloodDrip(mobj_t *actor)
 {
-	if(P_Random() > 128)
+	if (P_Random() > 128)
 	{
 		return;
 	}
-	P_SpawnMobj(actor->x, actor->y, actor->z+actor->height/2, 
-		MT_CORPSEBLOODDRIP);
+	P_SpawnMobj(actor->x, actor->y, actor->z+actor->height/2, MT_CORPSEBLOODDRIP);
 }
 
 //============================================================================
@@ -249,11 +250,11 @@ void A_CorpseExplode(mobj_t *actor)
 	mobj_t *mo;
 	int i;
 
-	for(i = (P_Random()&3)+3; i; i--)
+	for (i = (P_Random()&3)+3; i; i--)
 	{
 		mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_CORPSEBIT);
-		P_SetMobjState(mo, mo->info->spawnstate+(P_Random()%3));
-		if(mo)
+		P_SetMobjState(mo, mo->info->spawnstate + (P_Random()%3));
+		if (mo)
 		{
 			mo->momz = ((P_Random()&7)+5)*(3*FRACUNIT/4);
 			mo->momx = (P_Random()-P_Random())<<(FRACBITS-6);
@@ -263,9 +264,9 @@ void A_CorpseExplode(mobj_t *actor)
 	// Spawn a skull
 	mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_CORPSEBIT);
 	P_SetMobjState(mo, S_CORPSEBIT_4);
-	if(mo)
+	if (mo)
 	{
-		mo->momz = ((P_Random()&7)+5)*(3*FRACUNIT/4);
+		mo->momz = ((P_Random()&7) + 5) * (3*FRACUNIT/4);
 		mo->momx = (P_Random()-P_Random())<<(FRACBITS-6);
 		mo->momy = (P_Random()-P_Random())<<(FRACBITS-6);
 		S_StartSound(mo, SFX_FIRED_DEATH);
@@ -284,12 +285,13 @@ void A_LeafSpawn(mobj_t *actor)
 	mobj_t *mo;
 	int i;
 
-	for(i = (P_Random()&3)+1; i; i--)
+	for (i = (P_Random()&3)+1; i; i--)
 	{
-		mo = P_SpawnMobj(actor->x+((P_Random()-P_Random())<<14), actor->y+
-			((P_Random()-P_Random())<<14), actor->z+(P_Random()<<14), 
-			MT_LEAF1+(P_Random()&1));
-		if(mo)
+		mo = P_SpawnMobj(actor->x + ((P_Random()-P_Random())<<14),
+				 actor->y + ((P_Random()-P_Random())<<14),
+				 actor->z + (P_Random()<<14),
+				 MT_LEAF1 + (P_Random()&1));
+		if (mo)
 		{
 			P_ThrustMobj(mo, actor->angle, (P_Random()<<9)+3*FRACUNIT);
 			mo->target = actor;
@@ -306,7 +308,7 @@ void A_LeafSpawn(mobj_t *actor)
 
 void A_LeafThrust(mobj_t *actor)
 {
-	if(P_Random() > 96)
+	if (P_Random() > 96)
 	{
 		return;
 	}
@@ -322,14 +324,14 @@ void A_LeafThrust(mobj_t *actor)
 void A_LeafCheck(mobj_t *actor)
 {
 	actor->special1++;
-	if(actor->special1 >= 20)
+	if (actor->special1 >= 20)
 	{
 		P_SetMobjState(actor, S_NULL);
 		return;
 	}
-	if(P_Random() > 64)
+	if (P_Random() > 64)
 	{
-		if(!actor->momx && !actor->momy)
+		if (!actor->momx && !actor->momy)
 		{
 			P_ThrustMobj(actor, actor->target->angle,
 				(P_Random()<<9)+FRACUNIT);
@@ -348,14 +350,14 @@ void GenerateOrbitTable(void)
 {
 	int angle;
 
-	for (angle=0; angle<256; angle++)
+	for (angle = 0; angle < 256; angle++)
 	{
 		orbitTableX[angle] = FixedMul(ORBIT_RADIUS, finecosine[angle<<5]);
 		orbitTableY[angle] = FixedMul(ORBIT_RADIUS, finesine[angle<<5]);
 	}
 
 	printf("int orbitTableX[256]=\n{\n");
-	for (angle=0; angle<256; angle+=8)
+	for (angle = 0; angle < 256; angle += 8)
 	{
 		printf("%d, %d, %d, %d, %d, %d, %d, %d,\n",
 			orbitTableX[angle],
@@ -370,7 +372,7 @@ void GenerateOrbitTable(void)
 	printf("};\n\n");
 
 	printf("int orbitTableY[256]=\n{\n");
-	for (angle=0; angle<256; angle+=8)
+	for (angle = 0; angle < 256; angle += 8)
 	{
 		printf("%d, %d, %d, %d, %d, %d, %d, %d,\n",
 			orbitTableY[angle],
@@ -400,7 +402,7 @@ void A_BridgeOrbit(mobj_t *actor)
 	{
 		P_SetMobjState(actor, S_NULL);
 	}
-	actor->args[0]+=3;
+	actor->args[0] += 3;
 	actor->x = actor->target->x + orbitTableX[actor->args[0]];
 	actor->y = actor->target->y + orbitTableY[actor->args[0]];
 	actor->z = actor->target->z;
@@ -427,11 +429,11 @@ void A_BridgeInit(mobj_t *actor)
 	ball1->target = actor;
 
 	ball2 = P_SpawnMobj(cx, cy, cz, MT_BRIDGEBALL);
-	ball2->args[0] = (startangle+85)&255;
+	ball2->args[0] = (startangle + 85) & 255;
 	ball2->target = actor;
 
 	ball3 = P_SpawnMobj(cx, cy, cz, MT_BRIDGEBALL);
-	ball3->args[0] = (startangle+170)&255;
+	ball3->args[0] = (startangle + 170) & 255;
 	ball3->target = actor;
 
 	A_BridgeOrbit(ball1);
@@ -558,19 +560,19 @@ void A_UnSetAltShadow(mobj_t *actor)
 
 void A_ContMobjSound(mobj_t *actor)
 {
-	switch(actor->type)
+	switch (actor->type)
 	{
-		case MT_SERPENTFX:
-			S_StartSound(actor, SFX_SERPENTFX_CONTINUOUS);
-			break;
-		case MT_HAMMER_MISSILE:
-			S_StartSound(actor, SFX_FIGHTER_HAMMER_CONTINUOUS);
-			break;
-		case MT_QUAKE_FOCUS:
-			S_StartSound(actor, SFX_EARTHQUAKE);
-			break;
-		default:
-			break;
+	case MT_SERPENTFX:
+		S_StartSound(actor, SFX_SERPENTFX_CONTINUOUS);
+		break;
+	case MT_HAMMER_MISSILE:
+		S_StartSound(actor, SFX_FIGHTER_HAMMER_CONTINUOUS);
+		break;
+	case MT_QUAKE_FOCUS:
+		S_StartSound(actor, SFX_EARTHQUAKE);
+		break;
+	default:
+		break;
 	}
 }
 
@@ -584,24 +586,22 @@ void A_ESound(mobj_t *mo)
 {
 	int sound;
 
-	switch(mo->type)
+	switch (mo->type)
 	{
-		case MT_SOUNDWIND:
-			sound = SFX_WIND;
-			break;
-		default:
-			sound = SFX_NONE;
-			break;
+	case MT_SOUNDWIND:
+		sound = SFX_WIND;
+		break;
+	default:
+		sound = SFX_NONE;
+		break;
 	}
-	S_StartSound(mo, sound);	
+	S_StartSound(mo, sound);
 }
-
 
 
 //==========================================================================
 // Summon Minotaur -- see p_enemy for variable descriptions
 //==========================================================================
-
 
 void A_Summon(mobj_t *actor)
 {
@@ -611,17 +611,18 @@ void A_Summon(mobj_t *actor)
 	mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_MINOTAUR);
 	if (mo)
 	{
-		if(P_TestMobjLocation(mo) == false || !actor->special1)
+		if (P_TestMobjLocation(mo) == false || !actor->special1)
 		{ // Didn't fit - change back to artifact
 			P_SetMobjState(mo, S_NULL);
 			mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_SUMMONMAULATOR);
-			if (mo) mo->flags2 |= MF2_DROPPED;
+			if (mo)
+				mo->flags2 |= MF2_DROPPED;
 			return;
 		}
 
 		memcpy((void *)mo->args, &leveltime, sizeof(leveltime));
 		master = (mobj_t *)actor->special1;
-		if (master->flags&MF_CORPSE)
+		if (master->flags & MF_CORPSE)
 		{	// Master dead
 			mo->special1 = 0;		// No master
 		}
@@ -638,53 +639,55 @@ void A_Summon(mobj_t *actor)
 }
 
 
-
 //==========================================================================
 // Fog Variables:
 //
 //		args[0]		Speed (0..10) of fog
 //		args[1]		Angle of spread (0..128)
-// 		args[2]		Frequency of spawn (1..10)
+//		args[2]		Frequency of spawn (1..10)
 //		args[3]		Lifetime countdown
 //		args[4]		Boolean: fog moving?
-//		special1		Internal:  Counter for spawn frequency
-//		special2		Internal:  Index into floatbob table
+//		special1	Internal:  Counter for spawn frequency
+//		special2	Internal:  Index into floatbob table
 //
 //==========================================================================
 
 void A_FogSpawn(mobj_t *actor)
 {
-	mobj_t *mo=NULL;
+	mobj_t *mo = NULL;
 	angle_t delta;
 
-	if (actor->special1-- > 0) return;
+	if (actor->special1-- > 0)
+		return;
 
 	actor->special1 = actor->args[2];		// Reset frequency count
 
-	switch(P_Random()%3)
+	switch (P_Random() % 3)
 	{
-		case 0:
-			mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_FOGPATCHS);
-			break;
-		case 1:
-			mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_FOGPATCHM);
-			break;
-		case 2:
-			mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_FOGPATCHL);
-			break;
+	case 0:
+		mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_FOGPATCHS);
+		break;
+	case 1:
+		mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_FOGPATCHM);
+		break;
+	case 2:
+		mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_FOGPATCHL);
+		break;
 	}
 
 	if (mo)
 	{
 		delta = actor->args[1];
-		if (delta==0) delta=1;
+		if (delta == 0)
+			delta = 1;
 		mo->angle = actor->angle + (((P_Random()%delta)-(delta>>1))<<24);
 		mo->target = actor;
-		if (actor->args[0] < 1) actor->args[0] = 1;
-		mo->args[0] = (P_Random() % (actor->args[0]))+1;	// Random speed
-		mo->args[3] = actor->args[3];						// Set lifetime
-		mo->args[4] = 1;									// Set to moving
-		mo->special2 = P_Random()&63;
+		if (actor->args[0] < 1)
+			actor->args[0] = 1;
+		mo->args[0] = (P_Random() % (actor->args[0])) + 1;	// Random speed
+		mo->args[3] = actor->args[3];				// Set lifetime
+		mo->args[4] = 1;					// Set to moving
+		mo->special2 = P_Random() & 63;
 	}
 }
 
@@ -695,7 +698,8 @@ void A_FogMove(mobj_t *actor)
 	angle_t angle;
 	int weaveindex;
 
-	if (!(actor->args[4])) return;
+	if (!(actor->args[4]))
+		return;
 
 	if (actor->args[3]-- <= 0)
 	{
@@ -707,7 +711,7 @@ void A_FogMove(mobj_t *actor)
 	{
 		weaveindex = actor->special2;
 		actor->z += FloatBobOffsets[weaveindex]>>1;
-		actor->special2 = (weaveindex+1)&63;
+		actor->special2 = (weaveindex + 1) & 63;
 	}
 
 	angle = actor->angle>>ANGLETOFINESHIFT;
@@ -725,18 +729,17 @@ void A_PoisonBagInit(mobj_t *actor)
 {
 	mobj_t *mo;
 
-	mo = P_SpawnMobj(actor->x, actor->y, actor->z+28*FRACUNIT,
-		MT_POISONCLOUD);
-	if(!mo)
+	mo = P_SpawnMobj(actor->x, actor->y, actor->z+28*FRACUNIT, MT_POISONCLOUD);
+	if (!mo)
 	{
 		return;
 	}
 	mo->momx = 1; // missile objects must move to impact other objects
-	mo->special1 = 24+(P_Random()&7);
+	mo->special1 = 24 + (P_Random() & 7);
 	mo->special2 = 0;
 	mo->target = actor->target;
-	mo->radius = 20*FRACUNIT;
-	mo->height = 30*FRACUNIT;
+	mo->radius = 20 * FRACUNIT;
+	mo->height = 30 * FRACUNIT;
 	mo->flags &= ~MF_NOCLIP;
 }
 
@@ -748,7 +751,7 @@ void A_PoisonBagInit(mobj_t *actor)
 
 void A_PoisonBagCheck(mobj_t *actor)
 {
-	if(!--actor->special1)
+	if (!--actor->special1)
 	{
 		P_SetMobjState(actor, S_POISONCLOUD_X1);
 	}
@@ -767,14 +770,14 @@ void A_PoisonBagCheck(mobj_t *actor)
 void A_PoisonBagDamage(mobj_t *actor)
 {
 	int bobIndex;
-	
+
 	extern void A_Explode(mobj_t *actor);
 
-	A_Explode(actor);	
+	A_Explode(actor);
 
 	bobIndex = actor->special2;
 	actor->z += FloatBobOffsets[bobIndex]>>4;
-	actor->special2 = (bobIndex+1)&63;
+	actor->special2 = (bobIndex + 1) & 63;
 }
 
 //===========================================================================
@@ -796,7 +799,7 @@ void A_PoisonShroom(mobj_t *actor)
 
 void A_CheckThrowBomb(mobj_t *actor)
 {
-	if(abs(actor->momx) < 1.5*FRACUNIT && abs(actor->momy) < 1.5*FRACUNIT
+	if (abs(actor->momx) < 1.5*FRACUNIT && abs(actor->momy) < 1.5*FRACUNIT
 		&& actor->momz < 2*FRACUNIT
 		&& actor->state == &states[S_THROWINGBOMB6])
 	{
@@ -806,7 +809,7 @@ void A_CheckThrowBomb(mobj_t *actor)
 		actor->flags2 &= ~MF2_FLOORBOUNCE;
 		actor->flags &= ~MF_MISSILE;
 	}
-	if(!--actor->health)
+	if (!--actor->health)
 	{
 		P_SetMobjState(actor, actor->info->deathstate);
 	}
@@ -832,10 +835,10 @@ void A_CheckThrowBomb(mobj_t *actor)
 boolean A_LocalQuake(byte *args, mobj_t *actor)
 {
 	mobj_t *focus, *target;
-	int lastfound=0;
-	int success=false;
+	int lastfound = 0;
+	int success = false;
 
-	actor=actor;	// suppress warning
+	actor = actor;	// suppress warning
 
 	// Find all quake foci
 	do
@@ -844,8 +847,8 @@ boolean A_LocalQuake(byte *args, mobj_t *actor)
 		if (target)
 		{
 			focus = P_SpawnMobj(target->x,
-								target->y,
-								target->z, MT_QUAKE_FOCUS);
+							target->y,
+							target->z, MT_QUAKE_FOCUS);
 			if (focus)
 			{
 				focus->args[0] = args[0];
@@ -856,9 +859,9 @@ boolean A_LocalQuake(byte *args, mobj_t *actor)
 				success = true;
 			}
 		}
-	}while(target != NULL);
+	} while (target != NULL);
 
-	return(success);
+	return success;
 }
 
 
@@ -880,10 +883,11 @@ void A_Quake(mobj_t *actor)
 
 	if (actor->args[1]-- > 0)
 	{
-		for (playnum=0; playnum < MAXPLAYERS; playnum++)
+		for (playnum = 0; playnum < MAXPLAYERS; playnum++)
 		{
 			player = &players[playnum];
-			if (!playeringame[playnum]) continue;
+			if (!playeringame[playnum])
+				continue;
 
 			victim = player->mo;
 			dist = P_AproxDistance(actor->x - victim->x,
@@ -909,7 +913,7 @@ void A_Quake(mobj_t *actor)
 	}
 	else
 	{
-		for (playnum=0; playnum < MAXPLAYERS; playnum++)
+		for (playnum = 0; playnum < MAXPLAYERS; playnum++)
 		{
 			localQuakeHappening[playnum] = false;
 		}
@@ -918,15 +922,13 @@ void A_Quake(mobj_t *actor)
 }
 
 
-
-
 //===========================================================================
 //
 // Teleport other stuff
 //
 //===========================================================================
 
-#define TELEPORT_LIFE 1
+#define TELEPORT_LIFE		1
 
 void A_TeloSpawnA(mobj_t *actor)
 {
@@ -1001,14 +1003,12 @@ void A_CheckTeleRing(mobj_t *actor)
 }
 
 
-
-
 // Dirt stuff
 
 void P_SpawnDirt(mobj_t *actor, fixed_t radius)
 {
 	fixed_t x,y,z;
-	int dtype=0;
+	int dtype = 0;
 	mobj_t *mo;
 	angle_t angle;
 
@@ -1018,35 +1018,33 @@ void P_SpawnDirt(mobj_t *actor, fixed_t radius)
 //	x = actor->x + ((P_Random()-P_Random())%radius)<<FRACBITS;
 //	y = actor->y + ((P_Random()-P_Random()<<FRACBITS)%radius);
 	z = actor->z + (P_Random()<<9) + FRACUNIT;
-	switch(P_Random()%6)
+	switch (P_Random() % 6)
 	{
-		case 0:
-			dtype = MT_DIRT1;
-			break;
-		case 1:
-			dtype = MT_DIRT2;
-			break;
-		case 2:
-			dtype = MT_DIRT3;
-			break;
-		case 3:
-			dtype = MT_DIRT4;
-			break;
-		case 4:
-			dtype = MT_DIRT5;
-			break;
-		case 5:
-			dtype = MT_DIRT6;
-			break;
+	case 0:
+		dtype = MT_DIRT1;
+		break;
+	case 1:
+		dtype = MT_DIRT2;
+		break;
+	case 2:
+		dtype = MT_DIRT3;
+		break;
+	case 3:
+		dtype = MT_DIRT4;
+		break;
+	case 4:
+		dtype = MT_DIRT5;
+		break;
+	case 5:
+		dtype = MT_DIRT6;
+		break;
 	}
-	mo = P_SpawnMobj(x,y,z,dtype);
+	mo = P_SpawnMobj(x, y, z, dtype);
 	if (mo)
 	{
 		mo->momz = P_Random()<<10;
 	}
 }
-
-
 
 
 //===========================================================================
@@ -1082,7 +1080,6 @@ void A_ThrustInitDn(mobj_t *actor)
 	actor->special1 = (int)mo;
 }
 
-
 void A_ThrustRaise(mobj_t *actor)
 {
 	if (A_RaiseMobj(actor))
@@ -1097,14 +1094,14 @@ void A_ThrustRaise(mobj_t *actor)
 	// Lose the dirt clump
 	if ((actor->floorclip < actor->height) && actor->special1)
 	{
-		P_RemoveMobj( (mobj_t *)actor->special1 );
+		P_RemoveMobj((mobj_t *)actor->special1);
 		actor->special1 = 0;
 	}
 
 	// Spawn some dirt
-	if (P_Random()<40)
+	if (P_Random() < 40)
 		P_SpawnDirt(actor, actor->radius);
-	actor->special2++;							// Increase raise speed
+	actor->special2++;		// Increase raise speed
 }
 
 void A_ThrustLower(mobj_t *actor)
@@ -1141,23 +1138,23 @@ void A_SoAExplode(mobj_t *actor)
 	mobj_t *mo;
 	int i;
 
-	for(i = 0; i < 10; i++)
+	for (i = 0; i < 10; i++)
 	{
 		mo = P_SpawnMobj(actor->x+((P_Random()-128)<<12), 
-			actor->y+((P_Random()-128)<<12), 
-			actor->z+(P_Random()*actor->height/256), MT_ZARMORCHUNK);
-		P_SetMobjState(mo, mo->info->spawnstate+i);
-		if(mo)
+			actor->y + ((P_Random()-128)<<12), 
+			actor->z + (P_Random()*actor->height/256), MT_ZARMORCHUNK);
+		P_SetMobjState(mo, mo->info->spawnstate + i);
+		if (mo)
 		{
 			mo->momz = ((P_Random()&7)+5)*FRACUNIT;
 			mo->momx = (P_Random()-P_Random())<<(FRACBITS-6);
 			mo->momy = (P_Random()-P_Random())<<(FRACBITS-6);
 		}
 	}
-	if(actor->args[0])
+	if (actor->args[0])
 	{ // Spawn an item
-		if(!nomonsters 
-		|| !(mobjinfo[TranslateThingType[actor->args[0]]].flags&MF_COUNTKILL))
+		if (!nomonsters ||
+		    !(mobjinfo[TranslateThingType[actor->args[0]]].flags & MF_COUNTKILL))
 		{ // Only spawn monsters if not -nomonsters
 			P_SpawnMobj(actor->x, actor->y, actor->z,
 				TranslateThingType[actor->args[0]]);
@@ -1176,7 +1173,7 @@ void A_SoAExplode(mobj_t *actor)
 void A_BellReset1(mobj_t *actor)
 {
 	actor->flags |= MF_NOGRAVITY;
-	actor->height <<= 2;	
+	actor->height <<= 2;
 }
 
 //===========================================================================
@@ -1201,7 +1198,7 @@ void A_BellReset2(mobj_t *actor)
 
 void A_FlameCheck(mobj_t *actor)
 {
-	if(!actor->args[0]--)		// Called every 8 tics
+	if (!actor->args[0]--)		// Called every 8 tics
 	{
 		P_SetMobjState(actor, S_NULL);
 	}
@@ -1235,16 +1232,18 @@ void A_BatSpawn(mobj_t *actor)
 	angle_t angle;
 
 	// Countdown until next spawn
-	if (actor->special1-- > 0) return;
+	if (actor->special1-- > 0)
+		return;
 	actor->special1 = actor->args[0];		// Reset frequency count
 
 	delta = actor->args[1];
-	if (delta==0) delta=1;
+	if (delta == 0)
+		delta = 1;
 	angle = actor->angle + (((P_Random()%delta)-(delta>>1))<<24);
 	mo = P_SpawnMissileAngle(actor, MT_BAT, angle, 0);
 	if (mo)
 	{
-		mo->args[0] = P_Random()&63;			// floatbob index
+		mo->args[0] = P_Random() & 63;			// floatbob index
 		mo->args[4] = actor->args[4];			// turn degrees
 		mo->special2 = actor->args[3]<<3;		// Set lifetime
 		mo->target = actor;
@@ -1263,7 +1262,7 @@ void A_BatMove(mobj_t *actor)
 	}
 	actor->special2 -= 2;		// Called every 2 tics
 
-	if (P_Random()<128)
+	if (P_Random() < 128)
 	{
 		newangle = actor->angle + ANGLE_1*actor->args[4];
 	}
@@ -1278,12 +1277,12 @@ void A_BatMove(mobj_t *actor)
 	actor->momx = FixedMul(speed, finecosine[newangle]);
 	actor->momy = FixedMul(speed, finesine[newangle]);
 
-	if (P_Random()<15)
+	if (P_Random() < 15)
 		S_StartSound(actor, SFX_BAT_SCREAM);
 
 	// Handle Z movement
 	actor->z = actor->target->z + 2*FloatBobOffsets[actor->args[0]];
-	actor->args[0] = (actor->args[0]+3)&63;	
+	actor->args[0] = (actor->args[0] + 3) & 63;
 }
 
 //===========================================================================
@@ -1294,11 +1293,11 @@ void A_BatMove(mobj_t *actor)
 
 void A_TreeDeath(mobj_t *actor)
 {
-	if(!(actor->flags2&MF2_FIREDAMAGE))
+	if (!(actor->flags2 & MF2_FIREDAMAGE))
 	{
 		actor->height <<= 2;
 		actor->flags |= MF_SHOOTABLE;
-		actor->flags &= ~(MF_CORPSE+MF_DROPOFF);
+		actor->flags &= ~(MF_CORPSE + MF_DROPOFF);
 		actor->health = 35;
 		return;
 	}

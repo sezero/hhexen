@@ -4,8 +4,8 @@
 //** h_hubmsg.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h_hubmsg.h,v $
-//** $Revision: 1.1 $
-//** $Date: 2008-06-19 06:23:21 $
+//** $Revision: 1.2 $
+//** $Date: 2008-06-22 16:20:46 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -18,8 +18,8 @@
 char *GetClusterText(int sequence);
 char *GetFinaleText (int sequence);
 
-// Hardcoded Cluster Ending Messages for Version 1.0 WAD files: ------------
-// h_hubmsg.c  -------------------------------------------------------------
+/* Hardcoded Cluster Ending Messages for Version 1.0 WAD files: ----------*/
+/* h_hubmsg.c  -----------------------------------------------------------*/
 
 #define CLUS1MSG	"HAVING PASSED THE SEVEN PORTALS\n"		\
 			"WHICH SEALED THIS REALM, A VAST\n"		\

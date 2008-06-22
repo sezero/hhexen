@@ -4,8 +4,8 @@
 //** soundst.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: soundst.h,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 13:41:11 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-22 16:20:46 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -15,52 +15,52 @@
 
 typedef struct
 {
-	char name[8];
-	int p1;
+	char	name[8];
+	int		p1;
 } musicinfo_t;
 
 typedef struct sfxinfo_s
 {
-	char tagName[32];
-	char lumpname[12]; // Only need 9 bytes, but padded out to be dword aligned
-	//struct sfxinfo_s *link; // Make alias for another sound
-	int priority; // Higher priority takes precendence
-	int usefulness; // Determines when a sound should be cached out
-	void *snd_ptr;
-	int lumpnum;
-	int numchannels; // total number of channels a sound type may occupy
+	char	tagName[32];
+	char	lumpname[12];	/* Only need 9 bytes, but padded out to be dword aligned */
+//	struct sfxinfo_s *link;	/* Make alias for another sound */
+	int	priority;	/* Higher priority takes precendence */
+	int	usefulness;	/* Determines when a sound should be cached out */
+	void	*snd_ptr;
+	int	lumpnum;
+	int	numchannels;	/* total number of channels a sound type may occupy */
 	boolean	changePitch;
 } sfxinfo_t;
 
 typedef struct
 {
-	mobj_t *mo;
-	int sound_id;
-	int handle;
-	int volume;
-	int pitch;
-	int priority;
+	mobj_t		*mo;
+	int		sound_id;
+	int		handle;
+	int		volume;
+	int		pitch;
+	int		priority;
 } channel_t;
 
 typedef struct
 {
-	int id;
-	unsigned short priority;
-	char *name;
-	mobj_t *mo;
-	int distance;
+	int		id;
+	unsigned short	priority;
+	char		*name;
+	mobj_t		*mo;
+	int		distance;
 } ChanInfo_t;
 
 typedef struct
 {
-	int channelCount;
-	int musicVolume;
-	int soundVolume;
-	ChanInfo_t chan[8];
+	int	channelCount;
+	int	musicVolume;
+	int	soundVolume;
+	ChanInfo_t	chan[8];
 } SoundInfo_t;
 
-extern int snd_MaxVolume;
-extern int snd_MusicVolume;
+extern	int		snd_MaxVolume;
+extern	int		snd_MusicVolume;
 
 void S_Start(void);
 void S_StartSound(mobj_t *origin, int sound_id);
@@ -78,5 +78,5 @@ void S_GetChannelInfo(SoundInfo_t *s);
 void S_SetMusicVolume(void);
 boolean S_GetSoundPlayingInfo(mobj_t *mobj, int sound_id);
 
-#endif
+#endif	/* __SOUNDSTH__ */
 

@@ -22,7 +22,7 @@
 
 // MACROS ------------------------------------------------------------------
 
-// #define MAX_AUDIO_TRACKS 25
+#define MAX_AUDIO_TRACKS	25
 
 // TYPES -------------------------------------------------------------------
 
@@ -40,11 +40,12 @@ int cd_Error;
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
-//static int cd_FirstTrack;
-//static int cd_LastTrack;
-
+#if 0
+static int cd_FirstTrack;
+static int cd_LastTrack;
+static char cd_dev[64] = "/dev/cdrom";
+#endif
 static int cdfile = -1;
-//static char cd_dev[64] = "/dev/cdrom";
 
 // CODE --------------------------------------------------------------------
 
@@ -52,6 +53,7 @@ static int I_CDGetDiskInfo(void)
 {
 	return 0;
 }
+
 //==========================================================================
 //
 // I_CDMusInit
@@ -178,5 +180,5 @@ void I_CDMusShutdown(void)
 void I_CDMusUpdate(void)
 {
 
-}              
+}
 

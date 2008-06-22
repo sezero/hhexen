@@ -72,7 +72,7 @@ static int bps, ebps;
 static int flush;
 static int fragsize, format, channels;
 static int frequency, efrequency, device_buffer_size;
-static char device_name[ 16 ];
+static char device_name[16];
 static pthread_t buffer_thread;
 static gboolean realtime = FALSE;
 
@@ -229,7 +229,6 @@ int oss_downsample(guchar * ob, guint length, guint speed, guint espeed)
 		free(nbuffer);
 	}
 	return w;
-
 }
 
 void oss_write(void *ptr, int length)
@@ -238,7 +237,7 @@ void oss_write(void *ptr, int length)
 
 	if (!realtime)
 	{
-		while( oss_free() < length )
+		while (oss_free() < length)
 			usleep(10000);
 
 		remove_prebuffer = FALSE;
@@ -250,7 +249,6 @@ void oss_write(void *ptr, int length)
 			wr_index = (wr_index + cnt) % buffer_size;
 			length -= cnt;
 			off = cnt;
-
 		}
 	}
 	else
@@ -276,7 +274,6 @@ void oss_write(void *ptr, int length)
 		written += length;
 		output_bytes += w;
 	}
-
 }
 
 void oss_close(void)
@@ -298,7 +295,7 @@ void oss_flush(int time)
 	if (!realtime)
 	{
 		flush = time;
-		while( flush != -1 )
+		while (flush != -1)
 			usleep(10000);
 	}
 	else
@@ -363,11 +360,14 @@ void *oss_loop(void *arg)
 				rd_index = (rd_index + cnt) % buffer_size;
 				length -= cnt;
 			}
-/*			if (!oss_used())
-				ioctl(audio_fd, SNDCTL_DSP_POST, 0);*/
+			/*
+			if (!oss_used())
+				ioctl(audio_fd, SNDCTL_DSP_POST, 0);
+			*/
 		}
 		else
-			usleep( 10000 );
+			usleep(10000);
+
 		if (do_pause && !paused)
 		{
 			do_pause = FALSE;
@@ -382,6 +382,7 @@ void *oss_loop(void *arg)
 			ioctl(audio_fd, SNDCTL_DSP_RESET, 0);
 
 		}
+
 		if (unpause && paused)
 		{
 			unpause = FALSE;
@@ -397,7 +398,6 @@ void *oss_loop(void *arg)
 			 * This close and open is a work around of a bug that exists in some drivers which 
 			 * cause the driver to get fucked up by a reset
 			 */
-
 			ioctl(audio_fd, SNDCTL_DSP_RESET, 0);
 			close(audio_fd);
 			audio_fd = open(device_name, O_WRONLY);
@@ -408,7 +408,6 @@ void *oss_loop(void *arg)
 			flush = -1;
 			prebuffer = TRUE;
 		}
-
 	}
 
 	ioctl(audio_fd, SNDCTL_DSP_RESET, 0);
@@ -439,32 +438,32 @@ void oss_set_audio_params(void)
 
 int oss_open(AFormat fmt, int rate, int nch)
 {
-	switch( fmt )
+	switch (fmt)
 	{
-		case FMT_U8:
-			format = AFMT_U8;
-			break;
-		case FMT_S8:
-			format = AFMT_S8;
-			break;
-		case FMT_U16_LE:
-			format = AFMT_U16_LE;
-			break;
-		case FMT_U16_BE:
-			format = AFMT_U16_BE;
-			break;
-		case FMT_U16_NE:
-			format = AFMT_U16_NE;
-			break;
-		case FMT_S16_LE:
-			format = AFMT_S16_LE;
-			break;
-		case FMT_S16_BE:
-			format = AFMT_S16_BE;
-			break;
-		case FMT_S16_NE:
-			format = AFMT_S16_NE;
-			break;
+	case FMT_U8:
+		format = AFMT_U8;
+		break;
+	case FMT_S8:
+		format = AFMT_S8;
+		break;
+	case FMT_U16_LE:
+		format = AFMT_U16_LE;
+		break;
+	case FMT_U16_BE:
+		format = AFMT_U16_BE;
+		break;
+	case FMT_U16_NE:
+		format = AFMT_U16_NE;
+		break;
+	case FMT_S16_LE:
+		format = AFMT_S16_LE;
+		break;
+	case FMT_S16_BE:
+		format = AFMT_S16_BE;
+		break;
+	case FMT_S16_NE:
+		format = AFMT_S16_NE;
+		break;
 	}
 
 	bps = rate * nch;
@@ -524,7 +523,7 @@ int oss_open(AFormat fmt, int rate, int nch)
 }
 
 
-static void scan_devices( char* type )
+static void scan_devices(char* type)
 {
 	FILE* file;
 	char buf[256];
@@ -532,10 +531,10 @@ static void scan_devices( char* type )
 	int found = 0;
 	int index = 0;
 
-	printf( "%s\n", type );
+	printf("%s\n", type);
 
-	file = fopen( "/dev/sndstat", "r" );
-	if( file )
+	file = fopen("/dev/sndstat", "r");
+	if (file)
 	{
 		while (fgets(buf, 255, file))
 		{
@@ -557,44 +556,38 @@ static void scan_devices( char* type )
 					else
 						tmp2 = buf;
 
-					printf( "  %s (default)\n", tmp2 );
+					printf("  %s (default)\n", tmp2);
 				}
 				else
 				{
-					printf( "  %s\n", buf );
+					printf("  %s\n", buf);
 				}
 			}
-			if( ! strcasecmp(buf, type) )
+			if (! strcasecmp(buf, type))
 				found = 1;
 		}
 		fclose(file);
 	}
 }
 
-
 void oss_configure(void)
 {
-    printf( "OSS configure not implemented - here are the current devices:\n" );
-    scan_devices( "Audio devices:" );
-    scan_devices( "Mixers:" );
+	printf( "OSS configure not implemented - here are the current devices:\n" );
+	scan_devices("Audio devices:");
+	scan_devices("Mixers:");
 
-    /*
+	/*
 	oss_cfg.audio_device = audio_device;
 	oss_cfg.mixer_device = mixer_device;
 	oss_cfg.buffer_size = (gint) GTK_ADJUSTMENT(buffer_size_adj)->value;
 	oss_cfg.prebuffer = (gint) GTK_ADJUSTMENT(buffer_pre_adj)->value;
 	oss_cfg.fragment_count = 32;
-    */
+	*/
 }
 
 
 void oss_init(void)
 {
-	/*
-    ConfigFile *cfgfile;
-	char* filename;
-    */
-
 	memset(&oss_cfg, 0, sizeof (OSSConfig));
 
 	oss_cfg.audio_device = 0;
@@ -602,18 +595,6 @@ void oss_init(void)
 	oss_cfg.buffer_size = 3000;
 	oss_cfg.prebuffer = 25;
 	oss_cfg.fragment_count = 3;  /*32;*/
-
-#if 0
-	filename = g_strconcat(g_get_home_dir(), "/.xmms/config", NULL);
-	if (cfgfile = xmms_cfg_open_file(filename))
-	{
-		xmms_cfg_read_int(cfgfile, "OSS", "audio_device", &oss_cfg.audio_device);
-		xmms_cfg_read_int(cfgfile, "OSS", "mixer_device", &oss_cfg.mixer_device);
-		xmms_cfg_read_int(cfgfile, "OSS", "buffer_size", &oss_cfg.buffer_size);
-		xmms_cfg_read_int(cfgfile, "OSS", "prebuffer", &oss_cfg.prebuffer);
-		xmms_cfg_free(cfgfile);
-	}
-#endif
 }
 
 
@@ -654,7 +635,7 @@ void oss_get_volume(int *l, int *r)
 void oss_set_volume(int l, int r)
 {
 	int fd, v, cmd, devs;
-	char devname[ 20 ];
+	char devname[20];
 
 	if (oss_cfg.mixer_device > 0)
 		snprintf(devname, sizeof(devname), "/dev/mixer%d", oss_cfg.mixer_device);
@@ -710,7 +691,4 @@ OutputPlugin *get_oplugin_info(void)
 {
 	return &oss_op;
 }
-
-
-/* EOF */
 

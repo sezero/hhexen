@@ -40,7 +40,7 @@
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
-static int curfilter = 0;	// The current filter (0 = none).
+static int curfilter = 0;	/* The current filter (0 = none). */
 
 // CODE --------------------------------------------------------------------
 
@@ -48,8 +48,6 @@ void OGL_DrawRawScreen(int lump)	// Raw screens are 320 x 200.
 {
 	float tcbottom;
 	int pixelBorder;
-	//float shift64 = 1.0/(64*screenWidth/320.0);
-	//float onePhysPixel = 320/(float)screenWidth;
 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
@@ -59,33 +57,33 @@ void OGL_DrawRawScreen(int lump)	// Raw screens are 320 x 200.
 	glLoadIdentity();
 	gluOrtho2D(0, screenWidth, screenHeight, 0);
 
-	OGL_SetRawImage(lump,1);
+	OGL_SetRawImage(lump, 1);
 	tcbottom = lumptexsizes[lump].h / (float)FindNextPower2(lumptexsizes[lump].h);
 	pixelBorder = lumptexsizes[lump].w * screenWidth / 320;
 
-	glColor3f(1,1,1);
+	glColor3f(1, 1, 1);
 	glBegin(GL_QUADS);
-	glTexCoord2f(0,0);
-	glVertex2f(0,0);
-	glTexCoord2f(1,0);
+	glTexCoord2f(0, 0);
+	glVertex2f(0, 0);
+	glTexCoord2f(1, 0);
 	glVertex2f(pixelBorder, 0);
-	glTexCoord2f(1,tcbottom);
+	glTexCoord2f(1, tcbottom);
 	glVertex2f(pixelBorder, screenHeight);
-	glTexCoord2f(0,tcbottom);
+	glTexCoord2f(0, tcbottom);
 	glVertex2f(0, screenHeight);
 	glEnd();
 
 	// And the other part.
-	OGL_SetRawImage(lump,2);
+	OGL_SetRawImage(lump, 2);
 	glBegin(GL_QUADS);
-	glTexCoord2f(0,0);
-	glVertex2f(pixelBorder-1, 0);
-	glTexCoord2f(1,0);
+	glTexCoord2f(0, 0);
+	glVertex2f(pixelBorder - 1, 0);
+	glTexCoord2f(1, 0);
 	glVertex2f(screenWidth, 0);
 	glTexCoord2f(1, tcbottom);
 	glVertex2f(screenWidth, screenHeight);
 	glTexCoord2f(0, tcbottom);
-	glVertex2f(pixelBorder-1, screenHeight);
+	glVertex2f(pixelBorder - 1, screenHeight);
 	glEnd();
 
 	// Restore the old projection matrix.
@@ -106,39 +104,39 @@ void OGL_DrawPatch_CS(int x, int y, int lumpnum)
 
 	w = lumptexsizes[lumpnum].w;
 	h = lumptexsizes[lumpnum].h;
-	p2w = FindNextPower2(w); 
+	p2w = FindNextPower2(w);
 	p2h = OGL_ValidTexHeight2(w, h);
-	tcright = (float)w/(float)p2w; 
-	tcbottom = (float)h/(float)p2h;
-	
+	tcright = (float)w / (float)p2w;
+	tcbottom = (float)h / (float)p2h;
+
 	x += lumptexsizes[lumpnum].offx;
 	y += lumptexsizes[lumpnum].offy;
 
 	glBegin(GL_QUADS);
-	
+
 	glTexCoord2f(0, 0);
 	glVertex2i(x, y);
 
 	glTexCoord2f(tcright, 0);
-	glVertex2i(x+w, y);
+	glVertex2i(x + w, y);
 
 	glTexCoord2f(tcright, tcbottom);
-	glVertex2i(x+w, y+h);
+	glVertex2i(x + w, y + h);
 
 	glTexCoord2f(0, tcbottom);
-	glVertex2i(x, y+h);
+	glVertex2i(x, y + h);
 
 	glEnd();
 
 	// Is there a second part?
-	if(OGL_GetOtherPart(lumpnum))
+	if (OGL_GetOtherPart(lumpnum))
 	{
 		x += w;
 
 		OGL_BindTexture(OGL_GetOtherPart(lumpnum));
 		w = lumptexsizes[lumpnum].w2;
 		p2w = FindNextPower2(w);
-		tcright = w/(float)p2w;
+		tcright = w / (float)p2w;
 
 		glBegin(GL_QUADS);
 
@@ -166,30 +164,33 @@ void OGL_DrawPatchLitAlpha(int x, int y, float light, float alpha, int lumpnum)
 
 void OGL_DrawPatch(int x, int y, int lumpnum)
 {
-	if(lumpnum < 0) return;
+	if (lumpnum < 0)
+		return;
 	OGL_DrawPatchLitAlpha(x, y, 1, 1, lumpnum);
 }
 
 void OGL_DrawFuzzPatch(int x, int y, int lumpnum)
 {
-	if(lumpnum < 0) return;
+	if (lumpnum < 0)
+		return;
 	OGL_DrawPatchLitAlpha(x, y, 1, .333f, lumpnum);
 }
 
 void OGL_DrawAltFuzzPatch(int x, int y, int lumpnum)
 {
-	if(lumpnum < 0) return;
+	if (lumpnum < 0)
+		return;
 	OGL_DrawPatchLitAlpha(x, y, 1, .666f, lumpnum);
 }
 
 void OGL_DrawShadowedPatch(int x, int y, int lumpnum)
 {
-	if(lumpnum < 0) return;
-	OGL_DrawPatchLitAlpha(x+2, y+2, 0, .4f, lumpnum);
+	if (lumpnum < 0)
+		return;
+	OGL_DrawPatchLitAlpha(x + 2, y + 2, 0, .4f, lumpnum);
 	OGL_DrawPatchLitAlpha(x, y, 1, 1, lumpnum);
 }
 
-extern void checkGLContext();
 void OGL_DrawRect(float x, float y, float w, float h, float r, float g, float b, float a)
 {
 	glColor4f(r, g, b, a);
@@ -220,21 +221,21 @@ void OGL_DrawRectTiled(int x, int y, int w, int h, int tw, int th)
 }
 
 // The cut rectangle must be inside the other one.
-void OGL_DrawCutRectTiled(int x, int y, int w, int h, int tw, int th, 
-						  int cx, int cy, int cw, int ch)
+void OGL_DrawCutRectTiled(int x, int y, int w, int h, int tw, int th,
+			  int cx, int cy, int cw, int ch)
 {
-	float ftw = tw, fth = th;
+	float	ftw = tw, fth = th;
 	// We'll draw at max four rectangles.
-	int	toph = cy-y, bottomh = y+h-(cy+ch), sideh = h-toph-bottomh,
-		lefth = cx-x, righth = x+w-(cx+cw);
-	
+	int	toph = cy - y, bottomh = y + h - (cy + ch), sideh = h - toph - bottomh,
+		lefth = cx - x, righth = x + w - (cx + cw);
+
 	glBegin(GL_QUADS);
-	if(toph > 0)
+	if (toph > 0)
 	{
 		// The top rectangle.
 		glTexCoord2f(0, 0);
 		glVertex2i(x, y);
-		
+
 		glTexCoord2f(w/ftw, 0);
 		glVertex2i(x+w, y);
 
@@ -244,12 +245,12 @@ void OGL_DrawCutRectTiled(int x, int y, int w, int h, int tw, int th,
 		glTexCoord2f(0, toph/fth);
 		glVertex2i(x, y+toph);
 	}
-	if(lefth > 0 && sideh > 0)
+	if (lefth > 0 && sideh > 0)
 	{
-		float yoff = toph/fth;
+		float yoff = toph / fth;
 		// The left rectangle.
 		glTexCoord2f(0, yoff);
-		glVertex2i(x, y+toph);
+		glVertex2i(x, y + toph);
 
 		glTexCoord2f(lefth/ftw, yoff);
 		glVertex2i(x+lefth, y+toph);
@@ -260,11 +261,11 @@ void OGL_DrawCutRectTiled(int x, int y, int w, int h, int tw, int th,
 		glTexCoord2f(0, yoff+sideh/fth);
 		glVertex2i(x, y+toph+sideh);
 	}
-	if(righth > 0 && sideh > 0)
+	if (righth > 0 && sideh > 0)
 	{
-		int ox = x+lefth+cw;
-		float xoff = (lefth+cw)/ftw;
-		float yoff = toph/fth;
+		int ox = x + lefth + cw;
+		float xoff = (lefth + cw) / ftw;
+		float yoff = toph / fth;
 		// The left rectangle.
 		glTexCoord2f(xoff, yoff);
 		glVertex2i(ox, y+toph);
@@ -278,13 +279,13 @@ void OGL_DrawCutRectTiled(int x, int y, int w, int h, int tw, int th,
 		glTexCoord2f(xoff, yoff+sideh/fth);
 		glVertex2i(ox, y+toph+sideh);
 	}
-	if(bottomh > 0)
+	if (bottomh > 0)
 	{
-		int oy = y+toph+sideh;
-		float yoff = (toph+sideh)/fth;
+		int oy = y + toph + sideh;
+		float yoff = (toph + sideh) / fth;
 		glTexCoord2f(0, yoff);
 		glVertex2i(x, oy);
-		
+
 		glTexCoord2f(w/ftw, yoff);
 		glVertex2i(x+w, oy);
 
@@ -297,22 +298,22 @@ void OGL_DrawCutRectTiled(int x, int y, int w, int h, int tw, int th,
 	glEnd();
 }
 
-void OGL_DrawLine(float x1, float y1, float x2, float y2, 
-				  float r, float g, float b, float a)
+void OGL_DrawLine(float x1, float y1, float x2, float y2,
+		  float r, float g, float b, float a)
 {
 	glColor4f(r, g, b, a);
 	glBegin(GL_LINES);
-	glVertex2f(x1,y1);
-	glVertex2f(x2,y2);
+	glVertex2f(x1, y1);
+	glVertex2f(x2, y2);
 	glEnd();
 }
 
 void OGL_SetColor(int palidx)
 {
 	byte rgb[3];
-	
-	if(palidx == -1)	// Invisible?
-		glColor4f(0,0,0,0);
+
+	if (palidx == -1)	// Invisible?
+		glColor4f(0, 0, 0, 0);
 	else
 	{
 		PalIdxToRGB(W_CacheLumpNum(pallump,PU_CACHE), palidx, rgb);
@@ -328,29 +329,29 @@ void OGL_SetColorAndAlpha(float r, float g, float b, float a)
 // Filters correspond the palettes in the wad.
 void OGL_SetFilter(int filter)
 {
-	curfilter = filter;	
+	curfilter = filter;
 }
 
 // Returns nonzero if the filter was drawn.
-int OGL_DrawFilter()
+int OGL_DrawFilter(void)
 {
-	if(!curfilter) return 0;		// No filter needed.
+	if (!curfilter)
+		return 0;		// No filter needed.
 
 	// No texture, please.
-	//glBindTexture(GL_TEXTURE_2D, 0);
-	glDisable( GL_TEXTURE_2D );
+	glDisable(GL_TEXTURE_2D);
 
 	// We have to choose the right color and alpha.
-	if(curfilter >= STARTREDPALS && curfilter < STARTREDPALS+NUMREDPALS) 
+	if (curfilter >= STARTREDPALS && curfilter < STARTREDPALS+NUMREDPALS)
 		// Red?
 		glColor4f(1, 0, 0, curfilter/8.0);	// Full red with filter 8.
-	else if(curfilter >= STARTBONUSPALS && curfilter < STARTBONUSPALS+NUMBONUSPALS) 
+	else if (curfilter >= STARTBONUSPALS && curfilter < STARTBONUSPALS+NUMBONUSPALS)
 		// Light Green?
-		glColor4f(.5, 1, .5, (curfilter-STARTBONUSPALS+1)/12.0); 
-	else if(curfilter >= STARTPOISONPALS && curfilter < STARTPOISONPALS+NUMPOISONPALS)
+		glColor4f(.5, 1, .5, (curfilter-STARTBONUSPALS+1)/12.0);
+	else if (curfilter >= STARTPOISONPALS && curfilter < STARTPOISONPALS+NUMPOISONPALS)
 		// Green?
 		glColor4f(0, 1, 0, (curfilter-STARTPOISONPALS+1)/16.0);
-	else if(curfilter >= STARTSCOURGEPAL)
+	else if (curfilter >= STARTSCOURGEPAL)
 		// Orange?
 		glColor4f(1, .5, 0, (STARTSCOURGEPAL+3-curfilter)/6.0);
 	else if(curfilter >= STARTHOLYPAL)
@@ -361,7 +362,7 @@ int OGL_DrawFilter()
 		glColor4f(.5f, .5f, 1, .4f);
 	else
 		I_Error("OGL_DrawFilter: Real strange filter number: %d.\n", curfilter);
-	
+
 	glBegin(GL_QUADS);
 	glVertex2f(0, 0);
 	glVertex2f(320, 0);
@@ -369,7 +370,7 @@ int OGL_DrawFilter()
 	glVertex2f(0, 200);
 	glEnd();
 
-	glEnable( GL_TEXTURE_2D );
+	glEnable(GL_TEXTURE_2D);
 	return 1;
 }
 

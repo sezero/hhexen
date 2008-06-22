@@ -4,8 +4,8 @@
 //** sn_sonix.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sn_sonix.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 13:40:58 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-22 16:20:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -18,20 +18,20 @@
 
 // MACROS ------------------------------------------------------------------
 
-#define SS_MAX_SCRIPTS	64
+#define SS_MAX_SCRIPTS		64
 #define SS_TEMPBUFFER_SIZE	1024
-#define SS_SEQUENCE_NAME_LENGTH 32
+#define SS_SEQUENCE_NAME_LENGTH	32
 
-#define SS_SCRIPT_NAME "SNDSEQ"
-#define SS_STRING_PLAY			"play"
-#define SS_STRING_PLAYUNTILDONE "playuntildone"
-#define SS_STRING_PLAYTIME		"playtime"
+#define SS_SCRIPT_NAME		"SNDSEQ"
+#define SS_STRING_PLAY		"play"
+#define SS_STRING_PLAYUNTILDONE	"playuntildone"
+#define SS_STRING_PLAYTIME	"playtime"
 #define SS_STRING_PLAYREPEAT	"playrepeat"
-#define SS_STRING_DELAY			"delay"
-#define SS_STRING_DELAYRAND		"delayrand"
-#define SS_STRING_VOLUME		"volume"
-#define SS_STRING_END			"end"
-#define SS_STRING_STOPSOUND		"stopsound"
+#define SS_STRING_DELAY		"delay"
+#define SS_STRING_DELAYRAND	"delayrand"
+#define SS_STRING_VOLUME	"volume"
+#define SS_STRING_END		"end"
+#define SS_STRING_STOPSOUND	"stopsound"
 
 // TYPES -------------------------------------------------------------------
 
@@ -39,7 +39,7 @@ typedef enum
 {
 	SS_CMD_NONE,
 	SS_CMD_PLAY,
-	SS_CMD_WAITUNTILDONE, // used by PLAYUNTILDONE
+	SS_CMD_WAITUNTILDONE,	/* used by PLAYUNTILDONE */
 	SS_CMD_PLAYTIME,
 	SS_CMD_PLAYREPEAT,
 	SS_CMD_DELAY,
@@ -68,15 +68,15 @@ extern sfxinfo_t S_sfx[];
 
 static struct
 {
-	char name[SS_SEQUENCE_NAME_LENGTH];
-	int scriptNum;
-	int stopSound;
+	char	name[SS_SEQUENCE_NAME_LENGTH];
+	int				scriptNum;
+	int				stopSound;
 } SequenceTranslate[SEQ_NUMSEQ] =
 {
 	{ "Platform", 0, 0 },
-	{ "Platform", 0, 0 },   	// a 'heavy' platform is just a platform
-	{ "PlatformMetal", 0, 0 }, 	
-	{ "Platform", 0, 0 },		// same with a 'creak' platform
+	{ "Platform", 0, 0 },		/* a 'heavy' platform is just a platform */
+	{ "PlatformMetal", 0, 0 },
+	{ "Platform", 0, 0 },		/* same with a 'creak' platform */
 	{ "Silence", 0, 0 },
 	{ "Lava", 0, 0 },
 	{ "Water", 0, 0 },
@@ -113,7 +113,7 @@ seqnode_t *SequenceListHead;
 
 static void VerifySequencePtr(int *base, int *ptr)
 {
-	if(ptr-base > SS_TEMPBUFFER_SIZE)
+	if (ptr-base > SS_TEMPBUFFER_SIZE)
 	{
 		I_Error("VerifySequencePtr:  tempPtr >= %d\n", SS_TEMPBUFFER_SIZE);
 	}
@@ -128,10 +128,10 @@ static void VerifySequencePtr(int *base, int *ptr)
 static int GetSoundOffset(char *name)
 {
 	int i;
-	
-	for(i = 0; i < NUMSFX; i++)
+
+	for (i = 0; i < NUMSFX; i++)
 	{
-		if(!strcasecmp(name, S_sfx[i].tagName))
+		if (!strcasecmp(name, S_sfx[i].tagName))
 		{
 			return i;
 		}
@@ -155,89 +155,88 @@ void SN_InitSequenceScript(void)
 
 	inSequence = -1;
 	ActiveSequences = 0;
-	for(i = 0; i < SS_MAX_SCRIPTS; i++)
+	for (i = 0; i < SS_MAX_SCRIPTS; i++)
 	{
 		SequenceData[i] = NULL;
-	} 
+	}
 	SC_Open(SS_SCRIPT_NAME);
-	while(SC_GetString())
+	while (SC_GetString())
 	{
-		if(*sc_String == ':')
+		if (*sc_String == ':')
 		{
-			if(inSequence != -1)
+			if (inSequence != -1)
 			{
 				SC_ScriptError("SN_InitSequenceScript:  Nested Script Error");
 			}
-			tempDataStart = (int *)Z_Malloc(SS_TEMPBUFFER_SIZE, 
-				PU_STATIC, NULL);
+			tempDataStart = (int *)Z_Malloc(SS_TEMPBUFFER_SIZE, PU_STATIC, NULL);
 			memset(tempDataStart, 0, SS_TEMPBUFFER_SIZE);
 			tempDataPtr = tempDataStart;
-			for(i = 0; i < SS_MAX_SCRIPTS; i++)
+			for (i = 0; i < SS_MAX_SCRIPTS; i++)
 			{
-				if(SequenceData[i] == NULL)
+				if (SequenceData[i] == NULL)
 				{
 					break;
 				}
 			}
-			if(i == SS_MAX_SCRIPTS)
+			if (i == SS_MAX_SCRIPTS)
 			{
 				I_Error("Number of SS Scripts >= SS_MAX_SCRIPTS");
 			}
-			for(j = 0; j < SEQ_NUMSEQ; j++)
+			for (j = 0; j < SEQ_NUMSEQ; j++)
 			{
-				if(!strcasecmp(SequenceTranslate[j].name, sc_String+1))
+				if (!strcasecmp(SequenceTranslate[j].name, sc_String+1))
 				{
 					SequenceTranslate[j].scriptNum = i;
 					inSequence = j;
 					break;
 				}
-			}					
+			}
 			continue; // parse the next command
 		}
-		if(inSequence == -1)
+		if (inSequence == -1)
 		{
 			continue;
 		}
-		if(SC_Compare(SS_STRING_PLAYUNTILDONE))
+		if (SC_Compare(SS_STRING_PLAYUNTILDONE))
 		{
 			VerifySequencePtr(tempDataStart, tempDataPtr);
 			SC_MustGetString();
 			*tempDataPtr++ = SS_CMD_PLAY;
 			*tempDataPtr++ = GetSoundOffset(sc_String);
-			*tempDataPtr++ = SS_CMD_WAITUNTILDONE;		
+			*tempDataPtr++ = SS_CMD_WAITUNTILDONE;
 		}
-		else if(SC_Compare(SS_STRING_PLAY))
+		else if (SC_Compare(SS_STRING_PLAY))
 		{
 			VerifySequencePtr(tempDataStart, tempDataPtr);
 			SC_MustGetString();
 			*tempDataPtr++ = SS_CMD_PLAY;
 			*tempDataPtr++ = GetSoundOffset(sc_String);
 		}
-		else if(SC_Compare(SS_STRING_PLAYTIME))
+		else if (SC_Compare(SS_STRING_PLAYTIME))
 		{
 			VerifySequencePtr(tempDataStart, tempDataPtr);
 			SC_MustGetString();
 			*tempDataPtr++ = SS_CMD_PLAY;
 			*tempDataPtr++ = GetSoundOffset(sc_String);
 			SC_MustGetNumber();
-			*tempDataPtr++ = SS_CMD_DELAY;	
+			*tempDataPtr++ = SS_CMD_DELAY;
 			*tempDataPtr++ = sc_Number;
 		}
-		else if(SC_Compare(SS_STRING_PLAYREPEAT))
+		else if (SC_Compare(SS_STRING_PLAYREPEAT))
 		{
 			VerifySequencePtr(tempDataStart, tempDataPtr);
 			SC_MustGetString();
 			*tempDataPtr++ = SS_CMD_PLAYREPEAT;
 			*tempDataPtr++ = GetSoundOffset(sc_String);
 		}
-		else if(SC_Compare(SS_STRING_DELAY))
+		else if (SC_Compare(SS_STRING_DELAY))
 		{
 			VerifySequencePtr(tempDataStart, tempDataPtr);
 			*tempDataPtr++ = SS_CMD_DELAY;
 			SC_MustGetNumber();
 			*tempDataPtr++ = sc_Number;
 		}
-		else if(SC_Compare(SS_STRING_DELAYRAND))
+		else if (SC_Compare(SS_STRING_DELAYRAND))
 		{
 			VerifySequencePtr(tempDataStart, tempDataPtr);
 			*tempDataPtr++ = SS_CMD_DELAYRAND;
@@ -246,30 +245,28 @@ void SN_InitSequenceScript(void)
 			SC_MustGetNumber();
 			*tempDataPtr++ = sc_Number;
 		}
-		else if(SC_Compare(SS_STRING_VOLUME))
+		else if (SC_Compare(SS_STRING_VOLUME))
 		{
 			VerifySequencePtr(tempDataStart, tempDataPtr);
 			*tempDataPtr++ = SS_CMD_VOLUME;
 			SC_MustGetNumber();
 			*tempDataPtr++ = sc_Number;
 		}
-		else if(SC_Compare(SS_STRING_END))
+		else if (SC_Compare(SS_STRING_END))
 		{
 			int dataSize;
 
 			*tempDataPtr++ = SS_CMD_END;
-			dataSize = (tempDataPtr-tempDataStart)*sizeof(int);
-			SequenceData[i] = (int *)Z_Malloc(dataSize, PU_STATIC,
-				NULL);
+			dataSize = (tempDataPtr - tempDataStart) * sizeof(int);
+			SequenceData[i] = (int *)Z_Malloc(dataSize, PU_STATIC, NULL);
 			memcpy(SequenceData[i], tempDataStart, dataSize);
 			Z_Free(tempDataStart);
 			inSequence = -1;
 		}
-		else if(SC_Compare(SS_STRING_STOPSOUND))
+		else if (SC_Compare(SS_STRING_STOPSOUND))
 		{
 			SC_MustGetString();
-			SequenceTranslate[inSequence].stopSound =
-				GetSoundOffset(sc_String);
+			SequenceTranslate[inSequence].stopSound = GetSoundOffset(sc_String);
 			*tempDataPtr++ = SS_CMD_STOPSOUND;
 		}
 		else
@@ -288,7 +285,7 @@ void SN_InitSequenceScript(void)
 void SN_StartSequence(mobj_t *mobj, int sequence)
 {
 	seqnode_t *node;
-	
+
 	SN_StopSequence(mobj); // Stop any previous sequence
 	node = (seqnode_t *)Z_Malloc(sizeof(seqnode_t), PU_STATIC, NULL);
 	node->sequencePtr = SequenceData[SequenceTranslate[sequence].scriptNum];
@@ -298,7 +295,7 @@ void SN_StartSequence(mobj_t *mobj, int sequence)
 	node->stopSound = SequenceTranslate[sequence].stopSound;
 	node->volume = 127; // Start at max volume
 
-	if(!SequenceListHead)
+	if (!SequenceListHead)
 	{
 		SequenceListHead = node;
 		node->next = node->prev = NULL;
@@ -324,9 +321,9 @@ void SN_StartSequenceName(mobj_t *mobj, char *name)
 {
 	int i;
 
-	for(i = 0; i < SEQ_NUMSEQ; i++)
+	for (i = 0; i < SEQ_NUMSEQ; i++)
 	{
-		if(!strcmp(name, SequenceTranslate[i].name))
+		if (!strcmp(name, SequenceTranslate[i].name))
 		{
 			SN_StartSequence(mobj, i);
 			return;
@@ -344,24 +341,24 @@ void SN_StopSequence(mobj_t *mobj)
 {
 	seqnode_t *node;
 
-	for(node = SequenceListHead; node; node = node->next)
+	for (node = SequenceListHead; node; node = node->next)
 	{
-		if(node->mobj == mobj)
+		if (node->mobj == mobj)
 		{
 			S_StopSound(mobj);
-			if(node->stopSound)
+			if (node->stopSound)
 			{
 				S_StartSoundAtVolume(mobj, node->stopSound, node->volume);
 			}
-			if(SequenceListHead == node)
+			if (SequenceListHead == node)
 			{
 				SequenceListHead = node->next;
 			}
-			if(node->prev)
+			if (node->prev)
 			{
 				node->prev->next = node->next;
 			}
-			if(node->next)
+			if (node->next)
 			{
 				node->next->prev = node->prev;
 			}
@@ -382,67 +379,67 @@ void SN_UpdateActiveSequences(void)
 	seqnode_t *node;
 	boolean sndPlaying;
 
-	if(!ActiveSequences || paused)
+	if (!ActiveSequences || paused)
 	{ // No sequences currently playing/game is paused
 		return;
 	}
-	for(node = SequenceListHead; node; node = node->next)
+	for (node = SequenceListHead; node; node = node->next)
 	{
-		if(node->delayTics)
+		if (node->delayTics)
 		{
 			node->delayTics--;
 			continue;
 		}
 		sndPlaying = S_GetSoundPlayingInfo(node->mobj, node->currentSoundID);
-		switch(*node->sequencePtr)
+		switch (*node->sequencePtr)
 		{
-			case SS_CMD_PLAY:
-				if(!sndPlaying)
-				{
-					node->currentSoundID = *(node->sequencePtr+1);
-					S_StartSoundAtVolume(node->mobj, node->currentSoundID,
-						node->volume);
-				}
-				node->sequencePtr += 2;
-				break;
-			case SS_CMD_WAITUNTILDONE:
-				if(!sndPlaying)
-				{
-					node->sequencePtr++;
-					node->currentSoundID = 0;
-				}
-				break;
-			case SS_CMD_PLAYREPEAT:
-				if(!sndPlaying)
-				{
-					node->currentSoundID = *(node->sequencePtr+1);
-					S_StartSoundAtVolume(node->mobj, node->currentSoundID,
-						node->volume);
-				}
-				break;
-			case SS_CMD_DELAY:
-				node->delayTics = *(node->sequencePtr+1);
-				node->sequencePtr += 2;
+		case SS_CMD_PLAY:
+			if (!sndPlaying)
+			{
+				node->currentSoundID = *(node->sequencePtr + 1);
+				S_StartSoundAtVolume(node->mobj, node->currentSoundID,
+									node->volume);
+			}
+			node->sequencePtr += 2;
+			break;
+		case SS_CMD_WAITUNTILDONE:
+			if (!sndPlaying)
+			{
+				node->sequencePtr++;
 				node->currentSoundID = 0;
-				break;
-			case SS_CMD_DELAYRAND:
-				node->delayTics = *(node->sequencePtr+1)+
-					M_Random()%(*(node->sequencePtr+2)-*(node->sequencePtr+1));
-				node->sequencePtr += 2;
-				node->currentSoundID = 0;
-				break;
-			case SS_CMD_VOLUME:
-				node->volume = (127*(*(node->sequencePtr+1)))/100;
-				node->sequencePtr += 2;
-				break;
-			case SS_CMD_STOPSOUND:
-				// Wait until something else stops the sequence
-				break;
-			case SS_CMD_END:
-				SN_StopSequence(node->mobj);
-				break;
-			default:	
-				break;
+			}
+			break;
+		case SS_CMD_PLAYREPEAT:
+			if (!sndPlaying)
+			{
+				node->currentSoundID = *(node->sequencePtr + 1);
+				S_StartSoundAtVolume(node->mobj, node->currentSoundID,
+									node->volume);
+			}
+			break;
+		case SS_CMD_DELAY:
+			node->delayTics = *(node->sequencePtr + 1);
+			node->sequencePtr += 2;
+			node->currentSoundID = 0;
+			break;
+		case SS_CMD_DELAYRAND:
+			node->delayTics = *(node->sequencePtr + 1) +
+					  M_Random() % (*(node->sequencePtr + 2) - *(node->sequencePtr + 1));
+			node->sequencePtr += 2;
+			node->currentSoundID = 0;
+			break;
+		case SS_CMD_VOLUME:
+			node->volume = (127 * (*(node->sequencePtr + 1))) / 100;
+			node->sequencePtr += 2;
+			break;
+		case SS_CMD_STOPSOUND:
+			// Wait until something else stops the sequence
+			break;
+		case SS_CMD_END:
+			SN_StopSequence(node->mobj);
+			break;
+		default:
+			break;
 		}
 	}
 }
@@ -457,13 +454,13 @@ void SN_StopAllSequences(void)
 {
 	seqnode_t *node;
 
-	for(node = SequenceListHead; node; node = node->next)
+	for (node = SequenceListHead; node; node = node->next)
 	{
 		node->stopSound = 0; // don't play any stop sounds
 		SN_StopSequence(node->mobj);
 	}
 }
-	
+
 //==========================================================================
 //
 //  SN_GetSequenceOffset
@@ -472,7 +469,7 @@ void SN_StopAllSequences(void)
 
 int SN_GetSequenceOffset(int sequence, int *sequencePtr)
 {
-	return (sequencePtr-SequenceData[SequenceTranslate[sequence].scriptNum]);
+	return (sequencePtr - SequenceData[SequenceTranslate[sequence].scriptNum]);
 }
 
 //==========================================================================
@@ -482,20 +479,20 @@ int SN_GetSequenceOffset(int sequence, int *sequencePtr)
 // 	nodeNum zero is the first node
 //==========================================================================
 
-void SN_ChangeNodeData(int nodeNum, int seqOffset, int delayTics, int volume,
-	int currentSoundID)
+void SN_ChangeNodeData (int nodeNum, int seqOffset, int delayTics, int volume,
+			int currentSoundID)
 {
 	int i;
 	seqnode_t *node;
 
 	i = 0;
 	node = SequenceListHead;
-	while(node && i < nodeNum)
+	while (node && i < nodeNum)
 	{
 		node = node->next;
 		i++;
 	}
-	if(!node)
+	if (!node)
 	{ // reach the end of the list before finding the nodeNum-th node
 		return;
 	}

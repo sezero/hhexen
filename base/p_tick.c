@@ -4,8 +4,8 @@
 //** p_tick.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_tick.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 13:40:50 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-22 16:20:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -34,7 +34,7 @@ static void RunThinkers(void);
 
 int leveltime;
 int TimerGame;
-thinker_t thinkercap; // The head and tail of the thinker list
+thinker_t thinkercap;	/* The head and tail of the thinker list */
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
@@ -50,20 +50,20 @@ void P_Ticker(void)
 {
 	int i;
 
-	if(paused)
+	if (paused)
 	{
 		return;
 	}
-	for(i = 0; i < MAXPLAYERS; i++)
+	for (i = 0; i < MAXPLAYERS; i++)
 	{
-		if(playeringame[i])
+		if (playeringame[i])
 		{
 			P_PlayerThink(&players[i]);
 		}
 	}
-	if(TimerGame)
+	if (TimerGame)
 	{
-		if(!--TimerGame)
+		if (!--TimerGame)
 		{
 			G_Completed(P_TranslateMap(P_GetMapNextMap(gamemap)), 0);
 		}
@@ -85,15 +85,15 @@ static void RunThinkers(void)
 	thinker_t *currentthinker;
 
 	currentthinker = thinkercap.next;
-	while(currentthinker != &thinkercap)
+	while (currentthinker != &thinkercap)
 	{
-		if(currentthinker->function == (think_t)-1)
+		if (currentthinker->function == (think_t)-1)
 		{ // Time to remove it
 			currentthinker->next->prev = currentthinker->prev;
 			currentthinker->prev->next = currentthinker->next;
 			Z_Free(currentthinker);
 		}
-		else if(currentthinker->function)
+		else if (currentthinker->function)
 		{
 			currentthinker->function(currentthinker);
 		}

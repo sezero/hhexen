@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.23 $
-//** $Date: 2008-06-19 06:23:20 $
+//** $Revision: 1.24 $
+//** $Date: 2008-06-22 16:20:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -21,16 +21,16 @@
 
 #ifdef RENDER3D
 #include "ogl_def.h"
-#define W_CacheLumpName(a,b)        W_GetNumForName(a)
-#define V_DrawPatch(x,y,p)          OGL_DrawPatch(x,y,p)
-#define V_DrawRawScreen(a)          OGL_DrawRawScreen(a)
+#define W_CacheLumpName(a,b)	W_GetNumForName((a))
+#define V_DrawPatch(x,y,p)	OGL_DrawPatch((x),(y),(p))
+#define V_DrawRawScreen(a)	OGL_DrawRawScreen((a))
 #endif
 
 
 // MACROS ------------------------------------------------------------------
 
-#define CONFIG_FILE_NAME "hhexen.cfg"
-#define MAXWADFILES 20
+#define CONFIG_FILE_NAME	"hhexen.cfg"
+#define MAXWADFILES		20
 
 // TYPES -------------------------------------------------------------------
 
@@ -38,8 +38,8 @@ typedef struct
 {
 	char *name;
 	void (*func)(char **args, int tag);
-	int requiredArgs;
-	int tag;
+	int	requiredArgs;
+	int		tag;
 } execOpt_t;
 
 // EXTERNAL FUNCTION PROTOTYPES --------------------------------------------
@@ -89,7 +89,7 @@ extern boolean askforquit;
 
 const char *basePath = "";
 boolean DevMaps;			// true = Map development mode
-char *DevMapsDir = "";		// development maps directory
+char *DevMapsDir = "";			// development maps directory
 boolean shareware;			// true if only episode 1 present
 boolean oldwad_10;			// true if version 1.0 wad files
 boolean nomonsters;			// checkparm of -nomonsters
@@ -217,7 +217,6 @@ void H2_Main(void)
 	ST_Message("Z_Init: Init zone memory allocation daemon.\n");
 	Z_Init();
 
-
 	ST_Message("MN_Init: Init menu system.\n");
 	MN_Init();
 
@@ -248,7 +247,8 @@ void H2_Main(void)
 	R_Init();
 	ST_Message("\n");
 
-	if (M_CheckParm("-net")) ST_NetProgress();	// Console player found
+	if (M_CheckParm("-net"))
+		ST_NetProgress();	// Console player found
 
 	ST_Message("P_Init: Init Playloop state.\n");
 	P_Init();
@@ -257,10 +257,10 @@ void H2_Main(void)
 	// MAPINFO.TXT script must be already processed.
 	WarpCheck();
 
-	if(autostart)
+	if (autostart)
 	{
 		ST_Message("Warp to Map %d (\"%s\":%d), Skill %d\n",
-			WarpMap, P_GetMapName(startmap), startmap, startskill+1);
+			WarpMap, P_GetMapName(startmap), startmap, startskill + 1);
 	}
 
 	ST_Message("D_CheckNetGame: Checking network game status.\n");
@@ -268,42 +268,42 @@ void H2_Main(void)
 
 	ST_Message("SB_Init: Loading patches.\n");
 	SB_Init();
-	
+
 	CheckRecordFrom();
 
 	p = M_CheckParm("-record");
-	if(p && p < myargc-1)
+	if (p && p < myargc - 1)
 	{
-		G_RecordDemo(startskill, 1, startepisode, startmap, myargv[p+1]);
+		G_RecordDemo(startskill, 1, startepisode, startmap, myargv[p + 1]);
 		H2_GameLoop(); // Never returns
 	}
 
 	p = M_CheckParm("-playdemo");
-	if(p && p < myargc-1)
+	if (p && p < myargc - 1)
 	{
 		singledemo = true; // Quit after one demo
-		G_DeferedPlayDemo(myargv[p+1]);
+		G_DeferedPlayDemo(myargv[p + 1]);
 		H2_GameLoop(); // Never returns
 	}
 
 	p = M_CheckParm("-timedemo");
-	if(p && p < myargc-1)
+	if (p && p < myargc - 1)
 	{
-		G_TimeDemo(myargv[p+1]);
+		G_TimeDemo(myargv[p + 1]);
 		H2_GameLoop(); // Never returns
 	}
 
 	p = M_CheckParm("-loadgame");
-	if(p && p < myargc-1)
+	if (p && p < myargc - 1)
 	{
-		G_LoadGame(atoi(myargv[p+1]));
+		G_LoadGame(atoi(myargv[p + 1]));
 	}
 
-	if(gameaction != ga_loadgame)
+	if (gameaction != ga_loadgame)
 	{
 		UpdateState |= I_FULLSCRN;
 		BorderNeedRefresh = true;
-		if(autostart || netgame)
+		if (autostart || netgame)
 		{
 			G_StartNewInit();
 			G_InitNew(startskill, startepisode, startmap);
@@ -338,10 +338,10 @@ static void HandleArgs(void)
 	cmdfrag = M_ParmExists("-cmdfrag");
 
 	// Process command line options
-	for(opt = ExecOptions; opt->name != NULL; opt++)
+	for (opt = ExecOptions; opt->name != NULL; opt++)
 	{
 		p = M_CheckParm(opt->name);
-		if(p && p < myargc-opt->requiredArgs)
+		if (p && p < myargc-opt->requiredArgs)
 		{
 			opt->func(&myargv[p], opt->tag);
 		}
@@ -363,11 +363,11 @@ static void WarpCheck(void)
 	int map;
 
 	p = M_CheckParm("-warp");
-	if(p && p < myargc-1)
+	if (p && p < myargc - 1)
 	{
-		WarpMap = atoi(myargv[p+1]);
+		WarpMap = atoi(myargv[p + 1]);
 		map = P_TranslateMap(WarpMap);
-		if(map == -1)
+		if (map == -1)
 		{ // Couldn't find real map number
 			startmap = 1;
 			ST_Message("-WARP: Invalid map number.\n");
@@ -382,7 +382,7 @@ static void WarpCheck(void)
 	{
 		WarpMap = 1;
 		startmap = P_TranslateMap(1);
-		if(startmap == -1)
+		if (startmap == -1)
 		{
 			startmap = 1;
 		}
@@ -397,7 +397,7 @@ static void WarpCheck(void)
 
 static void ExecOptionSKILL(char **args, int tag)
 {
-	startskill = args[1][0]-'1';
+	startskill = args[1][0] - '1';
 	autostart = true;
 }
 
@@ -412,7 +412,7 @@ static void ExecOptionFILE(char **args, int tag)
 	int p;
 
 	p = M_CheckParm("-file");
-	while(++p != myargc && myargv[p][0] != '-')
+	while (++p != myargc && myargv[p][0] != '-')
 	{
 		AddWADFile(myargv[p]);
 	}
@@ -454,6 +454,7 @@ static void ExecOptionSCRIPTS(char **args, int tag)
 
 static void ExecOptionDEVMAPS(char **args, int tag)
 {
+	char *ptr;
 	DevMaps = true;
 	ST_Message("Map development mode enabled:\n");
 	ST_Message("[config    ] = %s\n", args[1]);
@@ -461,17 +462,19 @@ static void ExecOptionDEVMAPS(char **args, int tag)
 	SC_MustGetStringName("mapsdir");
 	SC_MustGetString();
 	ST_Message("[mapsdir   ] = %s\n", sc_String);
-	DevMapsDir = malloc(strlen(sc_String)+1);
-	strcpy(DevMapsDir, sc_String);
+	ptr = (char *) malloc(strlen(sc_String) + 1);
+	strcpy(ptr, sc_String);
+	DevMapsDir = ptr;
 	SC_MustGetStringName("scriptsdir");
 	SC_MustGetString();
 	ST_Message("[scriptsdir] = %s\n", sc_String);
 	sc_FileScripts = true;
-	sc_ScriptsDir = malloc(strlen(sc_String)+1);
-	strcpy(sc_ScriptsDir, sc_String);
-	while(SC_GetString())
+	ptr = (char *) malloc(strlen(sc_String) + 1);
+	strcpy(ptr, sc_String);
+	sc_ScriptsDir = ptr;
+	while (SC_GetString())
 	{
-		if(SC_Compare("file"))
+		if (SC_Compare("file"))
 		{
 			SC_MustGetString();
 			AddWADFile(sc_String);
@@ -485,12 +488,12 @@ static void ExecOptionDEVMAPS(char **args, int tag)
 }
 
 
-long superatol(char *s)
+static long superatol(char *s)
 {
-	long int n=0, r=10, x, mul=1;
-	char *c=s;
+	long int n = 0, r = 10, x, mul = 1;
+	char *c = s;
 
-	for (; *c; c++)
+	for ( ; *c; c++)
 	{
 		x = (*c & 223) - 16;
 
@@ -500,28 +503,33 @@ long superatol(char *s)
 		}
 		else if (x == 72 && r == 10)
 		{
-			n -= (r=n);
-			if (!r) r=16;
-			if (r<2 || r>36) return -1;
+			n -= (r = n);
+			if (!r)
+				r = 16;
+			if (r < 2 || r > 36)
+				return -1;
 		}
 		else
 		{
-			if (x>10) x-=39;
-			if (x >= r) return -1;
+			if (x > 10)
+				x -= 39;
+			if (x >= r)
+				return -1;
 			n = (n*r) + x;
 		}
 	}
-	return(mul*n);
+	return (mul*n);
 }
-
 
 static void ExecOptionMAXZONE(char **args, int tag)
 {
 	int size;
-	
+
 	size = (int) superatol(args[1]);
-	if (size < MINIMUM_HEAP_SIZE) size = MINIMUM_HEAP_SIZE;
-	if (size > MAXIMUM_HEAP_SIZE) size = MAXIMUM_HEAP_SIZE;
+	if (size < MINIMUM_HEAP_SIZE)
+		size = MINIMUM_HEAP_SIZE;
+	if (size > MAXIMUM_HEAP_SIZE)
+		size = MAXIMUM_HEAP_SIZE;
 	maxzone = size;
 }
 
@@ -533,25 +541,25 @@ static void ExecOptionMAXZONE(char **args, int tag)
 
 void H2_GameLoop(void)
 {
-	if(M_CheckParm("-debugfile"))
+	if (M_CheckParm("-debugfile"))
 	{
 		char filename[20];
 		snprintf(filename, sizeof(filename), "debug%i.txt", consoleplayer);
 		debugfile = fopen(filename,"w");
 	}
 	I_InitGraphics();
-	while(1)
+	while (1)
 	{
 		// Frame syncronous IO operations
 		I_StartFrame();
 
 		// Process one or more tics
-		if(singletics)
+		if (singletics)
 		{
 			I_StartTic();
 			H2_ProcessEvents();
-			G_BuildTiccmd(&netcmds[consoleplayer][maketic%BACKUPTICS]);
-			if(advancedemo)
+			G_BuildTiccmd(&netcmds[consoleplayer][maketic % BACKUPTICS]);
+			if (advancedemo)
 			{
 				H2_DoAdvanceDemo();
 			}
@@ -587,11 +595,11 @@ void H2_ProcessEvents(void)
 	while (eventtail != eventhead)
 	{
 		ev = &events[eventtail];
-		if(F_Responder(ev))
+		if (F_Responder(ev))
 		{
 			goto _next_ev;
 		}
-		if(MN_Responder(ev))
+		if (MN_Responder(ev))
 		{
 			goto _next_ev;
 		}
@@ -625,53 +633,50 @@ void H2_PostEvent(event_t *ev)
 static void DrawAndBlit(void)
 {
 	// Change the view size if needed
-	if(setsizeneeded)
+	if (setsizeneeded)
 	{
 		R_ExecuteSetViewSize();
 	}
 
 	// Do buffered drawing
-	switch(gamestate)
+	switch (gamestate)
 	{
-		case GS_LEVEL:
-			if(!gametic)
-				break;
-			/* bbm 3/9/2003: Always render player map transparent */
-			R_RenderPlayerView(&players[displayplayer]);
-			if(automapactive)
-				AM_Drawer();
-			CT_Drawer();
-			UpdateState |= I_FULLVIEW;
-			SB_Drawer();
+	case GS_LEVEL:
+		if (!gametic)
 			break;
-		case GS_INTERMISSION:
-			IN_Drawer();
-			break;
-		case GS_FINALE:
-			F_Drawer();
-			break;
-		case GS_DEMOSCREEN:
-			PageDrawer();
-			break;
+		R_RenderPlayerView(&players[displayplayer]);
+		if (automapactive)
+			AM_Drawer();
+		CT_Drawer();
+		UpdateState |= I_FULLVIEW;
+		SB_Drawer();
+		break;
+	case GS_INTERMISSION:
+		IN_Drawer();
+		break;
+	case GS_FINALE:
+		F_Drawer();
+		break;
+	case GS_DEMOSCREEN:
+		PageDrawer();
+		break;
 	}
 
-	if(paused && !MenuActive && !askforquit)
+	if (paused && !MenuActive && !askforquit)
 	{
-		if(!netgame)
+		if (!netgame)
 		{
-			V_DrawPatch(160, viewwindowy+5, W_CacheLumpName("PAUSED",
-				PU_CACHE));
+			V_DrawPatch(160, viewwindowy + 5, W_CacheLumpName("PAUSED", PU_CACHE));
 		}
 		else
 		{
-			V_DrawPatch(160, 70, W_CacheLumpName("PAUSED",
-				PU_CACHE));
+			V_DrawPatch(160, 70, W_CacheLumpName("PAUSED", PU_CACHE));
 		}
 	}
 
 #ifdef RENDER3D
-    if( OGL_DrawFilter() )
-        BorderNeedRefresh = true;
+	if (OGL_DrawFilter())
+		BorderNeedRefresh = true;
 #endif
 
 	// Draw current message
@@ -698,18 +703,17 @@ static void DrawMessage(void)
 	player_t *player;
 
 	player = &players[consoleplayer];
-	if(player->messageTics <= 0 || !player->message)
+	if (player->messageTics <= 0 || !player->message)
 	{ // No message
 		return;
 	}
-	if(player->yellowMessage)
+	if (player->yellowMessage)
 	{
-		MN_DrTextAYellow(player->message, 
-			160-MN_TextAWidth(player->message)/2, 1);
+		MN_DrTextAYellow(player->message, 160 - MN_TextAWidth(player->message)/2, 1);
 	}
 	else
 	{
-		MN_DrTextA(player->message, 160-MN_TextAWidth(player->message)/2, 1);
+		MN_DrTextA(player->message, 160 - MN_TextAWidth(player->message)/2, 1);
 	}
 }
 
@@ -721,7 +725,7 @@ static void DrawMessage(void)
 
 void H2_PageTicker(void)
 {
-	if(--pagetic < 0)
+	if (--pagetic < 0)
 	{
 		H2_AdvanceDemo();
 	}
@@ -736,7 +740,7 @@ void H2_PageTicker(void)
 static void PageDrawer(void)
 {
 	V_DrawRawScreen(W_CacheLumpName(pagename, PU_CACHE));
-	if(demosequence == 1)
+	if (demosequence == 1)
 	{
 		V_DrawPatch(4, 160, W_CacheLumpName("ADVISOR", PU_CACHE));
 	}
@@ -769,45 +773,45 @@ void H2_DoAdvanceDemo(void)
 	usergame = false; // can't save/end game here
 	paused = false;
 	gameaction = ga_nothing;
-	demosequence = (demosequence+1)%7;
-	switch(demosequence)
+	demosequence = (demosequence + 1) % 7;
+	switch (demosequence)
 	{
-		case 0:
-			pagetic = 280;
-			gamestate = GS_DEMOSCREEN;
-			pagename = "TITLE";
-			S_StartSongName("hexen", true);
-			break;
-		case 1:
-			pagetic = 210;
-			gamestate = GS_DEMOSCREEN;
-			pagename = "TITLE";
-			break;
-		case 2:
-			BorderNeedRefresh = true;
-			UpdateState |= I_FULLSCRN;
-			G_DeferedPlayDemo("demo1");
-			break;
-		case 3:
-			pagetic = 200;
-			gamestate = GS_DEMOSCREEN;
-			pagename = "CREDIT";
-			break;
-		case 4:
-			BorderNeedRefresh = true;
-			UpdateState |= I_FULLSCRN;
-			G_DeferedPlayDemo("demo2");
-			break;
-		case 5:
-			pagetic = 200;
-			gamestate = GS_DEMOSCREEN;
-			pagename = "CREDIT";
-			break;
-		case 6:
-			BorderNeedRefresh = true;
-			UpdateState |= I_FULLSCRN;
-			G_DeferedPlayDemo("demo3");
-			break;
+	case 0:
+		pagetic = 280;
+		gamestate = GS_DEMOSCREEN;
+		pagename = "TITLE";
+		S_StartSongName("hexen", true);
+		break;
+	case 1:
+		pagetic = 210;
+		gamestate = GS_DEMOSCREEN;
+		pagename = "TITLE";
+		break;
+	case 2:
+		BorderNeedRefresh = true;
+		UpdateState |= I_FULLSCRN;
+		G_DeferedPlayDemo("demo1");
+		break;
+	case 3:
+		pagetic = 200;
+		gamestate = GS_DEMOSCREEN;
+		pagename = "CREDIT";
+		break;
+	case 4:
+		BorderNeedRefresh = true;
+		UpdateState |= I_FULLSCRN;
+		G_DeferedPlayDemo("demo2");
+		break;
+	case 5:
+		pagetic = 200;
+		gamestate = GS_DEMOSCREEN;
+		pagename = "CREDIT";
+		break;
+	case 6:
+		BorderNeedRefresh = true;
+		UpdateState |= I_FULLSCRN;
+		G_DeferedPlayDemo("demo3");
+		break;
 	}
 }
 
@@ -837,13 +841,13 @@ static void CheckRecordFrom(void)
 	int p;
 
 	p = M_CheckParm("-recordfrom");
-	if(!p || p > myargc-2)
+	if (!p || p > myargc - 2)
 	{ // Bad args
 		return;
 	}
-	G_LoadGame(atoi(myargv[p+1]));
+	G_LoadGame(atoi(myargv[p + 1]));
 	G_DoLoadGame(); // Load the gameskill etc info from savegame
-	G_RecordDemo(gameskill, 1, gameepisode, gamemap, myargv[p+2]);
+	G_RecordDemo(gameskill, 1, gameepisode, gamemap, myargv[p + 2]);
 	H2_GameLoop(); // Never returns
 }
 
@@ -856,19 +860,19 @@ static void CheckRecordFrom(void)
 static void AddWADFile(char *file)
 {
 	int i;
-	char *new;
+	char *newwad;
 
 	ST_Message("Adding external file: %s\n", file);
 	i = 0;
-	while(wadfiles[i])
+	while (wadfiles[i])
 	{
 		i++;
 		if (i == MAXWADFILES)
 			I_Error ("MAXWADFILES reached for %s", file);
 	}
-	new = malloc(strlen(file)+1);
-	strcpy(new, file);
-	wadfiles[i] = new;
+	newwad = malloc(strlen(file) + 1);
+	strcpy(newwad, file);
+	wadfiles[i] = newwad;
 }
 
 
@@ -919,7 +923,7 @@ fixed_t FixedMul (fixed_t a, fixed_t b)
 
 fixed_t FixedDiv2 (fixed_t a, fixed_t b)
 {
-	if(!b)
+	if (!b)
 		return 0;
 	return (fixed_t) (((double) a / (double) b) * FRACUNIT);
 }

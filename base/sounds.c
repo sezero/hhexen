@@ -4,8 +4,8 @@
 //** sounds.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sounds.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-17 13:41:02 $
+//** $Revision: 1.4 $
+//** $Date: 2008-06-22 16:20:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -14,9 +14,9 @@
 #include "h2def.h"
 #include "sounds.h"
 
-// Music info
+/* Music info */
 
-/*
+#if 0
 musicinfo_t S_music[] =
 {
 	{ "MUS_E1M1", 0 }, // 1-1
@@ -51,14 +51,14 @@ musicinfo_t S_music[] =
 	{ "MUS_INTR", 0 },
 	{ "MUS_CPTD", 0 }
 };
-*/
+#endif
 
-// Sound info
+/* Sound info */
 
 sfxinfo_t S_sfx[] =
 {
-	// tagname, lumpname, priority, usefulness, snd_ptr, lumpnum, numchannels,
-	//		pitchshift
+	/* tagname, lumpname, priority, usefulness, snd_ptr, lumpnum, numchannels, */
+	/*		pitchshift						   */
 	{ "", "", 0, -1, NULL, 0, 0, 0 },
 	{ "PlayerFighterNormalDeath", "", 256, -1, NULL, 0, 2, 1 },
 	{ "PlayerFighterCrazyDeath", "", 256, -1, NULL, 0, 2, 1 },

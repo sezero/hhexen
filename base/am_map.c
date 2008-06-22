@@ -4,8 +4,8 @@
 //** am_map.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: am_map.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-19 06:23:20 $
+//** $Revision: 1.12 $
+//** $Date: 2008-06-22 16:20:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -261,13 +261,13 @@ static void AM_changeWindowLoc(void)
 	/*
 	mapxstart += MTOF(m_paninc.x+FRACUNIT/2);
 	mapystart -= MTOF(m_paninc.y+FRACUNIT/2);
-	if(mapxstart >= finit_width)
+	if (mapxstart >= finit_width)
 		mapxstart -= finit_width;
-	if(mapxstart < 0)
+	if (mapxstart < 0)
 		mapxstart += finit_width;
-	if(mapystart >= finit_height)
+	if (mapystart >= finit_height)
 		mapystart -= finit_height;
-	if(mapystart < 0)
+	if (mapystart < 0)
 		mapystart += finit_height;
 	*/
 	m_x2 = m_x + m_w;
@@ -320,11 +320,11 @@ static void AM_initVariables(void)
 	// load in the location of keys, if in baby mode
 
 //	memset(KeyPoints, 0, sizeof(vertex_t)*3);
-	if(gameskill == sk_baby)
+	if (gameskill == sk_baby)
 	{
-		for(think = thinkercap.next; think != &thinkercap; think = think->next)
+		for (think = thinkercap.next; think != &thinkercap; think = think->next)
 		{
-			if(think->function != P_MobjThinker)
+			if (think->function != P_MobjThinker)
 			{ //not a mobj
 				continue;
 			}
@@ -397,7 +397,7 @@ static void AM_Start (void)
 	if (!stopped)
 		AM_Stop();
 	stopped = false;
-	if(gamestate != GS_LEVEL)
+	if (gamestate != GS_LEVEL)
 	{
 		return; // don't show automap if we aren't in a game!
 	}
@@ -450,7 +450,7 @@ boolean AM_Responder (event_t *ev)
 	else if (ev->type == ev_keydown)
 	{
 		rc = true;
-		switch(ev->data1)
+		switch (ev->data1)
 		{
 		case AM_PANRIGHTKEY: // pan right
 			if (!followplayer)
@@ -510,10 +510,10 @@ boolean AM_Responder (event_t *ev)
 			rc = false;
 		}
 
-		if(cheat_kills[ShowKillsCount] == ev->data1 && netgame && deathmatch)
+		if (cheat_kills[ShowKillsCount] == ev->data1 && netgame && deathmatch)
 		{
 			ShowKillsCount++;
-			if(ShowKillsCount == 5)
+			if (ShowKillsCount == 5)
 			{
 				ShowKillsCount = 0;
 				rc = false;
@@ -588,18 +588,18 @@ static void AM_doFollowPlayer(void)
 		dmapx = (MTOF(plr->mo->x)-MTOF(f_oldloc.x)); //fixed point
 		dmapy = (MTOF(f_oldloc.y)-MTOF(plr->mo->y));
 
-		if(f_oldloc.x == MAXINT) //to eliminate an error when the user first
+		if (f_oldloc.x == MAXINT) //to eliminate an error when the user first
 			dmapx = 0;  //goes into the automap.
 		mapxstart += dmapx;
 		mapystart += dmapy;
 
-		while(mapxstart >= finit_width)
+		while (mapxstart >= finit_width)
 			mapxstart -= finit_width;
-		while(mapxstart < 0)
+		while (mapxstart < 0)
 			mapxstart += finit_width;
-		while(mapystart >= finit_height)
+		while (mapystart >= finit_height)
 			mapystart -= finit_height;
-		while(mapystart < 0)
+		while (mapystart < 0)
 			mapystart += finit_height;
 		*/
 		f_oldloc.x = plr->mo->x;
@@ -662,38 +662,38 @@ static void AM_clearFB(int color)
 	int i, j;
 #endif
 
-	if(followplayer)
+	if (followplayer)
 	{
 		dmapx = (MTOF(plr->mo->x)-MTOF(oldplr.x)); //fixed point
 		dmapy = (MTOF(oldplr.y)-MTOF(plr->mo->y));
 
 		oldplr.x = plr->mo->x;
 		oldplr.y = plr->mo->y;
-//		if(f_oldloc.x == MAXINT) //to eliminate an error when the user first
-//			dmapx=0;  //goes into the automap.
+	//	if (f_oldloc.x == MAXINT)	//to eliminate an error when the user first
+	//		dmapx = 0;				//goes into the automap.
 		mapxstart += dmapx>>1;
 		mapystart += dmapy>>1;
 
-	  	while(mapxstart >= finit_width)
+	  	while (mapxstart >= finit_width)
 			mapxstart -= finit_width;
-		while(mapxstart < 0)
+		while (mapxstart < 0)
 			mapxstart += finit_width;
-		while(mapystart >= finit_height)
+		while (mapystart >= finit_height)
 			mapystart -= finit_height;
-		while(mapystart < 0)
+		while (mapystart < 0)
 			mapystart += finit_height;
 	}
 	else
 	{
 		mapxstart += (MTOF(m_paninc.x)>>1);
 		mapystart -= (MTOF(m_paninc.y)>>1);
-		if(mapxstart >= finit_width)
+		if (mapxstart >= finit_width)
 			mapxstart -= finit_width;
-		if(mapxstart < 0)
+		if (mapxstart < 0)
 			mapxstart += finit_width;
-		if(mapystart >= finit_height)
+		if (mapystart >= finit_height)
 			mapystart -= finit_height;
-		if(mapystart < 0)
+		if (mapystart < 0)
 			mapystart += finit_height;
 	}
 
@@ -720,12 +720,12 @@ static void AM_clearFB(int color)
 #if 0	/* bbm 3/9/2003: Makes map transparent */
 	//blit the automap background to the screen.
 	j = mapystart*finit_width;
-	for(i = 0; i < SCREENHEIGHT-SBARHEIGHT; i++)
+	for (i = 0; i < SCREENHEIGHT-SBARHEIGHT; i++)
 	{
 		memcpy(screen + i*finit_width, maplump + j + mapxstart, finit_width - mapxstart);
 		memcpy(screen + i*finit_width + finit_width - mapxstart, maplump + j, mapxstart);
 		j += finit_width;
-		if(j >= finit_height*finit_width)
+		if (j >= finit_height*finit_width)
 			j = 0;
 	}
 #endif	/* Transparent map */
@@ -752,36 +752,36 @@ static void PUTDOT(short xx,short yy,byte *cc, byte *cm)
 	static int oldyyshifted;
 	byte *oldcc = cc;
 
-	if(xx < 32)
+	if (xx < 32)
 		cc += 7-(xx>>2);
-	else if(xx > (finit_width - 32))
+	else if (xx > (finit_width - 32))
 		cc += 7-((finit_width-xx) >> 2);
-//	if(cc == oldcc) //make sure that we don't double fade the corners.
+//	if (cc == oldcc) //make sure that we don't double fade the corners.
 //	{
-		if(yy < 32)
+		if (yy < 32)
 			cc += 7-(yy>>2);
-		else if(yy > (finit_height - 32))
+		else if (yy > (finit_height - 32))
 			cc += 7-((finit_height-yy) >> 2);
 //	}
-	if(cc > cm && cm != NULL)
+	if (cc > cm && cm != NULL)
 	{
 		cc = cm;
 	}
-	else if(cc > oldcc+6) // don't let the color escape from the fade table...
+	else if (cc > oldcc+6) // don't let the color escape from the fade table...
 	{
 		cc = oldcc+6;
 	}
-	if(yy == oldyy+1)
+	if (yy == oldyy+1)
 	{
 		oldyy++;
 		oldyyshifted += 320;
 	}
-	else if(yy == oldyy-1)
+	else if (yy == oldyy-1)
 	{
 		oldyy--;
 		oldyyshifted -= 320;
 	}
-	else if(yy != oldyy)
+	else if (yy != oldyy)
 	{
 		oldyy = yy;
 		oldyyshifted = yy*320;
@@ -1034,7 +1034,7 @@ static void AM_drawFline(fline_t *fl, int color)
 	register int x, y, dx, dy, sx, sy, ax, ay, d;
 //	static fuck = 0;
 
-	switch(color)
+	switch (color)
 	{
 	case WALLCOLORS:
 		DrawWuLine(fl->a.x, fl->a.y, fl->b.x, fl->b.y,
@@ -1169,7 +1169,7 @@ static void AM_drawWalls(void)
 	int i;
 
 #ifdef RENDER3D
-	for(i = 0; i < numlines; i++)
+	for (i = 0; i < numlines; i++)
 	{
 		if (cheating || (lines[i].flags & ML_MAPPED))
 		{
@@ -1188,15 +1188,15 @@ static void AM_drawWalls(void)
 					else
 						OGL_SetColor(WALLCOLORS);
 				}
-				else if(lines[i].special == 13 || lines[i].special == 83)
+				else if (lines[i].special == 13 || lines[i].special == 83)
 				{ // Locked door line -- all locked doors are greed
 					OGL_SetColor(GREENKEY);
 				}
-				else if(lines[i].special == 70 || lines[i].special == 71)
+				else if (lines[i].special == 70 || lines[i].special == 71)
 				{ // intra-level teleports are blue
 					OGL_SetColor(BLUEKEY);
 				}
-				else if(lines[i].special == 74 || lines[i].special == 75)
+				else if (lines[i].special == 74 || lines[i].special == 75)
 				{ // inter-level teleport/game-winning exit -- both are red
 					OGL_SetColor(BLOODRED);
 				}
@@ -1258,15 +1258,15 @@ static void AM_drawWalls(void)
 					else
 						AM_drawMline(&l, WALLCOLORS+lightlev);
 				}
-				else if(lines[i].special == 13 || lines[i].special == 83)
+				else if (lines[i].special == 13 || lines[i].special == 83)
 				{ // Locked door line -- all locked doors are greed
 					AM_drawMline(&l, GREENKEY);
 				}
-				else if(lines[i].special == 70 || lines[i].special == 71)
+				else if (lines[i].special == 70 || lines[i].special == 71)
 				{ // intra-level teleports are blue
 					AM_drawMline(&l, BLUEKEY);
 				}
-				else if(lines[i].special == 74 || lines[i].special == 75)
+				else if (lines[i].special == 74 || lines[i].special == 75)
 				{ // inter-level teleport/game-winning exit -- both are red
 					AM_drawMline(&l, BLOODRED);
 				}
@@ -1356,7 +1356,7 @@ static void AM_drawPlayers(void)
 	int their_color = -1;
 	int color;
 
-	if(!netgame)
+	if (!netgame)
 	{
 		AM_drawLineCharacter(player_arrow, NUMPLYRLINES, 0, plr->mo->angle,
 							GREENKEY, plr->mo->x, plr->mo->y);
@@ -1364,11 +1364,11 @@ static void AM_drawPlayers(void)
 		return;
 	}
 
-	for(i = 0; i < MAXPLAYERS; i++)
+	for (i = 0; i < MAXPLAYERS; i++)
 	{
 		their_color++;
 		p = &players[i];
-		if(deathmatch && !singledemo && p != plr)
+		if (deathmatch && !singledemo && p != plr)
 		{
 			continue;
 		}
@@ -1419,17 +1419,17 @@ static void AM_drawMarks(void)
 /*
 static void AM_drawkeys(void)
 {
-	if(KeyPoints[0].x != 0 || KeyPoints[0].y != 0)
+	if (KeyPoints[0].x != 0 || KeyPoints[0].y != 0)
 	{
 		AM_drawLineCharacter(keysquare, NUMKEYSQUARELINES, 0, 0, YELLOWKEY,
 			KeyPoints[0].x, KeyPoints[0].y);
 	}
-	if(KeyPoints[1].x != 0 || KeyPoints[1].y != 0)
+	if (KeyPoints[1].x != 0 || KeyPoints[1].y != 0)
 	{
 		AM_drawLineCharacter(keysquare, NUMKEYSQUARELINES, 0, 0, GREENKEY,
 			KeyPoints[1].x, KeyPoints[1].y);
 	}
-	if(KeyPoints[2].x != 0 || KeyPoints[2].y != 0)
+	if (KeyPoints[2].x != 0 || KeyPoints[2].y != 0)
 	{
 		AM_drawLineCharacter(keysquare, NUMKEYSQUARELINES, 0, 0, BLUEKEY,
 			KeyPoints[2].x, KeyPoints[2].y);
@@ -1496,7 +1496,7 @@ void AM_Drawer (void)
 
 //	AM_drawCrosshair(XHAIRCOLORS);
 //	AM_drawMarks();
-//	if(gameskill == sk_baby)
+//	if (gameskill == sk_baby)
 //		AM_drawkeys();
 
 #ifdef RENDER3D
@@ -1544,36 +1544,36 @@ static void AM_DrawDeathmatchStats(void)
 	char textBuffer[80];
 	int yPosition;
 
-	for(i = 0; i < MAXPLAYERS; i++)
+	for (i = 0; i < MAXPLAYERS; i++)
 	{
 		fragCount[i] = 0;
 		order[i] = -1;
 	}
-	for(i = 0; i < MAXPLAYERS; i++)
+	for (i = 0; i < MAXPLAYERS; i++)
 	{
-		if(!playeringame[i])
+		if (!playeringame[i])
 		{
 			continue;
 		}
 		else
 		{
-			for(j = 0; j < MAXPLAYERS; j++)
+			for (j = 0; j < MAXPLAYERS; j++)
 			{
-				if(playeringame[j])
+				if (playeringame[j])
 				{
 					fragCount[i] += players[i].frags[j];
 				}
 			}
-			for(k = 0; k < MAXPLAYERS; k++)
+			for (k = 0; k < MAXPLAYERS; k++)
 			{
-				if(order[k] == -1)
+				if (order[k] == -1)
 				{
 					order[k] = i;
 					break;
 				}
-				else if(fragCount[i] > fragCount[order[k]])
+				else if (fragCount[i] > fragCount[order[k]])
 				{
-					for(m = MAXPLAYERS-1; m > k; m--)
+					for (m = MAXPLAYERS-1; m > k; m--)
 					{
 						order[m] = order[m-1];
 					}
@@ -1584,9 +1584,9 @@ static void AM_DrawDeathmatchStats(void)
 		}
 	}
 	yPosition = 15;
-	for(i = 0; i < MAXPLAYERS; i++)
+	for (i = 0; i < MAXPLAYERS; i++)
 	{
-		if(!playeringame[order[i]])
+		if (!playeringame[order[i]])
 		{
 			continue;
 		}

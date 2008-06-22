@@ -4,8 +4,8 @@
 //** sounds.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sounds.h,v $
-//** $Revision: 1.2 $
-//** $Date: 2008-06-17 09:20:20 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-22 16:20:46 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -15,10 +15,10 @@
 
 #include "soundst.h"
 
-#define MAX_SND_DIST    2025
-#define MAX_CHANNELS    16
+#define MAX_SND_DIST	2025
+#define MAX_CHANNELS	16
 
-// Music identifiers
+/* ---- Music identifiers ---- */
 
 typedef enum
 {
@@ -56,12 +56,12 @@ typedef enum
 	NUMMUSIC
 } musicenum_t;
 
-// Sound identifiers
+/* ---- Sound identifiers ---- */
 
 typedef enum
 {
 	SFX_NONE,
-	SFX_PLAYER_FIGHTER_NORMAL_DEATH,		// class specific death screams
+	SFX_PLAYER_FIGHTER_NORMAL_DEATH,	/* class specific death screams */
 	SFX_PLAYER_FIGHTER_CRAZY_DEATH,
 	SFX_PLAYER_FIGHTER_EXTREME1_DEATH,
 	SFX_PLAYER_FIGHTER_EXTREME2_DEATH,
@@ -87,7 +87,7 @@ typedef enum
 	SFX_PLAYER_MAGE_GRUNT,
 	SFX_PLAYER_LAND,
 	SFX_PLAYER_POISONCOUGH,
-	SFX_PLAYER_FIGHTER_FALLING_SCREAM,	// class specific falling screams
+	SFX_PLAYER_FIGHTER_FALLING_SCREAM,	/* class specific falling screams */
 	SFX_PLAYER_CLERIC_FALLING_SCREAM,
 	SFX_PLAYER_MAGE_FALLING_SCREAM,
 	SFX_PLAYER_FALLING_SPLAT,
@@ -308,5 +308,5 @@ typedef enum
 	NUMSFX
 } sfxenum_t;
 
-#endif
+#endif	/* __SOUNDSH__ */
 

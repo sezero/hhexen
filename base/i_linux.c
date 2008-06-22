@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.24 2008-06-20 07:04:27 sezero Exp $
+//** $Id: i_linux.c,v 1.25 2008-06-22 16:20:45 sezero Exp $
 //**
 //**************************************************************************
 
@@ -20,7 +20,7 @@
 
 // Macros
 
-#define DEFAULT_ARCHIVEPATH     "o:\\sound\\archive\\"
+#define DEFAULT_ARCHIVEPATH	"o:\\sound\\archive\\"
 #define PRIORITY_MAX_ADJUST	10
 #define DIST_ADJUST	(MAX_SND_DIST/PRIORITY_MAX_ADJUST)
 
@@ -69,7 +69,7 @@ static void *Mus_SndPtr;
 static byte *SoundCurve;
 
 static boolean UseSndScript;
-static char ArchivePath[128];
+static char ArchivePath[MAX_OSPATH];
 
 extern int snd_MusicDevice;
 extern int snd_SfxDevice;
@@ -80,7 +80,7 @@ extern int snd_Channels;
 extern int startepisode;
 extern int startmap;
 
-// int AmbChan;
+//int AmbChan;
 
 boolean S_StopSoundID(int sound_id, int priority);
 
@@ -107,9 +107,9 @@ void S_StartSong(int song, boolean loop)
 	char *songLump;
 	int track;
 
-	if(i_CDMusic)
+	if (i_CDMusic)
 	{ // Play a CD track, instead
-		if(i_CDTrack)
+		if (i_CDTrack)
 		{ // Default to the player-chosen track
 			track = i_CDTrack;
 		}
@@ -117,53 +117,54 @@ void S_StartSong(int song, boolean loop)
 		{
 			track = P_GetMapCDTrack(gamemap);
 		}
-		if(track == i_CDCurrentTrack && i_CDMusicLength > 0)
+		if (track == i_CDCurrentTrack && i_CDMusicLength > 0)
 		{
 			return;
 		}
-		if(!I_CDMusPlay(track))
+		if (!I_CDMusPlay(track))
 		{
-/*			if(loop)
+			/*
+			if (loop)
 			{
-//				i_CDMusicLength = 35*I_CDMusTrackLength(track);
+			//	i_CDMusicLength = 35*I_CDMusTrackLength(track);
 				oldTic = gametic;
 			}
 			else
 			{
 				i_CDMusicLength = -1;
 			}
-*/
+			*/
 			i_CDCurrentTrack = track;
 		}
 	}
 	else
 	{
-		if(song == Mus_Song)
+		if (song == Mus_Song)
 		{ // don't replay an old song
 			return;
 		}
-		if(RegisteredSong)
+		if (RegisteredSong)
 		{
 			I_StopSong(RegisteredSong);
 			I_UnRegisterSong(RegisteredSong);
-			if(UseSndScript)
+			if (UseSndScript)
 			{
 				Z_Free(Mus_SndPtr);
 			}
 			else
 			{
 				Z_ChangeTag(lumpcache[Mus_LumpNum], PU_CACHE);
-			} 
+			}
 			RegisteredSong = 0;
 		}
 		songLump = P_GetMapSongLump(song);
-		if(!songLump)
+		if (!songLump)
 		{
 			return;
 		}
-		if(UseSndScript)
+		if (UseSndScript)
 		{
-			char name[128];
+			char name[MAX_OSPATH];
 			snprintf(name, sizeof(name), "%s%s.lmp", ArchivePath, songLump);
 			M_ReadFile(name, &Mus_SndPtr);
 		}
@@ -171,9 +172,9 @@ void S_StartSong(int song, boolean loop)
 		{
 			Mus_LumpNum = W_GetNumForName(songLump);
 			Mus_SndPtr = W_CacheLumpNum(Mus_LumpNum, PU_MUSIC);
-		} 
+		}
 		RegisteredSong = I_RegisterSong(Mus_SndPtr);
-		I_PlaySong(RegisteredSong, loop); // 'true' denotes endless looping.
+		I_PlaySong(RegisteredSong, loop);	// 'true' denotes endless looping.
 		Mus_Song = song;
 	}
 }
@@ -188,47 +189,48 @@ void S_StartSongName(char *songLump, boolean loop)
 {
 	int cdTrack;
 
-	if(!songLump)
+	if (!songLump)
 	{
 		return;
 	}
-	if(i_CDMusic)
+	if (i_CDMusic)
 	{
 		cdTrack = 0;
 
-		if(!strcmp(songLump, "hexen"))
+		if (!strcmp(songLump, "hexen"))
 		{
 			cdTrack = P_GetCDTitleTrack();
 		}
-		else if(!strcmp(songLump, "hub"))
+		else if (!strcmp(songLump, "hub"))
 		{
 			cdTrack = P_GetCDIntermissionTrack();
 		}
-		else if(!strcmp(songLump, "hall"))
+		else if (!strcmp(songLump, "hall"))
 		{
 			cdTrack = P_GetCDEnd1Track();
 		}
-		else if(!strcmp(songLump, "orb"))
+		else if (!strcmp(songLump, "orb"))
 		{
 			cdTrack = P_GetCDEnd2Track();
 		}
-		else if(!strcmp(songLump, "chess") && !i_CDTrack)
+		else if (!strcmp(songLump, "chess") && !i_CDTrack)
 		{
 			cdTrack = P_GetCDEnd3Track();
 		}
 /*	Uncomment this, if Kevin writes a specific song for startup
-		else if(!strcmp(songLump, "start"))
+		else if (!strcmp(songLump, "start"))
 		{
 			cdTrack = P_GetCDStartTrack();
 		}
 */
-		if(!cdTrack || (cdTrack == i_CDCurrentTrack && i_CDMusicLength > 0))
+		if (!cdTrack || (cdTrack == i_CDCurrentTrack && i_CDMusicLength > 0))
 		{
 			return;
 		}
-		if(!I_CDMusPlay(cdTrack))
+		if (!I_CDMusPlay(cdTrack))
 		{
-/*			if(loop)
+			/*
+			if (loop)
 			{
 				i_CDMusicLength = 35*I_CDMusTrackLength(cdTrack);
 				oldTic = gametic;
@@ -237,30 +239,30 @@ void S_StartSongName(char *songLump, boolean loop)
 			{
 				i_CDMusicLength = -1;
 			}
-*/
+			*/
 			i_CDCurrentTrack = cdTrack;
 			i_CDTrack = false;
 		}
 	}
 	else
 	{
-		if(RegisteredSong)
+		if (RegisteredSong)
 		{
 			I_StopSong(RegisteredSong);
 			I_UnRegisterSong(RegisteredSong);
-			if(UseSndScript)
+			if (UseSndScript)
 			{
 				Z_Free(Mus_SndPtr);
 			}
 			else
 			{
 				Z_ChangeTag(lumpcache[Mus_LumpNum], PU_CACHE);
-			} 
+			}
 			RegisteredSong = 0;
 		}
-		if(UseSndScript)
+		if (UseSndScript)
 		{
-			char name[128];
+			char name[MAX_OSPATH];
 			snprintf(name, sizeof(name), "%s%s.lmp", ArchivePath, songLump);
 			M_ReadFile(name, &Mus_SndPtr);
 		}
@@ -268,9 +270,9 @@ void S_StartSongName(char *songLump, boolean loop)
 		{
 			Mus_LumpNum = W_GetNumForName(songLump);
 			Mus_SndPtr = W_CacheLumpNum(Mus_LumpNum, PU_MUSIC);
-		} 
+		}
 		RegisteredSong = I_RegisterSong(Mus_SndPtr);
-		I_PlaySong(RegisteredSong, loop); // 'true' denotes endless looping.
+		I_PlaySong(RegisteredSong, loop);	// 'true' denotes endless looping.
 		Mus_Song = -1;
 	}
 }
@@ -285,9 +287,9 @@ int S_GetSoundID(char *name)
 {
 	int i;
 
-	for(i = 0; i < NUMSFX; i++)
+	for (i = 0; i < NUMSFX; i++)
 	{
-		if(!strcmp(S_sfx[i].tagName, name))
+		if (!strcmp(S_sfx[i].tagName, name))
 		{
 			return i;
 		}
@@ -325,13 +327,13 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 	static int sndcount = 0;
 	int chan;
 
-	if(sound_id == 0 || snd_MaxVolume == 0)
+	if (sound_id == 0 || snd_MaxVolume == 0)
 		return;
 #if 0
-	if(origin == NULL)
+	if (origin == NULL)
 		origin = players[displayplayer].mo;	// bug -- can be uninitialized
 #endif
-	if(volume == 0)
+	if (volume == 0)
 	{
 		return;
 	}
@@ -347,74 +349,74 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 	{
 		absx = absy = 0;
 	}
-	dist = absx+absy-(absx > absy ? absy>>1 : absx>>1);
+	dist = absx + absy - (absx > absy ? absy>>1 : absx>>1);
 	dist >>= FRACBITS;
-	if(dist >= MAX_SND_DIST)
+	if (dist >= MAX_SND_DIST)
 	{
 		return;	// sound is beyond the hearing range...
 	}
-	if(dist < 0)
+	if (dist < 0)
 	{
 		dist = 0;
 	}
 	priority = S_sfx[sound_id].priority;
-	priority *= (PRIORITY_MAX_ADJUST-(dist/DIST_ADJUST));
-	if(!S_StopSoundID(sound_id, priority))
+	priority *= (PRIORITY_MAX_ADJUST - (dist / DIST_ADJUST));
+	if (!S_StopSoundID(sound_id, priority))
 	{
 		return;	// other sounds have greater priority
 	}
-	for(i = 0; i < snd_Channels; i++)
+	for (i = 0; i < snd_Channels; i++)
 	{
-		if(!origin || origin->player)
+		if (!origin || origin->player)
 		{
 			i = snd_Channels;
 			break;	// let the player have more than one sound.
 		}
-		if(origin == Channel[i].mo)
+		if (origin == Channel[i].mo)
 		{ // only allow other mobjs one sound
 			S_StopSound(Channel[i].mo);
 			break;
 		}
 	}
-	if(i >= snd_Channels)
+	if (i >= snd_Channels)
 	{
-		for(i = 0; i < snd_Channels; i++)
+		for (i = 0; i < snd_Channels; i++)
 		{
-			if(Channel[i].mo == NULL)
+			if (Channel[i].mo == NULL)
 			{
 				break;
 			}
 		}
-		if(i >= snd_Channels)
+		if (i >= snd_Channels)
 		{
 			// look for a lower priority sound to replace.
 			sndcount++;
-			if(sndcount >= snd_Channels)
+			if (sndcount >= snd_Channels)
 			{
 				sndcount = 0;
 			}
-			for(chan = 0; chan < snd_Channels; chan++)
+			for (chan = 0; chan < snd_Channels; chan++)
 			{
 				i = (sndcount + chan) % snd_Channels;
-				if(priority >= Channel[i].priority)
+				if (priority >= Channel[i].priority)
 				{
-					chan = -1;	//denote that sound should be replaced.
+					chan = -1;	// denote that sound should be replaced.
 					break;
 				}
 			}
-			if(chan != -1)
+			if (chan != -1)
 			{
-				return;	//no free channels.
+				return;	// no free channels.
 			}
-			else	//replace the lower priority sound.
+			else	// replace the lower priority sound.
 			{
-				if(Channel[i].handle)
+				if (Channel[i].handle)
 				{
-					if(I_SoundIsPlaying(Channel[i].handle))
+					if (I_SoundIsPlaying(Channel[i].handle))
 					{
 						I_StopSound(Channel[i].handle);
 					}
-					if(S_sfx[Channel[i].sound_id].usefulness > 0)
+					if (S_sfx[Channel[i].sound_id].usefulness > 0)
 					{
 						S_sfx[Channel[i].sound_id].usefulness--;
 					}
@@ -422,22 +424,21 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 			}
 		}
 	}
-	if(S_sfx[sound_id].lumpnum == 0)
+	if (S_sfx[sound_id].lumpnum == 0)
 	{
 		S_sfx[sound_id].lumpnum = I_GetSfxLumpNum(&S_sfx[sound_id]);
 	}
-	if(S_sfx[sound_id].snd_ptr == NULL)
+	if (S_sfx[sound_id].snd_ptr == NULL)
 	{
-		if(UseSndScript)
+		if (UseSndScript)
 		{
-			char name[128];
+			char name[MAX_OSPATH];
 			snprintf(name, sizeof(name), "%s%s.lmp", ArchivePath, S_sfx[sound_id].lumpname);
 			M_ReadFile(name, &S_sfx[sound_id].snd_ptr);
 		}
 		else
 		{
-			S_sfx[sound_id].snd_ptr = W_CacheLumpNum(S_sfx[sound_id].lumpnum,
-				PU_SOUND);
+			S_sfx[sound_id].snd_ptr = W_CacheLumpNum(S_sfx[sound_id].lumpnum, PU_SOUND);
 		}
 	}
 
@@ -445,7 +446,7 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 	if (!origin || origin == players[displayplayer].mo)
 	{
 		sep = 128;
-//		vol = (volume*(snd_MaxVolume+1)*8)>>7;
+	//	vol = (volume*(snd_MaxVolume+1)*8)>>7;
 	}
 	else
 	{
@@ -453,17 +454,17 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 				players[displayplayer].mo->y, origin->x, origin->y);
 				/* bug:  *NOT*  Channel[i].mo->x, Channel[i].mo->y); */
 		angle = (angle-viewangle)>>24;
-		sep = angle*2-128;
-		if(sep < 64)
+		sep = angle*2 - 128;
+		if (sep < 64)
 			sep = -sep;
-		if(sep > 192)
+		if (sep > 192)
 			sep = 512-sep;
-//		vol = SoundCurve[dist];
+	//	vol = SoundCurve[dist];
 	}
 
-	if(S_sfx[sound_id].changePitch)
+	if (S_sfx[sound_id].changePitch)
 	{
-		Channel[i].pitch = (byte)(127+(M_Random()&7)-(M_Random()&7));
+		Channel[i].pitch = (byte)(127 + (M_Random() & 7) - (M_Random() & 7));
 	}
 	else
 	{
@@ -475,7 +476,7 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 	Channel[i].sound_id = sound_id;
 	Channel[i].priority = priority;
 	Channel[i].volume = volume;
-	if(S_sfx[sound_id].usefulness < 0)
+	if (S_sfx[sound_id].usefulness < 0)
 	{
 		S_sfx[sound_id].usefulness = 1;
 	}
@@ -497,45 +498,45 @@ boolean S_StopSoundID(int sound_id, int priority)
 	int lp; //least priority
 	int found;
 
-	if(S_sfx[sound_id].numchannels == -1)
+	if (S_sfx[sound_id].numchannels == -1)
 	{
-		return(true);
+		return true;
 	}
 	lp = -1; //denote the argument sound_id
 	found = 0;
-	for(i = 0; i < snd_Channels; i++)
+	for (i = 0; i < snd_Channels; i++)
 	{
-		if(Channel[i].sound_id == sound_id && Channel[i].mo)
+		if (Channel[i].sound_id == sound_id && Channel[i].mo)
 		{
 			found++; //found one.  Now, should we replace it??
-			if(priority >= Channel[i].priority)
+			if (priority >= Channel[i].priority)
 			{ // if we're gonna kill one, then this'll be it
 				lp = i;
 				priority = Channel[i].priority;
 			}
 		}
 	}
-	if(found < S_sfx[sound_id].numchannels)
+	if (found < S_sfx[sound_id].numchannels)
 	{
-		return(true);
+		return true;
 	}
-	else if(lp == -1)
+	else if (lp == -1)
 	{
-		return(false); // don't replace any sounds
+		return false;	// don't replace any sounds
 	}
-	if(Channel[lp].handle)
+	if (Channel[lp].handle)
 	{
-		if(I_SoundIsPlaying(Channel[lp].handle))
+		if (I_SoundIsPlaying(Channel[lp].handle))
 		{
 			I_StopSound(Channel[lp].handle);
 		}
-		if(S_sfx[Channel[lp].sound_id].usefulness > 0)
+		if (S_sfx[Channel[lp].sound_id].usefulness > 0)
 		{
 			S_sfx[Channel[lp].sound_id].usefulness--;
 		}
 		Channel[lp].mo = NULL;
 	}
-	return(true);
+	return true;
 }
 
 //==========================================================================
@@ -548,12 +549,12 @@ void S_StopSound(mobj_t *origin)
 {
 	int i;
 
-	for(i = 0; i < snd_Channels; i++)
+	for (i = 0; i < snd_Channels; i++)
 	{
-		if(Channel[i].mo == origin)
+		if (Channel[i].mo == origin)
 		{
 			I_StopSound(Channel[i].handle);
-			if(S_sfx[Channel[i].sound_id].usefulness > 0)
+			if (S_sfx[Channel[i].sound_id].usefulness > 0)
 			{
 				S_sfx[Channel[i].sound_id].usefulness--;
 			}
@@ -574,9 +575,9 @@ void S_StopAllSound(void)
 	int i;
 
 	//stop all sounds
-	for(i = 0; i < snd_Channels; i++)
+	for (i = 0; i < snd_Channels; i++)
 	{
-		if(Channel[i].handle)
+		if (Channel[i].handle)
 		{
 			S_StopSound(Channel[i].mo);
 		}
@@ -594,9 +595,9 @@ void S_SoundLink(mobj_t *oldactor, mobj_t *newactor)
 {
 	int i;
 
-	for(i = 0; i < snd_Channels; i++)
+	for (i = 0; i < snd_Channels; i++)
 	{
-		if(Channel[i].mo == oldactor)
+		if (Channel[i].mo == oldactor)
 			Channel[i].mo = newactor;
 	}
 }
@@ -609,7 +610,7 @@ void S_SoundLink(mobj_t *oldactor, mobj_t *newactor)
 
 void S_PauseSound(void)
 {
-	if(i_CDMusic)
+	if (i_CDMusic)
 	{
 		I_CDMusStop();
 	}
@@ -627,7 +628,7 @@ void S_PauseSound(void)
 
 void S_ResumeSound(void)
 {
-	if(i_CDMusic)
+	if (i_CDMusic)
 	{
 		I_CDMusResume();
 	}
@@ -652,11 +653,11 @@ void S_UpdateSounds(mobj_t *listener)
 	int absx;
 	int absy;
 
-	if(i_CDMusic)
+	if (i_CDMusic)
 	{
 		I_CDMusUpdate();
 	}
-	if(snd_MaxVolume == 0)
+	if (snd_MaxVolume == 0)
 	{
 		return;
 	}
@@ -664,13 +665,13 @@ void S_UpdateSounds(mobj_t *listener)
 	// Update any Sequences
 	SN_UpdateActiveSequences();
 
-	if(NextCleanup < gametic)
+	if (NextCleanup < gametic)
 	{
-		if(UseSndScript)
+		if (UseSndScript)
 		{
-			for(i = 0; i < NUMSFX; i++)
+			for (i = 0; i < NUMSFX; i++)
 			{
-				if(S_sfx[i].usefulness == 0 && S_sfx[i].snd_ptr)
+				if (S_sfx[i].usefulness == 0 && S_sfx[i].snd_ptr)
 				{
 					S_sfx[i].usefulness = -1;
 				}
@@ -678,18 +679,15 @@ void S_UpdateSounds(mobj_t *listener)
 		}
 		else
 		{
-			for(i = 0; i < NUMSFX; i++)
+			for (i = 0; i < NUMSFX; i++)
 			{
-				if(S_sfx[i].usefulness == 0 && S_sfx[i].snd_ptr)
+				if (S_sfx[i].usefulness == 0 && S_sfx[i].snd_ptr)
 				{
-					if(lumpcache[S_sfx[i].lumpnum])
+					if (lumpcache[S_sfx[i].lumpnum])
 					{
-						if(((memblock_t *)((byte*)
-							(lumpcache[S_sfx[i].lumpnum])-
-							sizeof(memblock_t)))->id == ZONEID)
+						if (((memblock_t *)((byte*)(lumpcache[S_sfx[i].lumpnum]) - sizeof(memblock_t)))->id == ZONEID)
 						{ // taken directly from the Z_ChangeTag macro
-							Z_ChangeTag2(lumpcache[S_sfx[i].lumpnum],
-								PU_CACHE); 
+							Z_ChangeTag2(lumpcache[S_sfx[i].lumpnum], PU_CACHE);
 						}
 					}
 					S_sfx[i].usefulness = -1;
@@ -699,15 +697,15 @@ void S_UpdateSounds(mobj_t *listener)
 		}
 		NextCleanup = gametic + 35*30;	// every 30 seconds
 	}
-	for(i = 0; i < snd_Channels; i++)
+	for (i = 0; i < snd_Channels; i++)
 	{
-		if(!Channel[i].handle || S_sfx[Channel[i].sound_id].usefulness == -1)
+		if (!Channel[i].handle || S_sfx[Channel[i].sound_id].usefulness == -1)
 		{
 			continue;
 		}
-		if(!I_SoundIsPlaying(Channel[i].handle))
+		if (!I_SoundIsPlaying(Channel[i].handle))
 		{
-			if(S_sfx[Channel[i].sound_id].usefulness > 0)
+			if (S_sfx[Channel[i].sound_id].usefulness > 0)
 			{
 				S_sfx[Channel[i].sound_id].usefulness--;
 			}
@@ -715,7 +713,7 @@ void S_UpdateSounds(mobj_t *listener)
 			Channel[i].mo = NULL;
 			Channel[i].sound_id = 0;
 		}
-		if(Channel[i].mo == NULL || Channel[i].sound_id == 0
+		if (Channel[i].mo == NULL || Channel[i].sound_id == 0
 			|| Channel[i].mo == listener)
 		{
 			continue;
@@ -727,18 +725,18 @@ void S_UpdateSounds(mobj_t *listener)
 			dist = absx+absy-(absx > absy ? absy>>1 : absx>>1);
 			dist >>= FRACBITS;
 
-			if(dist >= MAX_SND_DIST)
+			if (dist >= MAX_SND_DIST)
 			{
 				S_StopSound(Channel[i].mo);
 				continue;
 			}
-			if(dist < 0)
+			if (dist < 0)
 			{
 				dist = 0;
 			}
 			//vol = SoundCurve[dist];
 			vol = (SoundCurve[dist]*(snd_MaxVolume*8)*Channel[i].volume)>>14;
-			if(Channel[i].mo == listener)
+			if (Channel[i].mo == listener)
 			{
 				sep = 128;
 			}
@@ -748,15 +746,14 @@ void S_UpdateSounds(mobj_t *listener)
 								Channel[i].mo->x, Channel[i].mo->y);
 				angle = (angle-viewangle)>>24;
 				sep = angle*2-128;
-				if(sep < 64)
+				if (sep < 64)
 					sep = -sep;
-				if(sep > 192)
+				if (sep > 192)
 					sep = 512-sep;
 			}
-			I_UpdateSoundParams(Channel[i].handle, vol, sep,
-				Channel[i].pitch);
+			I_UpdateSoundParams(Channel[i].handle, vol, sep, Channel[i].pitch);
 			priority = S_sfx[Channel[i].sound_id].priority;
-			priority *= PRIORITY_MAX_ADJUST-(dist/DIST_ADJUST);
+			priority *= PRIORITY_MAX_ADJUST- (dist / DIST_ADJUST);
 			Channel[i].priority = priority;
 		}
 	}
@@ -771,9 +768,9 @@ void S_UpdateSounds(mobj_t *listener)
 void S_Init(void)
 {
 	SoundCurve = W_CacheLumpName("SNDCURVE", PU_STATIC);
-//      SoundCurve = Z_Malloc(MAX_SND_DIST, PU_STATIC, NULL);
+//	SoundCurve = Z_Malloc(MAX_SND_DIST, PU_STATIC, NULL);
 	I_StartupSound();
-	if(snd_Channels > 8)
+	if (snd_Channels > 8)
 	{
 		snd_Channels = 8;
 	}
@@ -781,10 +778,10 @@ void S_Init(void)
 	I_SetMusicVolume(snd_MusicVolume);
 
 	// Attempt to setup CD music
-	if(cdaudio)
+	if (cdaudio)
 	{
-	   	ST_Message("  Attempting to initialize CD Music: ");
-		if(!cdrom)
+		ST_Message("  Attempting to initialize CD Music: ");
+		if (!cdrom)
 		{
 			i_CDMusic = (I_CDMusInit() != -1);
 		}
@@ -792,14 +789,14 @@ void S_Init(void)
 		{ // The user is trying to use the cdrom for both game and music
 			i_CDMusic = false;
 		}
-	   	if(i_CDMusic)
-	   	{
-	   		ST_Message("initialized.\n");
-	   	}
-	   	else
-	   	{
-	   		ST_Message("failed.\n");
-	   	}
+		if (i_CDMusic)
+		{
+			ST_Message("initialized.\n");
+		}
+		else
+		{
+			ST_Message("failed.\n");
+		}
 	}
 }
 
@@ -817,15 +814,14 @@ void S_GetChannelInfo(SoundInfo_t *s)
 	s->channelCount = snd_Channels;
 	s->musicVolume = snd_MusicVolume;
 	s->soundVolume = snd_MaxVolume;
-	for(i = 0; i < snd_Channels; i++)
+	for (i = 0; i < snd_Channels; i++)
 	{
 		c = &s->chan[i];
 		c->id = Channel[i].sound_id;
 		c->priority = Channel[i].priority;
 		c->name = S_sfx[c->id].lumpname;
 		c->mo = Channel[i].mo;
-		c->distance = P_AproxDistance(c->mo->x-viewx, c->mo->y-viewy)
-			>>FRACBITS;
+		c->distance = P_AproxDistance(c->mo->x-viewx, c->mo->y-viewy)>>FRACBITS;
 	}
 }
 
@@ -839,11 +835,11 @@ boolean S_GetSoundPlayingInfo(mobj_t *mobj, int sound_id)
 {
 	int i;
 
-	for(i = 0; i < snd_Channels; i++)
+	for (i = 0; i < snd_Channels; i++)
 	{
-		if(Channel[i].sound_id == sound_id && Channel[i].mo == mobj)
+		if (Channel[i].sound_id == sound_id && Channel[i].mo == mobj)
 		{
-			if(I_SoundIsPlaying(Channel[i].handle))
+			if (I_SoundIsPlaying(Channel[i].handle))
 			{
 				return true;
 			}
@@ -860,25 +856,25 @@ boolean S_GetSoundPlayingInfo(mobj_t *mobj, int sound_id)
 
 void S_SetMusicVolume(void)
 {
-	if(i_CDMusic)
+	if (i_CDMusic)
 	{
-		I_CDMusSetVolume(snd_MusicVolume*16); // 0-255
+		I_CDMusSetVolume(snd_MusicVolume*16);	// 0-255
 	}
 	else
 	{
 		I_SetMusicVolume(snd_MusicVolume);
 	}
-	if(snd_MusicVolume == 0)
+	if (snd_MusicVolume == 0)
 	{
-		if(!i_CDMusic)
+		if (!i_CDMusic)
 		{
 			I_PauseSong(RegisteredSong);
 		}
 		MusicPaused = true;
 	}
-	else if(MusicPaused)
+	else if (MusicPaused)
 	{
-		if(!i_CDMusic)
+		if (!i_CDMusic)
 		{
 			I_ResumeSong(RegisteredSong);
 		}
@@ -894,14 +890,14 @@ void S_SetMusicVolume(void)
 
 void S_ShutDown(void)
 {
-	if(RegisteredSong)
+	if (RegisteredSong)
 	{
 		I_StopSong(RegisteredSong);
 		I_UnRegisterSong(RegisteredSong);
 	}
 	I_ShutdownSound();
 
-	if(i_CDMusic)
+	if (i_CDMusic)
 	{
 		I_CDMusStop();
 	}
@@ -920,30 +916,31 @@ void S_InitScript(void)
 	int i;
 
 	strcpy(ArchivePath, DEFAULT_ARCHIVEPATH);
-	if(!(p = M_CheckParm("-devsnd")))
-	{
-		UseSndScript = false;
-		SC_OpenLump("sndinfo");
-	}
-	else
+	p = M_CheckParm("-devsnd");
+	if (p && p < myargc - 1)
 	{
 		UseSndScript = true;
 		SC_OpenFile(myargv[p+1]);
 	}
-	while(SC_GetString())
+	else
 	{
-		if(*sc_String == '$')
+		UseSndScript = false;
+		SC_OpenLump("sndinfo");
+	}
+	while (SC_GetString())
+	{
+		if (*sc_String == '$')
 		{
-			if(!strcasecmp(sc_String, "$ARCHIVEPATH"))
+			if (!strcasecmp(sc_String, "$ARCHIVEPATH"))
 			{
 				SC_MustGetString();
 				strcpy(ArchivePath, sc_String);
 			}
-			else if(!strcasecmp(sc_String, "$MAP"))
+			else if (!strcasecmp(sc_String, "$MAP"))
 			{
 				SC_MustGetNumber();
 				SC_MustGetString();
-				if(sc_Number)
+				if (sc_Number)
 				{
 					P_PutMapSongLump(sc_Number, sc_String);
 				}
@@ -952,12 +949,12 @@ void S_InitScript(void)
 		}
 		else
 		{
-			for(i = 0; i < NUMSFX; i++)
+			for (i = 0; i < NUMSFX; i++)
 			{
-				if(!strcmp(S_sfx[i].tagName, sc_String))
+				if (!strcmp(S_sfx[i].tagName, sc_String))
 				{
 					SC_MustGetString();
-					if(*sc_String != '?')
+					if (*sc_String != '?')
 					{
 						strcpy(S_sfx[i].lumpname, sc_String);
 					}
@@ -968,7 +965,7 @@ void S_InitScript(void)
 					break;
 				}
 			}
-			if(i == NUMSFX)
+			if (i == NUMSFX)
 			{
 				SC_MustGetString();
 			}
@@ -976,9 +973,9 @@ void S_InitScript(void)
 	}
 	SC_Close();
 
-	for(i = 0; i < NUMSFX; i++)
+	for (i = 0; i < NUMSFX; i++)
 	{
-		if(!strcmp(S_sfx[i].lumpname, ""))
+		if (!strcmp(S_sfx[i].lumpname, ""))
 		{
 			strcpy(S_sfx[i].lumpname, "default");
 		}
@@ -986,18 +983,19 @@ void S_InitScript(void)
 }
 
 
-//==================================================
+/*
+============================================================================
+
+					TIMER INTERRUPT
+
+============================================================================
+*/
 
 
-int ticcount;
+int		ticcount;
+static long	_startSec;
 
-
-//==========================================================================
-
-
-static long _startSec;
-
-void I_StartupTimer(void)
+static void I_StartupTimer(void)
 {
 	struct timeval tv;
 	gettimeofday (&tv, NULL);
@@ -1017,7 +1015,7 @@ int I_GetTime (void)
 	struct timeval tv;
 	gettimeofday (&tv, NULL);
 
-//	printf( "GT: %lx %lx\n", tv.tv_sec, tv.tv_usec );
+//	printf ("GT: %lx %lx\n", tv.tv_sec, tv.tv_usec);
 //	ticcount = ((tv.tv_sec * 1000000) + tv.tv_usec) / 28571;
 	ticcount = ((tv.tv_sec - _startSec) * 35) + (tv.tv_usec / 28571);
 	return ticcount;
@@ -1076,13 +1074,7 @@ void I_StartFrame (void)
 }
 
 
-/*
-============================================================================
-
-					TIMER INTERRUPT
-
-============================================================================
-*/
+//==========================================================================
 
 
 /*
@@ -1260,7 +1252,7 @@ byte *I_AllocLow (int length)
 ============================================================================
 */
 
-extern  doomcom_t               *doomcom;
+extern	doomcom_t	*doomcom;
 
 /*
 ====================
@@ -1272,7 +1264,7 @@ extern  doomcom_t               *doomcom;
 
 void I_InitNetwork (void)
 {
-	int             i;
+	int		i;
 
 	i = M_CheckParm ("-net");
 	if (!i)
@@ -1280,8 +1272,8 @@ void I_InitNetwork (void)
 	//
 	// single player game
 	//
-		doomcom = malloc (sizeof (*doomcom) );
-		memset (doomcom, 0, sizeof(*doomcom) );
+		doomcom = malloc (sizeof(*doomcom));
+		memset (doomcom, 0, sizeof(*doomcom));
 		netgame = false;
 		doomcom->id = DOOMCOM_ID;
 		doomcom->numplayers = doomcom->numnodes = 1;
@@ -1354,7 +1346,7 @@ static void PrintVersion (void)
 	printf ("HHexen (%s) v%d.%d.%d\n", VERSION_PLATFORM, VERSION_MAJ, VERSION_MIN, VERSION_PATCH);
 }
 
-static void PrintHelp(char *name)
+static void PrintHelp (char *name)
 {
 	PrintVersion ();
 	printf ("http://sourceforge.net/projects/hhexen\n");
@@ -1378,7 +1370,7 @@ static void PrintHelp(char *name)
 	printf ("\n");
 }
 
-int main (int argc, char** argv)
+int main (int argc, char **argv)
 {
 	myargc = argc;
 	myargv = argv;

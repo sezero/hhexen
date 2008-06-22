@@ -15,6 +15,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+
 #ifndef AUDIO_PLUGIN_H
 #define AUDIO_PLUGIN_H
 
@@ -27,19 +28,23 @@ AFormat;
 
 typedef struct
 {
-	void *handle;		/* Filled in by xmms */
-	char *filename;		/* Filled in by xmms */
-	char *description;	/* The description that is shown in the preferences box */
+	void *handle;			/* Filled in by xmms */
+	char *filename;			/* Filled in by xmms */
+	char *description;		/* The description that is shown in the preferences box */
 	void (*init) (void);
-	void (*about) (void);	/* Show the about box */
+	void (*about) (void);		/* Show the about box */
 	void (*configure) (void);	/* Show the configuration dialog */
 	void (*get_volume) (int *l, int *r);
 	void (*set_volume) (int l, int r);	/* Set the volume */
-	int (*open_audio) (AFormat fmt, int rate, int nch);	/* Open the device, if the device can't handle the given 
-								   parameters the plugin is responsible for downmixing
-								   the data to the right format before outputting it */
-	void (*write_audio) (void *ptr, int length);	/* The input plugin calls this to write data to the output 
-							   buffer */
+
+	int (*open_audio) (AFormat fmt, int rate, int nch);
+					/* Open the device, if the device can't handle the given 
+					   parameters the plugin is responsible for downmixing
+					   the data to the right format before outputting it */
+
+	void (*write_audio) (void *ptr, int length);
+					/* The input plugin calls this to write data to the output buffer */
+
 	void (*close_audio) (void);	/* No comment... */
 	void (*flush) (int time);	/* Flush the buffer and set the plugins internal timers to time */
 	void (*pause) (short paused);	/* Pause or unpause the output */
@@ -54,6 +59,5 @@ typedef struct
 }
 OutputPlugin;
 
-
-#endif
+#endif	/* AUDIO_PLUGIN_H */
 

@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-06-17 14:07:15 $
+//** $Revision: 1.10 $
+//** $Date: 2008-06-22 16:20:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -18,17 +18,19 @@
 
 // MACROS ------------------------------------------------------------------
 
-#define MAX_TARGET_PLAYERS 512
-#define MOBJ_NULL -1
-#define MOBJ_XX_PLAYER -2
-#define GET_BYTE (*SavePtr.b++)
-#define GET_WORD (*SavePtr.w++)
-#define GET_LONG (*SavePtr.l++)
-#define MAX_MAPS 99
-#define BASE_SLOT 6
-#define REBORN_SLOT 7
-#define REBORN_DESCRIPTION "TEMP GAME"
-#define MAX_THINKER_SIZE 256
+#define MAX_TARGET_PLAYERS	512
+#define MOBJ_NULL		-1
+#define MOBJ_XX_PLAYER		-2
+
+#define GET_BYTE	(*SavePtr.b++)
+#define GET_WORD	(*SavePtr.w++)
+#define GET_LONG	(*SavePtr.l++)
+
+#define MAX_MAPS		99
+#define BASE_SLOT		6
+#define REBORN_SLOT		7
+#define REBORN_DESCRIPTION	"TEMP GAME"
+#define MAX_THINKER_SIZE	256
 
 // TYPES -------------------------------------------------------------------
 
@@ -146,9 +148,9 @@ static void *SaveBuffer;
 static boolean SavingPlayers;
 static union
 {
-	byte *b;
-	short *w;
-	int *l;
+	byte	*b;
+	short	*w;
+	int	*l;
 } SavePtr;
 static FILE *SavingFP;
 
@@ -352,7 +354,7 @@ void SV_LoadGame(int slot)
 	mobj_t *mobj;
 
 	// Copy all needed save files to the base slot
-	if(slot != BASE_SLOT)
+	if (slot != BASE_SLOT)
 	{
 		ClearSaveSlot(BASE_SLOT);
 		CopySaveSlot(slot, BASE_SLOT);
@@ -368,7 +370,7 @@ void SV_LoadGame(int slot)
 	SavePtr.b = (byte *)SaveBuffer + HXS_DESCRIPTION_LENGTH;
 
 	// Check the version text
-	if(strcmp((char *)SavePtr.b, HXS_VERSION_TEXT))
+	if (strcmp((char *)SavePtr.b, HXS_VERSION_TEXT))
 	{ // Bad version
 		return;
 	}
@@ -394,7 +396,7 @@ void SV_LoadGame(int slot)
 	Z_Free(SaveBuffer);
 
 	// Save player structs
-	for(i = 0; i < MAXPLAYERS; i++)
+	for (i = 0; i < MAXPLAYERS; i++)
 	{
 		playerBackup[i] = players[i];
 	}
@@ -408,12 +410,12 @@ void SV_LoadGame(int slot)
 	// Restore player structs
 	inv_ptr = 0;
 	curpos = 0;
-	for(i = 0; i < MAXPLAYERS; i++)
+	for (i = 0; i < MAXPLAYERS; i++)
 	{
 		mobj = players[i].mo;
 		players[i] = playerBackup[i];
 		players[i].mo = mobj;
-		if(i == consoleplayer)
+		if (i == consoleplayer)
 		{
 			players[i].readyArtifact = players[i].inventory[inv_ptr].type;
 		}
@@ -468,9 +470,9 @@ void SV_MapTeleport(int map, int position)
 	int oldPieces = 0; /* jim added initialiser */
 	int bestWeapon;
 
-	if(!deathmatch)
+	if (!deathmatch)
 	{
-		if(P_GetMapCluster(gamemap) == P_GetMapCluster(map))
+		if (P_GetMapCluster(gamemap) == P_GetMapCluster(map))
 		{ // Same cluster - save map without saving player mobjs
 			SV_SaveMap(false);
 		}
@@ -483,7 +485,7 @@ void SV_MapTeleport(int map, int position)
 	// Store player structs for later
 	rClass = randomclass;
 	randomclass = false;
-	for(i = 0; i < MAXPLAYERS; i++)
+	for (i = 0; i < MAXPLAYERS; i++)
 	{
 		playerBackup[i] = players[i];
 	}
@@ -498,7 +500,7 @@ void SV_MapTeleport(int map, int position)
 
 	gamemap = map;
 	snprintf(fileName, sizeof(fileName), "%shex6%02d.hxs", basePath, gamemap);
-	if(!deathmatch && ExistingFile(fileName))
+	if (!deathmatch && ExistingFile(fileName))
 	{ // Unarchive map
 		SV_LoadMap();
 	}
@@ -507,9 +509,9 @@ void SV_MapTeleport(int map, int position)
 		G_InitNew(gameskill, gameepisode, gamemap);
 
 		// Destroy all freshly spawned players
-		for(i = 0; i < MAXPLAYERS; i++)
+		for (i = 0; i < MAXPLAYERS; i++)
 		{
-			if(playeringame[i])
+			if (playeringame[i])
 			{
 				P_RemoveMobj(players[i].mo);
 			}
@@ -518,9 +520,9 @@ void SV_MapTeleport(int map, int position)
 
 	// Restore player structs
 	targetPlayerMobj = NULL;
-	for(i = 0; i < MAXPLAYERS; i++)
+	for (i = 0; i < MAXPLAYERS; i++)
 	{
-		if(!playeringame[i])
+		if (!playeringame[i])
 		{
 			continue;
 		}
@@ -529,24 +531,24 @@ void SV_MapTeleport(int map, int position)
 		players[i].attacker = NULL;
 		players[i].poisoner = NULL;
 
-		if(netgame)
+		if (netgame)
 		{
-			if(players[i].playerstate == PST_DEAD)
+			if (players[i].playerstate == PST_DEAD)
 			{ // In a network game, force all players to be alive
 				players[i].playerstate = PST_REBORN;
 			}
-			if(!deathmatch)
+			if (!deathmatch)
 			{ // Cooperative net-play, retain keys and weapons
 				oldKeys = players[i].keys;
 				oldPieces = players[i].pieces;
-				for(j = 0; j < NUMWEAPONS; j++)
+				for (j = 0; j < NUMWEAPONS; j++)
 				{
 					oldWeaponowned[j] = players[i].weaponowned[j];
 				}
 			}
 		}
 		playerWasReborn = (players[i].playerstate == PST_REBORN);
-		if(deathmatch)
+		if (deathmatch)
 		{
 			memset(players[i].frags, 0, sizeof(players[i].frags));
 			mobj = P_SpawnMobj(playerstarts[0][i].x<<16,
@@ -560,13 +562,13 @@ void SV_MapTeleport(int map, int position)
 			P_SpawnPlayer(&playerstarts[position][i]);
 		}
 
-		if(playerWasReborn && netgame && !deathmatch)
+		if (playerWasReborn && netgame && !deathmatch)
 		{ // Restore keys and weapons when reborn in co-op
 			players[i].keys = oldKeys;
 			players[i].pieces = oldPieces;
-			for(bestWeapon = 0, j = 0; j < NUMWEAPONS; j++)
+			for (bestWeapon = 0, j = 0; j < NUMWEAPONS; j++)
 			{
-				if(oldWeaponowned[j])
+				if (oldWeaponowned[j])
 				{
 					bestWeapon = j;
 					players[i].weaponowned[j] = true;
@@ -574,13 +576,13 @@ void SV_MapTeleport(int map, int position)
 			}
 			players[i].mana[MANA_1] = 25;
 			players[i].mana[MANA_2] = 25;
-			if(bestWeapon)
+			if (bestWeapon)
 			{ // Bring up the best weapon
 				players[i].pendingweapon = bestWeapon;
 			}
 		}
 
-		if(targetPlayerMobj == NULL)
+		if (targetPlayerMobj == NULL)
 		{ // The poor sap
 			targetPlayerMobj = players[i].mo;
 		}
@@ -588,9 +590,9 @@ void SV_MapTeleport(int map, int position)
 	randomclass = rClass;
 
 	// Redirect anything targeting a player mobj
-	if(TargetPlayerAddrs)
+	if (TargetPlayerAddrs)
 	{
-		for(i = 0; i < TargetPlayerCount; i++)
+		for (i = 0; i < TargetPlayerCount; i++)
 		{
 			*TargetPlayerAddrs[i] = (int)targetPlayerMobj;
 		}
@@ -598,12 +600,11 @@ void SV_MapTeleport(int map, int position)
 	}
 
 	// Destroy all things touching players
-	for(i = 0; i < MAXPLAYERS; i++)
+	for (i = 0; i < MAXPLAYERS; i++)
 	{
-		if(playeringame[i])
+		if (playeringame[i])
 		{
-			P_TeleportMove(players[i].mo, players[i].mo->x,
-				players[i].mo->y);
+			P_TeleportMove(players[i].mo, players[i].mo->x, players[i].mo->y);
 		}
 	}
 
@@ -612,13 +613,13 @@ void SV_MapTeleport(int map, int position)
 	curpos = currentInvPos;
 
 	// Launch waiting scripts
-	if(!deathmatch)
+	if (!deathmatch)
 	{
 		P_CheckACSStore();
 	}
 
 	// For single play, save immediately into the reborn slot
-	if(!netgame)
+	if (!netgame)
 	{
 		SV_SaveGame(REBORN_SLOT, REBORN_DESCRIPTION);
 	}
@@ -632,7 +633,7 @@ void SV_MapTeleport(int map, int position)
 
 int SV_GetRebornSlot(void)
 {
-	return(REBORN_SLOT);
+	return (REBORN_SLOT);
 }
 
 //==========================================================================
@@ -718,21 +719,21 @@ static void ArchivePlayers(void)
 	player_t tempPlayer;
 
 	StreamOutLong(ASEG_PLAYERS);
-	for(i = 0; i < MAXPLAYERS; i++)
+	for (i = 0; i < MAXPLAYERS; i++)
 	{
 		StreamOutByte(playeringame[i]);
 	}
-	for(i = 0; i < MAXPLAYERS; i++)
+	for (i = 0; i < MAXPLAYERS; i++)
 	{
-		if(!playeringame[i])
+		if (!playeringame[i])
 		{
 			continue;
 		}
 		StreamOutByte(PlayerClass[i]);
 		tempPlayer = players[i];
-		for(j = 0; j < NUMPSPRITES; j++)
+		for (j = 0; j < NUMPSPRITES; j++)
 		{
-			if(tempPlayer.psprites[j].state)
+			if (tempPlayer.psprites[j].state)
 			{
 				tempPlayer.psprites[j].state =
 					(state_t *)(tempPlayer.psprites[j].state-states);
@@ -753,13 +754,13 @@ static void UnarchivePlayers(void)
 	int i, j;
 
 	AssertSegment(ASEG_PLAYERS);
-	for(i = 0; i < MAXPLAYERS; i++)
+	for (i = 0; i < MAXPLAYERS; i++)
 	{
 		playeringame[i] = GET_BYTE;
 	}
-	for(i = 0; i < MAXPLAYERS; i++)
+	for (i = 0; i < MAXPLAYERS; i++)
 	{
-		if(!playeringame[i])
+		if (!playeringame[i])
 		{
 			continue;
 		}
@@ -770,9 +771,9 @@ static void UnarchivePlayers(void)
 		P_ClearMessage(&players[i]);
 		players[i].attacker = NULL;
 		players[i].poisoner = NULL;
-		for(j = 0; j < NUMPSPRITES; j++)
+		for (j = 0; j < NUMPSPRITES; j++)
 		{
-			if(players[i].psprites[j].state)
+			if (players[i].psprites[j].state)
 			{
 				players[i].psprites[j].state =
 					&states[(int)players[i].psprites[j].state];
@@ -796,7 +797,7 @@ static void ArchiveWorld(void)
 	side_t *si;
 
 	StreamOutLong(ASEG_WORLD);
-	for(i = 0, sec = sectors; i < numsectors; i++, sec++)
+	for (i = 0, sec = sectors; i < numsectors; i++, sec++)
 	{
 		StreamOutWord(sec->floorheight>>FRACBITS);
 		StreamOutWord(sec->ceilingheight>>FRACBITS);
@@ -807,7 +808,7 @@ static void ArchiveWorld(void)
 		StreamOutWord(sec->tag);
 		StreamOutWord(sec->seqType);
 	}
-	for(i = 0, li = lines; i < numlines; i++, li++)
+	for (i = 0, li = lines; i < numlines; i++, li++)
 	{
 		StreamOutWord(li->flags);
 		StreamOutByte(li->special);
@@ -816,9 +817,9 @@ static void ArchiveWorld(void)
 		StreamOutByte(li->arg3);
 		StreamOutByte(li->arg4);
 		StreamOutByte(li->arg5);
-		for(j = 0; j < 2; j++)
+		for (j = 0; j < 2; j++)
 		{
-			if(li->sidenum[j] == -1)
+			if (li->sidenum[j] == -1)
 			{
 				continue;
 			}
@@ -847,7 +848,7 @@ static void UnarchiveWorld(void)
 	side_t *si;
 
 	AssertSegment(ASEG_WORLD);
-	for(i = 0, sec = sectors; i < numsectors; i++, sec++)
+	for (i = 0, sec = sectors; i < numsectors; i++, sec++)
 	{
 		sec->floorheight = GET_WORD<<FRACBITS;
 		sec->ceilingheight = GET_WORD<<FRACBITS;
@@ -860,7 +861,7 @@ static void UnarchiveWorld(void)
 		sec->specialdata = 0;
 		sec->soundtarget = 0;
 	}
-	for(i = 0, li = lines; i < numlines; i++, li++)
+	for (i = 0, li = lines; i < numlines; i++, li++)
 	{
 		li->flags = GET_WORD;
 		li->special = GET_BYTE;
@@ -869,9 +870,9 @@ static void UnarchiveWorld(void)
 		li->arg3 = GET_BYTE;
 		li->arg4 = GET_BYTE;
 		li->arg5 = GET_BYTE;
-		for(j = 0; j < 2; j++)
+		for (j = 0; j < 2; j++)
 		{
-			if(li->sidenum[j] == -1)
+			if (li->sidenum[j] == -1)
 			{
 				continue;
 			}
@@ -900,13 +901,13 @@ static void SetMobjArchiveNums(void)
 	thinker_t *thinker;
 
 	MobjCount = 0;
-	for(thinker = thinkercap.next; thinker != &thinkercap;
-		thinker = thinker->next)
+	for (thinker = thinkercap.next; thinker != &thinkercap;
+					thinker = thinker->next)
 	{
-		if(thinker->function == P_MobjThinker)
+		if (thinker->function == P_MobjThinker)
 		{
 			mobj = (mobj_t *)thinker;
-			if(mobj->player && !SavingPlayers)
+			if (mobj->player && !SavingPlayers)
 			{ // Skipping player mobjs
 				continue;
 			}
@@ -930,14 +931,14 @@ static void ArchiveMobjs(void)
 	StreamOutLong(ASEG_MOBJS);
 	StreamOutLong(MobjCount);
 	count = 0;
-	for(thinker = thinkercap.next; thinker != &thinkercap;
-		thinker = thinker->next)
+	for (thinker = thinkercap.next; thinker != &thinkercap;
+					thinker = thinker->next)
 	{
-		if(thinker->function != P_MobjThinker)
+		if (thinker->function != P_MobjThinker)
 		{ // Not a mobj thinker
 			continue;
 		}
-		if(((mobj_t *)thinker)->player && !SavingPlayers)
+		if (((mobj_t *)thinker)->player && !SavingPlayers)
 		{ // Skipping player mobjs
 			continue;
 		}
@@ -946,7 +947,7 @@ static void ArchiveMobjs(void)
 		MangleMobj(&tempMobj);
 		StreamOutBuffer(&tempMobj, sizeof(mobj_t));
 	}
-	if(count != MobjCount)
+	if (count != MobjCount)
 	{
 		I_Error("ArchiveMobjs: bad mobj count");
 	}
@@ -964,16 +965,15 @@ static void UnarchiveMobjs(void)
 	mobj_t *mobj;
 
 	AssertSegment(ASEG_MOBJS);
-	TargetPlayerAddrs = Z_Malloc(MAX_TARGET_PLAYERS*sizeof(int *),
-		PU_STATIC, NULL);
+	TargetPlayerAddrs = Z_Malloc(MAX_TARGET_PLAYERS*sizeof(int *), PU_STATIC, NULL);
 	TargetPlayerCount = 0;
 	MobjCount = GET_LONG;
 	MobjList = Z_Malloc(MobjCount*sizeof(mobj_t *), PU_STATIC, NULL);
-	for(i = 0; i < MobjCount; i++)
+	for (i = 0; i < MobjCount; i++)
 	{
 		MobjList[i] = Z_Malloc(sizeof(mobj_t), PU_LEVEL, NULL);
 	}
-	for(i = 0; i < MobjCount; i++)
+	for (i = 0; i < MobjCount; i++)
 	{
 		mobj = MobjList[i];
 		memcpy(mobj, SavePtr.b, sizeof(mobj_t));
@@ -996,13 +996,13 @@ static void MangleMobj(mobj_t *mobj)
 {
 	boolean corpse;
 
-	corpse = mobj->flags&MF_CORPSE;
+	corpse = mobj->flags & MF_CORPSE;
 	mobj->state = (state_t *)(mobj->state-states);
-	if(mobj->player)
+	if (mobj->player)
 	{
-		mobj->player = (player_t *)((mobj->player-players)+1);
+		mobj->player = (player_t *)((mobj->player-players) + 1);
 	}
-	if(corpse)
+	if (corpse)
 	{
 		mobj->target = (mobj_t *)MOBJ_NULL;
 	}
@@ -1010,62 +1010,62 @@ static void MangleMobj(mobj_t *mobj)
 	{
 		mobj->target = (mobj_t *)GetMobjNum(mobj->target);
 	}
-	switch(mobj->type)
+	switch (mobj->type)
 	{
-		// Just special1
-		case MT_BISH_FX:
-		case MT_HOLY_FX:
-		case MT_DRAGON:
-		case MT_THRUSTFLOOR_UP:
-		case MT_THRUSTFLOOR_DOWN:
-		case MT_MINOTAUR:
-		case MT_SORCFX1:
-		case MT_MSTAFF_FX2:
-			if(corpse)
-			{
-				mobj->special1 = MOBJ_NULL;
-			}
-			else
-			{
-				mobj->special1 = GetMobjNum((mobj_t *)mobj->special1);
-			}
-			break;
+	// Just special1
+	case MT_BISH_FX:
+	case MT_HOLY_FX:
+	case MT_DRAGON:
+	case MT_THRUSTFLOOR_UP:
+	case MT_THRUSTFLOOR_DOWN:
+	case MT_MINOTAUR:
+	case MT_SORCFX1:
+	case MT_MSTAFF_FX2:
+		if (corpse)
+		{
+			mobj->special1 = MOBJ_NULL;
+		}
+		else
+		{
+			mobj->special1 = GetMobjNum((mobj_t *)mobj->special1);
+		}
+		break;
 
-		// Just special2
-		case MT_LIGHTNING_FLOOR:
-		case MT_LIGHTNING_ZAP:
-			if(corpse)
-			{
-				mobj->special2 = MOBJ_NULL;
-			}
-			else
-			{
-				mobj->special2 = GetMobjNum((mobj_t *)mobj->special2);
-			}
-			break;
+	// Just special2
+	case MT_LIGHTNING_FLOOR:
+	case MT_LIGHTNING_ZAP:
+		if (corpse)
+		{
+			mobj->special2 = MOBJ_NULL;
+		}
+		else
+		{
+			mobj->special2 = GetMobjNum((mobj_t *)mobj->special2);
+		}
+		break;
 
-		// Both special1 and special2
-		case MT_HOLY_TAIL:
-		case MT_LIGHTNING_CEILING:
-			if(corpse)
-			{
-				mobj->special1 = MOBJ_NULL;
-				mobj->special2 = MOBJ_NULL;
-			}
-			else
-			{
-				mobj->special1 = GetMobjNum((mobj_t *)mobj->special1);
-				mobj->special2 = GetMobjNum((mobj_t *)mobj->special2);
-			}
-			break;
+	// Both special1 and special2
+	case MT_HOLY_TAIL:
+	case MT_LIGHTNING_CEILING:
+		if (corpse)
+		{
+			mobj->special1 = MOBJ_NULL;
+			mobj->special2 = MOBJ_NULL;
+		}
+		else
+		{
+			mobj->special1 = GetMobjNum((mobj_t *)mobj->special1);
+			mobj->special2 = GetMobjNum((mobj_t *)mobj->special2);
+		}
+		break;
 
-		// Miscellaneous
-		case MT_KORAX:
-			mobj->special1 = 0; // Searching index
-			break;
+	// Miscellaneous
+	case MT_KORAX:
+		mobj->special1 = 0; // Searching index
+		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 }
 
@@ -1077,11 +1077,11 @@ static void MangleMobj(mobj_t *mobj)
 
 static int GetMobjNum(mobj_t *mobj)
 {
-	if(mobj == NULL)
+	if (mobj == NULL)
 	{
 		return MOBJ_NULL;
 	}
-	if(mobj->player && !SavingPlayers)
+	if (mobj->player && !SavingPlayers)
 	{
 		return MOBJ_XX_PLAYER;
 	}
@@ -1097,9 +1097,9 @@ static int GetMobjNum(mobj_t *mobj)
 static void RestoreMobj(mobj_t *mobj)
 {
 	mobj->state = &states[(int)mobj->state];
-	if(mobj->player)
+	if (mobj->player)
 	{
-		mobj->player = &players[(int)mobj->player-1];
+		mobj->player = &players[(int)mobj->player - 1];
 		mobj->player->mo = mobj;
 	}
 	P_SetThingPosition(mobj);
@@ -1107,34 +1107,34 @@ static void RestoreMobj(mobj_t *mobj)
 	mobj->floorz = mobj->subsector->sector->floorheight;
 	mobj->ceilingz = mobj->subsector->sector->ceilingheight;
 	SetMobjPtr((int *)&mobj->target);
-	switch(mobj->type)
+	switch (mobj->type)
 	{
-		// Just special1
-		case MT_BISH_FX:
-		case MT_HOLY_FX:
-		case MT_DRAGON:
-		case MT_THRUSTFLOOR_UP:
-		case MT_THRUSTFLOOR_DOWN:
-		case MT_MINOTAUR:
-		case MT_SORCFX1:
-			SetMobjPtr(&mobj->special1);
-			break;
+	// Just special1
+	case MT_BISH_FX:
+	case MT_HOLY_FX:
+	case MT_DRAGON:
+	case MT_THRUSTFLOOR_UP:
+	case MT_THRUSTFLOOR_DOWN:
+	case MT_MINOTAUR:
+	case MT_SORCFX1:
+		SetMobjPtr(&mobj->special1);
+		break;
 
-		// Just special2
-		case MT_LIGHTNING_FLOOR:
-		case MT_LIGHTNING_ZAP:
-			SetMobjPtr(&mobj->special2);
-			break;
+	// Just special2
+	case MT_LIGHTNING_FLOOR:
+	case MT_LIGHTNING_ZAP:
+		SetMobjPtr(&mobj->special2);
+		break;
 
-		// Both special1 and special2
-		case MT_HOLY_TAIL:
-		case MT_LIGHTNING_CEILING:
-			SetMobjPtr(&mobj->special1);
-			SetMobjPtr(&mobj->special2);
-			break;
+	// Both special1 and special2
+	case MT_HOLY_TAIL:
+	case MT_LIGHTNING_CEILING:
+		SetMobjPtr(&mobj->special1);
+		SetMobjPtr(&mobj->special2);
+		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 }
 
@@ -1146,14 +1146,14 @@ static void RestoreMobj(mobj_t *mobj)
 
 static void SetMobjPtr(int *archiveNum)
 {
-	if(*archiveNum == MOBJ_NULL)
+	if (*archiveNum == MOBJ_NULL)
 	{
 		*archiveNum = 0;
 		return;
 	}
-	if(*archiveNum == MOBJ_XX_PLAYER)
+	if (*archiveNum == MOBJ_XX_PLAYER)
 	{
-		if(TargetPlayerCount == MAX_TARGET_PLAYERS)
+		if (TargetPlayerCount == MAX_TARGET_PLAYERS)
 		{
 			I_Error("RestoreMobj: exceeded MAX_TARGET_PLAYERS");
 		}
@@ -1177,16 +1177,16 @@ static void ArchiveThinkers(void)
 	byte buffer[MAX_THINKER_SIZE];
 
 	StreamOutLong(ASEG_THINKERS);
-	for(thinker = thinkercap.next; thinker != &thinkercap;
-		thinker = thinker->next)
+	for (thinker = thinkercap.next; thinker != &thinkercap;
+					thinker = thinker->next)
 	{
-		for(info = ThinkerInfo; info->tClass != TC_NULL; info++)
+		for (info = ThinkerInfo; info->tClass != TC_NULL; info++)
 		{
-			if(thinker->function == info->thinkerFunc)
+			if (thinker->function == info->thinkerFunc)
 			{
 				StreamOutByte(info->tClass);
 				memcpy(buffer, thinker, info->size);
-				if(info->mangleFunc)
+				if (info->mangleFunc)
 				{
 					info->mangleFunc(buffer);
 				}
@@ -1212,17 +1212,17 @@ static void UnarchiveThinkers(void)
 	thinkInfo_t *info;
 
 	AssertSegment(ASEG_THINKERS);
-	while((tClass = GET_BYTE) != TC_NULL)
+	while ((tClass = GET_BYTE) != TC_NULL)
 	{
-		for(info = ThinkerInfo; info->tClass != TC_NULL; info++)
+		for (info = ThinkerInfo; info->tClass != TC_NULL; info++)
 		{
-			if(tClass == info->tClass)
+			if (tClass == info->tClass)
 			{
 				thinker = Z_Malloc(info->size, PU_LEVEL, NULL);
 				memcpy(thinker, SavePtr.b, info->size);
 				SavePtr.b += info->size;
 				thinker->function = info->thinkerFunc;
-				if(info->restoreFunc)
+				if (info->restoreFunc)
 				{
 					info->restoreFunc(thinker);
 				}
@@ -1230,10 +1230,9 @@ static void UnarchiveThinkers(void)
 				break;
 			}
 		}
-		if(info->tClass == TC_NULL)
+		if (info->tClass == TC_NULL)
 		{
-			I_Error("UnarchiveThinkers: Unknown tClass %d in "
-				"savegame", tClass);
+			I_Error("UnarchiveThinkers: Unknown tClass %d in savegame", tClass);
 		}
 	}
 }
@@ -1281,8 +1280,7 @@ static void RestoreSSThinkerNoSD(ssthinker_t *sst)
 static void MangleScript(acs_t *script)
 {
 	script->ip = (int *)((int)(script->ip)-(int)ActionCodeBase);
-	script->line = script->line ?
-		(line_t *)(script->line-lines) : (line_t *)-1;
+	script->line = script->line ? (line_t *)(script->line-lines) : (line_t *)-1;
 	script->activator = (mobj_t *)GetMobjNum(script->activator);
 }
 
@@ -1294,8 +1292,8 @@ static void MangleScript(acs_t *script)
 
 static void RestoreScript(acs_t *script)
 {
-	script->ip = (int *)(ActionCodeBase+(int)script->ip);
-	if((int)script->line == -1)
+	script->ip = (int *)(ActionCodeBase + (int)script->ip);
+	if ((int)script->line == -1)
 	{
 		script->line = NULL;
 	}
@@ -1343,7 +1341,7 @@ static void ArchiveScripts(void)
 	int i;
 
 	StreamOutLong(ASEG_SCRIPTS);
-	for(i = 0; i < ACScriptCount; i++)
+	for (i = 0; i < ACScriptCount; i++)
 	{
 		StreamOutWord(ACSInfo[i].state);
 		StreamOutWord(ACSInfo[i].waitValue);
@@ -1362,7 +1360,7 @@ static void UnarchiveScripts(void)
 	int i;
 
 	AssertSegment(ASEG_SCRIPTS);
-	for(i = 0; i < ACScriptCount; i++)
+	for (i = 0; i < ACScriptCount; i++)
 	{
 		ACSInfo[i].state = GET_WORD;
 		ACSInfo[i].waitValue = GET_WORD;
@@ -1382,7 +1380,7 @@ static void ArchiveMisc(void)
 	int ix;
 
 	StreamOutLong(ASEG_MISC);
-	for (ix=0; ix<MAXPLAYERS; ix++)
+	for (ix = 0; ix < MAXPLAYERS; ix++)
 	{
 		StreamOutLong(localQuakeHappening[ix]);
 	}
@@ -1399,7 +1397,7 @@ static void UnarchiveMisc(void)
 	int ix;
 
 	AssertSegment(ASEG_MISC);
-	for (ix=0; ix<MAXPLAYERS; ix++)
+	for (ix = 0; ix < MAXPLAYERS; ix++)
 	{
 		localQuakeHappening[ix] = GET_LONG;
 	}
@@ -1417,10 +1415,10 @@ static void RemoveAllThinkers(void)
 	thinker_t *nextThinker;
 
 	thinker = thinkercap.next;
-	while(thinker != &thinkercap)
+	while (thinker != &thinkercap)
 	{
 		nextThinker = thinker->next;
-		if(thinker->function == P_MobjThinker)
+		if (thinker->function == P_MobjThinker)
 		{
 			P_RemoveMobj((mobj_t *)thinker);
 		}
@@ -1450,26 +1448,24 @@ static void ArchiveSounds(void)
 
 	// Save the sound sequences
 	StreamOutLong(ActiveSequences);
-	for(node = SequenceListHead; node; node = node->next)
+	for (node = SequenceListHead; node; node = node->next)
 	{
 		StreamOutLong(node->sequence);
 		StreamOutLong(node->delayTics);
 		StreamOutLong(node->volume);
-		StreamOutLong(SN_GetSequenceOffset(node->sequence,
-			node->sequencePtr));
+		StreamOutLong(SN_GetSequenceOffset(node->sequence, node->sequencePtr));
 		StreamOutLong(node->currentSoundID);
-		for(i = 0; i < po_NumPolyobjs; i++)
+		for (i = 0; i < po_NumPolyobjs; i++)
 		{
-			if(node->mobj == (mobj_t *)&polyobjs[i].startSpot)
+			if (node->mobj == (mobj_t *)&polyobjs[i].startSpot)
 			{
 				break;
 			}
 		}
-		if(i == po_NumPolyobjs)
+		if (i == po_NumPolyobjs)
 		{ // Sound is attached to a sector, not a polyobj
 			sec = R_PointInSubsector(node->mobj->x, node->mobj->y)->sector;
-			difference = (int)((byte *)sec
-				-(byte *)&sectors[0])/sizeof(sector_t);
+			difference = (int)((byte *)sec - (byte *)&sectors[0]) / sizeof(sector_t);
 			StreamOutLong(0); // 0 -- sector sound origin
 		}
 		else
@@ -1505,7 +1501,7 @@ static void UnarchiveSounds(void)
 	// Reload and restart all sound sequences
 	numSequences = GET_LONG;
 	i = 0;
-	while(i < numSequences)
+	while (i < numSequences)
 	{
 		sequence = GET_LONG;
 		delayTics = GET_LONG;
@@ -1515,7 +1511,7 @@ static void UnarchiveSounds(void)
 		soundID = GET_LONG;
 		polySnd = GET_LONG;
 		secNum = GET_LONG;
-		if(!polySnd)
+		if (!polySnd)
 		{
 			sndMobj = (mobj_t *)&sectors[secNum].soundorg;
 		}
@@ -1541,13 +1537,13 @@ static void ArchivePolyobjs(void)
 
 	StreamOutLong(ASEG_POLYOBJS);
 	StreamOutLong(po_NumPolyobjs);
-	for(i = 0; i < po_NumPolyobjs; i++)
+	for (i = 0; i < po_NumPolyobjs; i++)
 	{
 		StreamOutLong(polyobjs[i].tag);
 		StreamOutLong(polyobjs[i].angle);
 		StreamOutLong(polyobjs[i].startSpot.x);
 		StreamOutLong(polyobjs[i].startSpot.y);
-  	}
+	}
 }
 
 //==========================================================================
@@ -1563,13 +1559,13 @@ static void UnarchivePolyobjs(void)
 	fixed_t deltaY;
 
 	AssertSegment(ASEG_POLYOBJS);
-	if(GET_LONG != po_NumPolyobjs)
+	if (GET_LONG != po_NumPolyobjs)
 	{
 		I_Error("UnarchivePolyobjs: Bad polyobj count");
 	}
-	for(i = 0; i < po_NumPolyobjs; i++)
+	for (i = 0; i < po_NumPolyobjs; i++)
 	{
-		if(GET_LONG != polyobjs[i].tag)
+		if (GET_LONG != polyobjs[i].tag)
 		{
 			I_Error("UnarchivePolyobjs: Invalid polyobj tag");
 		}
@@ -1588,10 +1584,9 @@ static void UnarchivePolyobjs(void)
 
 static void AssertSegment(gameArchiveSegment_t segType)
 {
-	if(GET_LONG != segType)
+	if (GET_LONG != segType)
 	{
-		I_Error("Corrupt save game: Segment [%d] failed alignment check",
-			segType);
+		I_Error("Corrupt save game: Segment [%d] failed alignment check", segType);
 	}
 }
 
@@ -1608,7 +1603,7 @@ static void ClearSaveSlot(int slot)
 	int i;
 	char fileName[MAX_OSPATH];
 
-	for(i = 0; i < MAX_MAPS; i++)
+	for (i = 0; i < MAX_MAPS; i++)
 	{
 		snprintf(fileName, sizeof(fileName), "%shex%d%02d.hxs", basePath, slot, i);
 		remove(fileName);
@@ -1631,17 +1626,17 @@ static void CopySaveSlot(int sourceSlot, int destSlot)
 	char sourceName[MAX_OSPATH];
 	char destName[MAX_OSPATH];
 
-	for(i = 0; i < MAX_MAPS; i++)
+	for (i = 0; i < MAX_MAPS; i++)
 	{
 		snprintf(sourceName, sizeof(sourceName), "%shex%d%02d.hxs", basePath,sourceSlot, i);
-		if(ExistingFile(sourceName))
+		if (ExistingFile(sourceName))
 		{
 			snprintf(destName, sizeof(destName), "%shex%d%02d.hxs", basePath,destSlot, i);
 			CopyFile(sourceName, destName);
 		}
 	}
 	snprintf(sourceName, sizeof(sourceName), "%shex%d.hxs", basePath, sourceSlot);
-	if(ExistingFile(sourceName))
+	if (ExistingFile(sourceName))
 	{
 		snprintf(destName, sizeof(destName), "%shex%d.hxs", basePath, destSlot);
 		CopyFile(sourceName, destName);
@@ -1674,7 +1669,7 @@ static boolean ExistingFile(char *name)
 {
 	FILE *fp;
 
-	if((fp = fopen(name, "rb")) != NULL)
+	if ((fp = fopen(name, "rb")) != NULL)
 	{
 		fclose(fp);
 		return true;
@@ -1704,7 +1699,7 @@ static void OpenStreamOut(char *fileName)
 
 static void CloseStreamOut(void)
 {
-	if(SavingFP)
+	if (SavingFP)
 	{
 		fclose(SavingFP);
 	}
