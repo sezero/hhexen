@@ -4,8 +4,8 @@
 //** in_lude.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: in_lude.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-22 16:32:43 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -75,7 +75,7 @@ static int FontBLumpBase;
 static signed int totalFrags[MAXPLAYERS];
 
 static int HubCount;
-static char *HubText;
+static const char *HubText;
 
 // CODE --------------------------------------------------------------------
 
@@ -525,7 +525,7 @@ static void DrNumberBold(int val, int x, int y, int wrapThresh)
 static void DrawHubText(void)
 {
 	int		count;
-	char		*ch;
+	const char	*ch;
 	int		c;
 	int		cx, cy;
 	patch_t *w;

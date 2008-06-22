@@ -4,8 +4,8 @@
 //** f_finale.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: f_finale.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-22 16:32:43 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -51,7 +51,7 @@ static int FinaleCount;
 static int FinaleEndCount;
 static int FinaleLumpNum;
 static int FontABaseLump;
-static char *FinaleText;
+static const char *FinaleText;
 
 static fixed_t *Palette;
 static fixed_t *PaletteDelta;
@@ -156,7 +156,7 @@ void F_Ticker (void)
 static void TextWrite (void)
 {
 	int		count;
-	char		*ch;
+	const char	*ch;
 	int		c;
 	int		cx, cy;
 	patch_t *w;

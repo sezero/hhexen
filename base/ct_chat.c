@@ -4,8 +4,8 @@
 //** ct_chat.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: ct_chat.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-22 16:32:43 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -78,7 +78,7 @@ static int msglen[MAXPLAYERS];
 
 static int FontABaseLump;
 
-static char *CT_FromPlrText[MAXPLAYERS_11] =
+static const char *CT_FromPlrText[MAXPLAYERS_11] =
 {
 	"BLUE:  ",
 	"RED:  ",

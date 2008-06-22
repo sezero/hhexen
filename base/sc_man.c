@@ -4,8 +4,8 @@
 //** sc_man.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sc_man.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-22 16:32:44 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -33,7 +33,7 @@
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
 
 static void CheckOpen(void);
-static void OpenScript(char *name, int type);
+static void OpenScript(const char *name, int type);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
@@ -45,7 +45,7 @@ int sc_Line;
 boolean sc_End;
 boolean sc_Crossed;
 boolean sc_FileScripts = false;
-char *sc_ScriptsDir = "";	// "scripts/";
+const char *sc_ScriptsDir = "";	// "scripts/";
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
@@ -67,7 +67,7 @@ static boolean AlreadyGot = false;
 //
 //==========================================================================
 
-void SC_Open(char *name)
+void SC_Open(const char *name)
 {
 	char fileName[MAX_OSPATH];
 
@@ -90,7 +90,7 @@ void SC_Open(char *name)
 //
 //==========================================================================
 
-void SC_OpenLump(char *name)
+void SC_OpenLump(const char *name)
 {
 	OpenScript(name, LUMP_SCRIPT);
 }
@@ -104,7 +104,7 @@ void SC_OpenLump(char *name)
 //
 //==========================================================================
 
-void SC_OpenFile(char *name)
+void SC_OpenFile(const char *name)
 {
 	OpenScript(name, FILE_ZONE_SCRIPT);
 }
@@ -118,7 +118,7 @@ void SC_OpenFile(char *name)
 //
 //==========================================================================
 
-void SC_OpenFileCLib(char *name)
+void SC_OpenFileCLib(const char *name)
 {
 	OpenScript(name, FILE_CLIB_SCRIPT);
 }
@@ -129,7 +129,7 @@ void SC_OpenFileCLib(char *name)
 //
 //==========================================================================
 
-static void OpenScript(char *name, int type)
+static void OpenScript(const char *name, int type)
 {
 	SC_Close();
 	if (type == LUMP_SCRIPT)
@@ -295,7 +295,7 @@ void SC_MustGetString(void)
 //
 //==========================================================================
 
-void SC_MustGetStringName(char *name)
+void SC_MustGetStringName(const char *name)
 {
 	SC_MustGetString();
 	if (SC_Compare(name) == false)
@@ -406,7 +406,7 @@ boolean SC_Check(void)
 //
 //==========================================================================
 
-int SC_MatchString(char **strings)
+int SC_MatchString(const char **strings)
 {
 	int i;
 
@@ -426,7 +426,7 @@ int SC_MatchString(char **strings)
 //
 //==========================================================================
 
-int SC_MustMatchString(char **strings)
+int SC_MustMatchString(const char **strings)
 {
 	int i;
 
@@ -444,7 +444,7 @@ int SC_MustMatchString(char **strings)
 //
 //==========================================================================
 
-boolean SC_Compare(char *text)
+boolean SC_Compare(const char *text)
 {
 	if (strcasecmp(text, sc_String) == 0)
 	{
@@ -459,7 +459,7 @@ boolean SC_Compare(char *text)
 //
 //==========================================================================
 
-void SC_ScriptError(char *message)
+void SC_ScriptError(const char *message)
 {
 	if (message == NULL)
 	{

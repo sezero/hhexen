@@ -4,8 +4,8 @@
 //** p_setup.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_setup.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.10 $
+//** $Date: 2008-06-22 16:32:44 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -122,7 +122,7 @@ byte		*rejectmatrix;		// for fast sight rejection
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
 static mapInfo_t MapInfo[99];
-static char *MapCmdNames[] =
+static const char *MapCmdNames[] =
 {
 	"SKY1",
 	"SKY2",

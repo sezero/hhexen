@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.33 $
-//** $Date: 2008-06-22 16:20:46 $
+//** $Revision: 1.34 $
+//** $Date: 2008-06-22 16:32:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -357,7 +357,7 @@ typedef enum
 
 typedef struct
 {
-	char	*name;
+	const char	*name;
 	int	*location;
 	int	defaultvalue;
 	int	scantranslate;		/* PC scan code hack */
@@ -859,7 +859,7 @@ extern	boolean		paused;
 extern	boolean		shareware;	/* true if other episodes not present */
 extern	boolean		oldwad_10;	/* true if version 1.0 wad files (shareware or full) */
 extern	boolean		DevMaps;	/* true = map development mode */
-extern	char		*DevMapsDir;	/* development maps directory */
+extern	const char	*DevMapsDir;	/* development maps directory */
 extern	boolean		nomonsters;	/* checkparm of -nomonsters */
 extern	boolean		respawnparm;	/* checkparm of -respawn */
 extern	boolean		randomclass;	/* checkparm of -randclass */
@@ -1065,18 +1065,18 @@ typedef struct
 extern	lumpinfo_t	*lumpinfo;
 extern	int		numlumps;
 
-void W_InitMultipleFiles(char **filenames);
-void W_OpenAuxiliary(char *filename);
+void W_InitMultipleFiles(const char **filenames);
+void W_OpenAuxiliary(const char *filename);
 void W_CloseAuxiliaryFile(void);
 void W_CloseAuxiliary(void);
 void W_UsePrimary(void);
 void W_UseAuxiliary(void);
-int W_CheckNumForName(char *name);
-int W_GetNumForName(char *name);
+int W_CheckNumForName(const char *name);
+int W_GetNumForName(const char *name);
 int W_LumpLength(int lump);
 void W_ReadLump(int lump, void *dest);
 void *W_CacheLumpNum(int lump, int tag);
-void *W_CacheLumpName(char *name, int tag);
+void *W_CacheLumpName(const char *name, int tag);
 void W_CheckForOldFiles(void);
 
 
@@ -1244,7 +1244,7 @@ void G_DeferedInitNew (skill_t skill, int episode, int map);
 
 void G_DeferredNewGame(skill_t skill);
 
-void G_DeferedPlayDemo (char *demo);
+void G_DeferedPlayDemo (const char *demo);
 
 void G_LoadGame(int slot);
 /* can be called by the startup code or M_Responder
@@ -1253,15 +1253,15 @@ void G_LoadGame(int slot);
 
 void G_DoLoadGame (void);
 
-void G_SaveGame (int slot, char *description);
+void G_SaveGame (int slot, const char *description);
 /* called by M_Responder */
 
 void G_RecordDemo (skill_t skill, int numplayers, int episode,
-		   int map, char *name);
+		   int map, const char *name);
 /* only called by startup code */
 
-void G_PlayDemo (char *name);
-void G_TimeDemo (char *name);
+void G_PlayDemo (const char *name);
+void G_TimeDemo (const char *name);
 
 void G_TeleportNewMap(int map, int position);
 
@@ -1292,7 +1292,7 @@ void G_ScreenShot (void);
 #define HXS_VERSION_TEXT_LENGTH		16
 #define HXS_DESCRIPTION_LENGTH		24
 
-void SV_SaveGame(int slot, char *description);
+void SV_SaveGame(int slot, const char *description);
 void SV_SaveMap(boolean savePlayers);
 void SV_LoadGame(int slot);
 void SV_MapTeleport(int map, int position);
@@ -1370,26 +1370,26 @@ void R_DrawTopBorder (void);
 void R_SetViewSize (int blocks, int detail);
 /* called by M_Responder */
 
-int R_FlatNumForName (char *name);
+int R_FlatNumForName (const char *name);
 
-int R_TextureNumForName (char *name);
-int R_CheckTextureNumForName (char *name);
+int R_TextureNumForName (const char *name);
+int R_CheckTextureNumForName (const char *name);
 /* called by P_Ticker for switches and animations
  * returns the texture number for the texture name
  */
 
 
 /* ---- MISC ---- */
-extern	char		**myargv;
+extern	const char	**myargv;
 extern	int		myargc;
 extern	int		localQuakeHappening[MAXPLAYERS];
 
-int M_CheckParm(char *check);
+int M_CheckParm(const char *check);
 /* returns the position of the given parameter in the arg list (0 if not found) */
 
-boolean M_ParmExists(char *check);
+boolean M_ParmExists(const char *check);
 
-void M_ExtractFileBase(char *path, char *dest);
+void M_ExtractFileBase(const char *path, char *dest);
 
 void M_ForceUppercase(char *text);
 /* Changes a string to uppercase */
@@ -1409,37 +1409,37 @@ void M_ClearBox (fixed_t *box);
 void M_AddToBox (fixed_t *box, fixed_t x, fixed_t y);
 /* bounding box functions */
 
-boolean M_WriteFile(char const *name, void *source, int length);
+boolean M_WriteFile(char const *name, const void *source, int length);
 int M_ReadFile(char const *name, void **buffer);
 int M_ReadFileCLib(char const *name, void **buffer);
 
 void M_ScreenShot (void);
 
-void M_LoadDefaults(char *fileName);
+void M_LoadDefaults(const char *fileName);
 
 void M_SaveDefaults (void);
 
 
 /* ----- SC_man.c ---- */
 
-void SC_Open(char *name);
-void SC_OpenLump(char *name);
-void SC_OpenFile(char *name);
-void SC_OpenFileCLib(char *name);
+void SC_Open(const char *name);
+void SC_OpenLump(const char *name);
+void SC_OpenFile(const char *name);
+void SC_OpenFileCLib(const char *name);
 void SC_Close(void);
 boolean SC_GetString(void);
 void SC_MustGetString(void);
-void SC_MustGetStringName(char *name);
+void SC_MustGetStringName(const char *name);
 boolean SC_GetNumber(void);
 void SC_MustGetNumber(void);
 void SC_UnGet(void);
 /*
 boolean SC_Check(void);
 */
-boolean SC_Compare(char *text);
-int SC_MatchString(char **strings);
-int SC_MustMatchString(char **strings);
-void SC_ScriptError(char *message);
+boolean SC_Compare(const char *text);
+int SC_MatchString(const char **strings);
+int SC_MustMatchString(const char **strings);
+void SC_ScriptError(const char *message) __attribute__((noreturn));
 
 extern char *sc_String;
 extern int sc_Number;
@@ -1447,7 +1447,7 @@ extern int sc_Line;
 extern boolean sc_End;
 extern boolean sc_Crossed;
 extern boolean sc_FileScripts;
-extern char *sc_ScriptsDir;
+extern const char *sc_ScriptsDir;
 
 
 /* ---- SN_sonix.c ---- */
@@ -1495,7 +1495,7 @@ typedef enum
 
 void SN_InitSequenceScript(void);
 void SN_StartSequence(mobj_t *mobj, int sequence);
-void SN_StartSequenceName(mobj_t *mobj, char *name);
+void SN_StartSequenceName(mobj_t *mobj, const char *name);
 void SN_StopSequence(mobj_t *mobj);
 void SN_UpdateActiveSequences(void);
 void SN_StopAllSequences(void);
@@ -1533,8 +1533,8 @@ void IN_Drawer(void);
 
 /* ---- Interlude (hubmsg.c) ----- */
 
-char *GetClusterText(int sequence);
-char *GetFinaleText (int sequence);
+const char *GetClusterText(int sequence);
+const char *GetFinaleText (int sequence);
 
 /* ---- Finale (F_finale.c) ------ */
 
@@ -1578,11 +1578,11 @@ void MN_DeactivateMenu(void);
 boolean MN_Responder(event_t *event);
 void MN_Ticker(void);
 void MN_Drawer(void);
-void MN_DrTextA(char *text, int x, int y);
-void MN_DrTextAYellow(char *text, int x, int y);
-int MN_TextAWidth(char *text);
-void MN_DrTextB(char *text, int x, int y);
-int MN_TextBWidth(char *text);
+void MN_DrTextA(const char *text, int x, int y);
+void MN_DrTextAYellow(const char *text, int x, int y);
+int MN_TextAWidth(const char *text);
+void MN_DrTextB(const char *text, int x, int y);
+int MN_TextBWidth(const char *text);
 
 
 /* ---- VIDEO ---- */

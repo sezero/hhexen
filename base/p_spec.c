@@ -4,8 +4,8 @@
 //** p_spec.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_spec.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-22 16:32:44 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -25,7 +25,7 @@
 
 // EXTERNAL FUNCTION PROTOTYPES --------------------------------------------
 
-extern char *TextKeyMessages[11];
+extern const char *TextKeyMessages[11];
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
@@ -44,7 +44,7 @@ mobj_t LavaInflictor;
 
 static struct
 {
-	char	*name;
+	const char	*name;
 	int		type;
 } TerrainTypeDefs[] =
 {

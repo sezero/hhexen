@@ -4,8 +4,8 @@
 //** sn_sonix.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sn_sonix.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-22 16:32:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -56,7 +56,7 @@ typedef enum
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
 
 static void VerifySequencePtr(int *base, int *ptr);
-static int GetSoundOffset(char *name);
+static int GetSoundOffset(const char *name);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
@@ -68,7 +68,7 @@ extern sfxinfo_t S_sfx[];
 
 static struct
 {
-	char	name[SS_SEQUENCE_NAME_LENGTH];
+	const char	name[SS_SEQUENCE_NAME_LENGTH];
 	int				scriptNum;
 	int				stopSound;
 } SequenceTranslate[SEQ_NUMSEQ] =
@@ -125,7 +125,7 @@ static void VerifySequencePtr(int *base, int *ptr)
 //
 //==========================================================================
 
-static int GetSoundOffset(char *name)
+static int GetSoundOffset(const char *name)
 {
 	int i;
 
@@ -317,7 +317,7 @@ void SN_StartSequence(mobj_t *mobj, int sequence)
 //
 //==========================================================================
 
-void SN_StartSequenceName(mobj_t *mobj, char *name)
+void SN_StartSequenceName(mobj_t *mobj, const char *name)
 {
 	int i;
 

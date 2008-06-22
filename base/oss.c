@@ -523,7 +523,7 @@ int oss_open(AFormat fmt, int rate, int nch)
 }
 
 
-static void scan_devices(char* type)
+static void scan_devices(const char* type)
 {
 	FILE* file;
 	char buf[256];

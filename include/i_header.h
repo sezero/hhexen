@@ -52,7 +52,7 @@ void I_StopSong(int handle);
 
 /*  SFX I/O */
 
-void *I_GetSoundEffect (char *soundname);
+void *I_GetSoundEffect (const char *soundname);
 /* called by routines which wish to play a sound effect at some later
  * time.  Pass it the lump name of a sound effect WITHOUT the sfx
  * prefix.  This means the maximum name length is 7 letters/digits.

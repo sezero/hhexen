@@ -4,8 +4,8 @@
 //** p_local.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_local.h,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-22 16:20:46 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-22 16:32:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -277,8 +277,8 @@ extern	mobj_t		**blocklinks;		/* for thing chains */
 
 extern	int		clipmana[NUMMANA];
 
-void P_SetMessage(player_t *player, char *message, boolean ultmsg);
-void P_SetYellowMessage(player_t *player, char *message, boolean ultmsg);
+void P_SetMessage(player_t *player, const char *message, boolean ultmsg);
+void P_SetYellowMessage(player_t *player, const char *message, boolean ultmsg);
 void P_ClearMessage(player_t *player);
 void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher);
 void P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int damage);

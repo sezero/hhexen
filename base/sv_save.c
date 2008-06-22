@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.11 $
+//** $Date: 2008-06-22 16:32:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -121,11 +121,11 @@ static void RestoreMoveCeiling(ceiling_t *ceiling);
 static void AssertSegment(gameArchiveSegment_t segType);
 static void ClearSaveSlot(int slot);
 static void CopySaveSlot(int sourceSlot, int destSlot);
-static void CopyFile(char *sourceName, char *destName);
-static boolean ExistingFile(char *name);
-static void OpenStreamOut(char *fileName);
+static void CopyFile(const char *sourceName, const char *destName);
+static boolean ExistingFile(const char *name);
+static void OpenStreamOut(const char *fileName);
 static void CloseStreamOut(void);
-static void StreamOutBuffer(void *buffer, int size);
+static void StreamOutBuffer(const void *buffer, int size);
 static void StreamOutByte(byte val);
 static void StreamOutWord(unsigned short val);
 static void StreamOutLong(unsigned int val);
@@ -254,7 +254,7 @@ static thinkInfo_t ThinkerInfo[] =
 //
 //==========================================================================
 
-void SV_SaveGame(int slot, char *description)
+void SV_SaveGame(int slot, const char *description)
 {
 	char fileName[MAX_OSPATH];
 	char versionText[HXS_VERSION_TEXT_LENGTH];
@@ -1649,7 +1649,7 @@ static void CopySaveSlot(int sourceSlot, int destSlot)
 //
 //==========================================================================
 
-static void CopyFile(char *sourceName, char *destName)
+static void CopyFile(const char *sourceName, const char *destName)
 {
 	int length;
 	void *buffer;
@@ -1665,7 +1665,7 @@ static void CopyFile(char *sourceName, char *destName)
 //
 //==========================================================================
 
-static boolean ExistingFile(char *name)
+static boolean ExistingFile(const char *name)
 {
 	FILE *fp;
 
@@ -1686,7 +1686,7 @@ static boolean ExistingFile(char *name)
 //
 //==========================================================================
 
-static void OpenStreamOut(char *fileName)
+static void OpenStreamOut(const char *fileName)
 {
 	SavingFP = fopen(fileName, "wb");
 }
@@ -1711,7 +1711,7 @@ static void CloseStreamOut(void)
 //
 //==========================================================================
 
-static void StreamOutBuffer(void *buffer, int size)
+static void StreamOutBuffer(const void *buffer, int size)
 {
 	fwrite(buffer, size, 1, SavingFP);
 }

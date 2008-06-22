@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.20 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.21 $
+//** $Date: 2008-06-22 16:32:43 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -45,7 +45,7 @@ static int ReadFile(char const *name, void **buffer, int mallocType);
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
 int		myargc;
-char		**myargv;
+const char	**myargv;
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
@@ -60,7 +60,7 @@ char		**myargv;
 //
 //==========================================================================
 
-int M_CheckParm(char *check)
+int M_CheckParm(const char *check)
 {
 	int i;
 
@@ -83,7 +83,7 @@ int M_CheckParm(char *check)
 //
 //==========================================================================
 
-boolean M_ParmExists(char *check)
+boolean M_ParmExists(const char *check)
 {
 	return M_CheckParm(check) != 0 ? true : false;
 }
@@ -94,9 +94,9 @@ boolean M_ParmExists(char *check)
 //
 //==========================================================================
 
-void M_ExtractFileBase(char *path, char *dest)
+void M_ExtractFileBase(const char *path, char *dest)
 {
-	char *src;
+	const char *src;
 	int length;
 
 	src = path + strlen(path) - 1;
@@ -200,7 +200,7 @@ void M_AddToBox (fixed_t *box, fixed_t x, fixed_t y)
 ==================
 */
 
-boolean M_WriteFile (char const *name, void *source, int length)
+boolean M_WriteFile (char const *name, const void *source, int length)
 {
 	int handle, count;
 
@@ -310,8 +310,8 @@ void M_FindResponseFile(void)
 			int indexinfile;
 			char *infile;
 			char *file;
-			char *moreargs[20];
-			char *firstargv;
+			const char *moreargs[20];
+			const char *firstargv;
 
 			// READ THE RESPONSE FILE INTO MEMORY
 			handle = fopen(&myargv[i][1], "rb");
@@ -333,7 +333,7 @@ void M_FindResponseFile(void)
 				moreargs[index++] = myargv[k];
 
 			firstargv = myargv[0];
-			myargv = (char **) calloc(1, sizeof(char *) * MAXARGVS);
+			myargv = (const char **) calloc(1, sizeof(char *) * MAXARGVS);
 			myargv[0] = firstargv;
 
 			infile = file;
@@ -556,7 +556,7 @@ void M_SaveDefaults (void)
 //
 //==========================================================================
 
-void M_LoadDefaults(char *fileName)
+void M_LoadDefaults(const char *fileName)
 {
 	int i;
 	int len;
@@ -670,7 +670,7 @@ typedef struct
 ==============
 */
 
-void WritePCXfile (char *filename, byte *data, int width, int height, byte *palette)
+void WritePCXfile (const char *filename, byte *data, int width, int height, byte *palette)
 {
 	int	i, length;
 	pcx_t	*pcx;

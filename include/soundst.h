@@ -4,8 +4,8 @@
 //** soundst.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: soundst.h,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-22 16:20:46 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-22 16:32:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -15,13 +15,13 @@
 
 typedef struct
 {
-	char	name[8];
+	const char	name[8];
 	int		p1;
 } musicinfo_t;
 
 typedef struct sfxinfo_s
 {
-	char	tagName[32];
+	const char	tagName[32];
 	char	lumpname[12];	/* Only need 9 bytes, but padded out to be dword aligned */
 //	struct sfxinfo_s *link;	/* Make alias for another sound */
 	int	priority;	/* Higher priority takes precendence */
@@ -46,7 +46,7 @@ typedef struct
 {
 	int		id;
 	unsigned short	priority;
-	char		*name;
+	const char	*name;
 	mobj_t		*mo;
 	int		distance;
 } ChanInfo_t;
@@ -64,7 +64,7 @@ extern	int		snd_MusicVolume;
 
 void S_Start(void);
 void S_StartSound(mobj_t *origin, int sound_id);
-int S_GetSoundID(char *name);
+int S_GetSoundID(const char *name);
 void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume);
 void S_StopSound(mobj_t *origin);
 void S_StopAllSound(void);
@@ -72,7 +72,7 @@ void S_PauseSound(void);
 void S_ResumeSound(void);
 void S_UpdateSounds(mobj_t *listener);
 void S_StartSong(int song, boolean loop);
-void S_StartSongName(char *songLump, boolean loop);
+void S_StartSongName(const char *songLump, boolean loop);
 void S_Init(void);
 void S_GetChannelInfo(SoundInfo_t *s);
 void S_SetMusicVolume(void);

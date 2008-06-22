@@ -4,8 +4,8 @@
 //** r_data.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_data.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-22 16:32:44 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -493,7 +493,7 @@ void R_InitData (void)
 ================
 */
 
-int R_FlatNumForName (char *name)
+int R_FlatNumForName (const char *name)
 {
 	int		i;
 	char	namet[9];
@@ -517,7 +517,7 @@ int R_FlatNumForName (char *name)
 ================
 */
 
-int R_CheckTextureNumForName (char *name)
+int R_CheckTextureNumForName (const char *name)
 {
 	int		i;
 
@@ -543,7 +543,7 @@ int R_CheckTextureNumForName (char *name)
 ================
 */
 
-int R_TextureNumForName (char *name)
+int R_TextureNumForName (const char *name)
 {
 	int		i;
 

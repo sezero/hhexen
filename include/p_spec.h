@@ -4,8 +4,8 @@
 //** p_spec.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_spec.h,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-22 16:20:46 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-22 16:32:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -193,8 +193,8 @@ void P_SpawnLightSequence(sector_t *sector, int indexStep);
 
 typedef struct
 {
-	char		name1[9];
-	char		name2[9];
+	const char	name1[9];
+	const char	name2[9];
 	int		soundID;
 } switchlist_t;
 

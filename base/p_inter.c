@@ -4,8 +4,8 @@
 //** p_inter.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_inter.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.12 $
+//** $Date: 2008-06-22 16:32:44 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -41,7 +41,7 @@ int AutoArmorSave[NUMCLASSES] =
 	0
 };
 
-const *TextKeyMessages[] =
+const char *TextKeyMessages[] =
 {
 	TXT_KEY_STEEL,
 	TXT_KEY_CAVE,
@@ -58,7 +58,7 @@ const *TextKeyMessages[] =
 
 static void SetDormantArtifact(mobj_t *arti);
 static void TryPickupArtifact(player_t *player, artitype_t artifactType, mobj_t *artifact);
-static void TryPickupWeapon(player_t *player, pclass_t weaponClass, weapontype_t weaponType, mobj_t *weapon, char *message);
+static void TryPickupWeapon(player_t *player, pclass_t weaponClass, weapontype_t weaponType, mobj_t *weapon, const char *message);
 static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass, int pieceValue, mobj_t *pieceMobj);
 
 //--------------------------------------------------------------------------
@@ -67,7 +67,7 @@ static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass, int piec
 //
 //--------------------------------------------------------------------------
 
-void P_SetMessage(player_t *player, char *message, boolean ultmsg)
+void P_SetMessage(player_t *player, const char *message, boolean ultmsg)
 {
 	if ((player->ultimateMessage || !messageson) && !ultmsg)
 	{
@@ -101,7 +101,7 @@ void P_SetMessage(player_t *player, char *message, boolean ultmsg)
 //
 //==========================================================================
 
-void P_SetYellowMessage(player_t *player, char *message, boolean ultmsg)
+void P_SetYellowMessage(player_t *player, const char *message, boolean ultmsg)
 {
 	if ((player->ultimateMessage || !messageson) && !ultmsg)
 	{
@@ -208,7 +208,7 @@ boolean P_GiveMana(player_t *player, manatype_t mana, int count)
 //==========================================================================
 
 static void TryPickupWeapon(player_t *player, pclass_t weaponClass,
-	weapontype_t weaponType, mobj_t *weapon, char *message)
+	weapontype_t weaponType, mobj_t *weapon, const char *message)
 {
 	boolean remove;
 	boolean gaveMana;
@@ -434,7 +434,7 @@ static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass,
 	boolean checkAssembled;
 	boolean gaveWeapon;
 	int gaveMana;
-	static char *fourthWeaponText[] =
+	static const char *fourthWeaponText[] =
 	{
 		TXT_WEAPON_F4,
 		TXT_WEAPON_C4,
@@ -443,7 +443,7 @@ static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass,
 		TXT_WEAPON_A4
 #endif
 	};
-	static char *weaponPieceText[] =
+	static const char *weaponPieceText[] =
 	{
 		TXT_QUIETUS_PIECE,
 		TXT_WRAITHVERGE_PIECE,
@@ -747,7 +747,7 @@ boolean P_GivePower(player_t *player, powertype_t power)
 static void TryPickupArtifact(player_t *player, artitype_t artifactType,
 							mobj_t *artifact)
 {
-	static char *artifactMessages[NUMARTIFACTS] =
+	static const char *artifactMessages[NUMARTIFACTS] =
 	{
 		NULL,
 		TXT_ARTIINVULNERABILITY,

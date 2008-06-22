@@ -4,8 +4,8 @@
 //** p_acs.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_acs.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-22 16:32:43 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -169,7 +169,7 @@ static void ThingCount(int type, int tid);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
-extern char *TextKeyMessages[11];
+extern const char *TextKeyMessages[11];
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 

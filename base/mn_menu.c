@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.22 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.23 $
+//** $Date: 2008-06-22 16:32:43 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -64,7 +64,7 @@ typedef enum
 typedef struct
 {
 	ItemType_t type;
-	char *text;
+	const char *text;
 	void (*func)(int option);
 	int option;
 	MenuType_t menu;
@@ -91,7 +91,7 @@ extern int I_CDMusStop(void);
 
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
 
-static char *Key2String(int key);
+static const char *Key2String(int key);
 static void ClearControls(int key);
 static void InitFonts(void);
 static void SetMenu(MenuType_t menu);
@@ -406,14 +406,14 @@ static Menu_t *Menus[] =
 	&SaveMenu
 };
 
-static char *mlooktext[] =
+static const char *mlooktext[] =
 {
 	"OFF",
 	"NORMAL",
 	"INVERSE"
 };
 
-static char *stupidtable[] =
+static const char *stupidtable[] =
 {
 	"A","B","C","D","E",
 	"F","G","H","I","J",
@@ -424,7 +424,7 @@ static char *stupidtable[] =
 };
 
 #if defined(__linux) || defined(__FreeBSD__)
-static char *GammaText[] =
+static const char *GammaText[] =
 {
 	TXT_GAMMA_LEVEL_OFF,
 	TXT_GAMMA_LEVEL_1,
@@ -436,7 +436,7 @@ static char *GammaText[] =
 
 // CODE --------------------------------------------------------------------
 
-static char *Key2String (int key)
+static const char *Key2String (int key)
 {
 
 // Hmmm... return "[" doesnt work!
@@ -532,7 +532,7 @@ static void InitFonts(void)
 //
 //---------------------------------------------------------------------------
 
-void MN_DrTextA(char *text, int x, int y)
+void MN_DrTextA(const char *text, int x, int y)
 {
 	char c;
 	patch_t *p;
@@ -566,7 +566,7 @@ void MN_DrTextA(char *text, int x, int y)
 //
 //==========================================================================
 
-void MN_DrTextAYellow(char *text, int x, int y)
+void MN_DrTextAYellow(const char *text, int x, int y)
 {
 	char c;
 	patch_t *p;
@@ -602,7 +602,7 @@ void MN_DrTextAYellow(char *text, int x, int y)
 //
 //---------------------------------------------------------------------------
 
-int MN_TextAWidth(char *text)
+int MN_TextAWidth(const char *text)
 {
 	char c;
 	int width;
@@ -632,7 +632,7 @@ int MN_TextAWidth(char *text)
 //
 //---------------------------------------------------------------------------
 
-void MN_DrTextB(char *text, int x, int y)
+void MN_DrTextB(const char *text, int x, int y)
 {
 	char c;
 	patch_t *p;
@@ -756,7 +756,7 @@ static void MN_OGL_RestoreState(void)
 //
 //---------------------------------------------------------------------------
 
-static char *QuitEndMsg[] =
+static const char *QuitEndMsg[] =
 {
 	"ARE YOU SURE YOU WANT TO QUIT?",
 	"ARE YOU SURE YOU WANT TO END THE GAME?",
@@ -772,7 +772,7 @@ void MN_Drawer(void)
 	int x;
 	int y;
 	MenuItem_t *item;
-	char *selName;
+	const char *selName;
 
 	if (MenuActive == false)
 	{
@@ -949,14 +949,14 @@ static void DrawMainMenu(void)
 static void DrawClassMenu(void)
 {
 	pclass_t class;
-	static char *boxLumpName[4] =
+	static const char *boxLumpName[4] =
 	{
 		"m_fbox",
 		"m_cbox",
 		"m_mbox",
 		"m_abox"
 	};
-	static char *walkLumpName[4] =
+	static const char *walkLumpName[4] =
 	{
 		"m_fwalk1",
 		"m_cwalk1",

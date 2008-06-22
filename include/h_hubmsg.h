@@ -4,8 +4,8 @@
 //** h_hubmsg.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h_hubmsg.h,v $
-//** $Revision: 1.2 $
-//** $Date: 2008-06-22 16:20:46 $
+//** $Revision: 1.3 $
+//** $Date: 2008-06-22 16:32:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -15,8 +15,8 @@
 
 #define MAX_INTRMSN_MESSAGE_SIZE	1024
 
-char *GetClusterText(int sequence);
-char *GetFinaleText (int sequence);
+const char *GetClusterText(int sequence);
+const char *GetFinaleText (int sequence);
 
 /* Hardcoded Cluster Ending Messages for Version 1.0 WAD files: ----------*/
 /* h_hubmsg.c  -----------------------------------------------------------*/

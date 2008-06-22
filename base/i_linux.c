@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.25 2008-06-22 16:20:45 sezero Exp $
+//** $Id: i_linux.c,v 1.26 2008-06-22 16:32:43 sezero Exp $
 //**
 //**************************************************************************
 
@@ -185,7 +185,7 @@ void S_StartSong(int song, boolean loop)
 //
 //==========================================================================
 
-void S_StartSongName(char *songLump, boolean loop)
+void S_StartSongName(const char *songLump, boolean loop)
 {
 	int cdTrack;
 
@@ -283,7 +283,7 @@ void S_StartSongName(char *songLump, boolean loop)
 //
 //==========================================================================
 
-int S_GetSoundID(char *name)
+int S_GetSoundID(const char *name)
 {
 	int i;
 
@@ -1346,7 +1346,7 @@ static void PrintVersion (void)
 	printf ("HHexen (%s) v%d.%d.%d\n", VERSION_PLATFORM, VERSION_MAJ, VERSION_MIN, VERSION_PATCH);
 }
 
-static void PrintHelp (char *name)
+static void PrintHelp (const char *name)
 {
 	PrintVersion ();
 	printf ("http://sourceforge.net/projects/hhexen\n");
@@ -1373,7 +1373,7 @@ static void PrintHelp (char *name)
 int main (int argc, char **argv)
 {
 	myargc = argc;
-	myargv = argv;
+	myargv = (const char **) argv;
 	if (M_CheckParm("--help") || M_CheckParm("-h") || M_CheckParm("-?"))
 	{
 		PrintHelp (argv[0]);

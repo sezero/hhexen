@@ -4,8 +4,8 @@
 //** h_hubmsg.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h_hubmsg.c,v $
-//** $Revision: 1.1 $
-//** $Date: 2008-06-19 06:23:20 $
+//** $Revision: 1.2 $
+//** $Date: 2008-06-22 16:32:43 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -34,7 +34,7 @@
 
 static char ClusterMessage[MAX_INTRMSN_MESSAGE_SIZE];
 
-static char *ClusMsgLumpNames[] =
+static const char *ClusMsgLumpNames[] =
 {
 	"clus1msg",
 	"clus2msg", 
@@ -43,21 +43,21 @@ static char *ClusMsgLumpNames[] =
 	"clus5msg"
 };
 
-static char *winMsgLumpNames[] =
+static const char *winMsgLumpNames[] =
 {
 	"win1msg",
 	"win2msg",
 	"win3msg"
 };
 
-static char *winMsg_OldWad[] =
+static const char *winMsg_OldWad[] =
 {
 	WIN1MSG,
 	WIN2MSG,
 	WIN3MSG
 };
 
-static char *ClusMsg_OldWad[] =
+static const char *ClusMsg_OldWad[] =
 {
 	CLUS1MSG,
 	CLUS2MSG, 
@@ -74,9 +74,9 @@ static char *ClusMsg_OldWad[] =
 //
 //==========================================================================
 
-char *GetClusterText (int sequence)
+const char *GetClusterText (int sequence)
 {
-	char *msgLumpName;
+	const char *msgLumpName;
 	int msgSize;
 	int msgLump;
 
@@ -101,9 +101,9 @@ char *GetClusterText (int sequence)
 //
 //==========================================================================
 
-char *GetFinaleText (int sequence)
+const char *GetFinaleText (int sequence)
 {
-	char *msgLumpName;
+	const char *msgLumpName;
 	int msgSize;
 	int msgLump;
 

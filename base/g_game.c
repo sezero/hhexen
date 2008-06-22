@@ -4,8 +4,8 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.14 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.15 $
+//** $Date: 2008-06-22 16:32:43 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1544,7 +1544,7 @@ void G_DoLoadGame(void)
 //
 //==========================================================================
 
-void G_SaveGame(int slot, char *description)
+void G_SaveGame(int slot, const char *description)
 {
 	savegameslot = slot;
 	strcpy(savedescription, description);
@@ -1722,7 +1722,7 @@ static void G_WriteDemoTiccmd (ticcmd_t *cmd)
 ===================
 */
 
-void G_RecordDemo (skill_t skill, int numplayers, int episode, int map, char *name)
+void G_RecordDemo (skill_t skill, int numplayers, int episode, int map, const char *name)
 {
 	int		i;
 
@@ -1762,9 +1762,9 @@ void G_RecordDemo (skill_t skill, int numplayers, int episode, int map, char *na
 ===================
 */
 
-static char	*defdemoname;
+static const char	*defdemoname;
 
-void G_DeferedPlayDemo (char *name)
+void G_DeferedPlayDemo (const char *name)
 {
 	defdemoname = name;
 	gameaction = ga_playdemo;
@@ -1822,7 +1822,7 @@ static void G_DoPlayDemo (void)
 ===================
 */
 
-void G_TimeDemo (char *name)
+void G_TimeDemo (const char *name)
 {
 	skill_t	skill;
 	int	episode, map;

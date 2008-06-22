@@ -4,8 +4,8 @@
 //** r_things.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_things.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-22 16:32:44 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -56,7 +56,7 @@ static lighttable_t	**spritelights;
 
 static spriteframe_t	sprtemp[30];
 static int		maxframe;
-static char		*spritename;
+static const char	*spritename;
 
 
 /*
@@ -147,9 +147,9 @@ Only called at startup
 =================
 */
 
-void R_InitSpriteDefs (char **namelist)
+void R_InitSpriteDefs (const char **namelist)
 {
-	char		**check;
+	const char	**check;
 	int		i, l, intname, frame, rotation;
 	int		start, end;
 
@@ -262,7 +262,7 @@ vissprite_t	vissprites[MAXVISSPRITES], *vissprite_p;
 ===================
 */
 
-void R_InitSprites (char **namelist)
+void R_InitSprites (const char **namelist)
 {
 	int		i;
 

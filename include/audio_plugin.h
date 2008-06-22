@@ -30,7 +30,7 @@ typedef struct
 {
 	void *handle;			/* Filled in by xmms */
 	char *filename;			/* Filled in by xmms */
-	char *description;		/* The description that is shown in the preferences box */
+	const char *description;	/* The description that is shown in the preferences box */
 	void (*init) (void);
 	void (*about) (void);		/* Show the about box */
 	void (*configure) (void);	/* Show the configuration dialog */

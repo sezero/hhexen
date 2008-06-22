@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.20 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.21 $
+//** $Date: 2008-06-22 16:32:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -48,7 +48,7 @@ typedef struct
 
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
 
-static void W_MergeLumps(char *start, char *end);
+static void W_MergeLumps(const char *start, const char *end);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
@@ -80,7 +80,7 @@ boolean AuxiliaryOpened = false;
 //
 //==========================================================================
 
-void W_AddFile(char *filename)
+void W_AddFile(const char *filename)
 {
 	wadinfo_t header;
 	lumpinfo_t *lump_p;
@@ -204,7 +204,7 @@ void W_AddFile(char *filename)
 //
 //==========================================================================
 
-void W_InitMultipleFiles(char **filenames)
+void W_InitMultipleFiles(const char **filenames)
 {
 	int size;
 
@@ -247,7 +247,7 @@ void W_InitMultipleFiles(char **filenames)
 //
 //==========================================================================
 
-static int IsMarker(char *marker, char *name)
+static int IsMarker(const char *marker, const char *name)
 {
 	return !strncasecmp(name, marker, 8) ||
 		(*name == *marker && !strncasecmp(name + 1, marker, 7));
@@ -261,7 +261,7 @@ static int IsMarker(char *marker, char *name)
 //
 //==========================================================================
 
-static void W_MergeLumps(char *start, char *end)
+static void W_MergeLumps(const char *start, const char *end)
 {
 	lumpinfo_t *newlumpinfo;
 	int newlumps, oldlumps;
@@ -345,9 +345,9 @@ static void W_MergeLumps(char *start, char *end)
 //
 //==========================================================================
 
-void W_InitFile(char *filename)
+void W_InitFile(const char *filename)
 {
-	char *names[2];
+	const char *names[2];
 
 	names[0] = filename;
 	names[1] = NULL;
@@ -360,7 +360,7 @@ void W_InitFile(char *filename)
 //
 //==========================================================================
 
-void W_OpenAuxiliary(char *filename)
+void W_OpenAuxiliary(const char *filename)
 {
 	int i;
 	int size;
@@ -517,7 +517,7 @@ int	W_NumLumps(void)
 //
 //==========================================================================
 
-int W_CheckNumForName(char *name)
+int W_CheckNumForName(const char *name)
 {
 	char name8[9];
 	int v1, v2;
@@ -550,7 +550,7 @@ int W_CheckNumForName(char *name)
 //
 //==========================================================================
 
-int	W_GetNumForName (char *name)
+int	W_GetNumForName (const char *name)
 {
 	int	i;
 
@@ -641,7 +641,7 @@ void *W_CacheLumpNum(int lump, int tag)
 //
 //==========================================================================
 
-void *W_CacheLumpName(char *name, int tag)
+void *W_CacheLumpName(const char *name, int tag)
 {
 	return W_CacheLumpNum(W_GetNumForName(name), tag);
 }

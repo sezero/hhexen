@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.24 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.25 $
+//** $Date: 2008-06-22 16:32:43 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -36,8 +36,8 @@
 
 typedef struct
 {
-	char *name;
-	void (*func)(char **args, int tag);
+	const char *name;
+	void (*func)(const char **args, int tag);
 	int	requiredArgs;
 	int		tag;
 } execOpt_t;
@@ -68,14 +68,14 @@ static void DrawMessage(void);
 static void PageDrawer(void);
 static void HandleArgs(void);
 static void CheckRecordFrom(void);
-static void AddWADFile(char *file);
+static void AddWADFile(const char *file);
 static void DrawAndBlit(void);
-static void ExecOptionFILE(char **args, int tag);
-static void ExecOptionSCRIPTS(char **args, int tag);
-static void ExecOptionDEVMAPS(char **args, int tag);
-static void ExecOptionSKILL(char **args, int tag);
-static void ExecOptionPLAYDEMO(char **args, int tag);
-static void ExecOptionMAXZONE(char **args, int tag);
+static void ExecOptionFILE(const char **args, int tag);
+static void ExecOptionSCRIPTS(const char **args, int tag);
+static void ExecOptionDEVMAPS(const char **args, int tag);
+static void ExecOptionSKILL(const char **args, int tag);
+static void ExecOptionPLAYDEMO(const char **args, int tag);
+static void ExecOptionMAXZONE(const char **args, int tag);
 static void WarpCheck(void);
 
 
@@ -89,7 +89,7 @@ extern boolean askforquit;
 
 const char *basePath = "";
 boolean DevMaps;			// true = Map development mode
-char *DevMapsDir = "";			// development maps directory
+const char *DevMapsDir = "";		// development maps directory
 boolean shareware;			// true if only episode 1 present
 boolean oldwad_10;			// true if version 1.0 wad files
 boolean nomonsters;			// checkparm of -nomonsters
@@ -117,8 +117,8 @@ int eventtail;
 static int WarpMap;
 static int demosequence;
 static int pagetic;
-static char *pagename;
-static char *wadfiles[MAXWADFILES] =
+static const char *pagename;
+static const char *wadfiles[MAXWADFILES] =
 {
 	"hexen.wad",
 #ifdef ASSASSIN
@@ -395,7 +395,7 @@ static void WarpCheck(void)
 //
 //==========================================================================
 
-static void ExecOptionSKILL(char **args, int tag)
+static void ExecOptionSKILL(const char **args, int tag)
 {
 	startskill = args[1][0] - '1';
 	autostart = true;
@@ -407,7 +407,7 @@ static void ExecOptionSKILL(char **args, int tag)
 //
 //==========================================================================
 
-static void ExecOptionFILE(char **args, int tag)
+static void ExecOptionFILE(const char **args, int tag)
 {
 	int p;
 
@@ -425,7 +425,7 @@ static void ExecOptionFILE(char **args, int tag)
 //
 //==========================================================================
 
-static void ExecOptionPLAYDEMO(char **args, int tag)
+static void ExecOptionPLAYDEMO(const char **args, int tag)
 {
 	char file[256];
 
@@ -440,7 +440,7 @@ static void ExecOptionPLAYDEMO(char **args, int tag)
 //
 //==========================================================================
 
-static void ExecOptionSCRIPTS(char **args, int tag)
+static void ExecOptionSCRIPTS(const char **args, int tag)
 {
 	sc_FileScripts = true;
 	sc_ScriptsDir = args[1];
@@ -452,7 +452,7 @@ static void ExecOptionSCRIPTS(char **args, int tag)
 //
 //==========================================================================
 
-static void ExecOptionDEVMAPS(char **args, int tag)
+static void ExecOptionDEVMAPS(const char **args, int tag)
 {
 	char *ptr;
 	DevMaps = true;
@@ -488,10 +488,10 @@ static void ExecOptionDEVMAPS(char **args, int tag)
 }
 
 
-static long superatol(char *s)
+static long superatol(const char *s)
 {
 	long int n = 0, r = 10, x, mul = 1;
-	char *c = s;
+	const char *c = s;
 
 	for ( ; *c; c++)
 	{
@@ -521,7 +521,7 @@ static long superatol(char *s)
 	return (mul*n);
 }
 
-static void ExecOptionMAXZONE(char **args, int tag)
+static void ExecOptionMAXZONE(const char **args, int tag)
 {
 	int size;
 
@@ -857,7 +857,7 @@ static void CheckRecordFrom(void)
 //
 //==========================================================================
 
-static void AddWADFile(char *file)
+static void AddWADFile(const char *file)
 {
 	int i;
 	char *newwad;

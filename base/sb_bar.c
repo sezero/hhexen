@@ -4,8 +4,8 @@
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.12 $
+//** $Date: 2008-06-22 16:32:44 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -972,7 +972,7 @@ static void DrawSoundInfo(void)
 //
 //==========================================================================
 
-static char patcharti[][10] =
+static const char patcharti[][10] =
 {
 	{ "ARTIBOX" },		/* none			*/
 	{ "ARTIINVU" },		/* invulnerability	*/
