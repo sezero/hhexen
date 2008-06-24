@@ -4,8 +4,8 @@
 //** p_mobj.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_mobj.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-24 11:53:47 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-24 11:56:34 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -972,7 +972,8 @@ void P_BlasterMobjThinker(mobj_t *mobj)
 
 				jim- allow other things to have BlasterMobjThinker()s (crossbow)
 
-				O.S: I don't need an #ifdef ASSASSIN here, I think..
+				O.S- FIXME ---	I DON'T NEED AN #ifdef ASSASSIN here, YES ???
+					(also see jim's note in P_CheckMissileSpawn down below.)
 				*/
 				else if ((mobj->type == MT_CFLAME_MISSILE) && !--mobj->special1)
 				{
@@ -2027,6 +2028,7 @@ boolean P_CheckMissileSpawn(mobj_t *missile)
  * this is a horrible kludge, but to be honest so is the BlasterMobjThinker
  * stuff in the first place
  */
+/* O.S- FIXME --- THIS SEEMS TO HAVE BEEN DONE FOR the ASSASSIN */
 	if ((missile->momx > MAXMOVE) || (missile->momy > MAXMOVE))
 	{
 		missile->x += (missile->momx>>3);
