@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.25 $
-//** $Date: 2008-06-22 16:32:43 $
+//** $Revision: 1.26 $
+//** $Date: 2008-06-24 19:25:05 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -841,7 +841,7 @@ static void CheckRecordFrom(void)
 	int p;
 
 	p = M_CheckParm("-recordfrom");
-	if (!p || p > myargc - 2)
+	if (!p || p >= myargc - 2)
 	{ // Bad args
 		return;
 	}
