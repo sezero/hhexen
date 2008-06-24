@@ -4,8 +4,8 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.16 $
-//** $Date: 2008-06-24 18:23:15 $
+//** $Revision: 1.17 $
+//** $Date: 2008-06-24 19:05:32 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -86,7 +86,7 @@ boolean		demorecording;
 boolean		demoplayback;
 boolean		singledemo;		// quit after playing a demo from cmdline
 static byte	*demobuffer, *demo_p;
-static char	demoname[32];
+static char	demoname[MAX_OSPATH];
 
 static short	consistancy[MAXPLAYERS][BACKUPTICS];
 
@@ -1727,8 +1727,7 @@ void G_RecordDemo (skill_t skill, int numplayers, int episode, int map, const ch
 
 	G_InitNew (skill, episode, map);
 	usergame = false;
-	strcpy (demoname, name);
-	strcat (demoname, ".lmp");
+	snprintf (demoname, sizeof(demoname), "%s%s.lmp", basePath, name);
 	demobuffer = demo_p = Z_Malloc (0x20000, PU_STATIC, NULL);
 	*demo_p++ = skill;
 	*demo_p++ = episode;
@@ -1876,7 +1875,7 @@ boolean G_CheckDemoStatus (void)
 		M_WriteFile (demoname, demobuffer, demo_p - demobuffer);
 		Z_Free (demobuffer);
 		demorecording = false;
-		I_Error ("Demo %s recorded", demoname);
+		I_Error ("Recorded demo: %s", demoname);
 	}
 
 	return false;
