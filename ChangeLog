@@ -1,16 +1,18 @@
 HHexen ChangeLog
 
 v1.4.1
- - Added support for the Mac version of the
-   demo hexen.wad file.
- - The demo wad files doesn't need a special
-   configuration anymore.
- - Various hacks/fixes for the proper handling
-   of different 1.0 and 1.1 wad file versions;
-   read WADFILES for technical details.
- - Incomplete assassin class is now disabled
-   by default. If you want it, configure with
-   --enable-assassin
+ - Added support for the Mac version of the demo hexen.wad file.
+ - The demo wad files doesn't need a special configuration anymore.
+ - Various hacks/fixes for the proper handling of different 1.0 and 1.1 wad
+   file versions; read WADFILES for technical details.
+ - Adding wad and lmp files: hhexen will now look in the user directory, too.
+   Now, the search order is:
+   (1) in directory specifed by the HHEXEN_DATA environment variable,
+   (2) in the user directory (~/.hhexen/),  and
+   (3) in the usual current directory (w/o any prefixes to the filename).
+ - The recorded demos are now written in the user directory (~/.hhexen/).
+ - Incomplete assassin class is now disabled by default.  If you want it,
+   configure with --enable-assassin
  - Many other bugfixes
 
 v1.4
@@ -21,11 +23,9 @@ v1.4
  - Screenshots are now saved to ~/.hhexen/
  - Transparent map feature (TAB key)
  - Fixed broken keybinding in the menu
- - More complete support for punctuation keys
-   in the control-setup menu.
- - The config files from the previous hhexen
-   versions are now invalid: delete your configs
-   and bind your keys again from the menu system.
+ - More complete support for punctuation keys in the control-setup menu.
+ - The config files from the previous hhexen versions are now invalid: delete
+   your configs and bind your keys again from the menu system.
  - Many GCC/C/portability bugfixes
 
 v1.3
@@ -40,3 +40,4 @@ v1.2
 
 v1.0
  - Initial release
+
