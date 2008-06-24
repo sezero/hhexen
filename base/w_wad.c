@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.22 $
-//** $Date: 2008-06-24 15:50:04 $
+//** $Revision: 1.23 $
+//** $Date: 2008-06-24 18:55:06 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -103,8 +103,15 @@ void W_AddFile(const char *filename)
 		snprintf (path, sizeof(path), "%s/%s", waddir, filename);
 		handle = open(path, O_RDONLY|O_BINARY);
 	}
+	if (handle == -1)	/* Try UserDIR */
+	{
+		snprintf (path, sizeof(path), "%s%s", basePath, filename);
+		handle = open(path, O_RDONLY|O_BINARY);
+	}
 	if (handle == -1)	/* Now try CWD */
+	{
 		handle = open(filename, O_RDONLY|O_BINARY);
+	}
 	if (handle == -1)
 		return;		/* Didn't find the file. */
 
