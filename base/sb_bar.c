@@ -4,8 +4,8 @@
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.12 $
-//** $Date: 2008-06-22 16:32:44 $
+//** $Revision: 1.13 $
+//** $Date: 2008-06-24 11:45:59 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -59,6 +59,8 @@ typedef struct Cheat_s
 } Cheat_t;
 
 // EXTERNAL FUNCTION PROTOTYPES --------------------------------------------
+
+extern boolean P_UndoPlayerMorph(player_t *player);
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
@@ -2100,8 +2102,6 @@ static void CheatWarpFunc(player_t *player, Cheat_t *cheat)
 
 static void CheatPigFunc(player_t *player, Cheat_t *cheat)
 {
-	extern boolean P_UndoPlayerMorph(player_t *player);
-
 	if (player->morphTics)
 	{
 		P_UndoPlayerMorph(player);
