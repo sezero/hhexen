@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.34 $
-//** $Date: 2008-06-22 16:32:45 $
+//** $Revision: 1.35 $
+//** $Date: 2008-06-24 11:53:47 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -531,8 +531,13 @@ typedef enum
 #ifdef ASSASSIN
 	PCLASS_ASS,
 #endif
-	PCLASS_PIG,
-	NUMCLASSES
+	/* end of the actual classes */
+	NUMCLASSES_HUMAN,
+
+	/* morphed classes (Pig ...) */
+	PCLASS_PIG = NUMCLASSES_HUMAN,
+
+	NUMCLASSES	/* all classes */
 } pclass_t;
 
 typedef enum

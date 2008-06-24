@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.23 $
-//** $Date: 2008-06-22 16:32:43 $
+//** $Revision: 1.24 $
+//** $Date: 2008-06-24 11:53:47 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -225,11 +225,7 @@ static Menu_t ClassMenu =
 {
 	66, 66,
 	DrawClassMenu,
-#ifdef ASSASSIN
-	4,
-#else 
-	3,
-#endif
+	NUMCLASSES_HUMAN,
 	ClassItems,
 	0,
 	ITEM_HEIGHT,

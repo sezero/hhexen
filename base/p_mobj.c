@@ -4,8 +4,8 @@
 //** p_mobj.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_mobj.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-24 11:45:58 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-24 11:53:47 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1315,10 +1315,10 @@ void P_SpawnPlayer(mapthing_t *mthing)
 	z = ONFLOORZ;
 	if (randomclass && deathmatch)
 	{
-		p->class = P_Random() % 3;
+		p->class = P_Random() % NUMCLASSES_HUMAN;
 		if (p->class == PlayerClass[mthing->type - 1])
 		{
-			p->class = (p->class + 1) % 3;
+			p->class = (p->class + 1) % NUMCLASSES_HUMAN;
 		}
 		PlayerClass[mthing->type - 1] = p->class;
 		SB_SetClassData();

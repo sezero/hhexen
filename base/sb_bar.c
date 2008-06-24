@@ -4,8 +4,8 @@
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.13 $
-//** $Date: 2008-06-24 11:45:59 $
+//** $Revision: 1.14 $
+//** $Date: 2008-06-24 11:53:47 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -2156,6 +2156,7 @@ static void CheatQuickenFunc3(player_t *player, Cheat_t *cheat)
 
 static void CheatClassFunc1(player_t *player, Cheat_t *cheat)
 {
+/* P_SetMessage isn't variably arg'ed: set the messages by hand: */
 #ifdef ASSASSIN
 	P_SetMessage(player, "ENTER NEW PLAYER CLASS (0 - 3)", true);
 #else
@@ -2173,11 +2174,7 @@ static void CheatClassFunc2(player_t *player, Cheat_t *cheat)
 		return;
 	}
 	class = cheat->args[0] - '0';
-#ifdef ASSASSIN
-	if (class > 3 || class < 0)
-#else
-	if (class > 2 || class < 0)
-#endif
+	if (class > NUMCLASSES_HUMAN - 1 || class < 0)
 	{
 		P_SetMessage(player, "INVALID PLAYER CLASS", true);
 		return;
