@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.21 $
-//** $Date: 2008-06-22 16:32:45 $
+//** $Revision: 1.22 $
+//** $Date: 2008-06-24 15:50:04 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -524,8 +524,8 @@ int W_CheckNumForName(const char *name)
 	lumpinfo_t *lump_p;
 
 	// Make the name into two integers for easy compares
+	memset(name8, 0, sizeof(name8));
 	strncpy(name8, name, 8);
-	name8[8] = 0; // in case the name was a full 8 chars
 	strupr(name8); // case insensitive
 	v1 = *(int *)name8;
 	v2 = *(int *)&name8[4];
