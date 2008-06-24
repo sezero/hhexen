@@ -4,8 +4,8 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.15 $
-//** $Date: 2008-06-22 16:32:43 $
+//** $Revision: 1.16 $
+//** $Date: 2008-06-24 18:23:15 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -157,8 +157,7 @@ static fixed_t sidemove[NUMCLASSES][2] =
 static fixed_t	angleturn[3] = {640, 1280, 320};	// + slow turn
 #define SLOWTURNTICS		6
 
-#define NUMKEYS		256
-boolean	gamekeydown[NUMKEYS];
+boolean	gamekeydown[MAXKEYS];
 static int	turnheld;			// for accelerative turning
 static int	lookheld;
 
@@ -759,14 +758,14 @@ boolean G_Responder(event_t *ev)
 			sendpause = true;
 			return true;
 		}
-		if (ev->data1 < NUMKEYS)
+		if (ev->data1 < MAXKEYS)
 		{
 			gamekeydown[ev->data1] = true;
 		}
 		return true;	// eat key down events
 
 	case ev_keyup:
-		if (ev->data1 < NUMKEYS)
+		if (ev->data1 < MAXKEYS)
 		{
 			gamekeydown[ev->data1] = false;
 		}

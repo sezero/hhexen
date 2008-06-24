@@ -4,8 +4,8 @@
 //** ct_chat.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: ct_chat.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-22 16:32:43 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-24 18:23:15 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -15,8 +15,6 @@
 #include "h2def.h"
 #include "p_local.h"
 #include "soundst.h"
-
-#define NUMKEYS		256
 
 #define QUEUESIZE		128
 #define MESSAGESIZE		128

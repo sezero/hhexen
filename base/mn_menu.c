@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.24 $
-//** $Date: 2008-06-24 11:53:47 $
+//** $Revision: 1.25 $
+//** $Date: 2008-06-24 18:23:15 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -132,7 +132,7 @@ static void MN_LoadSlotText(void);
 extern int detailLevel;
 extern int screenblocks;
 extern int key_speed, key_strafe;
-extern boolean gamekeydown[256]; // The NUMKEYS macro is local to g_game
+extern boolean gamekeydown[MAXKEYS];
 extern default_t defaults[];
 
 extern int alwaysrun;

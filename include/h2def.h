@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.35 $
-//** $Date: 2008-06-24 11:53:47 $
+//** $Revision: 1.36 $
+//** $Date: 2008-06-24 18:23:16 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -220,6 +220,8 @@ extern	byte	*destview, *destscreen;	/* PC direct to screen pointers */
 #define	KEY_AUX30		240
 #define	KEY_AUX31		241
 #define	KEY_AUX32		242
+
+#define	MAXKEYS				256
 
 
 #define	FINEANGLES		8192
