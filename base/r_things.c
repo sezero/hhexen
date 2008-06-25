@@ -4,8 +4,8 @@
 //** r_things.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_things.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-25 08:25:52 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-25 08:28:59 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -604,6 +604,7 @@ void R_ProjectSprite (mobj_t *thing)
 		}
 		if (vis->playerclass > 2)
 		{
+		// O.S. --  FIXME: HARDCODED NUMBER: 2 == PCLASS_CLERIC
 			vis->playerclass = 0;
 		}
 	}
