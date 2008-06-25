@@ -4,8 +4,8 @@
 //** p_user.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_user.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-24 11:45:59 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-25 08:25:51 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -261,9 +261,9 @@ static void P_MovePlayer(player_t *player)
 	}
 	if (cmd->forwardmove || cmd->sidemove)
 	{
-		if (player->mo->state == &states[PStateNormal[player->class]])
+		if (player->mo->state == &states[PStateNormal[player->playerclass]])
 		{
-			P_SetMobjState(player->mo, PStateRun[player->class]);
+			P_SetMobjState(player->mo, PStateRun[player->playerclass]);
 		}
 	}
 
@@ -457,7 +457,7 @@ static void P_DeathThink(player_t *player)
 			newtorchdelta = 0;
 		}
 		player->playerstate = PST_REBORN;
-		player->mo->special1 = player->class;
+		player->mo->special1 = player->playerclass;
 		if (player->mo->special1 > 2)
 		{
 			player->mo->special1 = 0;
@@ -554,7 +554,7 @@ boolean P_UndoPlayerMorph(player_t *player)
 	oldBeast = pmo->type;
 	P_SetMobjState(pmo, S_FREETARGMOBJ);
 	playerNum = P_GetPlayerNum(player);
-	switch (PlayerClass[playerNum])
+	switch (PlayerClasses[playerNum])
 	{
 	case PCLASS_FIGHTER:
 		mo = P_SpawnMobj(x, y, z, MT_PLAYER_FIGHTER);
@@ -571,7 +571,7 @@ boolean P_UndoPlayerMorph(player_t *player)
 		break;
 #endif
 	default:
-		I_Error("P_UndoPlayerMorph:  Unknown player class %d\n", player->class);
+		I_Error("P_UndoPlayerMorph:  Unknown player class %d\n", player->playerclass);
 		mo = NULL;	/* avoid compiler warning */
 		break;
 	}
@@ -589,7 +589,7 @@ boolean P_UndoPlayerMorph(player_t *player)
 		player->morphTics = 2*35;
 		return false;
 	}
-	if (player->class == PCLASS_FIGHTER)
+	if (player->playerclass == PCLASS_FIGHTER)
 	{
 		// The first type should be blue, and the third should be the
 		// Fighter's original gold color
@@ -617,7 +617,7 @@ boolean P_UndoPlayerMorph(player_t *player)
 	player->morphTics = 0;
 	player->health = mo->health = MAXHEALTH;
 	player->mo = mo;
-	player->class = PlayerClass[playerNum];
+	player->playerclass = PlayerClasses[playerNum];
 	angle >>= ANGLETOFINESHIFT;
 	fog = P_SpawnMobj(x + 20*finecosine[angle],
 			  y + 20*finesine[angle],
@@ -704,7 +704,7 @@ void P_PlayerThink(player_t *player)
 			{
 				speedMo->angle = pmo->angle;
 				playerNum = P_GetPlayerNum(player);
-				if (player->class == PCLASS_FIGHTER)
+				if (player->playerclass == PCLASS_FIGHTER)
 				{
 					// The first type should be blue, and the 
 					// third should be the Fighter's original gold color
@@ -722,7 +722,7 @@ void P_PlayerThink(player_t *player)
 					speedMo->flags |= playerNum<<MF_TRANSSHIFT;
 				}
 				speedMo->target = pmo;
-				speedMo->special1 = player->class;
+				speedMo->special1 = player->playerclass;
 				if (speedMo->special1 > 2)
 				{
 					speedMo->special1 = 0;
@@ -745,7 +745,7 @@ void P_PlayerThink(player_t *player)
 	{
 		P_PlayerOnSpecialFlat(player, floorType);
 	}
-	switch (player->class)
+	switch (player->playerclass)
 	{
 	case PCLASS_FIGHTER:
 		if (player->mo->momz <= -35*FRACUNIT && player->mo->momz >= -40*FRACUNIT
@@ -858,7 +858,7 @@ void P_PlayerThink(player_t *player)
 	// Other Counters
 	if (player->powers[pw_invulnerability])
 	{
-		if (player->class == PCLASS_CLERIC)
+		if (player->playerclass == PCLASS_CLERIC)
 		{
 			if (!(leveltime & 7) && player->mo->flags & MF_SHADOW
 				&& !(player->mo->flags2 & MF2_DONTDRAW))
@@ -892,7 +892,7 @@ void P_PlayerThink(player_t *player)
 		if (!(--player->powers[pw_invulnerability]))
 		{
 			player->mo->flags2 &= ~(MF2_INVULNERABLE|MF2_REFLECTIVE);
-			if (player->class == PCLASS_CLERIC)
+			if (player->playerclass == PCLASS_CLERIC)
 			{
 				player->mo->flags2 &= ~(MF2_DONTDRAW|MF2_NONSHOOTABLE);
 				player->mo->flags &= ~(MF_SHADOW|MF_ALTSHADOW);
@@ -1316,7 +1316,7 @@ static boolean P_HealRadius(player_t *player)
 			continue;
 		}
 
-		switch (player->class)
+		switch (player->playerclass)
 		{
 		case PCLASS_FIGHTER:	// Radius armor boost
 			if ((P_GiveArmor(mo->player, ARMOR_ARMOR, 1)) ||
@@ -1566,7 +1566,7 @@ boolean P_UseArtifact(player_t *player, artitype_t arti)
 		break;
 	case arti_poisonbag:
 		angle = player->mo->angle>>ANGLETOFINESHIFT;
-		if (player->class == PCLASS_CLERIC)
+		if (player->playerclass == PCLASS_CLERIC)
 		{
 			mo = P_SpawnMobj(player->mo->x + 16*finecosine[angle],
 					 player->mo->y + 24*finesine[angle],
@@ -1577,7 +1577,7 @@ boolean P_UseArtifact(player_t *player, artitype_t arti)
 				mo->target = player->mo;
 			}
 		}
-		else if (player->class == PCLASS_MAGE)
+		else if (player->playerclass == PCLASS_MAGE)
 		{
 			mo = P_SpawnMobj(player->mo->x + 16*finecosine[angle],
 					 player->mo->y + 24*finesine[angle],

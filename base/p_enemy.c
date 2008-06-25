@@ -4,8 +4,8 @@
 //** p_enemy.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_enemy.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-22 21:40:11 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-25 08:25:49 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1475,7 +1475,7 @@ void A_Scream(mobj_t *actor)
 			}
 			else if (actor->health > -50)
 			{ // Normal death sound
-				switch (actor->player->class)
+				switch (actor->player->playerclass)
 				{
 				case PCLASS_FIGHTER:
 					sound = SFX_PLAYER_FIGHTER_NORMAL_DEATH;
@@ -1493,7 +1493,7 @@ void A_Scream(mobj_t *actor)
 			}
 			else if (actor->health > -100)
 			{ // Crazy death sound
-				switch (actor->player->class)
+				switch (actor->player->playerclass)
 				{
 				case PCLASS_FIGHTER:
 					sound = SFX_PLAYER_FIGHTER_CRAZY_DEATH;
@@ -1511,7 +1511,7 @@ void A_Scream(mobj_t *actor)
 			}
 			else
 			{ // Extreme death sound
-				switch (actor->player->class)
+				switch (actor->player->playerclass)
 				{
 				case PCLASS_FIGHTER:
 					sound = SFX_PLAYER_FIGHTER_EXTREME1_DEATH;
@@ -1734,7 +1734,7 @@ void A_SkullPop(mobj_t *actor)
 	// Attach player mobj to bloody skull
 	player = actor->player;
 	actor->player = NULL;
-	actor->special1 = player->class;
+	actor->special1 = player->playerclass;
 	mo->player = player;
 	mo->health = actor->health;
 	mo->angle = actor->angle;

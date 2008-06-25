@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-22 16:32:45 $
+//** $Revision: 1.12 $
+//** $Date: 2008-06-25 08:25:53 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -729,7 +729,7 @@ static void ArchivePlayers(void)
 		{
 			continue;
 		}
-		StreamOutByte(PlayerClass[i]);
+		StreamOutByte(PlayerClasses[i]);
 		tempPlayer = players[i];
 		for (j = 0; j < NUMPSPRITES; j++)
 		{
@@ -764,7 +764,7 @@ static void UnarchivePlayers(void)
 		{
 			continue;
 		}
-		PlayerClass[i] = GET_BYTE;
+		PlayerClasses[i] = GET_BYTE;
 		memcpy(&players[i], SavePtr.b, sizeof(player_t));
 		SavePtr.b += sizeof(player_t);
 		players[i].mo = NULL; // Will be set when unarc thinker

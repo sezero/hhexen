@@ -4,8 +4,8 @@
 //** r_things.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_things.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-22 16:32:44 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-25 08:25:52 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -391,7 +391,7 @@ void R_DrawVisSprite (vissprite_t *vis, int x1, int x2)
 		if (vis->mobjflags & MF_TRANSLATION)
 		{
 			colfunc = R_DrawTranslatedFuzzColumn;
-			dc_translation = translationtables - 256 + vis->class * ((MAXPLAYERS - 1) * 256) +
+			dc_translation = translationtables - 256 + vis->playerclass * ((MAXPLAYERS - 1) * 256) +
 					 ((vis->mobjflags & MF_TRANSLATION)>>(MF_TRANSSHIFT - 8));
 		}
 		else if (vis->mobjflags & MF_SHADOW)
@@ -407,7 +407,7 @@ void R_DrawVisSprite (vissprite_t *vis, int x1, int x2)
 	{
 		// Draw using translated column function
 		colfunc = R_DrawTranslatedColumn;
-		dc_translation = translationtables - 256 + vis->class * ((MAXPLAYERS - 1) * 256) +
+		dc_translation = translationtables - 256 + vis->playerclass * ((MAXPLAYERS - 1) * 256) +
 				 ((vis->mobjflags & MF_TRANSLATION)>>(MF_TRANSSHIFT - 8));
 	}
 
@@ -463,7 +463,7 @@ void R_DrawVisSprite (vissprite_t *vis, int x1, int x2)
 
 void R_ProjectSprite (mobj_t *thing)
 {
-	fixed_t		trx, try;
+	fixed_t		xtr, ytr;
 	fixed_t		gxt, gyt;
 	fixed_t		tx,tz;
 	fixed_t		xscale;
@@ -492,11 +492,11 @@ void R_ProjectSprite (mobj_t *thing)
 //
 // transform the origin point
 //
-	trx = thing->x - viewx;
-	try = thing->y - viewy;
+	xtr = thing->x - viewx;
+	ytr = thing->y - viewy;
 
-	gxt = FixedMul(trx,viewcos);
-	gyt = -FixedMul(try,viewsin);
+	gxt = FixedMul(xtr,viewcos);
+	gyt = -FixedMul(ytr,viewsin);
 	tz = gxt - gyt;
 
 #ifdef RENDER3D
@@ -510,8 +510,8 @@ void R_ProjectSprite (mobj_t *thing)
 #endif
 	xscale = FixedDiv(projection, tz);
 
-	gxt = -FixedMul(trx,viewsin);
-	gyt = FixedMul(try,viewcos);
+	gxt = -FixedMul(xtr,viewsin);
+	gyt = FixedMul(ytr,viewcos);
 	tx = -(gyt + gxt);
 
 #ifndef RENDER3D
@@ -553,7 +553,7 @@ void R_ProjectSprite (mobj_t *thing)
 	v1[VX] = FIX2FLT(thing->x);
 	v1[VY] = FIX2FLT(thing->y);
 //	thangle = BANG2RAD(bamsAtan2((v1[VY]-FIX2FLT(viewy))*10, (v1[VX]-FIX2FLT(viewx))*10)) - PI/2;
-	thangle = BANG2RAD(bamsAtan2(FIX2FLT(try)*10, FIX2FLT(trx)*10)) - PI/2;
+	thangle = BANG2RAD(bamsAtan2(FIX2FLT(ytr)*10, FIX2FLT(xtr)*10)) - PI/2;
 	sinrv = sin(thangle);
 	cosrv = cos(thangle);
 	v1[VX] -= cosrv*(spriteoffset[lump]>>FRACBITS);
@@ -596,15 +596,15 @@ void R_ProjectSprite (mobj_t *thing)
 	{
 		if (thing->player)
 		{
-			vis->class = thing->player->class;
+			vis->playerclass = thing->player->playerclass;
 		}
 		else
 		{
-			vis->class = thing->special1;
+			vis->playerclass = thing->special1;
 		}
-		if (vis->class > 2)
+		if (vis->playerclass > 2)
 		{
-			vis->class = 0;
+			vis->playerclass = 0;
 		}
 	}
 	// foot clipping
@@ -773,7 +773,7 @@ void R_DrawPSprite (pspdef_t *psp)
 	light = 1;
 	alpha = 1;
 	if (viewplayer->powers[pw_invulnerability] &&
-		viewplayer->class == PCLASS_CLERIC)
+		viewplayer->playerclass == PCLASS_CLERIC)
 	{
 		if (viewplayer->powers[pw_invulnerability] > 4*32)
 		{
@@ -813,7 +813,7 @@ void R_DrawPSprite (pspdef_t *psp)
 	y = -(spritetopoffset[lump]>>FRACBITS) + (psp->sy>>FRACBITS);
 	if (viewheight == SCREENHEIGHT)
 	{
-		y += PSpriteSY[viewplayer->class][players[consoleplayer].readyweapon] >> FRACBITS;
+		y += PSpriteSY[viewplayer->playerclass][players[consoleplayer].readyweapon] >> FRACBITS;
 	}
 	else
 		y -= 39/2;
@@ -836,12 +836,12 @@ void R_DrawPSprite (pspdef_t *psp)
 //
 	vis = &avis;
 	vis->mobjflags = 0;
-	vis->class = 0;
+	vis->playerclass = 0;
 	vis->psprite = true;
 	vis->texturemid = (BASEYCENTER<<FRACBITS)+FRACUNIT/2 - (psp->sy-spritetopoffset[lump]);
 	if (viewheight == SCREENHEIGHT)
 	{
-		vis->texturemid -= PSpriteSY[viewplayer->class][players[consoleplayer].readyweapon];
+		vis->texturemid -= PSpriteSY[viewplayer->playerclass][players[consoleplayer].readyweapon];
 	}
 	vis->x1 = x1 < 0 ? 0 : x1;
 	vis->x2 = x2 >= viewwidth ? viewwidth-1 : x2;
@@ -861,7 +861,7 @@ void R_DrawPSprite (pspdef_t *psp)
 	vis->patch = lump;
 
 	if (viewplayer->powers[pw_invulnerability] &&
-		viewplayer->class == PCLASS_CLERIC)
+		viewplayer->playerclass == PCLASS_CLERIC)
 	{
 		vis->colormap = spritelights[MAXLIGHTSCALE-1];
 		if (viewplayer->powers[pw_invulnerability] > 4*32)

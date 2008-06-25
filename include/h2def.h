@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.36 $
-//** $Date: 2008-06-24 18:23:16 $
+//** $Revision: 1.37 $
+//** $Date: 2008-06-25 08:25:54 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -725,11 +725,7 @@ typedef struct player_s
 	playerstate_t	playerstate;
 	ticcmd_t	cmd;
 
-#if defined(__cplusplus)
-	pclass_t	c_class;		/* player class type */
-#else
-	pclass_t	class;			/* player class type */
-#endif
+	pclass_t	playerclass;		/* player class type */
 
 	fixed_t		viewz;			/* focal origin above r.z */
 	fixed_t		viewheight;		/* base height above floor for viewz */
@@ -880,7 +876,7 @@ extern	boolean		netgame;	/* only true if >1 player */
 extern	boolean		cmdfrag;	/* true if a CMD_FRAG packet should be sent out every kill */
 
 extern	boolean		playeringame[MAXPLAYERS];
-extern	pclass_t	PlayerClass[MAXPLAYERS];
+extern	pclass_t	PlayerClasses[MAXPLAYERS];
 extern	int		consoleplayer;	/* player taking events and displaying */
 extern	int		displayplayer;
 extern	player_t	players[MAXPLAYERS];

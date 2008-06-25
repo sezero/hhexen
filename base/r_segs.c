@@ -4,8 +4,8 @@
 //** r_segs.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_segs.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-25 08:25:52 $
 //** $Author: sezero $
 //**
 //** This version has the tall-sector-crossing-precision-bug fixed.
@@ -379,14 +379,14 @@ void R_StoreWallRange (int start, int stop)
 #if 0
 		if (rw_distance < FRACUNIT/2)
 		{
-			fixed_t		trx, try;
+			fixed_t		xtr, ytr;
 			fixed_t		gxt, gyt;
 
-			trx = curline->v1->x - viewx;
-			try = curline->v1->y - viewy;
+			xtr = curline->v1->x - viewx;
+			ytr = curline->v1->y - viewy;
 
-			gxt = FixedMul(trx, viewcos);
-			gyt = -FixedMul(try, viewsin);
+			gxt = FixedMul(xtr, viewcos);
+			gyt = -FixedMul(ytr, viewsin);
 			ds_p->scale1 = FixedDiv(projection, gxt - gyt);
 		}
 #endif

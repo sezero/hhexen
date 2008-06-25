@@ -4,8 +4,8 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.17 $
-//** $Date: 2008-06-24 19:05:32 $
+//** $Revision: 1.18 $
+//** $Date: 2008-06-25 08:25:49 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -72,7 +72,7 @@ boolean		deathmatch;		// only if started as net death
 boolean		netgame;		// only true if packets are broadcast
 boolean		playeringame[MAXPLAYERS];
 player_t	players[MAXPLAYERS];
-pclass_t	PlayerClass[MAXPLAYERS];
+pclass_t	PlayerClasses[MAXPLAYERS];
 
 // Position indicator for cooperative net-play reborn
 int		RebornPosition;
@@ -211,7 +211,7 @@ void G_BuildTiccmd (ticcmd_t *cmd)
 	int	flyheight;
 	int	pClass;
 
-	pClass = players[consoleplayer].class;
+	pClass = players[consoleplayer].playerclass;
 	memset (cmd, 0, sizeof(*cmd));
 
 //	cmd->consistancy =
@@ -1089,7 +1089,7 @@ void G_PlayerReborn(int player)
 	players[player].itemcount = itemcount;
 	players[player].secretcount = secretcount;
 	players[player].worldTimer = worldTimer;
-	players[player].class = PlayerClass[player];
+	players[player].playerclass = PlayerClasses[player];
 
 	p->usedown = p->attackdown = true;	// don't do anything immediately
 	p->playerstate = PST_LIVE;
@@ -1746,7 +1746,7 @@ void G_RecordDemo (skill_t skill, int numplayers, int episode, int map, const ch
 			break;
 #endif
 		*demo_p++ = playeringame[i];
-		*demo_p++ = PlayerClass[i];
+		*demo_p++ = PlayerClasses[i];
 	}
 	demorecording = true;
 }
@@ -1793,12 +1793,12 @@ static void G_DoPlayDemo (void)
 		if (oldwad_10 && i >= MAXPLAYERS_10)
 		{
 			playeringame[i] = 0;
-			PlayerClass[i] = 0;
+			PlayerClasses[i] = 0;
 			continue;
 		}
 #endif
 		playeringame[i] = *demo_p++;
-		PlayerClass[i] = *demo_p++;
+		PlayerClasses[i] = *demo_p++;
 	}
 
 	// Initialize world info, etc.

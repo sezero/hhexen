@@ -4,8 +4,8 @@
 //** f_finale.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: f_finale.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-06-22 16:32:43 $
+//** $Revision: 1.10 $
+//** $Date: 2008-06-25 08:25:49 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -170,15 +170,15 @@ static void TextWrite (void)
 			V_DrawPatch(20, 0, W_CacheLumpName("chessall", PU_CACHE));
 		}
 #ifdef ASSASSIN
-		else if (PlayerClass[consoleplayer] == PCLASS_ASS)
+		else if (PlayerClasses[consoleplayer] == PCLASS_ASS)
 		{
 			V_DrawPatch(60,0, W_CacheLumpNum(W_GetNumForName("chessa"), PU_CACHE));
 		}
 #endif
-		else if (PlayerClass[consoleplayer])
+		else if (PlayerClasses[consoleplayer])
 		{
 			V_DrawPatch(60, 0, W_CacheLumpNum(W_GetNumForName("chessc")
-						+ PlayerClass[consoleplayer] - 1, PU_CACHE));
+						+ PlayerClasses[consoleplayer] - 1, PU_CACHE));
 		}
 	}
 	// Draw the actual text
@@ -311,9 +311,9 @@ static void DrawPic(void)
 		{
 			V_DrawPatch(20, 0, W_CacheLumpName("chessall", PU_CACHE));
 		}
-		else if (PlayerClass[consoleplayer])
+		else if (PlayerClasses[consoleplayer])
 		{
-			V_DrawPatch(60, 0, W_CacheLumpNum(W_GetNumForName("chessc") + PlayerClass[consoleplayer] - 1, PU_CACHE));
+			V_DrawPatch(60, 0, W_CacheLumpNum(W_GetNumForName("chessc") + PlayerClasses[consoleplayer] - 1, PU_CACHE));
 		}
 	}
 }

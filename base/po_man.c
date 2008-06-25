@@ -4,8 +4,8 @@
 //** PO_MAN.C : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: po_man.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-25 08:25:52 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -795,18 +795,18 @@ boolean PO_MovePolyobj(int num, int x, int y)
 
 static void RotatePt(int an, fixed_t *x, fixed_t *y, fixed_t startSpotX, fixed_t startSpotY)
 {
-	fixed_t trx, try;
+	fixed_t xtr, ytr;
 	fixed_t gxt, gyt;
 
-	trx = *x;
-	try = *y;
+	xtr = *x;
+	ytr = *y;
 
-	gxt = FixedMul(trx, finecosine[an]);
-	gyt = FixedMul(try, finesine[an]);
+	gxt = FixedMul(xtr, finecosine[an]);
+	gyt = FixedMul(ytr, finesine[an]);
 	*x = (gxt - gyt) + startSpotX;
 
-	gxt = FixedMul(trx, finesine[an]);
-	gyt = FixedMul(try, finecosine[an]);
+	gxt = FixedMul(xtr, finesine[an]);
+	gyt = FixedMul(ytr, finecosine[an]);
 	*y = (gyt + gxt) + startSpotY;
 }
 

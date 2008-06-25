@@ -4,8 +4,8 @@
 //** p_map.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_map.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-24 11:45:57 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-25 08:25:50 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1657,7 +1657,7 @@ static boolean PTR_AimTraverse (intercept_t *in)
 	th = in->d.thing;
 	if (th == shootthing)
 		return true;		// can't shoot self
-	if(!(th->flags & MF_SHOOTABLE))
+	if (!(th->flags & MF_SHOOTABLE))
 	{ // corpse or something
 		return true;
 	}
@@ -1815,7 +1815,7 @@ hitline:
 				P_BloodSplatter(x, y, z, in->d.thing);
 			}
 		}
-		if(PuffType == MT_FLAMEPUFF2)
+		if (PuffType == MT_FLAMEPUFF2)
 		{ // Cleric FlameStrike does fire damage
 			P_DamageMobj(th, &LavaInflictor, shootthing, la_damage);
 		}
@@ -1925,7 +1925,7 @@ static boolean PTR_UseTraverse (intercept_t *in)
 		{
 			if (usething->player)
 			{
-				switch (usething->player->class)
+				switch (usething->player->playerclass)
 				{
 				case PCLASS_FIGHTER:
 					sound = SFX_PLAYER_FIGHTER_FAILED_USE;
@@ -1952,7 +1952,7 @@ static boolean PTR_UseTraverse (intercept_t *in)
 			pheight = usething->z + (usething->height/2);
 			if ((opentop < pheight) || (openbottom > pheight))
 			{
-				switch (usething->player->class)
+				switch (usething->player->playerclass)
 				{
 				case PCLASS_FIGHTER:
 					sound = SFX_PLAYER_FIGHTER_FAILED_USE;
@@ -2038,7 +2038,7 @@ static boolean PTR_PuzzleItemTraverse(intercept_t *in)
 				sound = SFX_NONE;
 				if (PuzzleItemUser->player)
 				{
-					switch (PuzzleItemUser->player->class)
+					switch (PuzzleItemUser->player->playerclass)
 					{
 					case PCLASS_FIGHTER:
 						sound = SFX_PUZZLE_FAIL_FIGHTER;

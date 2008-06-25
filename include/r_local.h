@@ -4,8 +4,8 @@
 //** r_local.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_local.h,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-22 16:32:45 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-25 08:25:54 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -267,7 +267,7 @@ typedef struct vissprite_s
 #endif
 	int		mobjflags;		/* for color translation and shadow draw */
 	boolean		psprite;		/* true if psprite */
-	int			class;		/* player class (used in translation) */
+	int		playerclass;		/* player class (used in translation) */
 	fixed_t		floorclip;
 } vissprite_t;
 

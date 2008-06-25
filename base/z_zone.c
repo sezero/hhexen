@@ -4,8 +4,8 @@
 //** z_zone.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: z_zone.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-25 08:25:53 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -156,7 +156,7 @@ void Z_Free (void *ptr)
 void *Z_Malloc (int size, int tag, void *user)
 {
 	int		extra;
-	memblock_t	*start, *rover, *new, *base;
+	memblock_t	*start, *rover, *newblock, *base;
 
 //
 // scan through the block list looking for the first free block
@@ -202,14 +202,14 @@ void *Z_Malloc (int size, int tag, void *user)
 	extra = base->size - size;
 	if (extra >  MINFRAGMENT)
 	{	// there will be a free fragment after the allocated block
-		new = (memblock_t *) ((byte *)base + size);
-		new->size = extra;
-		new->user = NULL;		// free block
-		new->tag = 0;
-		new->prev = base;
-		new->next = base->next;
-		new->next->prev = new;
-		base->next = new;
+		newblock = (memblock_t *) ((byte *)base + size);
+		newblock->size = extra;
+		newblock->user = NULL;		// free block
+		newblock->tag = 0;
+		newblock->prev = base;
+		newblock->next = base->next;
+		newblock->next->prev = newblock;
+		base->next = newblock;
 		base->size = size;
 	}
 

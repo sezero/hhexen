@@ -4,8 +4,8 @@
 //** d_net.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: d_net.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-25 08:25:49 $
 //** $Author: sezero $
 //**
 //** This version has the fixed ticdup code.
@@ -552,7 +552,7 @@ static void D_ArbitrateNetStart (void)
 		{ // Check for any incoming packets
 			if (netbuffer->checksum & NCMD_SETUP && netbuffer->starttic >= 64)
 			{
-				PlayerClass[netbuffer->player] = netbuffer->starttic & 0x3f;
+				PlayerClasses[netbuffer->player] = netbuffer->starttic & 0x3f;
 				if (!gotClass[netbuffer->player])
 				{
 					gotClass[netbuffer->player] = true;
@@ -569,7 +569,7 @@ static void D_ArbitrateNetStart (void)
 		for (i = 0; i < doomcom->numnodes; i++)
 		{
 			netbuffer->player = doomcom->consoleplayer;
-			netbuffer->starttic = PlayerClass[doomcom->consoleplayer] + 64;
+			netbuffer->starttic = PlayerClasses[doomcom->consoleplayer] + 64;
 			netbuffer->retransmitfrom = gotinfo[doomcom->consoleplayer];
 			netbuffer->numtics = 0;
 			HSendPacket(i, NCMD_SETUP);
@@ -715,7 +715,7 @@ void D_CheckNetGame (void)
 		}
 		ST_Message("\nPlayer Class: %d\n", pClass);
 	}
-	PlayerClass[consoleplayer] = pClass;
+	PlayerClasses[consoleplayer] = pClass;
 	if (netgame)
 		D_ArbitrateNetStart ();
 

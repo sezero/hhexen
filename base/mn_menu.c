@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.25 $
-//** $Date: 2008-06-24 18:23:15 $
+//** $Revision: 1.26 $
+//** $Date: 2008-06-25 08:25:49 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -944,7 +944,7 @@ static void DrawMainMenu(void)
 
 static void DrawClassMenu(void)
 {
-	pclass_t class;
+	pclass_t pClass;
 	static const char *boxLumpName[4] =
 	{
 		"m_fbox",
@@ -961,15 +961,15 @@ static void DrawClassMenu(void)
 	};
 
 	MN_DrTextB("CHOOSE CLASS:", 34, 24);
-	class = (pclass_t)CurrentMenu->items[CurrentItPos].option;
+	pClass = (pclass_t)CurrentMenu->items[CurrentItPos].option;
 #ifdef RENDER3D
-	OGL_DrawPatch_CS(174, 8, W_GetNumForName(boxLumpName[class]));
+	OGL_DrawPatch_CS(174, 8, W_GetNumForName(boxLumpName[pClass]));
 	OGL_DrawPatch_CS(174+24, 8+12,
-			 W_GetNumForName(walkLumpName[class]) + ((MenuTime>>3) & 3));
+			 W_GetNumForName(walkLumpName[pClass]) + ((MenuTime>>3) & 3));
 #else
-	V_DrawPatch(174, 8, W_CacheLumpName(boxLumpName[class], PU_CACHE));
+	V_DrawPatch(174, 8, W_CacheLumpName(boxLumpName[pClass], PU_CACHE));
 	V_DrawPatch(174+24, 8+12,
-		W_CacheLumpNum(W_GetNumForName(walkLumpName[class]) + ((MenuTime>>3) & 3), PU_CACHE));
+		W_CacheLumpNum(W_GetNumForName(walkLumpName[pClass]) + ((MenuTime>>3) & 3), PU_CACHE));
 #endif
 }
 
@@ -1417,7 +1417,7 @@ static void SCSkill(int option)
 {
 	extern int SB_state;
 
-	PlayerClass[consoleplayer] = MenuPClass;
+	PlayerClasses[consoleplayer] = MenuPClass;
 	G_DeferredNewGame(option);
 	SB_SetClassData();
 	SB_state = -1;

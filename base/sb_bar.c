@@ -4,8 +4,8 @@
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.14 $
-//** $Date: 2008-06-24 11:53:47 $
+//** $Revision: 1.15 $
+//** $Date: 2008-06-25 08:25:52 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -615,31 +615,31 @@ void SB_Init(void)
 
 void SB_SetClassData(void)
 {
-	int class;
+	int pClass;
 	int max_players;
 
-	class = PlayerClass[consoleplayer]; // original player class (not pig)
+	pClass = PlayerClasses[consoleplayer];	// original player class (not pig)
 #ifdef ASSASSIN
-	if (class == PCLASS_ASS)
-		class = PCLASS_FIGHTER;	// Use FIghter chain and gem for now
+	if (pClass == PCLASS_ASS)
+		pClass = PCLASS_FIGHTER;	// Use FIghter chain and gem for now
 #endif
 
 	max_players = ((MAXPLAYERS > MAXPLAYERS_10) && oldwad_10) ? MAXPLAYERS_10 : MAXPLAYERS;
 
-	PatchWEAPONSLOT = WR_CacheLumpNum(W_GetNumForName("wpslot0") + class, PU_STATIC);
-	PatchWEAPONFULL = WR_CacheLumpNum(W_GetNumForName("wpfull0") + class, PU_STATIC);
-	PatchPIECE1	= WR_CacheLumpNum(W_GetNumForName("wpiecef1")+ class, PU_STATIC);
-	PatchPIECE2	= WR_CacheLumpNum(W_GetNumForName("wpiecef2")+ class, PU_STATIC);
-	PatchPIECE3	= WR_CacheLumpNum(W_GetNumForName("wpiecef3")+ class, PU_STATIC);
-	PatchCHAIN	= WR_CacheLumpNum(W_GetNumForName("chain")   + class, PU_STATIC);
+	PatchWEAPONSLOT = WR_CacheLumpNum(W_GetNumForName("wpslot0") + pClass, PU_STATIC);
+	PatchWEAPONFULL = WR_CacheLumpNum(W_GetNumForName("wpfull0") + pClass, PU_STATIC);
+	PatchPIECE1	= WR_CacheLumpNum(W_GetNumForName("wpiecef1")+ pClass, PU_STATIC);
+	PatchPIECE2	= WR_CacheLumpNum(W_GetNumForName("wpiecef2")+ pClass, PU_STATIC);
+	PatchPIECE3	= WR_CacheLumpNum(W_GetNumForName("wpiecef3")+ pClass, PU_STATIC);
+	PatchCHAIN	= WR_CacheLumpNum(W_GetNumForName("chain")   + pClass, PU_STATIC);
 
 	if (!netgame)
 	{ // single player game uses red life gem (the second gem)
-		PatchLIFEGEM = WR_CacheLumpNum(W_GetNumForName("lifegem") + max_players*class + 1, PU_STATIC);
+		PatchLIFEGEM = WR_CacheLumpNum(W_GetNumForName("lifegem") + max_players*pClass + 1, PU_STATIC);
 	}
 	else
 	{
-		PatchLIFEGEM = WR_CacheLumpNum(W_GetNumForName("lifegem") + max_players*class + consoleplayer, PU_STATIC);
+		PatchLIFEGEM = WR_CacheLumpNum(W_GetNumForName("lifegem") + max_players*pClass + consoleplayer, PU_STATIC);
 	}
 	SB_state = -1;
 	UpdateState |= I_FULLSCRN;
@@ -1516,7 +1516,7 @@ void DrawMainBar(void)
 #endif
 
 	// Armor
-	temp = AutoArmorSave[CPlayer->class]
+	temp = AutoArmorSave[CPlayer->playerclass]
 		+ CPlayer->armorpoints[ARMOR_ARMOR] + CPlayer->armorpoints[ARMOR_SHIELD]
 		+ CPlayer->armorpoints[ARMOR_HELMET]+ CPlayer->armorpoints[ARMOR_AMULET];
 #ifndef RENDER3D
@@ -1612,7 +1612,7 @@ void DrawKeyBar(void)
 		UpdateState |= I_STATBAR;
 	}
 #endif
-	temp = AutoArmorSave[CPlayer->class]
+	temp = AutoArmorSave[CPlayer->playerclass]
 		+ CPlayer->armorpoints[ARMOR_ARMOR] + CPlayer->armorpoints[ARMOR_SHIELD]
 		+ CPlayer->armorpoints[ARMOR_HELMET]+ CPlayer->armorpoints[ARMOR_AMULET];
 #ifdef RENDER3D
@@ -1625,11 +1625,11 @@ void DrawKeyBar(void)
 			{
 				continue;
 			}
-			if (CPlayer->armorpoints[i] <= (ArmorIncrement[CPlayer->class][i]>>2))
+			if (CPlayer->armorpoints[i] <= (ArmorIncrement[CPlayer->playerclass][i]>>2))
 			{
 				V_DrawFuzzPatch(150 + 31*i, 164, WR_CacheLumpNum(W_GetNumForName("armslot1") + i, PU_CACHE));
 			}
-			else if (CPlayer->armorpoints[i] <= (ArmorIncrement[CPlayer->class][i]>>1))
+			else if (CPlayer->armorpoints[i] <= (ArmorIncrement[CPlayer->playerclass][i]>>1))
 			{
 				V_DrawAltFuzzPatch(150 + 31*i, 164, WR_CacheLumpNum(W_GetNumForName("armslot1") + i, PU_CACHE));
 			}
@@ -1672,15 +1672,15 @@ static void DrawWeaponPieces(void)
 	V_DrawPatch(190, 162, PatchWEAPONSLOT);
 	if (CPlayer->pieces & WPIECE1)
 	{
-		V_DrawPatch(PieceX[PlayerClass[consoleplayer]][0], 162, PatchPIECE1);
+		V_DrawPatch(PieceX[PlayerClasses[consoleplayer]][0], 162, PatchPIECE1);
 	}
 	if (CPlayer->pieces & WPIECE2)
 	{
-		V_DrawPatch(PieceX[PlayerClass[consoleplayer]][1], 162, PatchPIECE2);
+		V_DrawPatch(PieceX[PlayerClasses[consoleplayer]][1], 162, PatchPIECE2);
 	}
 	if (CPlayer->pieces & WPIECE3)
 	{
-		V_DrawPatch(PieceX[PlayerClass[consoleplayer]][2], 162, PatchPIECE3);
+		V_DrawPatch(PieceX[PlayerClasses[consoleplayer]][2], 162, PatchPIECE3);
 	}
 }
 
@@ -1954,7 +1954,7 @@ static void CheatWeaponsFunc(player_t *player, Cheat_t *cheat)
 
 	for (i = 0; i < NUMARMOR; i++)
 	{
-		player->armorpoints[i] = ArmorIncrement[player->class][i];
+		player->armorpoints[i] = ArmorIncrement[player->playerclass][i];
 	}
 	for (i = 0; i < NUMWEAPONS; i++)
 	{
@@ -2167,24 +2167,24 @@ static void CheatClassFunc1(player_t *player, Cheat_t *cheat)
 static void CheatClassFunc2(player_t *player, Cheat_t *cheat)
 {
 	int i;
-	int class;
+	int pClass;
 
 	if (player->morphTics)
 	{ // don't change class if the player is morphed
 		return;
 	}
-	class = cheat->args[0] - '0';
-	if (class > NUMCLASSES_HUMAN - 1 || class < 0)
+	pClass = cheat->args[0] - '0';
+	if (pClass > NUMCLASSES_HUMAN - 1 || pClass < 0)
 	{
 		P_SetMessage(player, "INVALID PLAYER CLASS", true);
 		return;
 	}
-	player->class = class;
+	player->playerclass = pClass;
 	for (i = 0; i < NUMARMOR; i++)
 	{
 		player->armorpoints[i] = 0;
 	}
-	PlayerClass[consoleplayer] = class;
+	PlayerClasses[consoleplayer] = pClass;
 	P_PostMorphWeapon(player, WP_FIRST);
 	SB_SetClassData();
 	SB_state = -1;

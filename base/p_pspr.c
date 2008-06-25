@@ -4,8 +4,8 @@
 //** p_pspr.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_pspr.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-24 11:45:58 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-25 08:25:51 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -391,7 +391,7 @@ void P_PostMorphWeapon(player_t *player, weapontype_t weapon)
 	player->pendingweapon = WP_NOCHANGE;
 	player->readyweapon = weapon;
 	player->psprites[ps_weapon].sy = WEAPONBOTTOM;
-	P_SetPsprite(player, ps_weapon, WeaponInfo[weapon][player->class].upstate);
+	P_SetPsprite(player, ps_weapon, WeaponInfo[weapon][player->playerclass].upstate);
 }
 
 
@@ -405,24 +405,24 @@ void P_PostMorphWeapon(player_t *player, weapontype_t weapon)
 
 void P_BringUpWeapon(player_t *player)
 {
-	statenum_t new;
+	statenum_t newstate;
 
 	if (player->pendingweapon == WP_NOCHANGE)
 	{
 		player->pendingweapon = player->readyweapon;
 	}
-	if (player->class == PCLASS_FIGHTER && player->pendingweapon == WP_SECOND
+	if (player->playerclass == PCLASS_FIGHTER && player->pendingweapon == WP_SECOND
 						&& player->mana[MANA_1])
 	{
-		new = S_FAXEUP_G;
+		newstate = S_FAXEUP_G;
 	}
 	else
 	{
-		new = WeaponInfo[player->pendingweapon][player->class].upstate;
+		newstate = WeaponInfo[player->pendingweapon][player->playerclass].upstate;
 	}
 	player->pendingweapon = WP_NOCHANGE;
 	player->psprites[ps_weapon].sy = WEAPONBOTTOM;
-	P_SetPsprite(player, ps_weapon, new);
+	P_SetPsprite(player, ps_weapon, newstate);
 }
 
 //---------------------------------------------------------------------------
@@ -439,8 +439,8 @@ static boolean P_CheckMana(player_t *player)
 	manatype_t mana;
 	int count;
 
-	mana = WeaponInfo[player->readyweapon][player->class].mana;
-	count = WeaponManaUse[player->class][player->readyweapon];
+	mana = WeaponInfo[player->readyweapon][player->playerclass].mana;
+	count = WeaponManaUse[player->playerclass][player->readyweapon];
 	if (mana == MANA_BOTH)
 	{
 		if (player->mana[MANA_1] >= count && player->mana[MANA_2] >= count)
@@ -456,18 +456,18 @@ static boolean P_CheckMana(player_t *player)
 	do
 	{
 		if (player->weaponowned[WP_THIRD]
-			&& player->mana[MANA_2] >= WeaponManaUse[player->class][WP_THIRD])
+			&& player->mana[MANA_2] >= WeaponManaUse[player->playerclass][WP_THIRD])
 		{
 			player->pendingweapon = WP_THIRD;
 		}
 		else if (player->weaponowned[WP_SECOND]
-			&& player->mana[MANA_1] >= WeaponManaUse[player->class][WP_SECOND])
+			&& player->mana[MANA_1] >= WeaponManaUse[player->playerclass][WP_SECOND])
 		{
 			player->pendingweapon = WP_SECOND;
 		}
 		else if (player->weaponowned[WP_FOURTH]
-			&& player->mana[MANA_1] >= WeaponManaUse[player->class][WP_FOURTH]
-			&& player->mana[MANA_2] >= WeaponManaUse[player->class][WP_FOURTH])
+			&& player->mana[MANA_1] >= WeaponManaUse[player->playerclass][WP_FOURTH]
+			&& player->mana[MANA_2] >= WeaponManaUse[player->playerclass][WP_FOURTH])
 		{
 			player->pendingweapon = WP_FOURTH;
 		}
@@ -477,7 +477,7 @@ static boolean P_CheckMana(player_t *player)
 		}
 	} while (player->pendingweapon == WP_NOCHANGE);
 	P_SetPsprite(player, ps_weapon,
-			WeaponInfo[player->readyweapon][player->class].downstate);
+			WeaponInfo[player->readyweapon][player->playerclass].downstate);
 	return false;
 }
 
@@ -495,8 +495,8 @@ static void P_FireWeapon(player_t *player)
 	{
 		return;
 	}
-	P_SetMobjState(player->mo, PStateAttack[player->class]); // S_PLAY_ATK1);
-	if (player->class == PCLASS_FIGHTER && player->readyweapon == WP_SECOND
+	P_SetMobjState(player->mo, PStateAttack[player->playerclass]); // S_PLAY_ATK1);
+	if (player->playerclass == PCLASS_FIGHTER && player->readyweapon == WP_SECOND
 						&& player->mana[MANA_1] > 0)
 	{ // Glowing axe
 		attackState = S_FAXEATK_G1;
@@ -504,8 +504,8 @@ static void P_FireWeapon(player_t *player)
 	else
 	{
 		attackState = player->refire ? 
-			WeaponInfo[player->readyweapon][player->class].holdatkstate
-			: WeaponInfo[player->readyweapon][player->class].atkstate;
+			WeaponInfo[player->readyweapon][player->playerclass].holdatkstate
+			: WeaponInfo[player->readyweapon][player->playerclass].atkstate;
 	}
 	P_SetPsprite(player, ps_weapon, attackState);
 	P_NoiseAlert(player->mo, player->mo);
@@ -522,7 +522,7 @@ static void P_FireWeapon(player_t *player)
 void P_DropWeapon(player_t *player)
 {
 	P_SetPsprite(player, ps_weapon,
-			WeaponInfo[player->readyweapon][player->class].downstate);
+			WeaponInfo[player->readyweapon][player->playerclass].downstate);
 }
 
 //---------------------------------------------------------------------------
@@ -538,17 +538,17 @@ void A_WeaponReady(player_t *player, pspdef_t *psp)
 	int angle;
 
 	// Change player from attack state
-	if (player->mo->state >= &states[PStateAttack[player->class]]
-		&& player->mo->state <= &states[PStateAttackEnd[player->class]])
+	if (player->mo->state >= &states[PStateAttack[player->playerclass]]
+		&& player->mo->state <= &states[PStateAttackEnd[player->playerclass]])
 	{
-		P_SetMobjState(player->mo, PStateNormal[player->class]);
+		P_SetMobjState(player->mo, PStateNormal[player->playerclass]);
 	}
 	// Put the weapon away if the player has a pending weapon or has
 	// died.
 	if (player->pendingweapon != WP_NOCHANGE || !player->health)
 	{
 		P_SetPsprite(player, ps_weapon,
-			WeaponInfo[player->readyweapon][player->class].downstate);
+			WeaponInfo[player->readyweapon][player->playerclass].downstate);
 		return;
 	}
 
@@ -645,7 +645,7 @@ void A_Raise(player_t *player, pspdef_t *psp)
 		return;
 	}
 	psp->sy = WEAPONTOP;
-	if (player->class == PCLASS_FIGHTER && player->readyweapon == WP_SECOND
+	if (player->playerclass == PCLASS_FIGHTER && player->readyweapon == WP_SECOND
 						&& player->mana[MANA_1])
 	{
 		P_SetPsprite(player, ps_weapon, S_FAXEREADY_G);
@@ -653,7 +653,7 @@ void A_Raise(player_t *player, pspdef_t *psp)
 	else
 	{
 		P_SetPsprite(player, ps_weapon,
-			WeaponInfo[player->readyweapon][player->class].readystate);
+			WeaponInfo[player->readyweapon][player->playerclass].readystate);
 	}
 }
 
@@ -822,7 +822,7 @@ void A_FHammerAttack(player_t *player, pspdef_t *psp)
 	}
 hammerdone:
 	if (player->mana[MANA_2] < 
-			WeaponManaUse[player->class][player->readyweapon])
+			WeaponManaUse[player->playerclass][player->readyweapon])
 	{ // Don't spawn a hammer if the player doesn't have enough mana
 		pmo->special1 = false;
 	}
@@ -843,7 +843,7 @@ void A_FHammerThrow(player_t *player, pspdef_t *psp)
 	{
 		return;
 	}
-	player->mana[MANA_2] -= WeaponManaUse[player->class][player->readyweapon];
+	player->mana[MANA_2] -= WeaponManaUse[player->playerclass][player->readyweapon];
 	mo = P_SpawnPlayerMissile(player->mo, MT_HAMMER_MISSILE);
 	if (mo)
 	{
@@ -861,8 +861,8 @@ void A_FSwordAttack(player_t *player, pspdef_t *psp)
 {
 	mobj_t *pmo;
 
-	player->mana[MANA_1] -= WeaponManaUse[player->class][player->readyweapon];
-	player->mana[MANA_2] -= WeaponManaUse[player->class][player->readyweapon];
+	player->mana[MANA_1] -= WeaponManaUse[player->playerclass][player->readyweapon];
+	player->mana[MANA_2] -= WeaponManaUse[player->playerclass][player->readyweapon];
 	pmo = player->mo;
 	P_SPMAngleXYZ(pmo, pmo->x, pmo->y, pmo->z - 10*FRACUNIT, MT_FSWORD_MISSILE, pmo->angle + ANG45/4);
 	P_SPMAngleXYZ(pmo, pmo->x, pmo->y, pmo->z - 5*FRACUNIT, MT_FSWORD_MISSILE, pmo->angle + ANG45/8);
@@ -1114,7 +1114,7 @@ void A_MLightningAttack2(mobj_t *actor)
 void A_MLightningAttack(player_t *player, pspdef_t *psp)
 {
 	A_MLightningAttack2(player->mo);
-	player->mana[MANA_2] -= WeaponManaUse[player->class][player->readyweapon];
+	player->mana[MANA_2] -= WeaponManaUse[player->playerclass][player->readyweapon];
 }
 
 //============================================================================
@@ -1209,8 +1209,8 @@ void A_MStaffAttack(player_t *player, pspdef_t *psp)
 	angle_t angle;
 	mobj_t *pmo;
 
-	player->mana[MANA_1] -= WeaponManaUse[player->class][player->readyweapon];
-	player->mana[MANA_2] -= WeaponManaUse[player->class][player->readyweapon];
+	player->mana[MANA_1] -= WeaponManaUse[player->playerclass][player->readyweapon];
+	player->mana[MANA_2] -= WeaponManaUse[player->playerclass][player->readyweapon];
 	pmo = player->mo;
 	angle = pmo->angle;
 
@@ -1477,7 +1477,7 @@ axedone:
 	if (useMana == 2)
 	{
 		player->mana[MANA_1] -= 
-			WeaponManaUse[player->class][player->readyweapon];
+			WeaponManaUse[player->playerclass][player->readyweapon];
 		if (player->mana[MANA_1] <= 0)
 		{
 			P_SetPsprite(player, ps_weapon, S_FAXEATK_5);
@@ -1571,7 +1571,7 @@ void A_CStaffCheck(player_t *player, pspdef_t *psp)
 				P_SetPsprite(player, ps_weapon, S_CSTAFFATK2_1);
 			}
 			player->mana[MANA_1] -= 
-				WeaponManaUse[player->class][player->readyweapon];
+				WeaponManaUse[player->playerclass][player->readyweapon];
 			break;
 		}
 		angle = pmo->angle - i*(ANG45/16);
@@ -1589,7 +1589,7 @@ void A_CStaffCheck(player_t *player, pspdef_t *psp)
 				P_SetPsprite(player, ps_weapon, S_CSTAFFATK2_1);
 			}
 			player->mana[MANA_1] -= 
-				WeaponManaUse[player->class][player->readyweapon];
+				WeaponManaUse[player->playerclass][player->readyweapon];
 			break;
 		}
 	}
@@ -1606,7 +1606,7 @@ void A_CStaffAttack(player_t *player, pspdef_t *psp)
 	mobj_t *mo;
 	mobj_t *pmo;
 
-	player->mana[MANA_1] -=	WeaponManaUse[player->class][player->readyweapon];
+	player->mana[MANA_1] -=	WeaponManaUse[player->playerclass][player->readyweapon];
 	pmo = player->mo;
 	mo = P_SPMAngle(pmo, MT_CSTAFF_MISSILE, pmo->angle - (ANG45/15));
 	if (mo)
@@ -1690,7 +1690,7 @@ void A_CFlameAttack(player_t *player, pspdef_t *psp)
 		mo->special1 = 2;
 	}
 
-	player->mana[MANA_2] -= WeaponManaUse[player->class][player->readyweapon];
+	player->mana[MANA_2] -= WeaponManaUse[player->playerclass][player->readyweapon];
 	S_StartSound(player->mo, SFX_CLERIC_FLAME_FIRE);
 }
 
@@ -1835,7 +1835,7 @@ void A_CFlameAttack(player_t *player, pspdef_t *psp)
 // Create a line of flames from the player to the flame puff
 	CFlameCreateFlames(player->mo);
 
-	player->mana[MANA_2] -= WeaponManaUse[player->class][player->readyweapon];
+	player->mana[MANA_2] -= WeaponManaUse[player->playerclass][player->readyweapon];
 	S_StartSound(player->mo, SFX_CLERIC_FLAME_FIRE);
 }
 */
@@ -1948,8 +1948,8 @@ void A_CHolyAttack(player_t *player, pspdef_t *psp)
 {
 	mobj_t *mo;
 
-	player->mana[MANA_1] -= WeaponManaUse[player->class][player->readyweapon];
-	player->mana[MANA_2] -= WeaponManaUse[player->class][player->readyweapon];
+	player->mana[MANA_1] -= WeaponManaUse[player->playerclass][player->readyweapon];
+	player->mana[MANA_2] -= WeaponManaUse[player->playerclass][player->readyweapon];
 	mo = P_SpawnPlayerMissile(player->mo, MT_HOLY_MISSILE);
 	if (player == &players[consoleplayer])
 	{
@@ -2280,7 +2280,7 @@ void A_FireConePL1(player_t *player, pspdef_t *psp)
 	int conedone = false;
 
 	pmo = player->mo;
-	player->mana[MANA_1] -= WeaponManaUse[player->class][player->readyweapon];
+	player->mana[MANA_1] -= WeaponManaUse[player->playerclass][player->readyweapon];
 	S_StartSound(pmo, SFX_MAGE_SHARDS_FIRE);
 
 	damage = 90 + (P_Random() & 15);
@@ -2636,7 +2636,7 @@ void A_ACrossAttack(player_t *player, pspdef_t *psp)
 	mobj_t *mo;
 	mobj_t *pmo = player->mo;
 
-	player->mana[MANA_1] -=	WeaponManaUse[player->class][player->readyweapon];
+	player->mana[MANA_1] -=	WeaponManaUse[player->playerclass][player->readyweapon];
 //	pmo = player->mo;
 //	P_SpawnPlayerMissile(pmo, MT_CSTAFF_MISSILE);
 
@@ -2696,8 +2696,8 @@ void A_AStaffAttack(player_t *player, pspdef_t *psp)
 
 /* THIS ISN'T FINISHED YET!! */
 
-	player->mana[MANA_1] -= WeaponManaUse[player->class][player->readyweapon];
-	player->mana[MANA_2] -= WeaponManaUse[player->class][player->readyweapon];
+	player->mana[MANA_1] -= WeaponManaUse[player->playerclass][player->readyweapon];
+	player->mana[MANA_2] -= WeaponManaUse[player->playerclass][player->readyweapon];
 
 	pmo = player->mo;
 	angle = pmo->angle;

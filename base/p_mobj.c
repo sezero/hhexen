@@ -4,8 +4,8 @@
 //** p_mobj.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_mobj.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-24 11:56:34 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-25 08:25:51 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -449,12 +449,12 @@ static void P_XYMovement(mobj_t *mo)
 				}
 				else
 				{ // Slide against mobj
-					//if(P_TryMove(mo, mo->x, mo->y + mo->momy))
+					//if (P_TryMove(mo, mo->x, mo->y + mo->momy))
 					if (P_TryMove(mo, mo->x, ptryy))
 					{
 						mo->momx = 0;
 					}
-					//else if(P_TryMove(mo, mo->x + mo->momx, mo->y))
+					//else if (P_TryMove(mo, mo->x + mo->momx, mo->y))
 					else if (P_TryMove(mo, ptryx, mo->y))
 					{
 						mo->momy = 0;
@@ -630,9 +630,9 @@ explode:
 		if (player)
 		{
 			if ((unsigned)((player->mo->state - states)
-					- PStateRun[player->class]) < 4)
+					- PStateRun[player->playerclass]) < 4)
 			{
-				P_SetMobjState(player->mo, PStateNormal[player->class]);
+				P_SetMobjState(player->mo, PStateNormal[player->playerclass]);
 			}
 		}
 		mo->momx = 0;
@@ -788,7 +788,7 @@ static void P_ZMovement(mobj_t *mo)
 					else if (mo->momz < -GRAVITY*12 && !mo->player->morphTics)
 					{
 						S_StartSound(mo, SFX_PLAYER_LAND);
-						switch (mo->player->class)
+						switch (mo->player->playerclass)
 						{
 						case PCLASS_FIGHTER:
 							S_StartSound(mo, SFX_PLAYER_FIGHTER_GRUNT);
@@ -1024,7 +1024,7 @@ static void PlayerLandedOnThing(mobj_t *mo, mobj_t *onmobj)
 		 !mo->player->morphTics)
 	{
 		S_StartSound(mo, SFX_PLAYER_LAND);
-		switch (mo->player->class)
+		switch (mo->player->playerclass)
 		{
 		case PCLASS_FIGHTER:
 			S_StartSound(mo, SFX_PLAYER_FIGHTER_GRUNT);
@@ -1316,19 +1316,19 @@ void P_SpawnPlayer(mapthing_t *mthing)
 	z = ONFLOORZ;
 	if (randomclass && deathmatch)
 	{
-		p->class = P_Random() % NUMCLASSES_HUMAN;
-		if (p->class == PlayerClass[mthing->type - 1])
+		p->playerclass = P_Random() % NUMCLASSES_HUMAN;
+		if (p->playerclass == PlayerClasses[mthing->type - 1])
 		{
-			p->class = (p->class + 1) % NUMCLASSES_HUMAN;
+			p->playerclass = (p->playerclass + 1) % NUMCLASSES_HUMAN;
 		}
-		PlayerClass[mthing->type - 1] = p->class;
+		PlayerClasses[mthing->type - 1] = p->playerclass;
 		SB_SetClassData();
 	}
 	else
 	{
-		p->class = PlayerClass[mthing->type - 1];
+		p->playerclass = PlayerClasses[mthing->type - 1];
 	}
-	switch (p->class)
+	switch (p->playerclass)
 	{
 	case PCLASS_FIGHTER:
 		mobj = P_SpawnMobj(x, y, z, MT_PLAYER_FIGHTER);
@@ -1351,7 +1351,7 @@ void P_SpawnPlayer(mapthing_t *mthing)
 	}
 
 	// Set translation table data
-	if (p->class == PCLASS_FIGHTER && (mthing->type == 1 || mthing->type == 3))
+	if (p->playerclass == PCLASS_FIGHTER && (mthing->type == 1 || mthing->type == 3))
 	{
 		// The first type should be blue, and the third should be the
 		// Fighter's original gold color
@@ -1500,7 +1500,7 @@ void P_SpawnMapThing(mapthing_t *mthing)
 	// Check current character classes with spawn flags
 	if (netgame == false)
 	{ // Single player
-		if ((mthing->options&classFlags[PlayerClass[0]]) == 0)
+		if ((mthing->options&classFlags[PlayerClasses[0]]) == 0)
 		{ // Not for current class
 			return;
 		}
@@ -1512,7 +1512,7 @@ void P_SpawnMapThing(mapthing_t *mthing)
 		{
 			if (playeringame[i])
 			{
-				spawnMask |= classFlags[PlayerClass[i]];
+				spawnMask |= classFlags[PlayerClasses[i]];
 			}
 		}
 		if ((mthing->options&spawnMask) == 0)
