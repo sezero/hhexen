@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.21 $
-//** $Date: 2008-06-22 16:32:43 $
+//** $Revision: 1.22 $
+//** $Date: 2008-06-25 20:10:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -324,7 +324,7 @@ void M_FindResponseFile(void)
 			fseek (handle, 0, SEEK_END);
 			size = ftell(handle);
 			fseek (handle, 0, SEEK_SET);
-			file = malloc (size);
+			file = (char *) malloc (size);
 			fread (file, size, 1, handle);
 			fclose (handle);
 
@@ -676,7 +676,7 @@ void WritePCXfile (const char *filename, byte *data, int width, int height, byte
 	pcx_t	*pcx;
 	byte	*pack;
 
-	pcx = Z_Malloc (width*height*2+1000, PU_STATIC, NULL);
+	pcx = (pcx_t *) Z_Malloc (width*height*2 + 1000, PU_STATIC, NULL);
 
 	pcx->manufacturer = 0x0a;	// PCX id
 	pcx->version = 5;		// 256 color

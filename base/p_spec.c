@@ -4,8 +4,8 @@
 //** p_spec.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_spec.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-22 16:32:44 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-25 20:10:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -91,7 +91,7 @@ void P_InitTerrainTypes(void)
 	int size;
 
 	size = (numflats + 1) * sizeof(int);
-	TerrainTypes = Z_Malloc(size, PU_STATIC, 0);
+	TerrainTypes = (int *) Z_Malloc(size, PU_STATIC, NULL);
 	memset(TerrainTypes, 0, size);
 	for (i = 0; TerrainTypeDefs[i].type != -1; i++)
 	{

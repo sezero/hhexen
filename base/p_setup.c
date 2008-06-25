@@ -4,8 +4,8 @@
 //** p_setup.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_setup.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-25 17:26:07 $
+//** $Revision: 1.12 $
+//** $Date: 2008-06-25 20:10:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -183,7 +183,7 @@ static void P_LoadVertexes (int lump)
 	vertex_t	*li;
 
 	numvertexes = W_LumpLength (lump) / sizeof(mapvertex_t);
-	vertexes = Z_Malloc (numvertexes*sizeof(vertex_t), PU_LEVEL, 0);
+	vertexes = (vertex_t *) Z_Malloc (numvertexes*sizeof(vertex_t), PU_LEVEL, NULL);
 	data = W_CacheLumpNum (lump, PU_STATIC);
 
 	ml = (mapvertex_t *)data;
@@ -216,7 +216,7 @@ static void P_LoadSegs (int lump)
 	int		_linedef, side;
 
 	numsegs = W_LumpLength (lump) / sizeof(mapseg_t);
-	segs = Z_Malloc (numsegs*sizeof(seg_t), PU_LEVEL, 0);
+	segs = (seg_t *) Z_Malloc (numsegs*sizeof(seg_t), PU_LEVEL, NULL);
 	memset (segs, 0, numsegs*sizeof(seg_t));
 	data = W_CacheLumpNum (lump, PU_STATIC);
 
@@ -267,7 +267,7 @@ static void P_LoadSubsectors (int lump)
 	subsector_t		*ss;
 
 	numsubsectors = W_LumpLength (lump) / sizeof(mapsubsector_t);
-	subsectors = Z_Malloc (numsubsectors*sizeof(subsector_t), PU_LEVEL, 0);
+	subsectors = (subsector_t *) Z_Malloc (numsubsectors*sizeof(subsector_t), PU_LEVEL, NULL);
 	data = W_CacheLumpNum (lump, PU_STATIC);
 
 	ms = (mapsubsector_t *)data;
@@ -299,7 +299,7 @@ static void P_LoadSectors (int lump)
 	sector_t		*ss;
 
 	numsectors = W_LumpLength (lump) / sizeof(mapsector_t);
-	sectors = Z_Malloc (numsectors*sizeof(sector_t), PU_LEVEL, 0);
+	sectors = (sector_t *) Z_Malloc (numsectors*sizeof(sector_t), PU_LEVEL, NULL);
 	memset (sectors, 0, numsectors*sizeof(sector_t));
 	data = W_CacheLumpNum (lump, PU_STATIC);
 
@@ -350,7 +350,7 @@ static void P_LoadNodes (int lump)
 	node_t		*no;
 
 	numnodes = W_LumpLength (lump) / sizeof(mapnode_t);
-	nodes = Z_Malloc (numnodes*sizeof(node_t), PU_LEVEL, 0);
+	nodes = (node_t *) Z_Malloc (numnodes*sizeof(node_t), PU_LEVEL, NULL);
 	data = W_CacheLumpNum (lump, PU_STATIC);
 
 	mn = (mapnode_t *)data;
@@ -439,7 +439,7 @@ static void P_LoadLineDefs(int lump)
 	vertex_t	*v1, *v2;
 
 	numlines = W_LumpLength(lump) / sizeof(maplinedef_t);
-	lines = Z_Malloc(numlines*sizeof(line_t), PU_LEVEL, 0);
+	lines = (line_t *) Z_Malloc(numlines*sizeof(line_t), PU_LEVEL, NULL);
 	memset(lines, 0, numlines*sizeof(line_t));
 	data = W_CacheLumpNum(lump, PU_STATIC);
 
@@ -529,7 +529,7 @@ static void P_LoadSideDefs (int lump)
 	side_t		*sd;
 
 	numsides = W_LumpLength (lump) / sizeof(mapsidedef_t);
-	sides = Z_Malloc (numsides*sizeof(side_t), PU_LEVEL, 0);
+	sides = (side_t *) Z_Malloc (numsides*sizeof(side_t), PU_LEVEL, NULL);
 	memset (sides, 0, numsides*sizeof(side_t));
 	data = W_CacheLumpNum (lump, PU_STATIC);
 
@@ -580,7 +580,7 @@ static void P_LoadBlockMap (int lump)
 
 // clear out mobj chains
 	count = sizeof(*blocklinks) * bmapwidth * bmapheight;
-	blocklinks = Z_Malloc (count, PU_LEVEL, 0);
+	blocklinks = (mobj_t **) Z_Malloc (count, PU_LEVEL, NULL);
 	memset (blocklinks, 0, count);
 }
 
@@ -629,7 +629,7 @@ static void P_GroupLines (void)
 	}
 
 // build line tables for each sector
-	linebuffer = Z_Malloc (total * 4, PU_LEVEL, 0);
+	linebuffer = (line_t **) Z_Malloc (total * 4, PU_LEVEL, NULL);
 	sector = sectors;
 	for (i = 0; i < numsectors; i++, sector++)
 	{
@@ -726,7 +726,7 @@ static float findIntersectionVertex(fvertex_t *start, fvertex_t *end,
 static void P_ConvexCarver(subsector_t *ssec, int num, divline_t *list)
 {
 	int		numclippers = num + ssec->numlines;
-	fdivline_t	*clippers = (fdivline_t*)malloc(numclippers*sizeof(fdivline_t));
+	fdivline_t	*clippers = (fdivline_t *) malloc(numclippers*sizeof(fdivline_t));
 	int		i, k, numedgepoints;
 	fvertex_t	*edgepoints;
 	unsigned char	sidelist[MAX_CC_SIDES];
@@ -757,7 +757,7 @@ static void P_ConvexCarver(subsector_t *ssec, int num, divline_t *list)
 
 // Setup the 'worldwide' polygon.
 	numedgepoints = 4;
-	edgepoints = (fvertex_t*)malloc(numedgepoints*sizeof(fvertex_t));
+	edgepoints = (fvertex_t *) malloc(numedgepoints*sizeof(fvertex_t));
 
 	edgepoints[0].x = -32768;
 	edgepoints[0].y = 32768;
@@ -805,7 +805,7 @@ static void P_ConvexCarver(subsector_t *ssec, int num, divline_t *list)
 				findIntersectionVertex(edgepoints + startIdx, edgepoints + endIdx, curclip, &newvert);
 
 			// Add the new vertex. Also modify the sidelist.
-				edgepoints = (fvertex_t*)realloc(edgepoints, (++numedgepoints)*sizeof(fvertex_t));
+				edgepoints = (fvertex_t *) realloc(edgepoints, (++numedgepoints)*sizeof(fvertex_t));
 				if (numedgepoints >= MAX_CC_SIDES)
 					I_Error("Too many points in carver.\n");
 
@@ -862,7 +862,7 @@ static void P_ConvexCarver(subsector_t *ssec, int num, divline_t *list)
 			}
 		}
 		// We need these with dynamic lights.
-		ssec->origedgeverts = (fvertex_t*)Z_Malloc(sizeof(fvertex_t)*numedgepoints, PU_LEVEL, 0);
+		ssec->origedgeverts = (fvertex_t *) Z_Malloc(sizeof(fvertex_t)*numedgepoints, PU_LEVEL, NULL);
 		memcpy(ssec->origedgeverts, edgepoints, sizeof(fvertex_t)*numedgepoints);
 
 		// Find the center point. Do this by first finding the bounding box.
@@ -897,7 +897,7 @@ static void P_ConvexCarver(subsector_t *ssec, int num, divline_t *list)
 		}
 
 		ssec->numedgeverts = numedgepoints;
-		ssec->edgeverts = (fvertex_t*)Z_Malloc(sizeof(fvertex_t)*numedgepoints, PU_LEVEL, 0);
+		ssec->edgeverts = (fvertex_t *) Z_Malloc(sizeof(fvertex_t)*numedgepoints, PU_LEVEL, NULL);
 		memcpy(ssec->edgeverts, edgepoints, sizeof(fvertex_t)*numedgepoints);
 	}
 
@@ -931,7 +931,7 @@ static void P_CreateFloorsAndCeilings(int bspnode, int numdivlines, divline_t* d
 	nod = nodes + bspnode;
 
 	// Allocate a new list for each child.
-	childlist = (divline_t*)malloc(childlistsize*sizeof(divline_t));
+	childlist = (divline_t *) malloc(childlistsize*sizeof(divline_t));
 
 	// Copy the previous lines.
 	if (divlines)

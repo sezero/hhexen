@@ -4,8 +4,8 @@
 //** p_doors.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_doors.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-22 21:35:52 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-25 20:10:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -153,7 +153,7 @@ int EV_DoDoor(line_t *line, byte *args, vldoor_e type)
 		}
 		// Add new door thinker
 		retcode = 1;
-		door = Z_Malloc(sizeof(*door), PU_LEVSPEC, 0);
+		door = (vldoor_t *) Z_Malloc(sizeof(*door), PU_LEVSPEC, NULL);
 		P_AddThinker(&door->thinker);
 		sec->specialdata = door;
 		door->thinker.function = T_VerticalDoor;
@@ -231,7 +231,7 @@ boolean EV_VerticalDoor(line_t *line, mobj_t *thing)
 	//
 	// new door thinker
 	//
-	door = Z_Malloc (sizeof(*door), PU_LEVSPEC, 0);
+	door = (vldoor_t *) Z_Malloc (sizeof(*door), PU_LEVSPEC, NULL);
 	P_AddThinker(&door->thinker);
 	sec->specialdata = door;
 	door->thinker.function = T_VerticalDoor;
@@ -274,7 +274,7 @@ void P_SpawnDoorCloseIn30(sector_t *sec)
 {
 	vldoor_t *door;
 
-	door = Z_Malloc(sizeof(*door), PU_LEVSPEC, 0);
+	door = (vldoor_t *) Z_Malloc(sizeof(*door), PU_LEVSPEC, NULL);
 	P_AddThinker(&door->thinker);
 	sec->specialdata = door;
 	sec->special = 0;
@@ -298,7 +298,7 @@ void P_SpawnDoorRaiseIn5Mins(sector_t *sec, int secnum)
 {
 	vldoor_t *door;
 
-	door = Z_Malloc(sizeof(*door), PU_LEVSPEC, 0);
+	door = (vldoor_t *) Z_Malloc(sizeof(*door), PU_LEVSPEC, NULL);
 	P_AddThinker(&door->thinker);
 	sec->specialdata = door;
 	sec->special = 0;

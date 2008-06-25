@@ -4,8 +4,8 @@
 //** p_floor.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_floor.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-24 11:45:57 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-25 20:10:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -292,7 +292,7 @@ int EV_DoFloor(line_t *line, byte *args, floor_e floortype)
 		// new floor thinker
 		//
 		rtn = 1;
-		floor = Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
+		floor = (floormove_t *) Z_Malloc (sizeof(*floor), PU_LEVSPEC, NULL);
 		memset(floor, 0, sizeof(*floor));
 		P_AddThinker (&floor->thinker);
 		sec->specialdata = floor;
@@ -509,7 +509,7 @@ static void ProcessStairSector(sector_t *sec, int type, int height,
 	// new floor thinker
 	//
 	height += StepDelta;
-	floor = Z_Malloc(sizeof(*floor), PU_LEVSPEC, 0);
+	floor = (floormove_t *) Z_Malloc(sizeof(*floor), PU_LEVSPEC, NULL);
 	memset(floor, 0, sizeof(*floor));
 	P_AddThinker(&floor->thinker);
 	sec->specialdata = floor;
@@ -704,7 +704,7 @@ int EV_BuildPillar(line_t *line, byte *args, boolean crush)
 			newHeight = sec->floorheight + (args[2]<<FRACBITS);
 		}
 
-		pillar = Z_Malloc(sizeof(*pillar), PU_LEVSPEC, 0);
+		pillar = (pillar_t *) Z_Malloc(sizeof(*pillar), PU_LEVSPEC, NULL);
 		sec->specialdata = pillar;
 		P_AddThinker(&pillar->thinker);
 		pillar->thinker.function = T_BuildPillar;
@@ -760,7 +760,7 @@ int EV_OpenPillar(line_t *line, byte *args)
 			continue;
 		}
 		rtn = 1;
-		pillar = Z_Malloc(sizeof(*pillar), PU_LEVSPEC, 0);
+		pillar = (pillar_t *) Z_Malloc(sizeof(*pillar), PU_LEVSPEC, NULL);
 		sec->specialdata = pillar;
 		P_AddThinker(&pillar->thinker);
 		pillar->thinker.function = T_BuildPillar;
@@ -907,7 +907,7 @@ boolean EV_StartFloorWaggle(int tag, int height, int speed, int offset,
 			continue;
 		}
 		retCode = true;
-		waggle = Z_Malloc(sizeof(*waggle), PU_LEVSPEC, 0);
+		waggle = (floorWaggle_t *) Z_Malloc(sizeof(*waggle), PU_LEVSPEC, NULL);
 		sector->specialdata = waggle;
 		waggle->thinker.function = T_FloorWaggle;
 		waggle->sector = sector;

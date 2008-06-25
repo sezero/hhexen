@@ -4,8 +4,8 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.18 $
-//** $Date: 2008-06-25 08:25:49 $
+//** $Revision: 1.19 $
+//** $Date: 2008-06-25 20:10:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1728,7 +1728,7 @@ void G_RecordDemo (skill_t skill, int numplayers, int episode, int map, const ch
 	G_InitNew (skill, episode, map);
 	usergame = false;
 	snprintf (demoname, sizeof(demoname), "%s%s.lmp", basePath, name);
-	demobuffer = demo_p = Z_Malloc (0x20000, PU_STATIC, NULL);
+	demobuffer = demo_p = (byte *) Z_Malloc (0x20000, PU_STATIC, NULL);
 	*demo_p++ = skill;
 	*demo_p++ = episode;
 	*demo_p++ = map;

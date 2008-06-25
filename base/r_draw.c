@@ -4,8 +4,8 @@
 //** r_draw.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_draw.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-25 20:10:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -358,7 +358,7 @@ void R_InitTranslationTables (void)
 	tinttable = W_CacheLumpName("TINTTAB", PU_STATIC);
 
 	// Allocate translation tables
-	translationtables = Z_Malloc(256 * 3 * (MAXPLAYERS - 1) + 255, PU_STATIC, 0);
+	translationtables = (byte *) Z_Malloc(256 * 3 * (MAXPLAYERS - 1) + 255, PU_STATIC, NULL);
 	translationtables = (byte *)(((int)translationtables + 255) & ~255);
 
 	for (i = 0; i < 3 * (MAXPLAYERS - 1); i++)

@@ -4,8 +4,8 @@
 //** p_acs.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_acs.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-22 16:32:43 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-25 20:10:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -319,7 +319,7 @@ void P_LoadACScripts(int lump)
 	{ // Empty behavior lump
 		return;
 	}
-	ACSInfo = Z_Malloc(ACScriptCount*sizeof(acsInfo_t), PU_LEVEL, 0);
+	ACSInfo = (acsInfo_t *) Z_Malloc(ACScriptCount*sizeof(acsInfo_t), PU_LEVEL, NULL);
 	memset(ACSInfo, 0, ACScriptCount*sizeof(acsInfo_t));
 	for (i = 0, info = ACSInfo; i < ACScriptCount; i++, info++)
 	{
@@ -356,7 +356,7 @@ static void StartOpenACS(int number, int infoIndex, int *address)
 {
 	acs_t *script;
 
-	script = Z_Malloc(sizeof(acs_t), PU_LEVSPEC, 0);
+	script = (acs_t *) Z_Malloc(sizeof(acs_t), PU_LEVSPEC, NULL);
 	memset(script, 0, sizeof(acs_t));
 	script->number = number;
 
@@ -434,7 +434,7 @@ boolean P_StartACS(int number, int map, byte *args, mobj_t *activator,
 	{ // Script is already executing
 		return false;
 	}
-	script = Z_Malloc(sizeof(acs_t), PU_LEVSPEC, 0);
+	script = (acs_t *) Z_Malloc(sizeof(acs_t), PU_LEVSPEC, NULL);
 	memset(script, 0, sizeof(acs_t));
 	script->number = number;
 	script->infoIndex = infoIndex;

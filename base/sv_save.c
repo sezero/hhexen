@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.12 $
-//** $Date: 2008-06-25 08:25:53 $
+//** $Revision: 1.13 $
+//** $Date: 2008-06-25 20:10:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -965,13 +965,13 @@ static void UnarchiveMobjs(void)
 	mobj_t *mobj;
 
 	AssertSegment(ASEG_MOBJS);
-	TargetPlayerAddrs = Z_Malloc(MAX_TARGET_PLAYERS*sizeof(int *), PU_STATIC, NULL);
+	TargetPlayerAddrs = (int **) Z_Malloc(MAX_TARGET_PLAYERS*sizeof(int *), PU_STATIC, NULL);
 	TargetPlayerCount = 0;
 	MobjCount = GET_LONG;
-	MobjList = Z_Malloc(MobjCount*sizeof(mobj_t *), PU_STATIC, NULL);
+	MobjList = (mobj_t **) Z_Malloc(MobjCount*sizeof(mobj_t *), PU_STATIC, NULL);
 	for (i = 0; i < MobjCount; i++)
 	{
-		MobjList[i] = Z_Malloc(sizeof(mobj_t), PU_LEVEL, NULL);
+		MobjList[i] = (mobj_t *) Z_Malloc(sizeof(mobj_t), PU_LEVEL, NULL);
 	}
 	for (i = 0; i < MobjCount; i++)
 	{
@@ -1218,7 +1218,7 @@ static void UnarchiveThinkers(void)
 		{
 			if (tClass == info->tClass)
 			{
-				thinker = Z_Malloc(info->size, PU_LEVEL, NULL);
+				thinker = (thinker_t *) Z_Malloc(info->size, PU_LEVEL, NULL);
 				memcpy(thinker, SavePtr.b, info->size);
 				SavePtr.b += info->size;
 				thinker->function = info->thinkerFunc;

@@ -4,8 +4,8 @@
 //** r_things.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_things.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-25 08:28:59 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-25 20:10:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -162,7 +162,7 @@ void R_InitSpriteDefs (const char **namelist)
 	if (!numsprites)
 		return;
 
-	sprites = Z_Malloc(numsprites *sizeof(*sprites), PU_STATIC, NULL);
+	sprites = (spritedef_t *) Z_Malloc(numsprites *sizeof(*sprites), PU_STATIC, NULL);
 
 	start = firstspritelump - 1;
 	end = lastspritelump + 1;
@@ -237,7 +237,7 @@ void R_InitSpriteDefs (const char **namelist)
 		//
 		sprites[i].numframes = maxframe;
 		sprites[i].spriteframes =
-			Z_Malloc (maxframe * sizeof(spriteframe_t), PU_STATIC, NULL);
+			(spriteframe_t *) Z_Malloc (maxframe * sizeof(spriteframe_t), PU_STATIC, NULL);
 		memcpy (sprites[i].spriteframes, sprtemp, maxframe*sizeof(spriteframe_t));
 	}
 }

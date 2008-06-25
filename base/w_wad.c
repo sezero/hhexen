@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.23 $
-//** $Date: 2008-06-24 18:55:06 $
+//** $Revision: 1.24 $
+//** $Date: 2008-06-25 20:10:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -330,7 +330,7 @@ static void W_MergeLumps(const char *start, const char *end)
 	if (newlumps)
 	{
 		if (oldlumps + newlumps > numlumps)
-			lumpinfo = realloc(lumpinfo, (oldlumps + newlumps) * sizeof(lumpinfo_t));
+			lumpinfo = (lumpinfo_t *) realloc(lumpinfo, (oldlumps + newlumps) * sizeof(lumpinfo_t));
 		memcpy(lumpinfo + oldlumps, newlumpinfo, sizeof(lumpinfo_t) * newlumps);
 
 		numlumps = oldlumps + newlumps;
@@ -400,13 +400,13 @@ void W_OpenAuxiliary(const char *filename)
 	header.numlumps = LONG(header.numlumps);
 	header.infotableofs = LONG(header.infotableofs);
 	length = header.numlumps*sizeof(filelump_t);
-	fileinfo = Z_Malloc(length, PU_STATIC, 0);
+	fileinfo = (filelump_t *) Z_Malloc(length, PU_STATIC, NULL);
 	lseek(handle, header.infotableofs, SEEK_SET);
 	read(handle, fileinfo, length);
 	numlumps = header.numlumps;
 
 	// Init the auxiliary lumpinfo array
-	lumpinfo = Z_Malloc(numlumps*sizeof(lumpinfo_t), PU_STATIC, 0);
+	lumpinfo = (lumpinfo_t *) Z_Malloc(numlumps*sizeof(lumpinfo_t), PU_STATIC, NULL);
 	sourceLump = fileinfo;
 	destLump = lumpinfo;
 	for (i = 0; i < numlumps; i++, destLump++, sourceLump++)
@@ -420,7 +420,7 @@ void W_OpenAuxiliary(const char *filename)
 
 	// Allocate the auxiliary lumpcache array
 	size = numlumps*sizeof(*lumpcache);
-	lumpcache = Z_Malloc(size, PU_STATIC, 0);
+	lumpcache = (void **) Z_Malloc(size, PU_STATIC, NULL);
 	memset(lumpcache, 0, size);
 
 	AuxiliaryLumpInfo = lumpinfo;
@@ -632,7 +632,7 @@ void *W_CacheLumpNum(int lump, int tag)
 	}
 	if (!lumpcache[lump])
 	{ // Need to read the lump in
-		ptr = Z_Malloc(W_LumpLength(lump), tag, &lumpcache[lump]);
+		ptr = (byte *) Z_Malloc(W_LumpLength(lump), tag, &lumpcache[lump]);
 		W_ReadLump(lump, lumpcache[lump]);
 	}
 	else

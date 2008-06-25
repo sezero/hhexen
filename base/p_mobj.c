@@ -4,8 +4,8 @@
 //** p_mobj.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_mobj.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-06-25 08:25:51 $
+//** $Revision: 1.10 $
+//** $Date: 2008-06-25 20:10:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1181,7 +1181,7 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 	mobjinfo_t *info;
 	fixed_t space;
 
-	mobj = Z_Malloc(sizeof(*mobj), PU_LEVEL, NULL);
+	mobj = (mobj_t *) Z_Malloc(sizeof(*mobj), PU_LEVEL, NULL);
 	memset(mobj, 0, sizeof(*mobj));
 	info = &mobjinfo[type];
 	mobj->type = type;

@@ -4,8 +4,8 @@
 //** f_finale.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: f_finale.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-06-25 08:25:49 $
+//** $Revision: 1.11 $
+//** $Date: 2008-06-25 20:10:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -240,9 +240,9 @@ static void InitializeFade(boolean fadeIn)
 {
 	unsigned i;
 
-	Palette = Z_Malloc(768*sizeof(fixed_t), PU_STATIC, 0);
-	PaletteDelta = Z_Malloc(768*sizeof(fixed_t), PU_STATIC, 0);
-	RealPalette = Z_Malloc(768*sizeof(byte), PU_STATIC, 0);
+	Palette = (fixed_t *) Z_Malloc(768*sizeof(fixed_t), PU_STATIC, NULL);
+	PaletteDelta = (fixed_t *) Z_Malloc(768*sizeof(fixed_t), PU_STATIC, NULL);
+	RealPalette = (byte *) Z_Malloc(768*sizeof(byte), PU_STATIC, NULL);
 
 	if (fadeIn)
 	{

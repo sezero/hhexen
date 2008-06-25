@@ -4,8 +4,8 @@
 //** p_lights.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_lights.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-25 20:10:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -122,7 +122,7 @@ boolean EV_SpawnLight(line_t *line, byte *arg, lighttype_t type)
 		think = false;
 		sec = &sectors[secNum];
 
-		light = (light_t *)Z_Malloc(sizeof(light_t), PU_LEVSPEC, 0);
+		light = (light_t *)Z_Malloc(sizeof(light_t), PU_LEVSPEC, NULL);
 		light->type = type;
 		light->sector = sec;
 		light->count = 0;
@@ -248,7 +248,7 @@ void P_SpawnPhasedLight(sector_t *sector, int base, int index)
 {
 	phase_t	*phase;
 
-	phase = Z_Malloc(sizeof(*phase), PU_LEVSPEC, 0);
+	phase = (phase_t *) Z_Malloc(sizeof(*phase), PU_LEVSPEC, NULL);
 	P_AddThinker(&phase->thinker);
 	phase->sector = sector;
 	if (index == -1)

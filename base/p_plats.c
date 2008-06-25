@@ -4,8 +4,8 @@
 //** p_plats.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_plats.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-25 20:10:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -130,7 +130,7 @@ int EV_DoPlat(line_t *line, byte *args, plattype_e type, int amount)
 		// Find lowest & highest floors around sector
 		//
 		rtn = 1;
-		plat = Z_Malloc( sizeof(*plat), PU_LEVSPEC, 0);
+		plat = (plat_t *) Z_Malloc( sizeof(*plat), PU_LEVSPEC, NULL);
 		P_AddThinker(&plat->thinker);
 
 		plat->type = type;

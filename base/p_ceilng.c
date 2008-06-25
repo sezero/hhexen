@@ -4,8 +4,8 @@
 //** p_ceilng.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_ceilng.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-25 20:10:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -130,7 +130,7 @@ int EV_DoCeiling (line_t *line, byte *arg, ceiling_e type)
 		// new door thinker
 		//
 		rtn = 1;
-		ceiling = Z_Malloc (sizeof(*ceiling), PU_LEVSPEC, 0);
+		ceiling = (ceiling_t *) Z_Malloc (sizeof(*ceiling), PU_LEVSPEC, NULL);
 		P_AddThinker (&ceiling->thinker);
 		sec->specialdata = ceiling;
 		ceiling->thinker.function = T_MoveCeiling;
