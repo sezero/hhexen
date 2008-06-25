@@ -4,8 +4,8 @@
 //** p_setup.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_setup.c,v $
-//** $Revision: 1.12 $
-//** $Date: 2008-06-25 20:10:22 $
+//** $Revision: 1.13 $
+//** $Date: 2008-06-25 20:28:10 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -629,7 +629,7 @@ static void P_GroupLines (void)
 	}
 
 // build line tables for each sector
-	linebuffer = (line_t **) Z_Malloc (total * 4, PU_LEVEL, NULL);
+	linebuffer = (line_t **) Z_Malloc (total * sizeof(line_t *), PU_LEVEL, NULL);
 	sector = sectors;
 	for (i = 0; i < numsectors; i++, sector++)
 	{

@@ -4,8 +4,8 @@
 //** r_data.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_data.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-25 20:10:22 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-25 20:28:10 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -311,13 +311,13 @@ static void R_InitTextures (void)
 	}
 	numtextures = numtextures1 + numtextures2;
 
-	textures = (texture_t **) Z_Malloc (numtextures*4, PU_STATIC, NULL);
-	texturecolumnlump = (short **) Z_Malloc (numtextures*4, PU_STATIC, NULL);
-	texturecolumnofs = (unsigned short **) Z_Malloc (numtextures*4, PU_STATIC, NULL);
-	texturecomposite = (byte **) Z_Malloc (numtextures*4, PU_STATIC, NULL);
-	texturecompositesize = (int *) Z_Malloc (numtextures*4, PU_STATIC, NULL);
-	texturewidthmask = (int *) Z_Malloc (numtextures*4, PU_STATIC, NULL);
-	textureheight = (fixed_t *) Z_Malloc (numtextures*4, PU_STATIC, NULL);
+	textures = (texture_t **) Z_Malloc (numtextures*sizeof(texture_t *), PU_STATIC, NULL);
+	texturecolumnlump = (short **) Z_Malloc (numtextures*sizeof(short *), PU_STATIC, NULL);
+	texturecolumnofs = (unsigned short **) Z_Malloc (numtextures*sizeof(short *), PU_STATIC, NULL);
+	texturecomposite = (byte **) Z_Malloc (numtextures*sizeof(byte *), PU_STATIC, NULL);
+	texturecompositesize = (int *) Z_Malloc (numtextures*sizeof(int), PU_STATIC, NULL);
+	texturewidthmask = (int *) Z_Malloc (numtextures*sizeof(int), PU_STATIC, NULL);
+	textureheight = (fixed_t *) Z_Malloc (numtextures*sizeof(fixed_t), PU_STATIC, NULL);
 
 	totalwidth = 0;
 
@@ -378,7 +378,7 @@ static void R_InitTextures (void)
 //
 // translation table for global animation
 //
-	texturetranslation = (int *) Z_Malloc ((numtextures + 1)*4, PU_STATIC, NULL);
+	texturetranslation = (int *) Z_Malloc ((numtextures + 1)*sizeof(int), PU_STATIC, NULL);
 	for (i = 0; i < numtextures; i++)
 		texturetranslation[i] = i;
 
@@ -403,7 +403,7 @@ static void R_InitFlats (void)
 	numflats = lastflat - firstflat + 1;
 
 // translation table for global animation
-	flattranslation = (int *) Z_Malloc ((numflats + 1) * 4, PU_STATIC, NULL);
+	flattranslation = (int *) Z_Malloc ((numflats + 1) * sizeof(int), PU_STATIC, NULL);
 	for (i = 0; i < numflats; i++)
 		flattranslation[i] = i;
 }
@@ -427,9 +427,9 @@ static void R_InitSpriteLumps (void)
 	firstspritelump = W_GetNumForName ("S_START") + 1;
 	lastspritelump = W_GetNumForName ("S_END") - 1;
 	numspritelumps = lastspritelump - firstspritelump + 1;
-	spritewidth = (fixed_t *) Z_Malloc (numspritelumps*4, PU_STATIC, NULL);
-	spriteoffset = (fixed_t *) Z_Malloc (numspritelumps*4, PU_STATIC, NULL);
-	spritetopoffset = (fixed_t *) Z_Malloc (numspritelumps*4, PU_STATIC, NULL);
+	spritewidth = (fixed_t *) Z_Malloc (numspritelumps*sizeof(fixed_t), PU_STATIC, NULL);
+	spriteoffset = (fixed_t *) Z_Malloc (numspritelumps*sizeof(fixed_t), PU_STATIC, NULL);
+	spritetopoffset = (fixed_t *) Z_Malloc (numspritelumps*sizeof(fixed_t), PU_STATIC, NULL);
 
 	for (i = 0; i < numspritelumps; i++)
 	{
