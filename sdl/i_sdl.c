@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdl.c,v 1.15 2008-06-22 16:20:46 sezero Exp $
+//** $Id: i_sdl.c,v 1.16 2008-06-25 18:50:33 sezero Exp $
 //**
 //**************************************************************************
 
@@ -251,9 +251,9 @@ void I_InitGraphics(void)
 		  VERSION_MAJ, VERSION_MIN, VERSION_PATCH);
 	SDL_WM_SetCaption (text, "HHEXEN");
 
-	pcscreen = destscreen = sdl_screen->pixels;
+	pcscreen = destscreen = (byte *) sdl_screen->pixels;
 
-	I_SetPalette (W_CacheLumpName("PLAYPAL", PU_CACHE));
+	I_SetPalette ((byte *)W_CacheLumpName("PLAYPAL", PU_CACHE));
 }
 
 //--------------------------------------------------------------------------

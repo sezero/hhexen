@@ -688,7 +688,7 @@ boolean DL_AddLuminous(mobj_t *thing)
 
 		// Only allocate memory when it's needed.
 		if (++numLuminous > maxLuminous)
-			luminousList = realloc(luminousList, sizeof(lumobj_t) * (maxLuminous += 5));
+			luminousList = (lumobj_t *) realloc (luminousList, sizeof(lumobj_t) * (maxLuminous += 5));
 		lum = luminousList + numLuminous - 1;
 		lum->thing = thing;
 		// We need to know how tall the thing currently is.

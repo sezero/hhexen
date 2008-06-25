@@ -47,22 +47,21 @@
 #endif
 
 
+/* All that remains of glib usage... */
+#define FALSE			0
+#define TRUE			1
+typedef int		gboolean;
+typedef unsigned char	guchar;
+typedef unsigned short	gushort;
+typedef unsigned int	guint;
+typedef unsigned long	gulong;
+
+#define min(x,y)	((x) < (y) ? (x) : (y))
+
 void oss_set_audio_params(void);
 
-
-/* All that remains of glib usage... */
-#define FALSE   0
-#define TRUE    1
-typedef int    gboolean;
-typedef unsigned char   guchar;
-typedef unsigned short  gushort;
-typedef unsigned int    guint;
-typedef unsigned long   gulong;
-
-#define min(x,y) ((x)<(y)?(x):(y))
-
 static int audio_fd = 0;
-static void* buffer;
+static void *buffer;
 static gboolean going = FALSE, prebuffer = FALSE, remove_prebuffer = FALSE;
 static gboolean paused = FALSE, unpause = FALSE, do_pause = FALSE;
 static int buffer_size, prebuffer_size, blk_size;
@@ -181,7 +180,7 @@ int oss_downsample(guchar * ob, guint length, guint speed, guint espeed)
 		nlen = (length * espeed) / speed;
 		d = (speed << 8) / espeed;
 
-		nbuffer = malloc(nlen << 2);
+		nbuffer = (gulong *) malloc(nlen << 2);
 		for (i = 0, off = 0, ptr = nbuffer; i < nlen; i++)
 		{
 			*ptr++ = obuffer[off >> 8];
@@ -201,7 +200,7 @@ int oss_downsample(guchar * ob, guint length, guint speed, guint espeed)
 		nlen = (length * espeed) / speed;
 		d = (speed << 8) / espeed;
 
-		nbuffer = malloc(nlen << 1);
+		nbuffer = (gushort *) malloc(nlen << 1);
 		for (i = 0, off = 0, ptr = nbuffer; i < nlen; i++)
 		{
 			*ptr++ = obuffer[off >> 8];
@@ -219,7 +218,7 @@ int oss_downsample(guchar * ob, guint length, guint speed, guint espeed)
 		nlen = (length * espeed) / speed;
 		d = (speed << 8) / espeed;
 
-		nbuffer = malloc(nlen);
+		nbuffer = (guchar *) malloc(nlen);
 		for (i = 0, off = 0, ptr = nbuffer; i < nlen; i++)
 		{
 			*ptr++ = obuffer[off >> 8];
@@ -245,7 +244,7 @@ void oss_write(void *ptr, int length)
 		while (length > 0)
 		{
 			cnt = min(length, buffer_size - wr_index);
-			memcpy(buffer + wr_index, ptr + off, cnt);
+			memcpy((guchar *)buffer + wr_index, (guchar *)ptr + off, cnt);
 			wr_index = (wr_index + cnt) % buffer_size;
 			length -= cnt;
 			off = cnt;
@@ -259,7 +258,7 @@ void oss_write(void *ptr, int length)
 		if (frequency == efrequency)
 			w = write(audio_fd, ptr, length);
 		else
-			w = oss_downsample(ptr, length, frequency, efrequency);
+			w = oss_downsample((guchar *)ptr, length, frequency, efrequency);
 
 		if (w == -1 && errno == EIO)
 		{
@@ -269,7 +268,7 @@ void oss_write(void *ptr, int length)
 			if (frequency == efrequency)
 				w = write(audio_fd, ptr, length);
 			else
-				w = oss_downsample(ptr, length, frequency, efrequency);
+				w = oss_downsample((guchar *)ptr, length, frequency, efrequency);
 		}
 		written += length;
 		output_bytes += w;
@@ -343,18 +342,18 @@ void *oss_loop(void *arg)
 				cnt = min(length, buffer_size - rd_index);
 
 				if (frequency == efrequency)
-					w = write(audio_fd, buffer + rd_index, cnt);
+					w = write(audio_fd, (guchar *)buffer + rd_index, cnt);
 				else
-					w = oss_downsample(buffer + rd_index, cnt, frequency, efrequency);
+					w = oss_downsample((guchar *)buffer + rd_index, cnt, frequency, efrequency);
 				if (w == -1 && errno == EIO)
 				{
 					close(audio_fd);
 					audio_fd = open(device_name, O_WRONLY);
 					oss_set_audio_params();
 					if (frequency == efrequency)
-						w = write(audio_fd, buffer + rd_index, cnt);
+						w = write(audio_fd, (guchar *)buffer + rd_index, cnt);
 					else
-						w = oss_downsample(buffer + rd_index, cnt, frequency, efrequency);
+						w = oss_downsample((guchar *)buffer + rd_index, cnt, frequency, efrequency);
 				}
 				output_bytes += w;
 				rd_index = (rd_index + cnt) % buffer_size;

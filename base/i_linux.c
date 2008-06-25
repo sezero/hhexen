@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.26 2008-06-22 16:32:43 sezero Exp $
+//** $Id: i_linux.c,v 1.27 2008-06-25 18:50:30 sezero Exp $
 //**
 //**************************************************************************
 
@@ -767,7 +767,7 @@ void S_UpdateSounds(mobj_t *listener)
 
 void S_Init(void)
 {
-	SoundCurve = W_CacheLumpName("SNDCURVE", PU_STATIC);
+	SoundCurve = (byte *) W_CacheLumpName("SNDCURVE", PU_STATIC);
 //	SoundCurve = Z_Malloc(MAX_SND_DIST, PU_STATIC, NULL);
 	I_StartupSound();
 	if (snd_Channels > 8)
@@ -1272,7 +1272,7 @@ void I_InitNetwork (void)
 	//
 	// single player game
 	//
-		doomcom = malloc (sizeof(*doomcom));
+		doomcom = (doomcom_t *) malloc (sizeof(*doomcom));
 		memset (doomcom, 0, sizeof(*doomcom));
 		netgame = false;
 		doomcom->id = DOOMCOM_ID;

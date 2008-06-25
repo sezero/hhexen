@@ -100,31 +100,31 @@ float NextPower2Ratio(int num)
 void OGL_TexInit(void)
 {
 	// Allocate memory for the flat texture numbers.
-	flattexnames = Z_Malloc(sizeof(GLuint)*numflats, PU_STATIC, 0);	
-	memset(flattexnames, 0, sizeof(GLuint)*numflats);
+	flattexnames = (GLuint *) Z_Malloc(numflats * sizeof(GLuint), PU_STATIC, NULL);
+	memset(flattexnames, 0, numflats * sizeof(GLuint));
 
-	texnames = Z_Malloc(sizeof(GLuint)*numtextures, PU_STATIC, 0);
-	memset(texnames, 0, sizeof(GLuint)*numtextures);
+	texnames = (GLuint *) Z_Malloc(numtextures * sizeof(GLuint), PU_STATIC, NULL);
+	memset(texnames, 0, numtextures * sizeof(GLuint));
 
-	texmasked = Z_Malloc(numtextures, PU_STATIC, 0);
+	texmasked = (char *) Z_Malloc(numtextures, PU_STATIC, NULL);
 	memset(texmasked, 0, numtextures);
 
 	// Sprites.
-	spritenames = Z_Malloc(sizeof(GLuint)*numspritelumps, PU_STATIC, 0);
-	memset(spritenames, 0, sizeof(GLuint)*numspritelumps);
-	spriteheights = Z_Malloc(sizeof(short)*numspritelumps, PU_STATIC, 0);
-	memset(spriteheights, 0, sizeof(short)*numspritelumps);
+	spritenames = (GLuint *) Z_Malloc(numspritelumps * sizeof(GLuint), PU_STATIC, NULL);
+	memset(spritenames, 0, numspritelumps * sizeof(GLuint));
+	spriteheights = (unsigned short *) Z_Malloc(numspritelumps * sizeof(short), PU_STATIC, NULL);
+	memset(spriteheights, 0, numspritelumps * sizeof(short));
 
 	// Standard lump textures (raw images and other gfx).
 	// First parts.
-	lumptexnames = Z_Malloc(sizeof(GLuint)*numlumps, PU_STATIC, 0);
-	memset(lumptexnames, 0, sizeof(GLuint)*numlumps);
+	lumptexnames = (GLuint *) Z_Malloc(numlumps * sizeof(GLuint), PU_STATIC, NULL);
+	memset(lumptexnames, 0, numlumps * sizeof(GLuint));
 	// Second parts.
-	lumptexnames2 = Z_Malloc(sizeof(GLuint)*numlumps, PU_STATIC, 0);
-	memset(lumptexnames2, 0, sizeof(GLuint)*numlumps);
+	lumptexnames2 = (GLuint *) Z_Malloc(numlumps * sizeof(GLuint), PU_STATIC, NULL);
+	memset(lumptexnames2, 0, numlumps * sizeof(GLuint));
 	// Size data.
-	lumptexsizes = Z_Malloc(sizeof(texsize_t)*numlumps, PU_STATIC, 0);
-	memset(lumptexsizes, 0, sizeof(texsize_t)*numlumps);
+	lumptexsizes = (texsize_t *) Z_Malloc(numlumps * sizeof(texsize_t), PU_STATIC, NULL);
+	memset(lumptexsizes, 0, numlumps * sizeof(texsize_t));
 
 	// Raw screen lump book keeping.
 	rawlumps = 0;
@@ -140,16 +140,16 @@ void OGL_TexInit(void)
 void OGL_TexReset(void)
 {
 	glDeleteTextures(numflats, flattexnames);
-	memset(flattexnames, 0, sizeof(GLuint)*numflats);
+	memset(flattexnames, 0, numflats * sizeof(GLuint));
 
 	glDeleteTextures(numtextures, texnames);
-	memset(texnames, 0, sizeof(GLuint)*numtextures);
+	memset(texnames, 0, numtextures * sizeof(GLuint));
 
 	memset(texmasked, 0, numtextures);
 
 	glDeleteTextures(numspritelumps, spritenames);
-	memset(spritenames, 0, sizeof(GLuint)*numspritelumps);
-	memset(spriteheights, 0, sizeof(short)*numspritelumps);
+	memset(spritenames, 0, numspritelumps * sizeof(GLuint));
+	memset(spriteheights, 0, numspritelumps * sizeof(short));
 
 	glDeleteTextures(1, &dltexname);
 	dltexname = 0;
@@ -161,9 +161,9 @@ void OGL_ResetLumpTexData(void)
 {
 	glDeleteTextures(numlumps, lumptexnames);
 	glDeleteTextures(numlumps, lumptexnames2);
-	memset(lumptexnames, 0, sizeof(GLuint)*numlumps);
-	memset(lumptexnames2, 0, sizeof(GLuint)*numlumps);
-	memset(lumptexsizes, 0, sizeof(texsize_t)*numlumps);
+	memset(lumptexnames, 0, numlumps * sizeof(GLuint));
+	memset(lumptexnames2, 0, numlumps * sizeof(GLuint));
+	memset(lumptexsizes, 0, numlumps * sizeof(texsize_t));
 
 	// Free the raw lumps book keeping table.
 	free(rawlumps);
@@ -200,9 +200,9 @@ unsigned int OGL_BindTexFlat(int lump)
 {
 	GLuint name;
 	int	p, i;
-	byte *flatptr = W_CacheLumpNum(lump, PU_STATIC);
-	byte *palette = W_CacheLumpNum(pallump = W_GetNumForName("PLAYPAL"), PU_CACHE);
-	byte *rgbflat = (byte *)malloc(3 * lumpinfo[lump].size);
+	byte *flatptr = (byte *) W_CacheLumpNum(lump, PU_STATIC);
+	byte *palette = (byte *) W_CacheLumpNum(pallump = W_GetNumForName("PLAYPAL"), PU_CACHE);
+	byte *rgbflat = (byte *) malloc (3 * lumpinfo[lump].size);
 
 	OGL_DEBUG("OGL_SetFlat: Loading flat %d.\n", idx);
 	// Convert the data to RGB.
@@ -338,8 +338,8 @@ unsigned int OGL_PrepareTexture(int idx)
 		// The texture must be given to OpenGL.
 		int i, k, textype;
 		texture_t *tex = textures[idx];
-		byte *palette = W_CacheLumpNum(pallump, PU_CACHE);
-		byte *rgbflat = (byte *)malloc(3*tex->width*tex->height);
+		byte *palette = (byte *) W_CacheLumpNum(pallump, PU_CACHE);
+		byte *rgbflat = (byte *) malloc (3 * tex->width * tex->height);
 		byte *colptr;
 
 		if (tex->patchcount > 1)
@@ -355,10 +355,10 @@ unsigned int OGL_PrepareTexture(int idx)
 		else
 		{
 			// This texture has only only one patch. It might be masked.
-			byte *rgbaflat = (byte*)malloc(4*tex->width*tex->height);
-			memset(rgbaflat, 0, 4*tex->width*tex->height);
+			byte *rgbaflat = (byte *) malloc (4 * tex->width * tex->height);
+			memset(rgbaflat, 0, 4 * tex->width * tex->height);
 			textype = DrawRealPatch(rgbflat, rgbaflat, palette, tex->width, tex->height,
-						W_CacheLumpNum(tex->patches[0].patch, PU_CACHE), false);
+						(patch_t *)W_CacheLumpNum(tex->patches[0].patch, PU_CACHE), false);
 			if (textype == GL_RGBA)
 			{
 				free (rgbflat);
@@ -453,7 +453,7 @@ unsigned int OGL_PrepareSky(int idx, boolean zeroMask)
 	if (!texnames[idx])
 	{
 		int		i, k;
-		byte		*palette = W_CacheLumpNum(pallump, PU_CACHE);
+		byte		*palette = (byte *) W_CacheLumpNum(pallump, PU_CACHE);
 		texture_t	*tex = textures[idx];
 		int		textype, numpels = 256*256;	// 'Full' size.
 		byte		*imgdata, *colptr;
@@ -461,14 +461,14 @@ unsigned int OGL_PrepareSky(int idx, boolean zeroMask)
 		if (zeroMask)
 		{
 			textype = GL_RGBA;
-			imgdata = (byte *)malloc(4*numpels);
-			memset(imgdata, 0, 4*numpels);
+			imgdata = (byte *) malloc (4 * numpels);
+			memset(imgdata, 0, 4 * numpels);
 		}
 		else
 		{
 			textype = GL_RGB;
-			imgdata = (byte *)malloc(3*numpels);
-			memset(imgdata, 0, 3*numpels);
+			imgdata = (byte *) malloc (3 * numpels);
+			memset(imgdata, 0, 3 * numpels);
 		}
 		if (tex->patchcount > 1)
 		{
@@ -493,10 +493,10 @@ unsigned int OGL_PrepareSky(int idx, boolean zeroMask)
 			// This texture has only only one patch.
 			if (textype == GL_RGB)
 				DrawRealPatch(imgdata, NULL, palette, 256, tex->height,
-					W_CacheLumpNum(tex->patches[0].patch, PU_CACHE), false);
+					(patch_t *)W_CacheLumpNum(tex->patches[0].patch, PU_CACHE), false);
 			else if (textype == GL_RGBA) // Mask out zeros.
 				DrawRealPatch(NULL, imgdata, palette, 256, tex->height,
-					W_CacheLumpNum(tex->patches[0].patch, PU_CACHE), true);
+					(patch_t *)W_CacheLumpNum(tex->patches[0].patch, PU_CACHE), true);
 		}
 		if (textype == GL_RGBA)	// For masked data, calculate the alpha-fill color.
 		{
@@ -548,18 +548,18 @@ unsigned int OGL_PrepareSprite(int pnum)
 	if (!spritenames[pnum])
 	{
 		// There's no name for this patch, load it in.
-		patch_t *patch = W_CacheLumpNum(firstspritelump + pnum, PU_CACHE);
+		patch_t *patch = (patch_t *) W_CacheLumpNum(firstspritelump + pnum, PU_CACHE);
 		int	w = SHORT(patch->width),
 			h = SHORT(patch->height);
 		int	p2width = FindNextPower2(w),
 			p2height = OGL_ValidTexHeight2(w, h);
 		int	flatsize = 4*p2width*p2height;
-		byte	*rgbaflat = (byte *)malloc(flatsize);
+		byte	*rgbaflat = (byte *) malloc (flatsize);
 
 		OGL_DEBUG("orig: %d x %d => %d x %d\n", w, h, p2width, p2height);
 
 		memset(rgbaflat, 0, flatsize);
-		DrawRealPatch(NULL, rgbaflat, W_CacheLumpNum(pallump,PU_CACHE),
+		DrawRealPatch(NULL, rgbaflat, (byte *)W_CacheLumpNum(pallump,PU_CACHE),
 						p2width, p2height, patch, false);
 
 		// Generate and bind the texture.
@@ -585,7 +585,7 @@ void OGL_SetSprite(int pnum)
 
 void OGL_NewRawLump(int lump)
 {
-	rawlumps = realloc(rawlumps, sizeof(int) * ++numrawlumps);
+	rawlumps = (int *) realloc (rawlumps, sizeof(int) * ++numrawlumps);
 	rawlumps[numrawlumps - 1] = lump;
 }
 
@@ -607,10 +607,10 @@ void OGL_SetRawImage(int lump, int part)
 	{
 		// Load the raw texture data (320x200).
 		// We'll create two textures (256x256 and 64x256).
-		byte *raw = W_CacheLumpNum(lump, PU_CACHE);
-		byte *dat1 = (byte*)malloc(3*256*256);
-		byte *dat2 = (byte*)malloc(3*64*256);
-		byte *palette = W_CacheLumpNum(pallump, PU_CACHE);
+		byte *raw = (byte *) W_CacheLumpNum(lump, PU_CACHE);
+		byte *dat1 = (byte *) malloc (3*256*256);
+		byte *dat2 = (byte *) malloc (3*64*256);
+		byte *palette = (byte *) W_CacheLumpNum(pallump, PU_CACHE);
 		int i, k;
 
 		memset(dat1, 0, 3*256*256);	// Why must this be done?
@@ -719,18 +719,18 @@ void OGL_SetPatch(int lump)	// No mipmaps are generated.
 	if (!lumptexnames[lump])
 	{
 		// Load the patch.
-		patch_t	*patch = W_CacheLumpNum(lump, PU_CACHE);
+		patch_t	*patch = (patch_t *) W_CacheLumpNum(lump, PU_CACHE);
 		int	w = SHORT(patch->width),
 			h = SHORT(patch->height);
 		int	p2width = FindNextPower2(w),
 			p2height = OGL_ValidTexHeight2(w, h);
 		int	numpels = p2width*p2height;
-		byte	*rgbflat = (byte *)malloc(3*numpels),
-			*rgbaflat = (byte*)malloc(4*numpels);
+		byte	*rgbflat = (byte *) malloc (3 * numpels),
+			*rgbaflat = (byte *) malloc (4 * numpels);
 		int	ptype;
 
-		memset(rgbaflat, 0, 4*numpels);
-		ptype = DrawRealPatch(rgbflat, rgbaflat, W_CacheLumpNum(pallump,PU_CACHE),
+		memset(rgbaflat, 0, 4 * numpels);
+		ptype = DrawRealPatch(rgbflat, rgbaflat, (byte *)W_CacheLumpNum(pallump,PU_CACHE),
 							p2width, p2height, patch, false);
 
 		// See if we have to split the patch into two parts.
@@ -740,7 +740,7 @@ void OGL_SetPatch(int lump)	// No mipmaps are generated.
 			// applies to both parts. 
 			// The width of the first part is maxTexSize.
 			int part2width = FindNextPower2(w - maxTexSize);
-			byte *tempbuff = (byte*)malloc(4*maxTexSize*p2height);
+			byte *tempbuff = (byte *) malloc (4 * maxTexSize * p2height);
 			if (part2width > maxTexSize)
 				I_Error("OGL_SetPatch: Too wide texture (really: %d, pow2: %d).\n", w, p2width);
 			// We'll use a temporary buffer for doing to splitting.
@@ -826,7 +826,7 @@ GLuint OGL_PrepareLightTexture(void)
 	if (!dltexname)
 	{
 		// We need to generate the texture, I see.
-		byte *image = W_CacheLumpName("DLIGHT", PU_CACHE);
+		byte *image = (byte *) W_CacheLumpName("DLIGHT", PU_CACHE);
 		if (!image)
 			I_Error("OGL_SetLightTexture: no dlight texture.\n");
 		// The dynamic light map is a 64x64 grayscale 8-bit image.

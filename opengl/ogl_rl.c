@@ -137,7 +137,7 @@ static rendlist_t *RL_FindList(GLuint tex)
 	}
 
 	// Then create a new list.
-	rlists = (rendlist_t*)realloc(rlists, sizeof(rendlist_t) * ++numrlists);
+	rlists = (rendlist_t *) realloc (rlists, sizeof(rendlist_t) * ++numrlists);
 	dest = rlists + numrlists - 1;
 	memset(dest, 0, sizeof(rendlist_t));
 	dest->tex = tex;
@@ -170,8 +170,8 @@ void RL_AddQuad(rendquad_t *quad, GLuint quadtex)
 	if (++dest->numquads > dest->listsize)	// See if we have to allocate more memory.
 	{
 		dest->listsize = dest->numquads + 10;
-		dest->quads = (rendquad_t*)realloc(dest->quads, 
-						sizeof(rendquad_t) * dest->listsize);
+		dest->quads = (rendquad_t *) realloc (dest->quads,
+						dest->listsize * sizeof(rendquad_t));
 	}
 	dq = dest->quads + dest->numquads - 1;
 	memcpy(dq, quad, sizeof(rendquad_t));
@@ -214,18 +214,18 @@ void RL_AddFlatQuads(rendquad_t *base, GLuint quadtex, int numvrts,
 	{
 		// Allocate more memory.
 		dest->listsize = dest->numquads + 20;
-		dest->quads = (rendquad_t*)realloc(dest->quads, 
-					sizeof(rendquad_t) * dest->listsize);
+		dest->quads = (rendquad_t * ) realloc (dest->quads,
+					dest->listsize * sizeof(rendquad_t));
 	}
 
 	// Calculate the distance to each vertex.
-	distances = (float *)malloc(sizeof(float)*numvrts);
+	distances = (float *) malloc (numvrts * sizeof(float));
 	for (i = 0; i < numvrts; i++)
 		distances[i] = PointDist2D(&origvrts[i].x);
 
 	// Make a distance modification.
-	vrts = (fvertex_t *)malloc(sizeof(fvertex_t)*numvrts);
-	memcpy(vrts, origvrts, sizeof(fvertex_t)*numvrts);
+	vrts = (fvertex_t *) malloc (numvrts * sizeof(fvertex_t));
+	memcpy(vrts, origvrts, numvrts * sizeof(fvertex_t));
 	middist = PointDist2D(&currentssec->midpoint.x);
 	if (!(base->flags & RQF_LIGHT) && middist > 256)
 	{

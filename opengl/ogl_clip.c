@@ -65,12 +65,12 @@ static void C_CountNodes(void)
 
 void C_Init(void)
 {
-	clipnodes = Z_Malloc(sizeof(clipnode_t)*MAXCLIPNODES, PU_STATIC, 0);
+	clipnodes = (clipnode_t *) Z_Malloc(MAXCLIPNODES * sizeof(clipnode_t), PU_STATIC, NULL);
 }
 
 void C_ClearRanges(void)
 {
-	memset(clipnodes, 0, sizeof(clipnode_t)*MAXCLIPNODES);
+	memset(clipnodes, 0, MAXCLIPNODES * sizeof(clipnode_t));
 	cliphead = NULL;
 }
 
@@ -413,7 +413,7 @@ int C_CheckSubsector(subsector_t *ssec)
 {
 	int			i;
 //	clipnode_t	*cnode = NULL;
-	binangle	*anglist = (binangle*)malloc(sizeof(binangle)*ssec->numedgeverts);
+	binangle	*anglist = (binangle *) malloc (ssec->numedgeverts * sizeof(binangle));
 
 	if (anglist == NULL)
 		I_Error ("Couldn't allocate memory");

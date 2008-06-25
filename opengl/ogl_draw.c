@@ -316,7 +316,7 @@ void OGL_SetColor(int palidx)
 		glColor4f(0, 0, 0, 0);
 	else
 	{
-		PalIdxToRGB(W_CacheLumpNum(pallump,PU_CACHE), palidx, rgb);
+		PalIdxToRGB((byte *)W_CacheLumpNum(pallump,PU_CACHE), palidx, rgb);
 		glColor3f(rgb[0]/255.0, rgb[1]/255.0, rgb[2]/255.0);
 	}
 }
