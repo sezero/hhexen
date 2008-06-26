@@ -64,6 +64,8 @@ void OGL_DrawPSprite(int x, int y, float scale, int flip, int lump);
 void OGL_SetFilter(int filter);
 int OGL_DrawFilter(void);
 
+void OGL_ShadeRect(int x, int y, int w, int h, float darkening);
+
 /* ogl_tex.c */
 typedef struct
 {
