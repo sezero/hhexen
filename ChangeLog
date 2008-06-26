@@ -1,6 +1,7 @@
 HHexen ChangeLog
 
 v1.4.1
+ - Intermission and finale screens now work in OpenGL.
  - Added support for the Mac version of the demo hexen.wad file.
  - The demo wad files doesn't need a special configuration anymore.
  - Various hacks/fixes for the proper handling of different 1.0 and 1.1 wad
