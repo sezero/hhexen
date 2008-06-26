@@ -4,8 +4,8 @@
 //** f_finale.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: f_finale.c,v $
-//** $Revision: 1.12 $
-//** $Date: 2008-06-26 09:52:28 $
+//** $Revision: 1.13 $
+//** $Date: 2008-06-26 19:44:24 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -159,7 +159,8 @@ static void TextWrite (void)
 	const char	*ch;
 	int		c;
 	int		cx, cy;
-	patch_t *w;
+	patch_t		*w;
+	int		width;
 
 	memcpy(screen, W_CacheLumpNum(FinaleLumpNum, PU_CACHE), SCREENWIDTH*SCREENHEIGHT);
 
@@ -221,12 +222,13 @@ static void TextWrite (void)
 			continue;
 		}
 		w = (patch_t *) W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
-		if (cx + w->width > SCREENWIDTH)
+		width = SHORT(w->width);
+		if (cx + width > SCREENWIDTH)
 		{
 			break;
 		}
 		V_DrawPatch(cx, cy, w);
-		cx += w->width;
+		cx += width;
 	}
 }
 

@@ -4,8 +4,8 @@
 //** r_things.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_things.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-06-26 09:52:28 $
+//** $Revision: 1.10 $
+//** $Date: 2008-06-26 19:44:24 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -427,7 +427,7 @@ void R_DrawVisSprite (vissprite_t *vis, int x1, int x2)
 
 	if (vis->floorclip && !vis->psprite)
 	{
-		sprbotscreen = sprtopscreen + FixedMul(patch->height<<FRACBITS, spryscale);
+		sprbotscreen = sprtopscreen + FixedMul(SHORT(patch->height)<<FRACBITS, spryscale);
 		baseclip = (sprbotscreen - FixedMul(vis->floorclip, spryscale))>>FRACBITS;
 	}
 	else

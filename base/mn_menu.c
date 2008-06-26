@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.27 $
-//** $Date: 2008-06-26 09:52:28 $
+//** $Revision: 1.28 $
+//** $Date: 2008-06-26 19:44:24 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -551,7 +551,7 @@ void MN_DrTextA(const char *text, int x, int y)
 #else
 			V_DrawPatch(x, y, p);
 #endif
-			x += p->width - 1;
+			x += SHORT(p->width) - 1;
 		}
 	}
 }
@@ -585,7 +585,7 @@ void MN_DrTextAYellow(const char *text, int x, int y)
 #else
 			V_DrawPatch(x, y, p);
 #endif
-			x += p->width - 1;
+			x += SHORT(p->width) - 1;
 		}
 	}
 }
@@ -614,7 +614,7 @@ int MN_TextAWidth(const char *text)
 		else
 		{
 			p = (patch_t *) W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
-			width += p->width - 1;
+			width += SHORT(p->width) - 1;
 		}
 	}
 	return (width);
@@ -651,7 +651,7 @@ void MN_DrTextB(const char *text, int x, int y)
 #else
 			V_DrawPatch(x, y, p);
 #endif
-			x += p->width - 1;
+			x += SHORT(p->width) - 1;
 		}
 	}
 }
@@ -680,7 +680,7 @@ int MN_TextBWidth(const char *text)
 		else
 		{
 			p = (patch_t *) W_CacheLumpNum(FontBBaseLump + c - 33, PU_CACHE);
-			width += p->width - 1;
+			width += SHORT(p->width) - 1;
 		}
 	}
 	return (width);

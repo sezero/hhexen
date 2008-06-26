@@ -4,8 +4,8 @@
 //** ct_chat.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: ct_chat.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-06-26 09:52:28 $
+//** $Revision: 1.10 $
+//** $Date: 2008-06-26 19:44:23 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -375,7 +375,7 @@ void CT_Drawer(void)
 			{
 				patch = (patch_t *) W_CacheLumpNum(FontABaseLump + chat_msg[consoleplayer][i] - 33, PU_CACHE);
 				V_DrawPatch(x, 10, patch);
-				x += patch->width;
+				x += SHORT(patch->width);
 			}
 		}
 		patch = (patch_t *) W_CacheLumpName("FONTA59", PU_CACHE);
@@ -443,7 +443,7 @@ static void CT_AddChar(int player, char c)
 	else
 	{
 		patch = (patch_t *) W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
-		msglen[player] += patch->width;
+		msglen[player] += SHORT(patch->width);
 	}
 }
 
@@ -472,7 +472,7 @@ static void CT_BackSpace(int player)
 	else
 	{
 		patch = (patch_t *) W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
-		msglen[player] -= patch->width;
+		msglen[player] -= SHORT(patch->width);
 	}
 	chat_msg[player][msgptr[player]] = 0;
 }

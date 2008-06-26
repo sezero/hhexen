@@ -4,8 +4,8 @@
 //** in_lude.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: in_lude.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-06-26 09:52:28 $
+//** $Revision: 1.11 $
+//** $Date: 2008-06-26 19:44:24 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -527,7 +527,8 @@ static void DrawHubText(void)
 	const char	*ch;
 	int		c;
 	int		cx, cy;
-	patch_t *w;
+	patch_t		*w;
+	int		width;
 
 	cy = 5;
 	cx = 10;
@@ -561,12 +562,13 @@ static void DrawHubText(void)
 			continue;
 		}
 		w = (patch_t *) W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
-		if (cx + w->width > SCREENWIDTH)
+		width = SHORT(w->width);
+		if (cx + width > SCREENWIDTH)
 		{
 			break;
 		}
 		V_DrawPatch(cx, cy, w);
-		cx += w->width;
+		cx += width;
 	}
 }
 

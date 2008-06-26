@@ -4,8 +4,8 @@
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.16 $
-//** $Date: 2008-06-26 09:52:29 $
+//** $Revision: 1.17 $
+//** $Date: 2008-06-26 19:44:24 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -788,6 +788,7 @@ static void DrBNumber(signed int val, int x, int y)
 	patch_t* patch;
 	int xpos;
 	int oldval;
+	int width;
 
 	oldval = val;
 	xpos = x;
@@ -798,10 +799,11 @@ static void DrBNumber(signed int val, int x, int y)
 	if (val > 99)
 	{
 		patch = (patch_t *) W_CacheLumpNum(FontBNumBase + val/100, PU_CACHE);
+		width = SHORT(patch->width) / 2;
 #ifdef RENDER3D
-		OGL_DrawShadowedPatch(xpos + 6 - patch->width/2, y, FontBNumBase + val/100);
+		OGL_DrawShadowedPatch(xpos + 6 - width, y, FontBNumBase + val/100);
 #else
-		V_DrawShadowedPatch(xpos + 6 - patch->width/2, y, patch);
+		V_DrawShadowedPatch(xpos + 6 - width, y, patch);
 #endif
 	}
 	val = val % 100;
@@ -809,19 +811,21 @@ static void DrBNumber(signed int val, int x, int y)
 	if (val > 9 || oldval > 99)
 	{
 		patch = (patch_t *) W_CacheLumpNum(FontBNumBase + val/10, PU_CACHE);
+		width = SHORT(patch->width) / 2;
 #ifdef RENDER3D
-		OGL_DrawShadowedPatch(xpos + 6 - patch->width/2, y, FontBNumBase + val/10);
+		OGL_DrawShadowedPatch(xpos + 6 - width, y, FontBNumBase + val/10);
 #else
-		V_DrawShadowedPatch(xpos + 6 - patch->width/2, y, patch);
+		V_DrawShadowedPatch(xpos + 6 - width, y, patch);
 #endif
 	}
 	val = val % 10;
 	xpos += 12;
 	patch = (patch_t *) W_CacheLumpNum(FontBNumBase + val, PU_CACHE);
+	width = SHORT(patch->width) / 2;
 #ifdef RENDER3D
-	OGL_DrawShadowedPatch(xpos + 6 - patch->width/2, y, FontBNumBase + val/1);
+	OGL_DrawShadowedPatch(xpos + 6 - width, y, FontBNumBase + val/1);
 #else
-	V_DrawShadowedPatch(xpos + 6 - patch->width/2, y, patch);
+	V_DrawShadowedPatch(xpos + 6 - width, y, patch);
 #endif
 }
 
