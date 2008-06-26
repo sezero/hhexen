@@ -4,8 +4,8 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.19 $
-//** $Date: 2008-06-25 20:10:22 $
+//** $Revision: 1.20 $
+//** $Date: 2008-06-26 09:52:28 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1774,7 +1774,7 @@ static void G_DoPlayDemo (void)
 	int	i, episode, map;
 
 	gameaction = ga_nothing;
-	demobuffer = demo_p = W_CacheLumpName (defdemoname, PU_STATIC);
+	demobuffer = demo_p = (byte *) W_CacheLumpName (defdemoname, PU_STATIC);
 	skill = *demo_p++;
 	episode = *demo_p++;
 	map = *demo_p++;
@@ -1825,7 +1825,7 @@ void G_TimeDemo (const char *name)
 	skill_t	skill;
 	int	episode, map;
 
-	demobuffer = demo_p = W_CacheLumpName (name, PU_STATIC);
+	demobuffer = demo_p = (byte *) W_CacheLumpName (name, PU_STATIC);
 	skill = *demo_p++;
 	episode = *demo_p++;
 	map = *demo_p++;

@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.26 $
-//** $Date: 2008-06-25 08:25:49 $
+//** $Revision: 1.27 $
+//** $Date: 2008-06-26 09:52:28 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -545,7 +545,7 @@ void MN_DrTextA(const char *text, int x, int y)
 		}
 		else
 		{
-			p = W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
+			p = (patch_t *) W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
 #ifdef RENDER3D
 			OGL_DrawPatch_CS(x, y, FontABaseLump + c - 33);
 #else
@@ -579,7 +579,7 @@ void MN_DrTextAYellow(const char *text, int x, int y)
 		}
 		else
 		{
-			p = W_CacheLumpNum(FontAYellowBaseLump + c - 33, PU_CACHE);
+			p = (patch_t *) W_CacheLumpNum(FontAYellowBaseLump + c - 33, PU_CACHE);
 #ifdef RENDER3D
 			OGL_DrawPatch_CS(x, y, FontAYellowBaseLump + c - 33);
 #else
@@ -613,7 +613,7 @@ int MN_TextAWidth(const char *text)
 		}
 		else
 		{
-			p = W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
+			p = (patch_t *) W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
 			width += p->width - 1;
 		}
 	}
@@ -645,7 +645,7 @@ void MN_DrTextB(const char *text, int x, int y)
 		}
 		else
 		{
-			p = W_CacheLumpNum(FontBBaseLump + c - 33, PU_CACHE);
+			p = (patch_t *) W_CacheLumpNum(FontBBaseLump + c - 33, PU_CACHE);
 #ifdef RENDER3D
 			OGL_DrawPatch_CS(x, y, FontBBaseLump + c - 33);
 #else
@@ -679,7 +679,7 @@ int MN_TextBWidth(const char *text)
 		}
 		else
 		{
-			p = W_CacheLumpNum(FontBBaseLump + c - 33, PU_CACHE);
+			p = (patch_t *) W_CacheLumpNum(FontBBaseLump + c - 33, PU_CACHE);
 			width += p->width - 1;
 		}
 	}
@@ -907,7 +907,7 @@ void MN_Drawer(void)
 		}
 		y = CurrentMenu->y + (CurrentItPos * CurrentMenu->step) + SELECTOR_YOFFSET;
 		selName = (MenuTime & 16) ? "M_SLCTR1" : "M_SLCTR2";
-		V_DrawPatch(x + SELECTOR_XOFFSET, y, W_CacheLumpName(selName, PU_CACHE));
+		V_DrawPatch(x + SELECTOR_XOFFSET, y, (patch_t *)W_CacheLumpName(selName, PU_CACHE));
 	}
 #endif
 }
@@ -929,10 +929,10 @@ static void DrawMainMenu(void)
 	OGL_DrawPatch_CS(37, 80, MauloBaseLump + (frame + 2) % 7);
 	OGL_DrawPatch_CS(278, 80, MauloBaseLump + frame);
 #else
-	V_DrawPatch(88, 0, W_CacheLumpName("M_HTIC", PU_CACHE));
+	V_DrawPatch(88, 0, (patch_t *)W_CacheLumpName("M_HTIC", PU_CACHE));
 // Old Gold skull positions: (40, 10) and (232, 10)
-	V_DrawPatch(37, 80, W_CacheLumpNum(MauloBaseLump + (frame + 2) % 7, PU_CACHE));
-	V_DrawPatch(278, 80, W_CacheLumpNum(MauloBaseLump + frame, PU_CACHE));
+	V_DrawPatch(37, 80, (patch_t *)W_CacheLumpNum(MauloBaseLump + (frame + 2) % 7, PU_CACHE));
+	V_DrawPatch(278, 80, (patch_t *)W_CacheLumpNum(MauloBaseLump + frame, PU_CACHE));
 #endif
 }
 
@@ -967,9 +967,9 @@ static void DrawClassMenu(void)
 	OGL_DrawPatch_CS(174+24, 8+12,
 			 W_GetNumForName(walkLumpName[pClass]) + ((MenuTime>>3) & 3));
 #else
-	V_DrawPatch(174, 8, W_CacheLumpName(boxLumpName[pClass], PU_CACHE));
+	V_DrawPatch(174, 8, (patch_t *)W_CacheLumpName(boxLumpName[pClass], PU_CACHE));
 	V_DrawPatch(174+24, 8+12,
-		W_CacheLumpNum(W_GetNumForName(walkLumpName[pClass]) + ((MenuTime>>3) & 3), PU_CACHE));
+		(patch_t *)W_CacheLumpNum(W_GetNumForName(walkLumpName[pClass]) + ((MenuTime>>3) & 3), PU_CACHE));
 #endif
 }
 
@@ -1095,7 +1095,7 @@ static void DrawFileSlots(Menu_t *menu)
 #ifdef RENDER3D
 		OGL_DrawPatch_CS(x, y, W_GetNumForName("M_FSLOT"));
 #else
-		V_DrawPatch(x, y, W_CacheLumpName("M_FSLOT", PU_CACHE));
+		V_DrawPatch(x, y, (patch_t *)W_CacheLumpName("M_FSLOT", PU_CACHE));
 #endif
 		if (SlotStatus[i])
 		{
@@ -1686,7 +1686,7 @@ boolean MN_Responder(event_t *event)
 					typeofask = 0;
 					askforquit = false;
 					paused = false;
-					I_SetPalette(W_CacheLumpName("PLAYPAL", PU_CACHE));
+					I_SetPalette((byte *)W_CacheLumpName("PLAYPAL", PU_CACHE));
 					H2_StartTitle(); // go to intro/demo mode.
 					break;
 				case 3:
@@ -2195,10 +2195,10 @@ void MN_DrawInfo(void)
 	OGL_SetFilter(0);
 	OGL_DrawRawScreen(W_GetNumForName("TITLE")+InfoType);
 #else
-	I_SetPalette(W_CacheLumpName("PLAYPAL", PU_CACHE));
+	I_SetPalette((byte *)W_CacheLumpName("PLAYPAL", PU_CACHE));
 	memcpy(screen, (byte *)W_CacheLumpNum(W_GetNumForName("TITLE")+InfoType,
 		PU_CACHE), SCREENWIDTH*SCREENHEIGHT);
-//	V_DrawPatch(0, 0, W_CacheLumpNum(W_GetNumForName("TITLE")+InfoType,
+//	V_DrawPatch(0, 0, (patch_t *)W_CacheLumpNum(W_GetNumForName("TITLE")+InfoType,
 //		PU_CACHE));
 #endif
 }
@@ -2242,13 +2242,13 @@ static void DrawSlider(Menu_t *menu, int item, int width, int slot)
 	OGL_DrawPatch_CS(x2, y, W_GetNumForName("M_SLDRT"));
 	OGL_DrawPatch_CS(x + 4 + slot*8, y + 7, W_GetNumForName("M_SLDKB"));
 #else
-	V_DrawPatch(x-32, y, W_CacheLumpName("M_SLDLT", PU_CACHE));
+	V_DrawPatch(x-32, y, (patch_t *)W_CacheLumpName("M_SLDLT", PU_CACHE));
 	for (x2 = x, count = width; count--; x2 += 8)
 	{
-		V_DrawPatch(x2, y, W_CacheLumpName((count & 1) ? "M_SLDMD1" : "M_SLDMD2", PU_CACHE));
+		V_DrawPatch(x2, y, (patch_t *)W_CacheLumpName((count & 1) ? "M_SLDMD1" : "M_SLDMD2", PU_CACHE));
 	}
-	V_DrawPatch(x2, y, W_CacheLumpName("M_SLDRT", PU_CACHE));
-	V_DrawPatch(x + 4 + slot*8, y + 7, W_CacheLumpName("M_SLDKB", PU_CACHE));
+	V_DrawPatch(x2, y, (patch_t *)W_CacheLumpName("M_SLDRT", PU_CACHE));
+	V_DrawPatch(x + 4 + slot*8, y + 7, (patch_t *)W_CacheLumpName("M_SLDKB", PU_CACHE));
 #endif
 }
 

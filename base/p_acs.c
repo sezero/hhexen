@@ -4,8 +4,8 @@
 //** p_acs.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_acs.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-25 20:10:22 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-26 09:52:28 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -311,7 +311,7 @@ void P_LoadACScripts(int lump)
 	acsHeader_t *header;
 	acsInfo_t *info;
 
-	header = W_CacheLumpNum(lump, PU_LEVEL);
+	header = (acsHeader_t *) W_CacheLumpNum(lump, PU_LEVEL);
 	ActionCodeBase = (byte *)header;
 	buffer = (int *)((byte *)header + header->infoOffset);
 	ACScriptCount = *buffer++;

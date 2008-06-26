@@ -4,8 +4,8 @@
 //** am_map.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: am_map.c,v $
-//** $Revision: 1.13 $
-//** $Date: 2008-06-22 16:32:43 $
+//** $Revision: 1.14 $
+//** $Date: 2008-06-26 09:52:28 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -341,7 +341,7 @@ static void AM_loadPics(void)
 #ifdef RENDER3D
 	maplumpnum = W_GetNumForName("AUTOPAGE");
 #else
-	maplump = W_CacheLumpName("AUTOPAGE", PU_STATIC);
+	maplump = (byte *) W_CacheLumpName("AUTOPAGE", PU_STATIC);
 #endif
 }
 

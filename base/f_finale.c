@@ -4,8 +4,8 @@
 //** f_finale.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: f_finale.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-25 20:10:22 $
+//** $Revision: 1.12 $
+//** $Date: 2008-06-26 09:52:28 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -167,18 +167,18 @@ static void TextWrite (void)
 	{ // Chess pic, draw the correct character graphic
 		if (netgame)
 		{
-			V_DrawPatch(20, 0, W_CacheLumpName("chessall", PU_CACHE));
+			V_DrawPatch(20, 0, (patch_t *)W_CacheLumpName("chessall", PU_CACHE));
 		}
 #ifdef ASSASSIN
 		else if (PlayerClasses[consoleplayer] == PCLASS_ASS)
 		{
-			V_DrawPatch(60,0, W_CacheLumpNum(W_GetNumForName("chessa"), PU_CACHE));
+			V_DrawPatch(60, 0, (patch_t *)W_CacheLumpNum(W_GetNumForName("chessa"), PU_CACHE));
 		}
 #endif
 		else if (PlayerClasses[consoleplayer])
 		{
-			V_DrawPatch(60, 0, W_CacheLumpNum(W_GetNumForName("chessc")
-						+ PlayerClasses[consoleplayer] - 1, PU_CACHE));
+			V_DrawPatch(60, 0, (patch_t *)W_CacheLumpNum(W_GetNumForName("chessc")
+									+ PlayerClasses[consoleplayer] - 1, PU_CACHE));
 		}
 	}
 	// Draw the actual text
@@ -220,7 +220,7 @@ static void TextWrite (void)
 			cx += 5;
 			continue;
 		}
-		w = W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
+		w = (patch_t *) W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
 		if (cx + w->width > SCREENWIDTH)
 		{
 			break;
@@ -309,11 +309,12 @@ static void DrawPic(void)
 	{ // Chess pic, draw the correct character graphic
 		if (netgame)
 		{
-			V_DrawPatch(20, 0, W_CacheLumpName("chessall", PU_CACHE));
+			V_DrawPatch(20, 0, (patch_t *)W_CacheLumpName("chessall", PU_CACHE));
 		}
 		else if (PlayerClasses[consoleplayer])
 		{
-			V_DrawPatch(60, 0, W_CacheLumpNum(W_GetNumForName("chessc") + PlayerClasses[consoleplayer] - 1, PU_CACHE));
+			V_DrawPatch(60, 0, (patch_t *)W_CacheLumpNum(W_GetNumForName("chessc")
+									+ PlayerClasses[consoleplayer] - 1, PU_CACHE));
 		}
 	}
 }

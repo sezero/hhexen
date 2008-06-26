@@ -4,8 +4,8 @@
 //** r_things.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_things.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-25 20:10:22 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-26 09:52:28 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -379,7 +379,7 @@ void R_DrawVisSprite (vissprite_t *vis, int x1, int x2)
 	patch_t		*patch;
 	fixed_t		baseclip;
 
-	patch = W_CacheLumpNum(vis->patch + firstspritelump, PU_CACHE);
+	patch = (patch_t *) W_CacheLumpNum(vis->patch + firstspritelump, PU_CACHE);
 
 	dc_colormap = vis->colormap;
 

@@ -4,8 +4,8 @@
 //** r_data.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_data.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-06-25 20:28:10 $
+//** $Revision: 1.10 $
+//** $Date: 2008-06-26 09:52:28 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -124,7 +124,7 @@ static void R_GenerateComposite (int texnum)
 
 	for (i = 0, patch = texture->patches; i < texture->patchcount; i++, patch++)
 	{
-		realpatch = W_CacheLumpNum (patch->patch, PU_CACHE);
+		realpatch = (patch_t *) W_CacheLumpNum (patch->patch, PU_CACHE);
 		x1 = patch->originx;
 		x2 = x1 + SHORT(realpatch->width);
 
@@ -186,7 +186,7 @@ static void R_GenerateLookup (int texnum)
 
 	for (i = 0, patch = texture->patches; i < texture->patchcount; i++, patch++)
 	{
-		realpatch = W_CacheLumpNum (patch->patch, PU_CACHE);
+		realpatch = (patch_t *) W_CacheLumpNum (patch->patch, PU_CACHE);
 		x1 = patch->originx;
 		x2 = x1 + SHORT(realpatch->width);
 		if (x1 < 0)
@@ -278,7 +278,7 @@ static void R_InitTextures (void)
 // load the patch names from pnames.lmp
 //
 	name[8] = 0;
-	names = W_CacheLumpName ("PNAMES", PU_STATIC);
+	names = (char *) W_CacheLumpName ("PNAMES", PU_STATIC);
 	nummappatches = LONG ( *((int *)names) );
 	name_p = names + 4;
 	patchlookup = (int *)malloc(nummappatches*sizeof(*patchlookup));
@@ -292,14 +292,14 @@ static void R_InitTextures (void)
 //
 // load the map texture definitions from textures.lmp
 //
-	maptex = maptex1 = W_CacheLumpName ("TEXTURE1", PU_STATIC);
+	maptex = maptex1 = (int *) W_CacheLumpName ("TEXTURE1", PU_STATIC);
 	numtextures1 = LONG(*maptex);
 	maxoff = W_LumpLength (W_GetNumForName ("TEXTURE1"));
 	directory = maptex + 1;
 
 	if (W_CheckNumForName ("TEXTURE2") != -1)
 	{
-		maptex2 = W_CacheLumpName ("TEXTURE2", PU_STATIC);
+		maptex2 = (int *) W_CacheLumpName ("TEXTURE2", PU_STATIC);
 		numtextures2 = LONG(*maptex2);
 		maxoff2 = W_LumpLength (W_GetNumForName ("TEXTURE2"));
 	}
@@ -435,7 +435,7 @@ static void R_InitSpriteLumps (void)
 	{
 		if (!(i & 127))
 			ST_Progress();
-		patch = W_CacheLumpNum (firstspritelump + i, PU_CACHE);
+		patch = (patch_t *) W_CacheLumpNum (firstspritelump + i, PU_CACHE);
 		spritewidth[i] = SHORT(patch->width)<<FRACBITS;
 		spriteoffset[i] = SHORT(patch->leftoffset)<<FRACBITS;
 		spritetopoffset[i] = SHORT(patch->topoffset)<<FRACBITS;

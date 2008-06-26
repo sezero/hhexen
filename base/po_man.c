@@ -4,8 +4,8 @@
 //** PO_MAN.C : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: po_man.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-25 20:10:22 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-26 09:52:28 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -590,7 +590,7 @@ static void ThrustMobj(mobj_t *mobj, seg_t *seg, polyobj_t *po)
 	}
 	thrustAngle = (seg->angle - ANGLE_90)>>ANGLETOFINESHIFT;
 
-	pe = po->specialdata;
+	pe = (polyevent_t *) po->specialdata;
 	if (pe)
 	{
 		if (pe->thinker.function == T_RotatePoly)
@@ -1380,7 +1380,7 @@ static void TranslateToStartSpot(int tag, int originX, int originY)
 
 void PO_Init(int lump)
 {
-	byte		*data;
+	void		*data;
 	int		i;
 	mapthing_t	*mt;
 	int		numthings;

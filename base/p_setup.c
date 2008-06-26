@@ -4,8 +4,8 @@
 //** p_setup.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_setup.c,v $
-//** $Revision: 1.13 $
-//** $Date: 2008-06-25 20:28:10 $
+//** $Revision: 1.14 $
+//** $Date: 2008-06-26 09:52:28 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -177,7 +177,7 @@ static int cd_NonLevelTracks[6];	// Non-level specific song cd track numbers
 
 static void P_LoadVertexes (int lump)
 {
-	byte		*data;
+	void		*data;
 	int		i;
 	mapvertex_t	*ml;
 	vertex_t	*li;
@@ -208,7 +208,7 @@ static void P_LoadVertexes (int lump)
 
 static void P_LoadSegs (int lump)
 {
-	byte		*data;
+	void		*data;
 	int		i;
 	mapseg_t	*ml;
 	seg_t		*li;
@@ -261,7 +261,7 @@ static void P_LoadSegs (int lump)
 
 static void P_LoadSubsectors (int lump)
 {
-	byte			*data;
+	void			*data;
 	int			i;
 	mapsubsector_t		*ms;
 	subsector_t		*ss;
@@ -293,7 +293,7 @@ static void P_LoadSubsectors (int lump)
 
 static void P_LoadSectors (int lump)
 {
-	byte			*data;
+	void			*data;
 	int			i;
 	mapsector_t		*ms;
 	sector_t		*ss;
@@ -344,7 +344,7 @@ static void P_LoadSectors (int lump)
 
 static void P_LoadNodes (int lump)
 {
-	byte		*data;
+	void		*data;
 	int		i, j, k;
 	mapnode_t	*mn;
 	node_t		*no;
@@ -379,7 +379,7 @@ static void P_LoadNodes (int lump)
 
 static void P_LoadThings(int lump)
 {
-	byte		*data;
+	void		*data;
 	int		i;
 	mapthing_t	*mt;
 	int		numthings;
@@ -432,7 +432,7 @@ static void P_LoadThings(int lump)
 
 static void P_LoadLineDefs(int lump)
 {
-	byte		*data;
+	void		*data;
 	int		i;
 	maplinedef_t	*mld;
 	line_t		*ld;
@@ -523,7 +523,7 @@ static void P_LoadLineDefs(int lump)
 
 static void P_LoadSideDefs (int lump)
 {
-	byte		*data;
+	void		*data;
 	int		i;
 	mapsidedef_t	*msd;
 	side_t		*sd;
@@ -567,7 +567,7 @@ static void P_LoadBlockMap (int lump)
 {
 	int		i, count;
 
-	blockmaplump = W_CacheLumpNum (lump, PU_LEVEL);
+	blockmaplump = (short *) W_CacheLumpNum (lump, PU_LEVEL);
 	blockmap = blockmaplump + 4;
 	count = W_LumpLength (lump) / 2;
 	for (i = 0; i < count; i++)
@@ -1056,7 +1056,7 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
 	P_SkyFix();
 #endif
 
-	rejectmatrix = W_CacheLumpNum(lumpnum + ML_REJECT, PU_LEVEL);
+	rejectmatrix = (byte *) W_CacheLumpNum(lumpnum + ML_REJECT, PU_LEVEL);
 	P_GroupLines();
 	bodyqueslot = 0;
 	po_NumPolyobjs = 0;

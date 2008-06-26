@@ -4,8 +4,8 @@
 //** z_zone.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: z_zone.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-25 08:25:53 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-26 09:52:29 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -56,7 +56,7 @@ void Z_ClearZone (memzone_t *zone)
 
 	zone->blocklist.next = zone->blocklist.prev = block =
 		(memblock_t *)( (byte *)zone + sizeof(memzone_t) );
-	zone->blocklist.user = (void *)zone;
+	zone->blocklist.user = (void **)zone;
 	zone->blocklist.tag = PU_STATIC;
 	zone->rover = block;
 
@@ -87,7 +87,7 @@ void Z_Init (void)
 
 	mainzone->blocklist.next = mainzone->blocklist.prev = block =
 		(memblock_t *)( (byte *)mainzone + sizeof(memzone_t) );
-	mainzone->blocklist.user = (void *)mainzone;
+	mainzone->blocklist.user = (void **)mainzone;
 	mainzone->blocklist.tag = PU_STATIC;
 	mainzone->rover = block;
 
@@ -215,14 +215,14 @@ void *Z_Malloc (int size, int tag, void *user)
 
 	if (user)
 	{
-		base->user = user;		// mark as an in use block
+		base->user = (void **)user;	// mark as an in use block
 		*(void **)user = (void *) ((byte *)base + sizeof(memblock_t));
 	}
 	else
 	{
 		if (tag >= PU_PURGELEVEL)
 			I_Error ("Z_Malloc: an owner is required for purgable blocks");
-		base->user = (void *) 2;	// mark as in use, but unowned
+		base->user = (void **) 2;	// mark as in use, but unowned
 	}
 	base->tag = tag;
 

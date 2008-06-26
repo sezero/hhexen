@@ -4,8 +4,8 @@
 //** a_action.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: a_action.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-26 09:52:27 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -142,13 +142,13 @@ void A_DripBlood(mobj_t *actor)
 
 void A_PotteryExplode(mobj_t *actor)
 {
-	mobj_t *mo=NULL;
+	mobj_t *mo = NULL;
 	int i;
 
 	for (i = (P_Random()&3)+3; i; i--)
 	{
 		mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_POTTERYBIT1);
-		P_SetMobjState(mo, mo->info->spawnstate+(P_Random()%5));
+		P_SetMobjState(mo, mo->info->spawnstate + (P_Random() % 5));
 		if (mo)
 		{
 			mo->momz = ((P_Random()&7)+5)*(3*FRACUNIT/4);

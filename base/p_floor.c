@@ -4,8 +4,8 @@
 //** p_floor.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_floor.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-25 20:10:22 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-26 09:52:28 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -432,7 +432,7 @@ int EV_DoFloorAndCeiling(line_t *line, byte *args, boolean raise)
 #define STAIR_SECTOR_TYPE	26
 #define STAIR_QUEUE_SIZE	32
 
-struct
+static struct
 {
 	sector_t *sector;
 	int	type;

@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.24 $
-//** $Date: 2008-06-25 20:10:22 $
+//** $Revision: 1.25 $
+//** $Date: 2008-06-26 09:52:29 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -711,8 +711,8 @@ void W_CheckForOldFiles (void)
 
 // Ripped out for Heretic
 /*
-int	info[2500][10];
-int	profilecount;
+static int	info[2500][10];
+static int	profilecount;
 
 void W_Profile (void)
 {

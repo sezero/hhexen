@@ -4,8 +4,8 @@
 //** ct_chat.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: ct_chat.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-24 18:23:15 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-26 09:52:28 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -373,12 +373,13 @@ void CT_Drawer(void)
 			}
 			else
 			{
-				patch = W_CacheLumpNum(FontABaseLump + chat_msg[consoleplayer][i] - 33, PU_CACHE);
+				patch = (patch_t *) W_CacheLumpNum(FontABaseLump + chat_msg[consoleplayer][i] - 33, PU_CACHE);
 				V_DrawPatch(x, 10, patch);
 				x += patch->width;
 			}
 		}
-		V_DrawPatch(x, 10, W_CacheLumpName("FONTA59", PU_CACHE));
+		patch = (patch_t *) W_CacheLumpName("FONTA59", PU_CACHE);
+		V_DrawPatch(x, 10, patch);
 		BorderTopRefresh = true;
 		UpdateState |= I_MESSAGES;
 	}
@@ -441,7 +442,7 @@ static void CT_AddChar(int player, char c)
 	}
 	else
 	{
-		patch = W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
+		patch = (patch_t *) W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
 		msglen[player] += patch->width;
 	}
 }
@@ -470,7 +471,7 @@ static void CT_BackSpace(int player)
 	}
 	else
 	{
-		patch = W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
+		patch = (patch_t *) W_CacheLumpNum(FontABaseLump + c - 33, PU_CACHE);
 		msglen[player] -= patch->width;
 	}
 	chat_msg[player][msgptr[player]] = 0;

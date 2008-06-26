@@ -4,8 +4,8 @@
 //** p_mobj.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_mobj.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-06-25 20:10:22 $
+//** $Revision: 1.11 $
+//** $Date: 2008-06-26 09:52:28 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -91,7 +91,7 @@ boolean P_SetMobjState(mobj_t *mobj, statenum_t state)
 
 	if (state == S_NULL)
 	{ // Remove mobj
-		mobj->state = S_NULL;
+		mobj->state = NULL;
 		P_RemoveMobj(mobj);
 		return false;
 	}
@@ -121,7 +121,7 @@ boolean P_SetMobjStateNF(mobj_t *mobj, statenum_t state)
 
 	if (state == S_NULL)
 	{ // Remove mobj
-		mobj->state = S_NULL;
+		mobj->state = NULL;
 		P_RemoveMobj(mobj);
 		return false;
 	}

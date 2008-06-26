@@ -4,8 +4,8 @@
 //** r_plane.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_plane.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-22 21:35:52 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-26 09:52:28 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -488,7 +488,7 @@ void R_DrawPlanes(void)
 			}
 		}
 		// Regular flat
-		tempSource = W_CacheLumpNum(firstflat + flattranslation[pl->picnum], PU_STATIC);
+		tempSource = (byte *) W_CacheLumpNum(firstflat + flattranslation[pl->picnum], PU_STATIC);
 		scrollOffset = leveltime>>1 & 63;
 		switch (pl->special)
 		{ // Handle scrolling flats

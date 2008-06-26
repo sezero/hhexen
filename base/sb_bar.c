@@ -4,8 +4,8 @@
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.15 $
-//** $Date: 2008-06-25 08:25:52 $
+//** $Revision: 1.16 $
+//** $Date: 2008-06-26 09:52:29 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -552,42 +552,42 @@ void SB_Init(void)
 	int i;
 	int startLump;
 
-	PatchH2BAR	= W_CacheLumpName("H2BAR", PU_STATIC);
-	PatchH2TOP	= W_CacheLumpName("H2TOP", PU_STATIC);
-	PatchINVBAR	= W_CacheLumpName("INVBAR", PU_STATIC);
-	PatchLFEDGE	= W_CacheLumpName("LFEDGE", PU_STATIC);
-	PatchRTEDGE	= W_CacheLumpName("RTEDGE", PU_STATIC);
-	PatchSTATBAR	= W_CacheLumpName("STATBAR", PU_STATIC);
-	PatchKEYBAR	= W_CacheLumpName("KEYBAR", PU_STATIC);
-	PatchSELECTBOX	= W_CacheLumpName("SELECTBOX", PU_STATIC);
-	PatchARTICLEAR	= W_CacheLumpName("ARTICLS", PU_STATIC);
-	PatchARMCLEAR	= W_CacheLumpName("ARMCLS", PU_STATIC);
-	PatchMANACLEAR	= W_CacheLumpName("MANACLS", PU_STATIC);
-	PatchMANAVIAL1	= W_CacheLumpName("MANAVL1", PU_STATIC);
-	PatchMANAVIAL2	= W_CacheLumpName("MANAVL2", PU_STATIC);
-	PatchMANAVIALDIM1 = W_CacheLumpName("MANAVL1D", PU_STATIC);
-	PatchMANAVIALDIM2 = W_CacheLumpName("MANAVL2D", PU_STATIC);
-	PatchMANADIM1	= W_CacheLumpName("MANADIM1", PU_STATIC);
-	PatchMANADIM2	= W_CacheLumpName("MANADIM2", PU_STATIC);
-	PatchMANABRIGHT1 = W_CacheLumpName("MANABRT1", PU_STATIC);
-	PatchMANABRIGHT2 = W_CacheLumpName("MANABRT2", PU_STATIC);
-	PatchINVLFGEM1	= W_CacheLumpName("invgeml1", PU_STATIC);
-	PatchINVLFGEM2	= W_CacheLumpName("invgeml2", PU_STATIC);
-	PatchINVRTGEM1	= W_CacheLumpName("invgemr1", PU_STATIC);
-	PatchINVRTGEM2	= W_CacheLumpName("invgemr2", PU_STATIC);
-//	PatchCHAINBACK	= W_CacheLumpName("CHAINBACK", PU_STATIC);
+	PatchH2BAR	= (PATCH_REF) W_CacheLumpName("H2BAR", PU_STATIC);
+	PatchH2TOP	= (PATCH_REF) W_CacheLumpName("H2TOP", PU_STATIC);
+	PatchINVBAR	= (PATCH_REF) W_CacheLumpName("INVBAR", PU_STATIC);
+	PatchLFEDGE	= (PATCH_REF) W_CacheLumpName("LFEDGE", PU_STATIC);
+	PatchRTEDGE	= (PATCH_REF) W_CacheLumpName("RTEDGE", PU_STATIC);
+	PatchSTATBAR	= (PATCH_REF) W_CacheLumpName("STATBAR", PU_STATIC);
+	PatchKEYBAR	= (PATCH_REF) W_CacheLumpName("KEYBAR", PU_STATIC);
+	PatchSELECTBOX	= (PATCH_REF) W_CacheLumpName("SELECTBOX", PU_STATIC);
+	PatchARTICLEAR	= (PATCH_REF) W_CacheLumpName("ARTICLS", PU_STATIC);
+	PatchARMCLEAR	= (PATCH_REF) W_CacheLumpName("ARMCLS", PU_STATIC);
+	PatchMANACLEAR	= (PATCH_REF) W_CacheLumpName("MANACLS", PU_STATIC);
+	PatchMANAVIAL1	= (PATCH_REF) W_CacheLumpName("MANAVL1", PU_STATIC);
+	PatchMANAVIAL2	= (PATCH_REF) W_CacheLumpName("MANAVL2", PU_STATIC);
+	PatchMANAVIALDIM1 = (PATCH_REF) W_CacheLumpName("MANAVL1D", PU_STATIC);
+	PatchMANAVIALDIM2 = (PATCH_REF) W_CacheLumpName("MANAVL2D", PU_STATIC);
+	PatchMANADIM1	= (PATCH_REF) W_CacheLumpName("MANADIM1", PU_STATIC);
+	PatchMANADIM2	= (PATCH_REF) W_CacheLumpName("MANADIM2", PU_STATIC);
+	PatchMANABRIGHT1 = (PATCH_REF) W_CacheLumpName("MANABRT1", PU_STATIC);
+	PatchMANABRIGHT2 = (PATCH_REF) W_CacheLumpName("MANABRT2", PU_STATIC);
+	PatchINVLFGEM1	= (PATCH_REF) W_CacheLumpName("invgeml1", PU_STATIC);
+	PatchINVLFGEM2	= (PATCH_REF) W_CacheLumpName("invgeml2", PU_STATIC);
+	PatchINVRTGEM1	= (PATCH_REF) W_CacheLumpName("invgemr1", PU_STATIC);
+	PatchINVRTGEM2	= (PATCH_REF) W_CacheLumpName("invgemr2", PU_STATIC);
+//	PatchCHAINBACK	= (PATCH_REF) W_CacheLumpName("CHAINBACK", PU_STATIC);
 
 	startLump = W_GetNumForName("IN0");
 	for (i = 0; i < 10; i++)
 	{
-		PatchINumbers[i] = WR_CacheLumpNum(startLump + i, PU_STATIC);
+		PatchINumbers[i] = (PATCH_REF) WR_CacheLumpNum(startLump + i, PU_STATIC);
 	}
-	PatchNEGATIVE = W_CacheLumpName("NEGNUM", PU_STATIC);
+	PatchNEGATIVE = (PATCH_REF) W_CacheLumpName("NEGNUM", PU_STATIC);
 	FontBNumBase = W_GetNumForName("FONTB16");
 	startLump = W_GetNumForName("SMALLIN0");
 	for (i = 0; i < 10; i++)
 	{
-		PatchSmNumbers[i] = WR_CacheLumpNum(startLump + i, PU_STATIC);
+		PatchSmNumbers[i] = (PATCH_REF) WR_CacheLumpNum(startLump + i, PU_STATIC);
 	}
 	PlayPalette = W_GetNumForName("PLAYPAL");
 	SpinFlylump = W_GetNumForName("SPFLY0");
@@ -602,7 +602,7 @@ void SB_Init(void)
 
 	if (deathmatch)
 	{
-		PatchKILLS = W_CacheLumpName("KILLS", PU_STATIC);
+		PatchKILLS = (PATCH_REF) W_CacheLumpName("KILLS", PU_STATIC);
 	}
 	SB_SetClassData();
 }
@@ -626,20 +626,20 @@ void SB_SetClassData(void)
 
 	max_players = ((MAXPLAYERS > MAXPLAYERS_10) && oldwad_10) ? MAXPLAYERS_10 : MAXPLAYERS;
 
-	PatchWEAPONSLOT = WR_CacheLumpNum(W_GetNumForName("wpslot0") + pClass, PU_STATIC);
-	PatchWEAPONFULL = WR_CacheLumpNum(W_GetNumForName("wpfull0") + pClass, PU_STATIC);
-	PatchPIECE1	= WR_CacheLumpNum(W_GetNumForName("wpiecef1")+ pClass, PU_STATIC);
-	PatchPIECE2	= WR_CacheLumpNum(W_GetNumForName("wpiecef2")+ pClass, PU_STATIC);
-	PatchPIECE3	= WR_CacheLumpNum(W_GetNumForName("wpiecef3")+ pClass, PU_STATIC);
-	PatchCHAIN	= WR_CacheLumpNum(W_GetNumForName("chain")   + pClass, PU_STATIC);
+	PatchWEAPONSLOT = (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("wpslot0") + pClass, PU_STATIC);
+	PatchWEAPONFULL = (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("wpfull0") + pClass, PU_STATIC);
+	PatchPIECE1	= (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("wpiecef1")+ pClass, PU_STATIC);
+	PatchPIECE2	= (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("wpiecef2")+ pClass, PU_STATIC);
+	PatchPIECE3	= (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("wpiecef3")+ pClass, PU_STATIC);
+	PatchCHAIN	= (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("chain")   + pClass, PU_STATIC);
 
 	if (!netgame)
 	{ // single player game uses red life gem (the second gem)
-		PatchLIFEGEM = WR_CacheLumpNum(W_GetNumForName("lifegem") + max_players*pClass + 1, PU_STATIC);
+		PatchLIFEGEM = (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("lifegem") + max_players*pClass + 1, PU_STATIC);
 	}
 	else
 	{
-		PatchLIFEGEM = WR_CacheLumpNum(W_GetNumForName("lifegem") + max_players*pClass + consoleplayer, PU_STATIC);
+		PatchLIFEGEM = (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("lifegem") + max_players*pClass + consoleplayer, PU_STATIC);
 	}
 	SB_state = -1;
 	UpdateState |= I_FULLSCRN;
@@ -761,17 +761,17 @@ static void DrRedINumber(signed int val, int x, int y)
 	}
 	if (val > 99)
 	{
-		patch = WR_CacheLumpNum(W_GetNumForName("inred0") + val/100, PU_CACHE);
+		patch = (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("inred0") + val/100, PU_CACHE);
 		V_DrawPatch(x, y, patch);
 	}
 	val = val % 100;
 	if (val > 9 || oldval > 99)
 	{
-		patch = WR_CacheLumpNum(W_GetNumForName("inred0") + val/10, PU_CACHE);
+		patch = (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("inred0") + val/10, PU_CACHE);
 		V_DrawPatch(x + 8, y, patch);
 	}
 	val = val % 10;
-	patch = WR_CacheLumpNum(W_GetNumForName("inred0") + val, PU_CACHE);
+	patch = (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("inred0") + val, PU_CACHE);
 	V_DrawPatch(x + 16, y, patch);
 }
 
@@ -797,7 +797,7 @@ static void DrBNumber(signed int val, int x, int y)
 	}
 	if (val > 99)
 	{
-		patch = W_CacheLumpNum(FontBNumBase + val/100, PU_CACHE);
+		patch = (patch_t *) W_CacheLumpNum(FontBNumBase + val/100, PU_CACHE);
 #ifdef RENDER3D
 		OGL_DrawShadowedPatch(xpos + 6 - patch->width/2, y, FontBNumBase + val/100);
 #else
@@ -808,7 +808,7 @@ static void DrBNumber(signed int val, int x, int y)
 	xpos += 12;
 	if (val > 9 || oldval > 99)
 	{
-		patch = W_CacheLumpNum(FontBNumBase + val/10, PU_CACHE);
+		patch = (patch_t *) W_CacheLumpNum(FontBNumBase + val/10, PU_CACHE);
 #ifdef RENDER3D
 		OGL_DrawShadowedPatch(xpos + 6 - patch->width/2, y, FontBNumBase + val/10);
 #else
@@ -817,7 +817,7 @@ static void DrBNumber(signed int val, int x, int y)
 	}
 	val = val % 10;
 	xpos += 12;
-	patch = W_CacheLumpNum(FontBNumBase + val, PU_CACHE);
+	patch = (patch_t *) W_CacheLumpNum(FontBNumBase + val, PU_CACHE);
 #ifdef RENDER3D
 	OGL_DrawShadowedPatch(xpos + 6 - patch->width/2, y, FontBNumBase + val/1);
 #else
@@ -1123,11 +1123,11 @@ static void DrawAnimatedIcons(void)
 			{
 				if (hitCenterFrame && (frame != 15 && frame != 0))
 				{
-					V_DrawPatch(20, 19, WR_CacheLumpNum(SpinFlylump + 15, PU_CACHE));
+					V_DrawPatch(20, 19, (PATCH_REF)WR_CacheLumpNum(SpinFlylump + 15, PU_CACHE));
 				}
 				else
 				{
-					V_DrawPatch(20, 19, WR_CacheLumpNum(SpinFlylump + frame, PU_CACHE));
+					V_DrawPatch(20, 19, (PATCH_REF)WR_CacheLumpNum(SpinFlylump + frame, PU_CACHE));
 					hitCenterFrame = false;
 				}
 			}
@@ -1135,12 +1135,12 @@ static void DrawAnimatedIcons(void)
 			{
 				if (!hitCenterFrame && (frame != 15 && frame != 0))
 				{
-					V_DrawPatch(20, 19, WR_CacheLumpNum(SpinFlylump + frame, PU_CACHE));
+					V_DrawPatch(20, 19, (PATCH_REF)WR_CacheLumpNum(SpinFlylump + frame, PU_CACHE));
 					hitCenterFrame = false;
 				}
 				else
 				{
-					V_DrawPatch(20, 19, WR_CacheLumpNum(SpinFlylump + 15, PU_CACHE));
+					V_DrawPatch(20, 19, (PATCH_REF)WR_CacheLumpNum(SpinFlylump + 15, PU_CACHE));
 					hitCenterFrame = true;
 				}
 			}
@@ -1156,7 +1156,7 @@ static void DrawAnimatedIcons(void)
 			|| !(CPlayer->powers[pw_speed] & 16))
 		{
 			frame = (leveltime / 3) & 15;
-			V_DrawPatch(60, 19, WR_CacheLumpNum(SpinSpeedLump + frame, PU_CACHE));
+			V_DrawPatch(60, 19, (PATCH_REF)WR_CacheLumpNum(SpinSpeedLump + frame, PU_CACHE));
 		}
 		BorderTopRefresh = true;
 		UpdateState |= I_MESSAGES;
@@ -1169,7 +1169,7 @@ static void DrawAnimatedIcons(void)
 			|| !(CPlayer->powers[pw_invulnerability] & 16))
 		{
 			frame = (leveltime / 3) & 15;
-			V_DrawPatch(260, 19, WR_CacheLumpNum(SpinDefenseLump + frame, PU_CACHE));
+			V_DrawPatch(260, 19, (PATCH_REF)WR_CacheLumpNum(SpinDefenseLump + frame, PU_CACHE));
 		}
 		BorderTopRefresh = true;
 		UpdateState |= I_MESSAGES;
@@ -1182,7 +1182,7 @@ static void DrawAnimatedIcons(void)
 			|| !(CPlayer->powers[pw_minotaur] & 16))
 		{
 			frame = (leveltime / 3) & 15;
-			V_DrawPatch(300, 19, WR_CacheLumpNum(SpinMinotaurLump + frame, PU_CACHE));
+			V_DrawPatch(300, 19, (PATCH_REF)WR_CacheLumpNum(SpinMinotaurLump + frame, PU_CACHE));
 		}
 		BorderTopRefresh = true;
 		UpdateState |= I_MESSAGES;
@@ -1323,7 +1323,7 @@ void DrawMainBar(void)
 #ifndef RENDER3D
 		V_DrawPatch(144, 160, PatchARTICLEAR);
 #endif
-		V_DrawPatch(148, 164, WR_CacheLumpNum(W_GetNumForName("useartia") + ArtifactFlash - 1, PU_CACHE));
+		V_DrawPatch(148, 164, (PATCH_REF)WR_CacheLumpNum(W_GetNumForName("useartia") + ArtifactFlash - 1, PU_CACHE));
 		ArtifactFlash--;
 		oldarti = -1;	/* so that the correct artifact fills in after the flash */
 		UpdateState |= I_STATBAR;
@@ -1336,7 +1336,7 @@ void DrawMainBar(void)
 #endif
 		if (CPlayer->readyArtifact > 0)
 		{
-			V_DrawPatch(143, 163, W_CacheLumpName(patcharti[CPlayer->readyArtifact], PU_CACHE));
+			V_DrawPatch(143, 163, (PATCH_REF)W_CacheLumpName(patcharti[CPlayer->readyArtifact], PU_CACHE));
 			if (CPlayer->inventory[inv_ptr].count > 1)
 			{
 				DrSmallNumber(CPlayer->inventory[inv_ptr].count, 162, 184);
@@ -1564,7 +1564,7 @@ void DrawInventoryBar(void)
 		if (CPlayer->inventorySlotNum > x + i
 			&& CPlayer->inventory[x + i].type != arti_none)
 		{
-			V_DrawPatch(50 + i*31, 163, W_CacheLumpName(patcharti[CPlayer->inventory[x + i].type], PU_CACHE));
+			V_DrawPatch(50 + i*31, 163, (PATCH_REF)W_CacheLumpName(patcharti[CPlayer->inventory[x + i].type], PU_CACHE));
 			if (CPlayer->inventory[x + i].count > 1)
 			{
 				DrSmallNumber(CPlayer->inventory[x + i].count, 68 + i*31, 185);
@@ -1603,7 +1603,7 @@ void DrawKeyBar(void)
 		{
 			if (CPlayer->keys & (1 << i))
 			{
-				V_DrawPatch(xPosition, 164, WR_CacheLumpNum(W_GetNumForName("keyslot1") + i, PU_CACHE));
+				V_DrawPatch(xPosition, 164, (PATCH_REF)WR_CacheLumpNum(W_GetNumForName("keyslot1") + i, PU_CACHE));
 				xPosition += 20;
 			}
 		}
@@ -1627,15 +1627,15 @@ void DrawKeyBar(void)
 			}
 			if (CPlayer->armorpoints[i] <= (ArmorIncrement[CPlayer->playerclass][i]>>2))
 			{
-				V_DrawFuzzPatch(150 + 31*i, 164, WR_CacheLumpNum(W_GetNumForName("armslot1") + i, PU_CACHE));
+				V_DrawFuzzPatch(150 + 31*i, 164, (PATCH_REF)WR_CacheLumpNum(W_GetNumForName("armslot1") + i, PU_CACHE));
 			}
 			else if (CPlayer->armorpoints[i] <= (ArmorIncrement[CPlayer->playerclass][i]>>1))
 			{
-				V_DrawAltFuzzPatch(150 + 31*i, 164, WR_CacheLumpNum(W_GetNumForName("armslot1") + i, PU_CACHE));
+				V_DrawAltFuzzPatch(150 + 31*i, 164, (PATCH_REF)WR_CacheLumpNum(W_GetNumForName("armslot1") + i, PU_CACHE));
 			}
 			else
 			{
-				V_DrawPatch(150 + 31*i, 164, WR_CacheLumpNum(W_GetNumForName("armslot1") + i, PU_CACHE));
+				V_DrawPatch(150 + 31*i, 164, (PATCH_REF)WR_CacheLumpNum(W_GetNumForName("armslot1") + i, PU_CACHE));
 			}
 		}
 #ifdef RENDER3D
@@ -1721,8 +1721,8 @@ void DrawFullScreenStuff(void)
 	{
 		if (CPlayer->readyArtifact > 0)
 		{
-			V_DrawFuzzPatch(286, 170, W_CacheLumpName("ARTIBOX", PU_CACHE));
-			V_DrawPatch(284, 169, W_CacheLumpName(patcharti[CPlayer->readyArtifact], PU_CACHE));
+			V_DrawFuzzPatch(286, 170, (PATCH_REF)W_CacheLumpName("ARTIBOX", PU_CACHE));
+			V_DrawPatch(284, 169, (PATCH_REF)W_CacheLumpName(patcharti[CPlayer->readyArtifact], PU_CACHE));
 			if (CPlayer->inventory[inv_ptr].count > 1)
 			{
 				DrSmallNumber(CPlayer->inventory[inv_ptr].count, 302, 192);
@@ -1734,11 +1734,11 @@ void DrawFullScreenStuff(void)
 		x = inv_ptr - curpos;
 		for (i = 0; i < 7; i++)
 		{
-			V_DrawFuzzPatch(50 + i*31, 168, W_CacheLumpName("ARTIBOX", PU_CACHE));
+			V_DrawFuzzPatch(50 + i*31, 168, (PATCH_REF)W_CacheLumpName("ARTIBOX", PU_CACHE));
 			if (CPlayer->inventorySlotNum > x + i
 				&& CPlayer->inventory[x + i].type != arti_none)
 			{
-				V_DrawPatch(49 + i*31, 167, W_CacheLumpName(patcharti[CPlayer->inventory[x + i].type], PU_CACHE));
+				V_DrawPatch(49 + i*31, 167, (PATCH_REF)W_CacheLumpName(patcharti[CPlayer->inventory[x + i].type], PU_CACHE));
 				if (CPlayer->inventory[x + i].count > 1)
 				{
 					DrSmallNumber(CPlayer->inventory[x + i].count, 66 + i*31, 188);
@@ -1766,7 +1766,7 @@ void DrawFullScreenStuff(void)
 void Draw_TeleportIcon(void)
 {
 	PATCH_REF patch;
-	patch = WR_CacheLumpNum(W_GetNumForName("teleicon"), PU_CACHE);
+	patch = (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("teleicon"), PU_CACHE);
 	V_DrawPatch(100, 68, patch);
 	UpdateState |= I_FULLSCRN;
 	I_Update();
@@ -1782,7 +1782,7 @@ void Draw_TeleportIcon(void)
 void Draw_SaveIcon(void)
 {
 	PATCH_REF patch;
-	patch = WR_CacheLumpNum(W_GetNumForName("saveicon"), PU_CACHE);
+	patch = (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("saveicon"), PU_CACHE);
 	V_DrawPatch(100, 68, patch);
 	UpdateState |= I_FULLSCRN;
 	I_Update();
@@ -1798,7 +1798,7 @@ void Draw_SaveIcon(void)
 void Draw_LoadIcon(void)
 {
 	PATCH_REF patch;
-	patch = WR_CacheLumpNum(W_GetNumForName("loadicon"), PU_CACHE);
+	patch = (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("loadicon"), PU_CACHE);
 	V_DrawPatch(100, 68, patch);
 	UpdateState |= I_FULLSCRN;
 	I_Update();

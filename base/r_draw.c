@@ -4,8 +4,8 @@
 //** r_draw.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_draw.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-25 20:10:22 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-26 09:52:28 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -355,7 +355,7 @@ void R_InitTranslationTables (void)
 	byte	*transLump;
 
 	// Load tint table
-	tinttable = W_CacheLumpName("TINTTAB", PU_STATIC);
+	tinttable = (byte *) W_CacheLumpName("TINTTAB", PU_STATIC);
 
 	// Allocate translation tables
 	translationtables = (byte *) Z_Malloc(256 * 3 * (MAXPLAYERS - 1) + 255, PU_STATIC, NULL);
@@ -374,7 +374,7 @@ void R_InitTranslationTables (void)
 			break;
 		}
 #endif	/* 8-players */
-		transLump = W_CacheLumpNum(W_GetNumForName("trantbl0") + i, PU_STATIC);
+		transLump = (byte *) W_CacheLumpNum(W_GetNumForName("trantbl0") + i, PU_STATIC);
 		memcpy(translationtables + i*256, transLump, 256);
 		Z_Free(transLump);
 	}
@@ -553,7 +553,7 @@ void R_DrawViewBorder (void)
 	if (scaledviewwidth == SCREENWIDTH)
 		return;
 
-	src = W_CacheLumpName("F_022", PU_CACHE);
+	src = (byte *) W_CacheLumpName("F_022", PU_CACHE);
 	dest = screen;
 
 	for (y = 0 ; y < SCREENHEIGHT - SBARHEIGHT; y++)
@@ -571,18 +571,18 @@ void R_DrawViewBorder (void)
 	}
 	for (x = viewwindowx; x < viewwindowx + viewwidth; x += 16)
 	{
-		V_DrawPatch(x, viewwindowy - 4, W_CacheLumpName("bordt", PU_CACHE));
-		V_DrawPatch(x, viewwindowy + viewheight, W_CacheLumpName("bordb", PU_CACHE));
+		V_DrawPatch(x, viewwindowy - 4, (patch_t *)W_CacheLumpName("bordt", PU_CACHE));
+		V_DrawPatch(x, viewwindowy + viewheight, (patch_t *)W_CacheLumpName("bordb", PU_CACHE));
 	}
 	for (y = viewwindowy; y < viewwindowy + viewheight; y += 16)
 	{
-		V_DrawPatch(viewwindowx - 4, y, W_CacheLumpName("bordl", PU_CACHE));
-		V_DrawPatch(viewwindowx+viewwidth, y, W_CacheLumpName("bordr", PU_CACHE));
+		V_DrawPatch(viewwindowx - 4, y, (patch_t *)W_CacheLumpName("bordl", PU_CACHE));
+		V_DrawPatch(viewwindowx+viewwidth, y, (patch_t *)W_CacheLumpName("bordr", PU_CACHE));
 	}
-	V_DrawPatch(viewwindowx - 4, viewwindowy - 4, W_CacheLumpName("bordtl", PU_CACHE));
-	V_DrawPatch(viewwindowx + viewwidth, viewwindowy - 4, W_CacheLumpName("bordtr", PU_CACHE));
-	V_DrawPatch(viewwindowx + viewwidth, viewwindowy + viewheight, W_CacheLumpName("bordbr", PU_CACHE));
-	V_DrawPatch(viewwindowx - 4, viewwindowy + viewheight, W_CacheLumpName("bordbl", PU_CACHE));
+	V_DrawPatch(viewwindowx - 4, viewwindowy - 4, (patch_t *)W_CacheLumpName("bordtl", PU_CACHE));
+	V_DrawPatch(viewwindowx + viewwidth, viewwindowy - 4, (patch_t *)W_CacheLumpName("bordtr", PU_CACHE));
+	V_DrawPatch(viewwindowx + viewwidth, viewwindowy + viewheight, (patch_t *)W_CacheLumpName("bordbr", PU_CACHE));
+	V_DrawPatch(viewwindowx - 4, viewwindowy + viewheight, (patch_t *)W_CacheLumpName("bordbl", PU_CACHE));
 #endif
 }
 
@@ -631,7 +631,7 @@ void R_DrawTopBorder (void)
 	if (scaledviewwidth == SCREENWIDTH)
 		return;
 
-	src = W_CacheLumpName("F_022", PU_CACHE);
+	src = (byte *) W_CacheLumpName("F_022", PU_CACHE);
 	dest = screen;
 
 	for (y = 0; y < 34; y++)
@@ -651,15 +651,15 @@ void R_DrawTopBorder (void)
 	{
 		for (x = viewwindowx; x < viewwindowx + viewwidth; x += 16)
 		{
-			V_DrawPatch(x, viewwindowy - 4, W_CacheLumpName("bordt", PU_CACHE));
+			V_DrawPatch(x, viewwindowy - 4, (patch_t *)W_CacheLumpName("bordt", PU_CACHE));
 		}
-		V_DrawPatch(viewwindowx-4, viewwindowy, W_CacheLumpName("bordl", PU_CACHE));
-		V_DrawPatch(viewwindowx + viewwidth, viewwindowy, W_CacheLumpName("bordr", PU_CACHE));
-		V_DrawPatch(viewwindowx - 4, viewwindowy + 16, W_CacheLumpName("bordl", PU_CACHE));
-		V_DrawPatch(viewwindowx + viewwidth, viewwindowy + 16, W_CacheLumpName("bordr", PU_CACHE));
+		V_DrawPatch(viewwindowx-4, viewwindowy, (patch_t *)W_CacheLumpName("bordl", PU_CACHE));
+		V_DrawPatch(viewwindowx + viewwidth, viewwindowy, (patch_t *)W_CacheLumpName("bordr", PU_CACHE));
+		V_DrawPatch(viewwindowx - 4, viewwindowy + 16, (patch_t *)W_CacheLumpName("bordl", PU_CACHE));
+		V_DrawPatch(viewwindowx + viewwidth, viewwindowy + 16, (patch_t *)W_CacheLumpName("bordr", PU_CACHE));
 
-		V_DrawPatch(viewwindowx - 4, viewwindowy - 4, W_CacheLumpName("bordtl", PU_CACHE));
-		V_DrawPatch(viewwindowx + viewwidth, viewwindowy - 4, W_CacheLumpName("bordtr", PU_CACHE));
+		V_DrawPatch(viewwindowx - 4, viewwindowy - 4, (patch_t *)W_CacheLumpName("bordtl", PU_CACHE));
+		V_DrawPatch(viewwindowx + viewwidth, viewwindowy - 4, (patch_t *)W_CacheLumpName("bordtr", PU_CACHE));
 	}
 #endif
 }
