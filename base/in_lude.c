@@ -4,8 +4,8 @@
 //** in_lude.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: in_lude.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-26 19:44:24 $
+//** $Revision: 1.12 $
+//** $Date: 2008-06-26 20:35:26 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -13,11 +13,25 @@
 #include "h2stdinc.h"
 #include <ctype.h>
 #include "h2def.h"
+#ifdef RENDER3D
+#include "ogl_def.h"
+#endif
 
 // MACROS ------------------------------------------------------------------
 
 #define	TEXTSPEED	3
 #define	TEXTWAIT	140
+
+#ifdef RENDER3D
+#define PATCH_REF			int
+#define W_CacheLumpName(a,b)		W_GetNumForName((a))
+#define WR_CacheLumpNum(a,b)		(a)
+#define V_DrawPatch(x,y,p)		OGL_DrawPatch((x),(y),(p))
+#define V_DrawRawScreen(a)		OGL_DrawRawScreen((a))
+#else
+#define PATCH_REF			patch_t*
+#define WR_CacheLumpNum(a,b)		W_CacheLumpNum((a),(b))
+#endif
 
 // TYPES -------------------------------------------------------------------
 
@@ -63,11 +77,11 @@ static int intertime = -1;
 static gametype_t gametype;
 static int cnt;
 static int slaughterboy; // in DM, the player with the most kills
-static patch_t *patchINTERPIC;
-static patch_t *FontBNumbers[10];
-static patch_t *FontBNegative;
-static patch_t *FontBSlash;
-static patch_t *FontBPercent;
+static PATCH_REF patchINTERPIC;
+static PATCH_REF FontBNumbers[10];
+static PATCH_REF FontBNegative;
+static PATCH_REF FontBSlash;
+static PATCH_REF FontBPercent;
 static int FontABaseLump;
 static int FontBLump;
 static int FontBLumpBase;
@@ -90,7 +104,11 @@ extern void AM_Stop (void);
 void IN_Start(void)
 {
 	int i;
+#ifdef RENDER3D
+	OGL_SetFilter(0);
+#else
 	I_SetPalette((byte *)W_CacheLumpName("PLAYPAL", PU_CACHE));
+#endif
 	InitStats();
 	LoadPics();
 	intermission = true;
@@ -227,18 +245,18 @@ static void LoadPics(void)
 
 	if (HubCount || gametype == DEATHMATCH)
 	{
-		patchINTERPIC = (patch_t *) W_CacheLumpName("INTERPIC", PU_STATIC);
+		patchINTERPIC = (PATCH_REF) W_CacheLumpName("INTERPIC", PU_STATIC);
 		FontBLumpBase = W_GetNumForName("FONTB16");
 		for (i = 0; i < 10; i++)
 		{
-			FontBNumbers[i] = (patch_t *) W_CacheLumpNum(FontBLumpBase + i, PU_STATIC);
+			FontBNumbers[i] = (PATCH_REF) WR_CacheLumpNum(FontBLumpBase + i, PU_STATIC);
 		}
 		FontBLump = W_GetNumForName("FONTB_S") + 1;
-		FontBNegative = (patch_t *) W_CacheLumpName("FONTB13", PU_STATIC);
+		FontBNegative = (PATCH_REF) W_CacheLumpName("FONTB13", PU_STATIC);
 		FontABaseLump = W_GetNumForName("FONTA_S") + 1;
 
-		FontBSlash = (patch_t *) W_CacheLumpName("FONTB15", PU_STATIC);
-		FontBPercent = (patch_t *) W_CacheLumpName("FONTB05", PU_STATIC);
+		FontBSlash = (PATCH_REF) W_CacheLumpName("FONTB15", PU_STATIC);
+		FontBPercent = (PATCH_REF) W_CacheLumpName("FONTB05", PU_STATIC);
 	}
 }
 
@@ -250,6 +268,7 @@ static void LoadPics(void)
 
 static void UnloadPics(void)
 {
+#ifndef RENDER3D
 	int i;
 
 	if (HubCount || gametype == DEATHMATCH)
@@ -263,6 +282,7 @@ static void UnloadPics(void)
 		Z_ChangeTag(FontBSlash, PU_CACHE);
 		Z_ChangeTag(FontBPercent, PU_CACHE);
 	}
+#endif
 }
 
 //========================================================================
@@ -372,7 +392,12 @@ void IN_Drawer(void)
 		return;
 	}
 	UpdateState |= I_FULLSCRN;
+
+#ifdef RENDER3D
+	OGL_DrawRawScreen(patchINTERPIC);
+#else
 	memcpy(screen, (byte *)patchINTERPIC, SCREENWIDTH*SCREENHEIGHT);
+#endif
 
 	if (gametype == SINGLE)
 	{
@@ -416,8 +441,8 @@ static void DrDeathTally(void)
 	boolean bold;
 	static boolean showTotals;
 
-	V_DrawPatch(TALLY_TOP_X, TALLY_TOP_Y, (patch_t *)W_CacheLumpName("tallytop", PU_CACHE));
-	V_DrawPatch(TALLY_LEFT_X, TALLY_LEFT_Y, (patch_t *)W_CacheLumpName("tallylft", PU_CACHE));
+	V_DrawPatch(TALLY_TOP_X, TALLY_TOP_Y, (PATCH_REF)W_CacheLumpName("tallytop", PU_CACHE));
+	V_DrawPatch(TALLY_LEFT_X, TALLY_LEFT_Y, (PATCH_REF)W_CacheLumpName("tallylft", PU_CACHE));
 	if (intertime < TALLY_EFFECT_TICKS)
 	{
 		showTotals = false;
@@ -567,7 +592,11 @@ static void DrawHubText(void)
 		{
 			break;
 		}
+#ifdef RENDER3D
+		OGL_DrawPatch(cx, cy, FontABaseLump + c - 33);
+#else
 		V_DrawPatch(cx, cy, w);
+#endif
 		cx += width;
 	}
 }
