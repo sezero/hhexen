@@ -379,7 +379,7 @@ void OGL_ShadeRect(int x, int y, int w, int h, float darkening)
 {
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
+//	glEnable(GL_BLEND);
 
 	glColor4f(0, 0, 0, darkening);
 	glBegin(GL_QUADS);
@@ -389,7 +389,7 @@ void OGL_ShadeRect(int x, int y, int w, int h, float darkening)
 	glVertex2f(x, y + h);
 	glEnd();
 
-	glDisable(GL_BLEND);
+//	glDisable(GL_BLEND);
 	glEnable(GL_ALPHA_TEST);
 	glEnable(GL_TEXTURE_2D);
 }
