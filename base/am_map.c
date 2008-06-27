@@ -4,8 +4,8 @@
 //** am_map.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: am_map.c,v $
-//** $Revision: 1.14 $
-//** $Date: 2008-06-26 09:52:28 $
+//** $Revision: 1.15 $
+//** $Date: 2008-06-27 17:50:01 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -40,7 +40,6 @@ static int finit_height = SCREENHEIGHT-SBARHEIGHT-3;
 static int f_x, f_y; // location of window on screen
 static int f_w, f_h; // size of window on screen
 static int lightlev; // used for funky strobing effect
-static byte *fb; // pseudo-frame buffer
 static int amclock;
 
 static mpoint_t m_paninc; // how far the window pans each tic (map coords)
@@ -103,7 +102,9 @@ static byte *aliasmax[NUMALIAS] =
 };
 */
 
-static byte *maplump; // pointer to the raw data for the automap background.
+static byte *maplump;	// pointer to the raw data for the automap background.
+
+static byte *fb;	// pseudo-frame buffer
 #endif	/* RENDER3D */
 
 static short mapystart = 0; // y-value for the start of the map bitmap...used in
@@ -282,7 +283,9 @@ static void AM_initVariables(void)
 //	static event_t st_notify = { ev_keyup, AM_MSGENTERED };
 
 	automapactive = true;
+#ifndef RENDER3D
 	fb = screen;
+#endif
 
 	f_oldloc.x = MAXINT;
 	amclock = 0;
