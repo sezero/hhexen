@@ -56,9 +56,11 @@ typedef unsigned short	gushort;
 typedef unsigned int	guint;
 typedef unsigned long	gulong;
 
+#define NFRAGS		32
+
 #define min(x,y)	((x) < (y) ? (x) : (y))
 
-void oss_set_audio_params(void);
+static void oss_set_audio_params(void);
 
 static int audio_fd = 0;
 static void *buffer;
@@ -79,20 +81,19 @@ static gboolean realtime = FALSE;
 OSSConfig oss_cfg;
 
 
-void oss_about(void)
+static void oss_about(void)
 {
-	printf( "XMMS OSS Driver 0.9\n" );
+	printf ("XMMS OSS Driver 0.9\n");
 }
 
-
-int oss_get_written_time(void)
+static int oss_get_written_time(void)
 {
 	if (!going)
 		return 0;
 	return (int) (((float) written * 1000) / (float) (bps));
 }
 
-int oss_get_output_time(void)
+static int oss_get_output_time(void)
 {
 	audio_buf_info buf_info;
 	int bytes;
@@ -115,7 +116,7 @@ int oss_get_output_time(void)
 	return output_time_offset + (int) ((float) ((bytes) * 1000.0) / (float) ebps);
 }
 
-int oss_used(void)
+static int oss_used(void)
 {
 	if (realtime)
 		return 0;
@@ -127,7 +128,7 @@ int oss_used(void)
 	}
 }
 
-int oss_playing(void)
+static int oss_playing(void)
 {
 	audio_buf_info buf_info;
 	int bytes;
@@ -143,7 +144,7 @@ int oss_playing(void)
 	return TRUE;
 }
 
-int oss_free(void)
+static int oss_free(void)
 {
 	if (!realtime)
 	{
@@ -160,13 +161,15 @@ int oss_free(void)
 		return (buffer_size - (wr_index - rd_index)) - device_buffer_size - 1;
 	}
 	else
+	{
 		if (paused)
 			return 0;
 		else
 			return 1000000;
+	}
 }
 
-int oss_downsample(guchar * ob, guint length, guint speed, guint espeed)
+static int oss_downsample(guchar * ob, guint length, guint speed, guint espeed)
 {
 	guint nlen, i, off, d, w;
 
@@ -230,7 +233,7 @@ int oss_downsample(guchar * ob, guint length, guint speed, guint espeed)
 	return w;
 }
 
-void oss_write(void *ptr, int length)
+static void oss_write(void *ptr, int length)
 {
 	int cnt, off = 0, w;
 
@@ -275,7 +278,7 @@ void oss_write(void *ptr, int length)
 	}
 }
 
-void oss_close(void)
+static void oss_close(void)
 {
 	wr_index = 0;
 	rd_index = 0;
@@ -289,7 +292,7 @@ void oss_close(void)
 	}
 }
 
-void oss_flush(int time)
+static void oss_flush(int time)
 {
 	if (!realtime)
 	{
@@ -309,7 +312,7 @@ void oss_flush(int time)
 	}
 }
 
-void oss_pause(short p)
+static void oss_pause(short p)
 {
 	if (!realtime)
 	{
@@ -323,7 +326,7 @@ void oss_pause(short p)
 
 }
 
-void *oss_loop(void *arg)
+static void *oss_loop(void *arg)
 {
 	int length, cnt, w;
 	audio_buf_info abuf_info;
@@ -411,16 +414,17 @@ void *oss_loop(void *arg)
 
 	ioctl(audio_fd, SNDCTL_DSP_RESET, 0);
 	close(audio_fd);
-	munlock( buffer, buffer_size );
+	munlock(buffer, buffer_size);
 	free(buffer);
 	pthread_exit(NULL);
 }
 
-void oss_set_audio_params(void)
+static void oss_set_audio_params(void)
 {
 	int frag, stereo;
 
 	ioctl(audio_fd, SNDCTL_DSP_RESET, 0);
+//	frag = (NFRAGS << 16) | fragsize;
 	frag = (oss_cfg.fragment_count << 16) | fragsize;
 	ioctl(audio_fd, SNDCTL_DSP_SETFRAGMENT, &frag);
 	ioctl(audio_fd, SNDCTL_DSP_SETFMT, &format);
@@ -435,7 +439,7 @@ void oss_set_audio_params(void)
 		ebps *= 2;
 }
 
-int oss_open(AFormat fmt, int rate, int nch)
+static int oss_open(AFormat fmt, int rate, int nch)
 {
 	switch (fmt)
 	{
@@ -473,6 +477,7 @@ int oss_open(AFormat fmt, int rate, int nch)
 		fragsize++;
 	fragsize--;
 
+//	device_buffer_size = ((1L << fragsize) * (NFRAGS + 1));
 	device_buffer_size = ((1L << fragsize) * (oss_cfg.fragment_count + 1));
 
 	channels = nch;
@@ -485,7 +490,9 @@ int oss_open(AFormat fmt, int rate, int nch)
 		prebuffer_size = buffer_size - 4096;
 
 	buffer_size += device_buffer_size;
-	buffer = calloc( 1, buffer_size );
+	buffer = calloc(1,  buffer_size);
+	if (buffer == NULL)
+		return 0;
 	mlock(buffer, buffer_size);
 
 	going = 1;
@@ -497,8 +504,7 @@ int oss_open(AFormat fmt, int rate, int nch)
 	unpause = FALSE;
 	remove_prebuffer = FALSE;
 
-	/*realtime = xmms_check_realtime_priority();*/
-	/*realtime = FALSE;*/
+//	realtime = xmms_check_realtime_priority();
 	realtime = TRUE;
 
 	if (oss_cfg.audio_device > 0)
@@ -513,6 +519,7 @@ int oss_open(AFormat fmt, int rate, int nch)
 	if (audio_fd == -1)
 	{
 		free(buffer);
+		buffer = NULL;
 		return 0;
 	}
 	oss_set_audio_params();
@@ -522,7 +529,7 @@ int oss_open(AFormat fmt, int rate, int nch)
 }
 
 
-static void scan_devices(const char* type)
+static static void scan_devices(const char* type)
 {
 	FILE* file;
 	char buf[256];
@@ -569,9 +576,9 @@ static void scan_devices(const char* type)
 	}
 }
 
-void oss_configure(void)
+static void oss_configure(void)
 {
-	printf( "OSS configure not implemented - here are the current devices:\n" );
+	printf("OSS configure not implemented - here are the current devices:\n");
 	scan_devices("Audio devices:");
 	scan_devices("Mixers:");
 
@@ -580,12 +587,11 @@ void oss_configure(void)
 	oss_cfg.mixer_device = mixer_device;
 	oss_cfg.buffer_size = (gint) GTK_ADJUSTMENT(buffer_size_adj)->value;
 	oss_cfg.prebuffer = (gint) GTK_ADJUSTMENT(buffer_pre_adj)->value;
-	oss_cfg.fragment_count = 32;
+	oss_cfg.fragment_count = NFRAGS;
 	*/
 }
 
-
-void oss_init(void)
+static void oss_init(void)
 {
 	memset(&oss_cfg, 0, sizeof (OSSConfig));
 
@@ -593,14 +599,14 @@ void oss_init(void)
 	oss_cfg.mixer_device = 0;
 	oss_cfg.buffer_size = 3000;
 	oss_cfg.prebuffer = 25;
-	oss_cfg.fragment_count = 3;  /*32;*/
+//	oss_cfg.fragment_count = NFRAGS;
+	oss_cfg.fragment_count = 3;
 }
 
-
-void oss_get_volume(int *l, int *r)
+static void oss_get_volume(int *l, int *r)
 {
 	int fd, v, cmd, devs;
-	char devname[ 20 ];
+	char devname[20];
 
 	if (oss_cfg.mixer_device > 0)
 		snprintf(devname, sizeof(devname), "/dev/mixer%d", oss_cfg.mixer_device);
@@ -630,8 +636,7 @@ void oss_get_volume(int *l, int *r)
 	}
 }
 
-
-void oss_set_volume(int l, int r)
+static void oss_set_volume(int l, int r)
 {
 	int fd, v, cmd, devs;
 	char devname[20];
@@ -664,7 +669,7 @@ void oss_set_volume(int l, int r)
 }
 
 
-OutputPlugin oss_op =
+static OutputPlugin oss_op =
 {
 	NULL,
 	NULL,
@@ -684,7 +689,6 @@ OutputPlugin oss_op =
 	oss_get_output_time,
 	oss_get_written_time,
 };
-
 
 OutputPlugin *get_oplugin_info(void)
 {
