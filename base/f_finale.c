@@ -4,8 +4,8 @@
 //** f_finale.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: f_finale.c,v $
-//** $Revision: 1.14 $
-//** $Date: 2008-06-26 23:23:07 $
+//** $Revision: 1.15 $
+//** $Date: 2008-06-27 08:08:15 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -106,7 +106,9 @@ void F_StartFinale (void)
 	FinaleLumpNum = W_GetNumForName("FINALE1");
 	FontABaseLump = W_GetNumForName("FONTA_S") + 1;
 	InitializeFade(1);
-
+#ifdef RENDER3D
+	OGL_SetFilter(0);
+#endif
 //	S_ChangeMusic(mus_victor, true);
 	S_StartSongName("hall", false); // don't loop the song
 }
