@@ -351,12 +351,12 @@ int OGL_DrawFilter(void)
 	else if (curfilter >= STARTPOISONPALS && curfilter < STARTPOISONPALS+NUMPOISONPALS)
 		// Green?
 		glColor4f(0, 1, 0, (curfilter-STARTPOISONPALS+1)/16.0);
-	else if (curfilter >= STARTSCOURGEPAL)
+	else if (curfilter >= STARTSCOURGEPAL && curfilter < STARTSCOURGEPAL+3)
 		// Orange?
-		glColor4f(1, .5, 0, (STARTSCOURGEPAL+3-curfilter)/6.0);
-	else if (curfilter >= STARTHOLYPAL)
+		glColor4f(1, .5, 0, (STARTSCOURGEPAL+3-curfilter)/9.0);	// diminished the effect (was /6.0)
+	else if (curfilter >= STARTHOLYPAL && curfilter < STARTHOLYPAL+3)
 		// White?
-		glColor4f(1, 1, 1, (STARTHOLYPAL+3-curfilter)/6.0);
+		glColor4f(1, 1, 1, (STARTHOLYPAL+3-curfilter)/12.0);	// diminished the effect (was /6.0)
 	else if (curfilter == STARTICEPAL)
 		// Light blue?
 		glColor4f(.5f, .5f, 1, .4f);
