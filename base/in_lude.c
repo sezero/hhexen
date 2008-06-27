@@ -4,8 +4,8 @@
 //** in_lude.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: in_lude.c,v $
-//** $Revision: 1.12 $
-//** $Date: 2008-06-26 20:35:26 $
+//** $Revision: 1.13 $
+//** $Date: 2008-06-27 17:47:19 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -593,7 +593,7 @@ static void DrawHubText(void)
 			break;
 		}
 #ifdef RENDER3D
-		OGL_DrawPatch(cx, cy, FontABaseLump + c - 33);
+		OGL_DrawPatch_CS(cx, cy, FontABaseLump + c - 33);
 #else
 		V_DrawPatch(cx, cy, w);
 #endif

@@ -4,8 +4,8 @@
 //** f_finale.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: f_finale.c,v $
-//** $Revision: 1.15 $
-//** $Date: 2008-06-27 08:08:15 $
+//** $Revision: 1.16 $
+//** $Date: 2008-06-27 17:47:18 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -260,7 +260,7 @@ static void TextWrite (void)
 			break;
 		}
 #ifdef RENDER3D
-		OGL_DrawPatch(cx, cy, FontABaseLump + c - 33);
+		OGL_DrawPatch_CS(cx, cy, FontABaseLump + c - 33);
 #else
 		V_DrawPatch(cx, cy, w);
 #endif
