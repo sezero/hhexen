@@ -283,11 +283,13 @@ static void oss_write_audio(void *data, int length)
 {
 	audio_buf_info abuf_info;
 
-	ioctl(audio_fd, SNDCTL_DSP_GETOSPACE, &abuf_info);
-	while (abuf_info.bytes < length)
+	if (!ioctl(audio_fd, SNDCTL_DSP_GETOSPACE, &abuf_info))
 	{
-		usleep(10000);
-		ioctl(audio_fd, SNDCTL_DSP_GETOSPACE, &abuf_info);
+		while (abuf_info.bytes < length)
+		{
+			usleep(10000);
+			ioctl(audio_fd, SNDCTL_DSP_GETOSPACE, &abuf_info);
+		}
 	}
 	if (frequency == efrequency)
 		output_bytes += write(audio_fd, data, length);
