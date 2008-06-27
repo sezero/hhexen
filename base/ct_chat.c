@@ -4,8 +4,8 @@
 //** ct_chat.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: ct_chat.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-06-26 19:44:23 $
+//** $Revision: 1.11 $
+//** $Date: 2008-06-27 17:48:33 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -15,6 +15,9 @@
 #include "h2def.h"
 #include "p_local.h"
 #include "soundst.h"
+#ifdef RENDER3D
+#include "ogl_def.h"
+#endif
 
 #define QUEUESIZE		128
 #define MESSAGESIZE		128
@@ -374,12 +377,20 @@ void CT_Drawer(void)
 			else
 			{
 				patch = (patch_t *) W_CacheLumpNum(FontABaseLump + chat_msg[consoleplayer][i] - 33, PU_CACHE);
+#ifdef RENDER3D
+				OGL_DrawPatch_CS(x, 10, FontABaseLump + chat_msg[consoleplayer][i] - 33);
+#else
 				V_DrawPatch(x, 10, patch);
+#endif
 				x += SHORT(patch->width);
 			}
 		}
+#ifdef RENDER3D
+		OGL_DrawPatch_CS(x, 10, W_GetNumForName("FONTA59"));
+#else
 		patch = (patch_t *) W_CacheLumpName("FONTA59", PU_CACHE);
 		V_DrawPatch(x, 10, patch);
+#endif
 		BorderTopRefresh = true;
 		UpdateState |= I_MESSAGES;
 	}
