@@ -4,8 +4,8 @@
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.17 $
-//** $Date: 2008-06-26 19:44:24 $
+//** $Revision: 1.18 $
+//** $Date: 2008-06-27 22:45:42 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -23,17 +23,17 @@
 
 // MACROS ------------------------------------------------------------------
 
+#define PLAYPAL_NUM		PlayPalette
+
+#include "v_compat.h"
+
 #if defined(RENDER3D)
-#define PATCH_REF			int
-#define INVALID_PATCH			0
 #define W_CacheLumpName(a,b)		W_GetNumForName((a))
 #define WR_CacheLumpNum(a,b)		(a)
 #define V_DrawPatch(x,y,p)		OGL_DrawPatch((x),(y),(p))
 #define V_DrawFuzzPatch(x,y,p)		OGL_DrawFuzzPatch((x),(y),(p))
 #define V_DrawAltFuzzPatch(x,y,p)	OGL_DrawAltFuzzPatch((x),(y),(p))
 #else
-#define PATCH_REF			patch_t*
-#define INVALID_PATCH			NULL
 #define WR_CacheLumpNum(a,b)		W_CacheLumpNum((a),(b))
 #endif	/* RENDER3D */
 
@@ -1207,9 +1207,6 @@ void SB_PaletteFlash(boolean forceChange)
 	static int sb_palette = 0;
 	int palette;
 
-#ifndef RENDER3D
-	byte *pal;
-#endif
 	if (forceChange)
 	{
 		sb_palette = -1;
@@ -1261,12 +1258,7 @@ void SB_PaletteFlash(boolean forceChange)
 	if (palette != sb_palette)
 	{
 		sb_palette = palette;
-#ifdef RENDER3D
-		OGL_SetFilter(palette);
-#else
-		pal = (byte *)WR_CacheLumpNum(PlayPalette, PU_CACHE) + palette*768;
-		I_SetPalette(pal);
-#endif
+		V_SetPaletteShift(palette);
 	}
 }
 

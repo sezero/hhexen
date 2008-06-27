@@ -4,8 +4,8 @@
 //** f_finale.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: f_finale.c,v $
-//** $Revision: 1.16 $
-//** $Date: 2008-06-27 17:47:18 $
+//** $Revision: 1.17 $
+//** $Date: 2008-06-27 22:45:37 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -26,14 +26,14 @@
 #define	TEXTSPEED	3
 #define	TEXTWAIT	250
 
+#include "v_compat.h"
+
 #ifdef RENDER3D
-#define PATCH_REF			int
 #define W_CacheLumpName(a,b)		W_GetNumForName((a))
 #define WR_CacheLumpNum(a,b)		(a)
 #define V_DrawPatch(x,y,p)		OGL_DrawPatch((x),(y),(p))
 #define V_DrawRawScreen(a)		OGL_DrawRawScreen((a))
 #else
-#define PATCH_REF			patch_t*
 #define WR_CacheLumpNum(a,b)		W_CacheLumpNum((a),(b))
 #endif
 
@@ -190,11 +190,7 @@ static void TextWrite (void)
 	patch_t		*w;
 	int		width;
 
-#ifdef RENDER3D
-	OGL_DrawRawScreen(FinaleLumpNum);
-#else
-	memcpy(screen, W_CacheLumpNum(FinaleLumpNum, PU_CACHE), SCREENWIDTH*SCREENHEIGHT);
-#endif
+	V_DrawRawScreen((BYTE_REF) WR_CacheLumpNum(FinaleLumpNum, PU_CACHE));
 
 	if (FinaleStage == 5)
 	{ // Chess pic, draw the correct character graphic
@@ -376,11 +372,8 @@ static void FadeIn (void)
 
 static void DrawPic(void)
 {
-#ifdef RENDER3D
-	OGL_DrawRawScreen(FinaleLumpNum);
-#else
-	memcpy(screen, W_CacheLumpNum(FinaleLumpNum, PU_CACHE), SCREENWIDTH*SCREENHEIGHT);
-#endif
+	V_DrawRawScreen((BYTE_REF) WR_CacheLumpNum(FinaleLumpNum, PU_CACHE));
+
 	if (FinaleStage == 4 || FinaleStage == 5)
 	{ // Chess pic, draw the correct character graphic
 		if (netgame)

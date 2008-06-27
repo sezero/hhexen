@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.28 $
-//** $Date: 2008-06-26 09:52:28 $
+//** $Revision: 1.29 $
+//** $Date: 2008-06-27 22:45:38 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -18,24 +18,22 @@
 #include "h2def.h"
 #include "p_local.h"
 #include "soundst.h"
-
 #ifdef RENDER3D
 #include "ogl_def.h"
-#define PATCH_REF			int
-#define BYTE_REF			int
-#define W_CacheLumpName(a,b)		W_GetNumForName((a))
-#define V_DrawPatch(x,y,p)		OGL_DrawPatch((x),(y),(p))
-#define V_DrawRawScreen(a)		OGL_DrawRawScreen((a))
-#else
-#define BYTE_REF			byte*
-#define PATCH_REF			patch_t*
 #endif
-
 
 // MACROS ------------------------------------------------------------------
 
 #define CONFIG_FILE_NAME	"hhexen.cfg"
 #define MAXWADFILES		20
+
+#include "v_compat.h"
+
+#ifdef RENDER3D
+#define W_CacheLumpName(a,b)		W_GetNumForName((a))
+#define V_DrawPatch(x,y,p)		OGL_DrawPatch((x),(y),(p))
+#define V_DrawRawScreen(a)		OGL_DrawRawScreen((a))
+#endif
 
 // TYPES -------------------------------------------------------------------
 

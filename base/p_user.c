@@ -4,8 +4,8 @@
 //** p_user.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_user.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-06-27 07:23:10 $
+//** $Revision: 1.10 $
+//** $Date: 2008-06-27 22:45:42 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -18,6 +18,8 @@
 // Macros
 
 #define MAXBOB		0x100000	/* 16 pixels of bob */
+
+#include "v_compat.h"	/* for the V_SetPaletteXXX() macros */
 
 // Extern Data
 
@@ -450,7 +452,7 @@ static void P_DeathThink(player_t *player)
 	{
 		if (player == &players[consoleplayer])
 		{
-			I_SetPalette((byte *)W_CacheLumpName("PLAYPAL", PU_CACHE));
+			V_SetPaletteBase();
 			inv_ptr = 0;
 			curpos = 0;
 			newtorch = 0;

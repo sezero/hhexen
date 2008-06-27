@@ -4,8 +4,8 @@
 //** p_pspr.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_pspr.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-25 08:25:51 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-27 22:45:40 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -24,6 +24,8 @@
 
 #define WEAPONBOTTOM	128*FRACUNIT
 #define WEAPONTOP	32*FRACUNIT
+
+#include "v_compat.h"	/* V_SetPaletteXXX() macros */
 
 // TYPES -------------------------------------------------------------------
 
@@ -1222,8 +1224,7 @@ void A_MStaffAttack(player_t *player, pspdef_t *psp)
 	{
 		player->damagecount = 0;
 		player->bonuscount = 0;
-		I_SetPalette((byte *)W_CacheLumpNum(W_GetNumForName("playpal"), PU_CACHE)
-				+ STARTSCOURGEPAL*768);
+		V_SetPaletteShift(STARTSCOURGEPAL);
 	}
 }
 
@@ -1244,8 +1245,7 @@ void A_MStaffPalette(player_t *player, pspdef_t *psp)
 		{ // reset back to original playpal
 			pal = 0;
 		}
-		I_SetPalette((byte *)W_CacheLumpNum(W_GetNumForName("playpal"), PU_CACHE)
-				+ pal*768);
+		V_SetPaletteShift(pal);
 	}
 }
 
@@ -1955,8 +1955,7 @@ void A_CHolyAttack(player_t *player, pspdef_t *psp)
 	{
 		player->damagecount = 0;
 		player->bonuscount = 0;
-		I_SetPalette((byte *)W_CacheLumpNum(W_GetNumForName("playpal"), PU_CACHE)
-				+ STARTHOLYPAL*768);
+		V_SetPaletteShift(STARTHOLYPAL);
 	}
 	S_StartSound(player->mo, SFX_CHOLY_FIRE);
 }
@@ -1978,8 +1977,7 @@ void A_CHolyPalette(player_t *player, pspdef_t *psp)
 		{ // reset back to original playpal
 			pal = 0;
 		}
-		I_SetPalette((byte *)W_CacheLumpNum(W_GetNumForName("playpal"), PU_CACHE)
-				+ pal*768);
+		V_SetPaletteShift(pal);
 	}
 }
 

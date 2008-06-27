@@ -4,8 +4,8 @@
 //** in_lude.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: in_lude.c,v $
-//** $Revision: 1.13 $
-//** $Date: 2008-06-27 17:47:19 $
+//** $Revision: 1.14 $
+//** $Date: 2008-06-27 22:45:38 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -22,14 +22,14 @@
 #define	TEXTSPEED	3
 #define	TEXTWAIT	140
 
+#include "v_compat.h"
+
 #ifdef RENDER3D
-#define PATCH_REF			int
 #define W_CacheLumpName(a,b)		W_GetNumForName((a))
 #define WR_CacheLumpNum(a,b)		(a)
 #define V_DrawPatch(x,y,p)		OGL_DrawPatch((x),(y),(p))
 #define V_DrawRawScreen(a)		OGL_DrawRawScreen((a))
 #else
-#define PATCH_REF			patch_t*
 #define WR_CacheLumpNum(a,b)		W_CacheLumpNum((a),(b))
 #endif
 
@@ -104,11 +104,8 @@ extern void AM_Stop (void);
 void IN_Start(void)
 {
 	int i;
-#ifdef RENDER3D
-	OGL_SetFilter(0);
-#else
-	I_SetPalette((byte *)W_CacheLumpName("PLAYPAL", PU_CACHE));
-#endif
+
+	V_SetPaletteBase();
 	InitStats();
 	LoadPics();
 	intermission = true;
@@ -393,11 +390,7 @@ void IN_Drawer(void)
 	}
 	UpdateState |= I_FULLSCRN;
 
-#ifdef RENDER3D
-	OGL_DrawRawScreen(patchINTERPIC);
-#else
-	memcpy(screen, (byte *)patchINTERPIC, SCREENWIDTH*SCREENHEIGHT);
-#endif
+	V_DrawRawScreen((BYTE_REF) patchINTERPIC);
 
 	if (gametype == SINGLE)
 	{
