@@ -71,8 +71,9 @@ static int rd_index = 0, wr_index = 0;
 static int output_time_offset = 0, written = 0, output_bytes = 0;
 static int bps, ebps;
 static int flush;
-static int fragsize, format, channels;
+static int fragsize, format, oss_format, channels;
 static int frequency, efrequency, device_buffer_size;
+static int input_bps, input_format, input_frequency, input_channels;
 static char device_name[16];
 static pthread_t buffer_thread;
 static gboolean realtime = FALSE;
@@ -83,14 +84,59 @@ OSSConfig oss_cfg;
 
 static void oss_about(void)
 {
-	printf ("XMMS OSS Driver 0.9\n");
+	printf ("XMMS OSS Driver 0.9.5\n");
+}
+
+static void oss_setup_format(AFormat fmt,int rate, int nch)
+{
+	format = fmt;
+	frequency = rate;
+	channels = nch;
+	switch (fmt)
+	{
+	case FMT_U8:
+		oss_format = AFMT_U8;
+		break;
+	case FMT_S8:
+		oss_format = AFMT_S8;
+		break;
+	case FMT_U16_LE:
+		oss_format = AFMT_U16_LE;
+		break;
+	case FMT_U16_BE:
+		oss_format = AFMT_U16_BE;
+		break;
+	case FMT_U16_NE:
+		oss_format = AFMT_U16_NE;
+		break;
+	case FMT_S16_LE:
+		oss_format = AFMT_S16_LE;
+		break;
+	case FMT_S16_BE:
+		oss_format = AFMT_S16_BE;
+		break;
+	case FMT_S16_NE:
+		oss_format = AFMT_S16_NE;
+		break;
+	}
+
+	bps = rate * nch;
+	if (oss_format == AFMT_U16_BE || oss_format == AFMT_U16_LE || oss_format == AFMT_S16_BE || oss_format == AFMT_S16_LE)
+		bps *= 2;
+	fragsize = 0;
+	while ((1L << fragsize) < bps / 25)
+		fragsize++;
+	fragsize--;
+
+//	device_buffer_size = ((1L << fragsize) * (NFRAGS + 1));
+	device_buffer_size = ((1L << fragsize) * (oss_cfg.fragment_count + 1));
 }
 
 static int oss_get_written_time(void)
 {
 	if (!going)
 		return 0;
-	return (int) (((float) written * 1000) / (float) (bps));
+	return (int) (((float) written * 1000) / (float) (input_bps));
 }
 
 static int oss_get_output_time(void)
@@ -144,7 +190,7 @@ static int oss_playing(void)
 	return TRUE;
 }
 
-static int oss_free(void)
+int oss_free(void)
 {
 	if (!realtime)
 	{
@@ -173,7 +219,7 @@ static int oss_downsample(guchar * ob, guint length, guint speed, guint espeed)
 {
 	guint nlen, i, off, d, w;
 
-	if ((format == AFMT_U16_BE || format == AFMT_U16_LE || format == AFMT_S16_BE || format == AFMT_S16_LE) && channels == 2)
+	if ((oss_format == AFMT_U16_BE || oss_format == AFMT_U16_LE || oss_format == AFMT_S16_BE || oss_format == AFMT_S16_LE) && channels == 2)
 	{
 		gulong *nbuffer, *obuffer, *ptr;
 
@@ -192,8 +238,8 @@ static int oss_downsample(guchar * ob, guint length, guint speed, guint espeed)
 		w = write(audio_fd, nbuffer, nlen << 2);
 		free(nbuffer);
 	}
-	else if (((format == AFMT_U16_BE || format == AFMT_U16_LE || format == AFMT_S16_BE || format == AFMT_S16_LE) && channels == 1)
-	     || ((format == AFMT_U8 || format == AFMT_S8) && channels == 2))
+	else if (((oss_format == AFMT_U16_BE || oss_format == AFMT_U16_LE || oss_format == AFMT_S16_BE || oss_format == AFMT_S16_LE) && channels == 1)
+	      || ((oss_format == AFMT_U8 || oss_format == AFMT_S8) && channels == 2))
 	{
 		gushort *nbuffer, *obuffer, *ptr;
 
@@ -233,15 +279,28 @@ static int oss_downsample(guchar * ob, guint length, guint speed, guint espeed)
 	return w;
 }
 
+static void oss_write_audio(void *data, int length)
+{
+	audio_buf_info abuf_info;
+
+	ioctl(audio_fd, SNDCTL_DSP_GETOSPACE, &abuf_info);
+	while (abuf_info.bytes < length)
+	{
+		usleep(10000);
+		ioctl(audio_fd, SNDCTL_DSP_GETOSPACE, &abuf_info);
+	}
+	if (frequency == efrequency)
+		output_bytes += write(audio_fd, data, length);
+	else
+		output_bytes += oss_downsample(data, length, frequency, efrequency);
+}
+
 static void oss_write(void *ptr, int length)
 {
-	int cnt, off = 0, w;
+	int cnt, off = 0;
 
 	if (!realtime)
 	{
-		while (oss_free() < length)
-			usleep(10000);
-
 		remove_prebuffer = FALSE;
 		written += length;
 		while (length > 0)
@@ -250,7 +309,7 @@ static void oss_write(void *ptr, int length)
 			memcpy((guchar *)buffer + wr_index, (guchar *)ptr + off, cnt);
 			wr_index = (wr_index + cnt) % buffer_size;
 			length -= cnt;
-			off = cnt;
+			off = +cnt;
 		}
 	}
 	else
@@ -258,30 +317,13 @@ static void oss_write(void *ptr, int length)
 		if (paused)
 			return;
 
-		if (frequency == efrequency)
-			w = write(audio_fd, ptr, length);
-		else
-			w = oss_downsample((guchar *)ptr, length, frequency, efrequency);
-
-		if (w == -1 && errno == EIO)
-		{
-			close(audio_fd);
-			audio_fd = open(device_name, O_WRONLY);
-			oss_set_audio_params();
-			if (frequency == efrequency)
-				w = write(audio_fd, ptr, length);
-			else
-				w = oss_downsample((guchar *)ptr, length, frequency, efrequency);
-		}
+		oss_write_audio(ptr, length);
 		written += length;
-		output_bytes += w;
 	}
 }
 
 static void oss_close(void)
 {
-	wr_index = 0;
-	rd_index = 0;
 	going = 0;
 	if (!realtime)
 		pthread_join(buffer_thread, NULL);
@@ -290,6 +332,8 @@ static void oss_close(void)
 		ioctl(audio_fd, SNDCTL_DSP_RESET, 0);
 		close(audio_fd);
 	}
+	wr_index = 0;
+	rd_index = 0;
 }
 
 static void oss_flush(int time)
@@ -307,7 +351,7 @@ static void oss_flush(int time)
 		audio_fd = open(device_name, O_WRONLY);
 		oss_set_audio_params();
 		output_time_offset = time;
-		written = (time / 10) * (bps / 100);
+		written = (time / 10) * (input_bps / 100);
 		output_bytes = 0;
 	}
 }
@@ -323,20 +367,17 @@ static void oss_pause(short p)
 	}
 	else
 		paused = p;
-
 }
 
 static void *oss_loop(void *arg)
 {
-	int length, cnt, w;
+	int length, cnt;
 	audio_buf_info abuf_info;
 
 	while (going)
 	{
 		if (oss_used() > prebuffer_size)
-		{
 			prebuffer = FALSE;
-		}
 		if (oss_used() > 0 && !paused && !prebuffer)
 		{
 			length = min(blk_size, oss_used());
@@ -344,28 +385,12 @@ static void *oss_loop(void *arg)
 			{
 				cnt = min(length, buffer_size - rd_index);
 
-				if (frequency == efrequency)
-					w = write(audio_fd, (guchar *)buffer + rd_index, cnt);
-				else
-					w = oss_downsample((guchar *)buffer + rd_index, cnt, frequency, efrequency);
-				if (w == -1 && errno == EIO)
-				{
-					close(audio_fd);
-					audio_fd = open(device_name, O_WRONLY);
-					oss_set_audio_params();
-					if (frequency == efrequency)
-						w = write(audio_fd, (guchar *)buffer + rd_index, cnt);
-					else
-						w = oss_downsample((guchar *)buffer + rd_index, cnt, frequency, efrequency);
-				}
-				output_bytes += w;
+				oss_write_audio(buffer + rd_index, cnt);
 				rd_index = (rd_index + cnt) % buffer_size;
 				length -= cnt;
 			}
-			/*
 			if (!oss_used())
 				ioctl(audio_fd, SNDCTL_DSP_POST, 0);
-			*/
 		}
 		else
 			usleep(10000);
@@ -405,7 +430,7 @@ static void *oss_loop(void *arg)
 			audio_fd = open(device_name, O_WRONLY);
 			oss_set_audio_params();
 			output_time_offset = flush;
-			written = (flush / 10) * (bps / 100);
+			written = (flush / 10) * (input_bps / 100);
 			rd_index = wr_index = output_bytes = 0;
 			flush = -1;
 			prebuffer = TRUE;
@@ -414,7 +439,6 @@ static void *oss_loop(void *arg)
 
 	ioctl(audio_fd, SNDCTL_DSP_RESET, 0);
 	close(audio_fd);
-	munlock(buffer, buffer_size);
 	free(buffer);
 	pthread_exit(NULL);
 }
@@ -427,73 +451,49 @@ static void oss_set_audio_params(void)
 //	frag = (NFRAGS << 16) | fragsize;
 	frag = (oss_cfg.fragment_count << 16) | fragsize;
 	ioctl(audio_fd, SNDCTL_DSP_SETFRAGMENT, &frag);
-	ioctl(audio_fd, SNDCTL_DSP_SETFMT, &format);
+	ioctl(audio_fd, SNDCTL_DSP_SETFMT, &oss_format);
+	ioctl(audio_fd, SNDCTL_DSP_SETFMT, &oss_format);
 	stereo = channels - 1;
 	ioctl(audio_fd, SNDCTL_DSP_STEREO, &stereo);
 	efrequency = frequency;
 	ioctl(audio_fd, SNDCTL_DSP_SPEED, &efrequency);
 	ioctl(audio_fd, SNDCTL_DSP_GETBLKSIZE, &blk_size);
+	if (abs(((efrequency * 100) / frequency) - 100) < 10)
+		efrequency = frequency;
+	if (ioctl(audio_fd, SNDCTL_DSP_GETBLKSIZE, &blk_size) == -1)
+		blk_size = 1L << fragsize;
 
 	ebps = efrequency * channels;
-	if (format == AFMT_U16_BE || format == AFMT_U16_LE || format == AFMT_S16_BE || format == AFMT_S16_LE)
+	if (oss_format == AFMT_U16_BE || oss_format == AFMT_U16_LE || oss_format == AFMT_S16_BE || oss_format == AFMT_S16_LE)
 		ebps *= 2;
 }
 
 static int oss_open(AFormat fmt, int rate, int nch)
 {
-	switch (fmt)
+	oss_setup_format(fmt, rate, nch);
+
+	input_format = format;
+	input_channels = channels;
+	input_frequency = frequency;
+	input_bps = bps;
+
+//	realtime = xmms_check_realtime_priority();
+	realtime = TRUE;
+
+	if (!realtime)
 	{
-	case FMT_U8:
-		format = AFMT_U8;
-		break;
-	case FMT_S8:
-		format = AFMT_S8;
-		break;
-	case FMT_U16_LE:
-		format = AFMT_U16_LE;
-		break;
-	case FMT_U16_BE:
-		format = AFMT_U16_BE;
-		break;
-	case FMT_U16_NE:
-		format = AFMT_U16_NE;
-		break;
-	case FMT_S16_LE:
-		format = AFMT_S16_LE;
-		break;
-	case FMT_S16_BE:
-		format = AFMT_S16_BE;
-		break;
-	case FMT_S16_NE:
-		format = AFMT_S16_NE;
-		break;
+		buffer_size = (oss_cfg.buffer_size * input_bps) / 1000;
+		if (buffer_size < 8192)
+			buffer_size = 8192;
+		prebuffer_size = (buffer_size * oss_cfg.prebuffer) / 100;
+		if (buffer_size - prebuffer_size < 4096)
+			prebuffer_size = buffer_size - 4096;
+
+		buffer_size += device_buffer_size;
+		buffer = calloc(1, buffer_size);
+		if (buffer == NULL)
+			return 0;
 	}
-
-	bps = rate * nch;
-	if (format == AFMT_U16_BE || format == AFMT_U16_LE || format == AFMT_S16_BE || format == AFMT_S16_LE)
-		bps *= 2;
-	fragsize = 0;
-	while ((1L << fragsize) < bps / 25)
-		fragsize++;
-	fragsize--;
-
-//	device_buffer_size = ((1L << fragsize) * (NFRAGS + 1));
-	device_buffer_size = ((1L << fragsize) * (oss_cfg.fragment_count + 1));
-
-	channels = nch;
-	frequency = rate;
-	buffer_size = (oss_cfg.buffer_size * bps) / 1000;
-	if (buffer_size < 8192)
-		buffer_size = 8192;
-	prebuffer_size = (buffer_size * oss_cfg.prebuffer) / 100;
-	if (buffer_size - prebuffer_size < 4096)
-		prebuffer_size = buffer_size - 4096;
-
-	buffer_size += device_buffer_size;
-	buffer = calloc(1,  buffer_size);
-	if (buffer == NULL)
-		return 0;
-	mlock(buffer, buffer_size);
 
 	going = 1;
 	flush = -1;
@@ -503,9 +503,6 @@ static int oss_open(AFormat fmt, int rate, int nch)
 	do_pause = FALSE;
 	unpause = FALSE;
 	remove_prebuffer = FALSE;
-
-//	realtime = xmms_check_realtime_priority();
-	realtime = TRUE;
 
 	if (oss_cfg.audio_device > 0)
 		snprintf(device_name, sizeof(device_name), "/dev/dsp%d", oss_cfg.audio_device);
@@ -518,7 +515,8 @@ static int oss_open(AFormat fmt, int rate, int nch)
 	audio_fd = open(device_name, O_WRONLY);
 	if (audio_fd == -1)
 	{
-		free(buffer);
+		if (buffer)
+			free(buffer);
 		buffer = NULL;
 		return 0;
 	}
@@ -529,7 +527,7 @@ static int oss_open(AFormat fmt, int rate, int nch)
 }
 
 
-static static void scan_devices(const char* type)
+static void scan_devices(const char* type)
 {
 	FILE* file;
 	char buf[256];
@@ -673,7 +671,7 @@ static OutputPlugin oss_op =
 {
 	NULL,
 	NULL,
-	"OSS Driver 0.9",
+	"XMMS OSS Driver 0.9.5",
 	oss_init,
 	oss_about,
 	oss_configure,
