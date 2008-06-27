@@ -4,8 +4,8 @@
 //** p_user.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_user.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-25 08:28:59 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-27 07:23:10 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -460,7 +460,7 @@ static void P_DeathThink(player_t *player)
 		player->mo->special1 = player->playerclass;
 		if (player->mo->special1 > 2)
 		{
-		// O.S. --  FIXME: HARDCODED NUMBER: 2 == PCLASS_CLERIC
+		// O.S. --  FIXME: HARDCODED NUMBER: 2 == PCLASS_MAGE
 			player->mo->special1 = 0;
 		}
 		// Let the mobj know the player has entered the reborn state.
@@ -726,7 +726,7 @@ void P_PlayerThink(player_t *player)
 				speedMo->special1 = player->playerclass;
 				if (speedMo->special1 > 2)
 				{
-				// O.S. --  FIXME: HARDCODED NUMBER: 2 == PCLASS_CLERIC
+				// O.S. --  FIXME: HARDCODED NUMBER: 2 == PCLASS_MAGE
 					speedMo->special1 = 0;
 				}
 				speedMo->sprite = pmo->sprite;
