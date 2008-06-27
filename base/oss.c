@@ -84,7 +84,7 @@ OSSConfig oss_cfg;
 
 static void oss_about(void)
 {
-	printf ("XMMS OSS Driver 0.9.5\n");
+	printf ("XMMS OSS Driver 0.9.5.1\n");
 }
 
 static void oss_setup_format(AFormat fmt,int rate, int nch)
@@ -673,7 +673,7 @@ static OutputPlugin oss_op =
 {
 	NULL,
 	NULL,
-	"XMMS OSS Driver 0.9.5",
+	"XMMS OSS Driver 0.9.5.1",
 	oss_init,
 	oss_about,
 	oss_configure,
