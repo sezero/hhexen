@@ -4,8 +4,8 @@
 //** v_video.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: v_video.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-27 17:52:43 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -15,8 +15,6 @@
 
 #define SC_INDEX	0x3c4
 
-byte	*screen;
-int	dirtybox[4];
 int	usegamma;
 
 byte gammatable[5][256] =
@@ -111,6 +109,30 @@ byte gammatable[5][256] =
 	  247,248,248,249,249,250,250,251,251,252,252,253,254,254,255,255
 	}
 };
+
+#if defined(RENDER3D)
+
+void V_Init(void)
+{
+	/* OpenGL: NOTHING TO DO HERE. */
+}
+
+#else	/* RENDER3D */
+
+byte	*screen;
+int	dirtybox[4];
+
+//---------------------------------------------------------------------------
+//
+// PROC V_Init
+//
+//---------------------------------------------------------------------------
+
+void V_Init(void)
+{
+	// I_AllocLow will put screen in low dos memory on PCs.
+	screen = I_AllocLow(SCREENWIDTH*SCREENHEIGHT);
+}
 
 //---------------------------------------------------------------------------
 //
@@ -390,15 +412,5 @@ void V_DrawRawScreen(byte *raw)
 	memcpy(screen, raw, SCREENWIDTH*SCREENHEIGHT);
 }
 
-//---------------------------------------------------------------------------
-//
-// PROC V_Init
-//
-//---------------------------------------------------------------------------
-
-void V_Init(void)
-{
-	// I_AllocLow will put screen in low dos memory on PCs.
-	screen = I_AllocLow(SCREENWIDTH*SCREENHEIGHT);
-}
+#endif	/* ! RENDER3D */
 
