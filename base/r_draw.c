@@ -4,8 +4,8 @@
 //** r_draw.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_draw.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-26 09:52:28 $
+//** $Revision: 1.8 $
+//** $Date: 2008-06-27 17:51:17 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -26,13 +26,13 @@ files only know about ccordinates, not the architecture of the frame buffer.
 */
 
 int	viewwidth, scaledviewwidth, viewheight, viewwindowx, viewwindowy;
-byte	*ylookup[MAXHEIGHT];
-int	columnofs[MAXWIDTH];
-//byte	translations[3][256];	// color tables for different players
-byte	*tinttable;		// used for translucent sprites
 
 
 #ifndef RENDER3D
+
+byte	*ylookup[MAXHEIGHT];
+int	columnofs[MAXWIDTH];
+byte	*tinttable;		// used for translucent sprites
 
 /*
 ==================
@@ -470,17 +470,21 @@ void R_DrawSpanLow (void)
 
 void R_InitBuffer (int width, int height)
 {
+#ifndef RENDER3D
 	int		i;
+#endif
 
 	viewwindowx = (SCREENWIDTH - width) >> 1;
-	for (i = 0; i < width; i++)
-		columnofs[i] = viewwindowx + i;
 	if (width == SCREENWIDTH)
 		viewwindowy = 0;
 	else
 		viewwindowy = (SCREENHEIGHT - SBARHEIGHT - height) >> 1;
+#ifndef RENDER3D
+	for (i = 0; i < width; i++)
+		columnofs[i] = viewwindowx + i;
 	for (i = 0; i < height; i++)
 		ylookup[i] = screen + (i + viewwindowy)*SCREENWIDTH;
+#endif
 }
 
 
@@ -500,28 +504,21 @@ void R_DrawViewBorder (void)
 #ifdef RENDER3D
 	int lump;
 
-#if 0
-	if (scaledviewwidth == SCREENWIDTH)
-		return;
-#else
+//	if (scaledviewwidth == SCREENWIDTH)
 	if ((scaledviewwidth == 320 && sbarscale == 20) ||
 		(sbarscale != 20 && viewheight == 200))
 		return;
-#endif
 
 	// View background.
 	OGL_SetColorAndAlpha(1, 1, 1, 1);
 	OGL_SetFlat(W_GetNumForName("F_022") - firstflat);
 
-#if 1
+//	OGL_DrawRectTiled(0, 0, SCREENWIDTH, SCREENHEIGHT-SBARHEIGHT, 64, 64);
+//	OGL_DrawCutRectTiled(0, 0, 320, 200 - (sbarscale == 20 ? SBARHEIGHT : 0)
+//			/**sbarscale/20*/, 64, 64,
+//			viewwindowx - 4, viewwindowy - 4, viewwidth + 8, viewheight + 8);
 	OGL_DrawCutRectTiled(0, 0, 320, 200 - SBARHEIGHT, 64, 64,
 			viewwindowx - 4, viewwindowy - 4, viewwidth + 8, viewheight + 8);
-#else
-	//OGL_DrawRectTiled(0, 0, SCREENWIDTH, SCREENHEIGHT-SBARHEIGHT, 64, 64);
-	OGL_DrawCutRectTiled(0, 0, 320, 200 - (sbarscale == 20 ? SBARHEIGHT : 0)
-			/**sbarscale/20*/, 64, 64,
-			viewwindowx - 4, viewwindowy - 4, viewwidth + 8, viewheight + 8);
-#endif
 
 	// The border top.
 	OGL_SetPatch(lump = W_GetNumForName("bordt"));
