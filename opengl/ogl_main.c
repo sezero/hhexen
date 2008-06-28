@@ -4,8 +4,8 @@
 //** r_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: ogl_main.c,v $
-//** $Revision: 1.1 $
-//** $Date: 2008-06-28 17:30:59 $
+//** $Revision: 1.2 $
+//** $Date: 2008-06-28 17:55:07 $
 //** $Author: sezero $
 //**
 //** (r_main.c with necessary clean-ups for ogl)
@@ -46,12 +46,6 @@ int			detailshift;		// 0 = high, 1 = low
 //
 // precalculated math tables
 //
-
-// the finetangentgent[angle+FINEANGLES/4] table holds the fixed_t tangent
-// values for view angles, ranging from MININT to 0 to MAXINT.
-// fixed_t		finetangent[FINEANGLES/2];
-
-// fixed_t		finesine[5*FINEANGLES/4];
 fixed_t			*finecosine = &finesine[FINEANGLES/4];
 
 int			extralight;		// bumped light from gun blasts
