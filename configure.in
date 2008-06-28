@@ -1,88 +1,79 @@
 dnl Process this file with autoconf to produce a configure script.
-dnl configure.in for HHexen v1.3
+dnl configure.in for HHexen v1.4
 AC_REVISION([configure.in 1.00])
 AC_INIT(base/a_action.c)		
 AC_CONFIG_HEADER(include/config.h)
 
-dnl **** Command-line arguments ****
-
+dnl ==================================================================
 dnl Default values
+dnl ==================================================================
+
 GLHEXEN="false"
 GLLIBS=""
 BASELIBS=""
 LIBS="-L/usr/X11R6/lib"
 HAVEGL="no"
-GLBASE="opengl/i_gl.cpp"
+HAVEGLU="no"
 BUILDNAMES=""
 
-AC_ARG_ENABLE(gl,
-[  --enable-gl	 		Enable OpenGL mode],
-[GLHEXEN="true";SDL_VERSION="1.1.2"; AC_DEFINE(RENDER3D)],
-[SDL_VERSION="1.1.0"])
 
-AC_ARG_ENABLE(demowad,
-[  --enable-demowad		Compile for the demo version wadfile only],
-[ AC_DEFINE(DEMO_VERSION)])
-
-AC_ARG_ENABLE(oldwad,
-[  --enable-oldwad		Compile for the version 1.0 wadfiles only],
-[ AC_DEFINE(VERSION10_WAD)])
-
-AC_ARG_ENABLE(assassin,
-[  --enable-assassin		Compile HHexen with support for the assassin],
-[AC_DEFINE(ASSASSIN)])
-
-AC_SUBST(GLHEXEN)
-
-dnl **** Don't like this one.. ****
-AC_DEFINE(_REENTRANT)
-
-AC_DEFINE(NORANGECHECKING)
-
-dnl **** Check for some programs ****
+dnl ==================================================================
+dnl Checks for programs.
+dnl ==================================================================
 
 AC_PROG_CC
 AC_PROG_CPP
 
-dnl **** Check for some libraries ****
+dnl ==================================================================
+dnl Checks for header files.
+dnl ==================================================================
 
-dnl Check for pthread
-AC_CHECK_LIB(pthread, pthread_join, [BASELIBS="-lpthread"])
-
-AC_SUBST(BASELIBS)
-
-dnl Check for SDL
-AM_PATH_SDL($SDL_VERSION,
-	[HAVESDL="yes";GLBASE="sdl/i_sdlgl.o";BUILDNAMES="sdl $BUILDNAMES";GLLIBS=""],
-	[HAVESDL="no"]
+AC_CHECK_HEADERS(\
+	dlfcn.h \
+	linux/cdrom.h \
+	sys/cdio.h \
+	sys/soundcard.h \
+	linux/soundcard.h \
+	machine/soundcard.h \
+	soundcard.h \
+	stdint.h \
+	inttypes.h \
+	strings.h
 )
+AC_HEADER_STAT()
 
-AC_SUBST(GLLIBS)
-AC_SUBST(SDL_OGL)
-AC_SUBST(HAVESDL)
-AC_SUBST(GLBASE)
+dnl ==================================================================
+dnl Checks for typedefs, structures, and compiler characteristics
+dnl ==================================================================
 
-AC_CHECK_LIB(dl, dlopen)
-AC_CHECK_LIB(m, sqrt)
+AC_C_CONST()
+AC_C_INLINE()
+AC_C_CHAR_UNSIGNED()
+AC_TYPE_SIZE_T()
+AC_CHECK_SIZEOF(char,0)
+AC_CHECK_SIZEOF(short,0)
+AC_CHECK_SIZEOF(int,0)
+AC_CHECK_SIZEOF(long,0)
+AC_CHECK_SIZEOF(long long,0)
+AC_CHECK_SIZEOF(size_t,0)
 
-dnl Check for GL libraries
+AC_C_BIGENDIAN
 
-if test "$GLHEXEN" = "true"
-then
-    AC_CHECK_LIB(GL, glBindTexture,[LIBS="$LIBS -lGL";]
-      AC_CHECK_LIB(GLU, gluOrtho2D, [HAVEGL="yes"],
-        AC_CHECK_LIB(MesaGL, glBindTexture,[LIBS="$LIBS -lMesaGL";]
-	  AC_CHECK_LIB(MesaGLU, gluOrtho2D, [HAVEGL="yes"], HAVEGL="no"),
-	  HAVEGL="no")
-	),
-        AC_CHECK_LIB(MesaGL, glBindTexture,[LIBS="$LIBS -lMesaGL";]
-	  AC_CHECK_LIB(MesaGLU, gluOrtho2D, [HAVEGL="yes"], HAVEGL="no"),
-	HAVEGL="no")
-    )
-fi
+dnl === Check for underscore on external symbols =====================
+AC_CACHE_CHECK("whether external symbols need an underscore prefix",
+               ac_cv_c_extern_prefix,
+[saved_libs=$LIBS
+LIBS="conftest_asm.s $LIBS"
+cat > conftest_asm.s <<EOF
+	.globl _ac_test
+_ac_test:
+	.long 0
+EOF
+AC_TRY_LINK([extern int ac_test;],[if (ac_test) return 1],
+            ac_cv_c_extern_prefix="yes",ac_cv_c_extern_prefix="no")
+LIBS=$saved_libs])
 
-dnl **** Check for gcc strength-reduce bug ****
-
+dnl === Check for gcc strength-reduce bug ============================
 if test "x${GCC}" = "xyes"
 then
   CFLAGS="$CFLAGS -Wall"
@@ -104,61 +95,103 @@ int main(void) {
   fi
 fi
 
-dnl **** Check for underscore on external symbols ****
 
-AC_CACHE_CHECK("whether external symbols need an underscore prefix",
-               ac_cv_c_extern_prefix,
-[saved_libs=$LIBS
-LIBS="conftest_asm.s $LIBS"
-cat > conftest_asm.s <<EOF
-	.globl _ac_test
-_ac_test:
-	.long 0
-EOF
-AC_TRY_LINK([extern int ac_test;],[if (ac_test) return 1],
-            ac_cv_c_extern_prefix="yes",ac_cv_c_extern_prefix="no")
-LIBS=$saved_libs])
+dnl ================================================================== 
+dnl Command-line arguments
+dnl ================================================================== 
 
-dnl **** Check for endianness ****
-
-AC_C_BIGENDIAN
-
-dnl **** Check for functions ****
-
-dnl **** Check for header files ****
-
-AC_CHECK_HEADERS(\
-	linux/cdrom.h \
-	stdint.h \
-	inttypes.h \
-	strings.h
-)
-AC_HEADER_STAT()
-
-dnl **** Check for types ****
-
-AC_C_CONST()
-AC_C_INLINE()
-AC_C_CHAR_UNSIGNED()
-AC_TYPE_SIZE_T()
-AC_CHECK_SIZEOF(char,0)
-AC_CHECK_SIZEOF(short,0)
-AC_CHECK_SIZEOF(int,0)
-AC_CHECK_SIZEOF(long,0)
-AC_CHECK_SIZEOF(long long,0)
-AC_CHECK_SIZEOF(size_t,0)
-
-if test "$HAVEGL" = "yes"
-then
-  if test "$HAVESDL" = "yes"
-  then
-    BUILDNAMES="OpenGL (SDL)"
-  else
-    BUILDNAMES="OpenGL (GLX)"
-  fi 
+AC_ARG_ENABLE(gl,
+AC_HELP_STRING([--enable-gl], [Enable OpenGL mode ]),
+					[], [enable_gl=no])
+if test x$enable_gl = xyes; then
+	AC_DEFINE(RENDER3D)
+	GLHEXEN="true"
+	SDL_VERSION="1.1.2"
+else
+	SDL_VERSION="1.1.0"
 fi
 
-dnl **** Generate output files ****
+AC_ARG_ENABLE(demowad,
+AC_HELP_STRING([--enable-demowad], [Compile for the demo version wadfile only [[default=no]]]),
+									[], [enable_demowad=no])
+if test x$enable_demowad = xyes; then
+	AC_DEFINE(DEMO_VERSION)
+fi
+
+AC_ARG_ENABLE(oldwad,
+AC_HELP_STRING([--enable-oldwad],  [Compile for the version 1.0 wadfiles only [[default=no]]]),
+									[], [enable_oldwad=no])
+if test x$enable_oldwad = xyes; then
+	AC_DEFINE(VERSION10_WAD)
+fi
+
+AC_ARG_ENABLE(assassin,
+AC_HELP_STRING([--enable-assassin], [Compile with support for the Assassin [[default=no]]]),
+									[], [enable_assassin=no])
+if test x$enable_assassin = xyes; then
+	AC_DEFINE(ASSASSIN)
+fi
+
+AC_SUBST(GLHEXEN)
+
+
+dnl ================================================================== 
+dnl Checks for library functions. 
+dnl ==================================================================
+
+AC_CHECK_LIB(pthread, pthread_join, [BASELIBS="-lpthread"])
+
+AC_SUBST(BASELIBS)
+
+AC_CHECK_LIB(dl, dlopen)
+AC_CHECK_LIB(m, pow)
+AC_CHECK_LIB(m, sqrt)
+
+dnl === Check for SDL ================================================
+AM_PATH_SDL($SDL_VERSION,
+	[HAVESDL="yes";GLLIBS=""],
+	[HAVESDL="no"]
+)
+if test "$HAVESDL" = "no"; then
+	AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
+fi
+
+AC_SUBST(GLLIBS)
+AC_SUBST(HAVESDL)
+
+dnl === Check for GL libraries =======================================
+if test "$GLHEXEN" = "true"; then
+  AC_CHECK_LIB(GL, glBindTexture, [LIBS="$LIBS -lGL";HAVEGL="yes";], [HAVEGL="no";])
+  if test "$HAVEGL" = "no"; then
+	AC_MSG_ERROR([*** GL library not found!])
+  fi
+  AC_CHECK_LIB(GLU, gluOrtho2D, [LIBS="$LIBS -lGLU";HAVEGLU="yes";], [HAVEGLU="no";])
+  if test "$HAVEGLU" = "no"; then
+	AC_MSG_ERROR([*** GLU library not found!])
+  fi
+fi
+
+
+dnl ================================================================== 
+dnl Miscellaneous things
+dnl ================================================================== 
+
+dnl === do not compile most parameter validation debugging code ======
+AC_DEFINE(NORANGECHECKING)
+
+dnl === don't like this one!. needed for pthread support in OSS sound.
+AC_DEFINE(_REENTRANT)
+
+
+dnl ================================================================== 
+dnl Generate output files
+dnl ================================================================== 
+
+if test "$HAVEGL" = "yes"; then
+    BUILDNAMES="OpenGL (SDL)"
+else
+    BUILDNAMES="Software (SDL)"
+fi
 
 MAKE_NAME=Makefile
 AC_SUBST_FILE(MAKE_RULES)
@@ -169,12 +202,7 @@ echo
 echo "HHexen configuration finished."
 echo "Enabled targets: $BUILDNAMES"
 echo
-if test "$HAVESDL" = "no"
-then
-  echo "It is recommended that you install SDL (http://www.libsdl.org)."
-  echo "Other targets will compile, but they are no longer supported."
-  echo "If SDL is installed, you will need to upgrade to version $SDL_VERSION"
-  echo
-fi  
+
 echo "Type 'make' to compile."
 echo
+

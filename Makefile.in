@@ -48,7 +48,8 @@ CPPFLAGS += -I./include -I/usr/X11R6/include
 SDLOBJS = \
 	sdl/i_sdl.o
 
-GLBASE = @GLBASE@
+GLSDL =  \
+	sdl/i_sdlgl.o
 
 GLOBJS = \
 	opengl/ogl_clip.o \
@@ -122,13 +123,11 @@ BASEOBJS = \
 #	base/i_action.o \
 
 ifeq "$(GLHEXEN)" "true"
-opengl: $(GLBASE) $(GLOBJS) $(BASEOBJS)
-	$(CC) -o hhexen-gl $(GLBASE) $(GLOBJS) $(BASEOBJS) $(GLLIBS) $(SDLLIBS)
+opengl: $(GLSDL) $(GLOBJS) $(BASEOBJS)
+	$(CC) -o hhexen-gl $(GLSDL) $(GLOBJS) $(BASEOBJS) $(GLLIBS) $(SDLLIBS)
 else
-ifeq "$(HAVE_SDL)" "yes"
 sdl: $(SDLOBJS) $(BASEOBJS)
 	$(CC) -o hhexen-sdl $(SDLOBJS) $(BASEOBJS) $(SDLLIBS)
-endif
 endif
 
 clean:

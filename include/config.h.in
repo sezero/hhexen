@@ -61,6 +61,9 @@
 /* Define if you have the <linux/cdrom.h> header file.  */
 #undef HAVE_LINUX_CDROM_H
 
+/* Define if you have the <sys/cdio.h> header file.  */
+#undef HAVE_SYS_CDIO_H
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
@@ -91,36 +94,34 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* Define if you have the dl library (-ldl).  */
-#undef HAVE_LIBDL
+/* Define to 1 if you have the <linux/soundcard.h> header file. */
+#undef HAVE_LINUX_SOUNDCARD_H
 
-/* Define if you have the m library (-lm).  */
-#undef HAVE_LIBM
+/* Define to 1 if you have the <machine/soundcard.h> header file. */
+#undef HAVE_MACHINE_SOUNDCARD_H
 
-/* Define if you have the GLU library (-lGLU).  */
-#undef HAVE_LIBGLU
+/* Define to 1 if you have the <soundcard.h> header file. */
+#undef HAVE_SOUNDCARD_H
 
-/* Define if you have the MesaGL library (-lMesaGL).  */
-#undef HAVE_LIBMESAGL
-
-/* Define if you have the MesaGLU library (-lMesaGLU).  */
-#undef HAVE_LIBMESAGLU
+/* Define to 1 if you have the <sys/soundcard.h> header file. */
+#undef HAVE_SYS_SOUNDCARD_H
 
 /* Define if including the assassin in compile */
 #undef ASSASSIN 
 
-/* Define if building for OpenGL */
+/* Define if building with OpenGL support */
 #undef RENDER3D
 
-/* Define if building for the 4 level demo wad file only */
+/* Define if building for the 4 level shareware wad files only */
 #undef DEMO_VERSION
 
 /* Define if building for version 1.0 (4-player) wadfiles only */
 #undef VERSION10_WAD
 
-/* Needed for something or other */
-#undef _REENTRANT
-
-/* Same as above */
+/* Define to not compile most parameter validation debugging code */
 #undef NORANGECHECKING
+
+/* Needed for pthread support in OSS sound code. Don't like this
+   at all.. Find a better solution for this!!! */
+#undef _REENTRANT
 

@@ -6,18 +6,19 @@
 /* Define if including the assassin in compile */
 #undef ASSASSIN 
 
-/* Define if building for OpenGL */
+/* Define if building with OpenGL support */
 #undef RENDER3D
 
-/* Define if building for demo (4 level 4-player) wadfile only */
+/* Define if building for the 4 level shareware wad files only */
 #undef DEMO_VERSION
 
 /* Define if building for version 1.0 (4-player) wadfiles only */
 #undef VERSION10_WAD
 
-/* Needed for something or other */
-#undef _REENTRANT
-
-/* Same as above */
+/* Define to not compile most parameter validation debugging code */
 #undef NORANGECHECKING
+
+/* Needed for pthread support in OSS sound code. Don't like this
+   at all.. Find a better solution for this!!! */
+#undef _REENTRANT
 
