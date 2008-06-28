@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.29 $
-//** $Date: 2008-06-27 22:45:40 $
+//** $Revision: 1.30 $
+//** $Date: 2008-06-28 17:11:54 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1618,7 +1618,6 @@ boolean MN_Responder(event_t *event)
 	int key;
 	int i;
 	MenuItem_t *item;
-	extern boolean automapactive;
 	static boolean shiftdown;
 	extern void H2_StartTitle(void);
 	extern void G_CheckDemoStatus(void);

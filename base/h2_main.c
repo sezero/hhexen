@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.29 $
-//** $Date: 2008-06-27 22:45:38 $
+//** $Revision: 1.30 $
+//** $Date: 2008-06-28 17:11:54 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -84,7 +84,6 @@ static void WarpCheck(void);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
-extern boolean automapactive;
 extern boolean MenuActive;
 extern boolean askforquit;
 
@@ -647,9 +646,17 @@ static void DrawAndBlit(void)
 	case GS_LEVEL:
 		if (!gametic)
 			break;
+#if  AM_TRANSPARENT
 		R_RenderPlayerView(&players[displayplayer]);
+#endif
 		if (automapactive)
 			AM_Drawer();
+#if !AM_TRANSPARENT
+		else
+		{
+			R_RenderPlayerView(&players[displayplayer]);
+		}
+#endif
 		CT_Drawer();
 		UpdateState |= I_FULLVIEW;
 		SB_Drawer();

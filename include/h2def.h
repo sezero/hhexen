@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.37 $
-//** $Date: 2008-06-25 08:25:54 $
+//** $Revision: 1.38 $
+//** $Date: 2008-06-28 17:11:55 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1586,6 +1586,14 @@ void MN_DrTextAYellow(const char *text, int x, int y);
 int MN_TextAWidth(const char *text);
 void MN_DrTextB(const char *text, int x, int y);
 int MN_TextBWidth(const char *text);
+
+
+/* --- AUTOMAP---- */
+
+#define	AM_TRANSPARENT	1	/* compile time option. 0: old style map drawn	*/
+				/* onto solid background.  1:  transparent map.	*/
+
+extern	boolean		automapactive;
 
 
 /* ---- VIDEO ---- */

@@ -4,8 +4,8 @@
 //** am_map.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: am_map.c,v $
-//** $Revision: 1.15 $
-//** $Date: 2008-06-27 17:50:01 $
+//** $Revision: 1.16 $
+//** $Date: 2008-06-28 17:11:54 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -86,7 +86,7 @@ static unsigned ShowKillsCount = 0;
 extern boolean viewactive;
 
 #ifndef RENDER3D
-static byte antialias[NUMALIAS][8]=
+static byte antialias[NUMALIAS][8] =
 {
 	{ 83, 84, 85, 86, 87, 88, 89, 90 },
 	{ 96, 96, 95, 94, 93, 92, 91, 90 },
@@ -435,8 +435,8 @@ static void AM_maxOutWindowScale(void)
 boolean AM_Responder (event_t *ev)
 {
 	int rc;
-	static int cheatstate=0;
-	static int bigstate=0;
+	static int cheatstate = 0;
+	static int bigstate = 0;
 
 	rc = false;
 	if (!automapactive)
@@ -509,7 +509,7 @@ boolean AM_Responder (event_t *ev)
 				followplayer ? AMSTR_FOLLOWON : AMSTR_FOLLOWOFF, true);
 			break;
 		default:
-			cheatstate=0;
+			cheatstate = 0;
 			rc = false;
 		}
 
@@ -655,20 +655,19 @@ void AM_Ticker (void)
 
 static void AM_clearFB(int color)
 {
-	int dmapx;
-	int dmapy;
 #ifdef RENDER3D
 	float scaler;
 	int lump;
-#endif
-#if !defined(RENDER3D) && 0	/* bbm 3/9/2003: Makes map transparent */
+#else
+# if !AM_TRANSPARENT
 	int i, j;
+# endif
 #endif
 
 	if (followplayer)
 	{
-		dmapx = (MTOF(plr->mo->x)-MTOF(oldplr.x)); //fixed point
-		dmapy = (MTOF(oldplr.y)-MTOF(plr->mo->y));
+		int dmapx = (MTOF(plr->mo->x) - MTOF(oldplr.x));	//fixed point
+		int dmapy = (MTOF(oldplr.y) - MTOF(plr->mo->y));
 
 		oldplr.x = plr->mo->x;
 		oldplr.y = plr->mo->y;
@@ -707,21 +706,22 @@ static void AM_clearFB(int color)
 	scaler = sbarscale/20.0;
 	OGL_DrawCutRectTiled(0, finit_height+4, 320, 200-finit_height-4, 64, 64,
 				160-160*scaler+1, finit_height, 320*scaler-2, 200-finit_height);
- 
-	OGL_SetPatch(lump=W_GetNumForName("bordb"));
+
+	lump = W_GetNumForName("bordb");
+	OGL_SetPatch(lump);
 	OGL_DrawCutRectTiled(0, finit_height, 320, 4,
 				lumptexsizes[lump].w, lumptexsizes[lump].h,
 				160-160*scaler+1, finit_height, 320*scaler-2, 4);
-#if 0	/* bbm 3/9/2003: Makes map transparent */
-	OGL_SetRawImage(maplumpnum, 0); // We only want the left portion.
-	OGL_DrawRectTiled( 0, 0, finit_width,
+# if !AM_TRANSPARENT
+	OGL_SetRawImage(maplumpnum, 0);	// We only want the left portion.
+	OGL_DrawRectTiled(0, 0, finit_width,
 				/*(sbarscale<20)?200:*/ finit_height, 128, 128);
-#endif	/* Transparent map */
+# endif
 
 #else	/* RENDER3D */
 
-#if 0	/* bbm 3/9/2003: Makes map transparent */
-	//blit the automap background to the screen.
+# if !AM_TRANSPARENT
+	// blit the automap background to the screen.
 	j = mapystart*finit_width;
 	for (i = 0; i < SCREENHEIGHT-SBARHEIGHT; i++)
 	{
@@ -731,10 +731,7 @@ static void AM_clearFB(int color)
 		if (j >= finit_height*finit_width)
 			j = 0;
 	}
-#endif	/* Transparent map */
-
-//	memcpy(screen, maplump, finit_width*finit_height);
-//	memset(fb, color, f_w*f_h);
+# endif
 #endif	/* !RENDER3D */
 }
 
@@ -1111,22 +1108,35 @@ static void AM_drawFline(fline_t *fl, int color)
 		}
 	}
 }
-#endif	/* RENDER3D */
 
 static void AM_drawMline(mline_t *ml, int color)
 {
-#ifdef RENDER3D
-	OGL_SetColor(color);	/* bbm 3/9/2003: Consistant color rendering method */
-	/* Draw the line. 1.2 is the to-square aspect corrector. */
-	glVertex2f(FIX2FLT(CXMTOFX(ml->a.x)), FIX2FLT(CYMTOFX(ml->a.y))/1.2);
-	glVertex2f(FIX2FLT(CXMTOFX(ml->b.x)), FIX2FLT(CYMTOFX(ml->b.y))/1.2);
-#else
 	static fline_t fl;
 
 	if (AM_clipMline(ml, &fl))
 		AM_drawFline(&fl, color); // draws it on frame buffer using fb coords
-#endif
 }
+#endif	/* ! RENDER3D */
+
+#ifdef RENDER3D
+static void AM_drawMline(mline_t *ml, int color)
+{
+	/*
+	byte	*palette = (byte *) W_CacheLumpName("PLAYPAL", PU_CACHE);
+	byte	r = palette[color*3],
+		g = palette[color*3 + 1],
+		b = palette[color*3 + 2];
+
+	OGL_DrawLine(FIX2FLT(CXMTOFX(ml->a.x)), FIX2FLT(CYMTOFX(ml->a.y))/1.2,
+		     FIX2FLT(CXMTOFX(ml->b.x)), FIX2FLT(CYMTOFX(ml->b.y))/1.2, 
+		     r/255.0, g/255.0, b/255.0, 1); 
+	*/
+	OGL_SetColor(color);
+	// Draw the line. 1.2 is the to-square aspect corrector.
+	glVertex2f(FIX2FLT(CXMTOFX(ml->a.x)), FIX2FLT(CYMTOFX(ml->a.y))/1.2);
+	glVertex2f(FIX2FLT(CXMTOFX(ml->b.x)), FIX2FLT(CYMTOFX(ml->b.y))/1.2);
+}
+#endif	/* RENDER3D */
 
 static void AM_drawGrid(int color)
 {
@@ -1443,7 +1453,9 @@ static void AM_drawkeys(void)
 /*
 static void AM_drawCrosshair(int color)
 {
+#ifndef RENDER3D
 	fb[(f_w*(f_h+1))/2] = color; // single point for now
+#endif
 }
 */
 
@@ -1452,7 +1464,7 @@ static void AM_drawCrosshair(int color)
 static void AM_OGL_SetupState(void)
 {
 	float ys = screenHeight/200.0;
- 
+
 	// Let's set up a scissor box to clip the map lines and stuff.
 	glPushAttrib(GL_SCISSOR_BIT);
 	glScissor(0, screenHeight-finit_height*ys, screenWidth, finit_height*ys);
@@ -1471,22 +1483,20 @@ void AM_Drawer (void)
 	if (!automapactive)
 		return;
 
-#ifdef RENDER3D
-	// Update the height (in case sbarscale has been changed).
-	finit_height = SCREENHEIGHT-SBARHEIGHT*sbarscale/20/*-3*/;
-#endif
-
 	UpdateState |= I_FULLSCRN;
 
 #ifdef RENDER3D
+	// Update the height (in case sbarscale has been changed).
+	finit_height = SCREENHEIGHT - SBARHEIGHT * sbarscale / 20;
 	AM_OGL_SetupState();
 #endif
 
 	AM_clearFB(BACKGROUND);
+
 #ifdef RENDER3D
 	glDisable(GL_TEXTURE_2D);
 	glLineWidth(1.0);
-	glBegin(GL_LINES);	/* bbm 3/9/2003: draw all lines at once */
+	glBegin(GL_LINES);	/* bbm: start drawing all lines at once */
 #endif
 
 	if (grid)

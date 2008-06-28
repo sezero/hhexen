@@ -4,8 +4,8 @@
 //** f_finale.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: f_finale.c,v $
-//** $Revision: 1.17 $
-//** $Date: 2008-06-27 22:45:37 $
+//** $Revision: 1.18 $
+//** $Date: 2008-06-28 17:11:54 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -63,7 +63,6 @@ static void FadePic(void);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
-extern boolean automapactive;
 extern boolean viewactive;
 
 // PUBLIC DATA DECLARATIONS ------------------------------------------------

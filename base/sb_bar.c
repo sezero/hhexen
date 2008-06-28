@@ -4,8 +4,8 @@
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.18 $
-//** $Date: 2008-06-27 22:45:42 $
+//** $Revision: 1.19 $
+//** $Date: 2008-06-28 17:11:54 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1029,8 +1029,6 @@ static int oldarti = 0;
 static int oldartiCount = 0;
 static int oldkeys = -1;
 static int oldarmor = -1;
-
-extern boolean automapactive;
 
 void SB_Drawer(void)
 {
