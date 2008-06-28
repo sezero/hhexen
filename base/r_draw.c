@@ -4,19 +4,18 @@
 //** r_draw.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_draw.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-27 17:51:17 $
+//** $Revision: 1.9 $
+//** $Date: 2008-06-28 17:30:17 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 #include "h2stdinc.h"
+
+#ifndef RENDER3D
+
 #include "h2def.h"
 #include "r_local.h"
-
-#ifdef RENDER3D
-#include "ogl_def.h"
-#endif
 
 /*
 
@@ -27,12 +26,10 @@ files only know about ccordinates, not the architecture of the frame buffer.
 
 int	viewwidth, scaledviewwidth, viewheight, viewwindowx, viewwindowy;
 
-
-#ifndef RENDER3D
-
 byte	*ylookup[MAXHEIGHT];
 int	columnofs[MAXWIDTH];
 byte	*tinttable;		// used for translucent sprites
+
 
 /*
 ==================
@@ -457,8 +454,6 @@ void R_DrawSpanLow (void)
 	} while (count--);
 }
 
-#endif	/* !RENDER3D */
-
 
 /*
 ================
@@ -470,21 +465,17 @@ void R_DrawSpanLow (void)
 
 void R_InitBuffer (int width, int height)
 {
-#ifndef RENDER3D
 	int		i;
-#endif
 
 	viewwindowx = (SCREENWIDTH - width) >> 1;
+	for (i = 0; i < width; i++)
+		columnofs[i] = viewwindowx + i;
 	if (width == SCREENWIDTH)
 		viewwindowy = 0;
 	else
 		viewwindowy = (SCREENHEIGHT - SBARHEIGHT - height) >> 1;
-#ifndef RENDER3D
-	for (i = 0; i < width; i++)
-		columnofs[i] = viewwindowx + i;
 	for (i = 0; i < height; i++)
 		ylookup[i] = screen + (i + viewwindowy)*SCREENWIDTH;
-#endif
 }
 
 
@@ -501,49 +492,6 @@ boolean		BorderNeedRefresh;
 
 void R_DrawViewBorder (void)
 {
-#ifdef RENDER3D
-	int lump;
-
-//	if (scaledviewwidth == SCREENWIDTH)
-	if ((scaledviewwidth == 320 && sbarscale == 20) ||
-		(sbarscale != 20 && viewheight == 200))
-		return;
-
-	// View background.
-	OGL_SetColorAndAlpha(1, 1, 1, 1);
-	OGL_SetFlat(W_GetNumForName("F_022") - firstflat);
-
-//	OGL_DrawRectTiled(0, 0, SCREENWIDTH, SCREENHEIGHT-SBARHEIGHT, 64, 64);
-//	OGL_DrawCutRectTiled(0, 0, 320, 200 - (sbarscale == 20 ? SBARHEIGHT : 0)
-//			/**sbarscale/20*/, 64, 64,
-//			viewwindowx - 4, viewwindowy - 4, viewwidth + 8, viewheight + 8);
-	OGL_DrawCutRectTiled(0, 0, 320, 200 - SBARHEIGHT, 64, 64,
-			viewwindowx - 4, viewwindowy - 4, viewwidth + 8, viewheight + 8);
-
-	// The border top.
-	OGL_SetPatch(lump = W_GetNumForName("bordt"));
-	OGL_DrawRectTiled(viewwindowx, viewwindowy - 4, viewwidth,
-			  lumptexsizes[lump].h, 16, lumptexsizes[lump].h);
-	// Border bottom.
-	OGL_SetPatch(lump = W_GetNumForName("bordb"));
-	OGL_DrawRectTiled(viewwindowx, viewwindowy + viewheight, viewwidth,
-			  lumptexsizes[lump].h, 16, lumptexsizes[lump].h);
-	// Left view border.
-	OGL_SetPatch(lump = W_GetNumForName("bordl"));
-	OGL_DrawRectTiled(viewwindowx - 4, viewwindowy, lumptexsizes[lump].w,
-			  viewheight, lumptexsizes[lump].w, 16);
-	// Right view border.
-	OGL_SetPatch(lump=W_GetNumForName("bordr"));
-	OGL_DrawRectTiled(viewwindowx + viewwidth, viewwindowy,
-			  lumptexsizes[lump].w, viewheight, lumptexsizes[lump].w, 16);
-
-	OGL_DrawPatch(viewwindowx - 4, viewwindowy - 4, W_GetNumForName("bordtl"));
-	OGL_DrawPatch(viewwindowx + viewwidth, viewwindowy - 4, W_GetNumForName("bordtr"));
-	OGL_DrawPatch(viewwindowx + viewwidth, viewwindowy + viewheight, W_GetNumForName("bordbr"));
-	OGL_DrawPatch(viewwindowx - 4, viewwindowy + viewheight, W_GetNumForName("bordbl"));
-
-#else
-
 	byte	*src, *dest;
 	int		x, y;
 
@@ -580,7 +528,6 @@ void R_DrawViewBorder (void)
 	V_DrawPatch(viewwindowx + viewwidth, viewwindowy - 4, (patch_t *)W_CacheLumpName("bordtr", PU_CACHE));
 	V_DrawPatch(viewwindowx + viewwidth, viewwindowy + viewheight, (patch_t *)W_CacheLumpName("bordbr", PU_CACHE));
 	V_DrawPatch(viewwindowx - 4, viewwindowy + viewheight, (patch_t *)W_CacheLumpName("bordbl", PU_CACHE));
-#endif
 }
 
 /*
@@ -596,32 +543,6 @@ boolean		BorderTopRefresh;
 
 void R_DrawTopBorder (void)
 {
-#ifdef RENDER3D
-	if (scaledviewwidth == SCREENWIDTH)
-		return;
-
-	OGL_SetColorAndAlpha(1, 1, 1, 1);
-	OGL_SetFlat(W_GetNumForName("F_022") - firstflat);
-
-	OGL_DrawRectTiled(0, 0, 320, 64, 64, 64);
-	if (viewwindowy < 65)
-	{
-		int	lump;
-		OGL_SetPatch(lump = W_GetNumForName("bordt"));
-		OGL_DrawRectTiled(viewwindowx, viewwindowy - 4, viewwidth,
-				  lumptexsizes[lump].h, 16, lumptexsizes[lump].h);
-
-		OGL_DrawPatch(viewwindowx - 4, viewwindowy, W_GetNumForName("bordl"));
-		OGL_DrawPatch(viewwindowx + viewwidth, viewwindowy, W_GetNumForName("bordr"));
-		OGL_DrawPatch(viewwindowx - 4, viewwindowy + 16, W_GetNumForName("bordl"));
-		OGL_DrawPatch(viewwindowx + viewwidth, viewwindowy + 16, W_GetNumForName("bordr"));
-
-		OGL_DrawPatch(viewwindowx - 4, viewwindowy - 4, W_GetNumForName("bordtl"));
-		OGL_DrawPatch(viewwindowx + viewwidth, viewwindowy - 4, W_GetNumForName("bordtr"));
-	}
-
-#else
-
 	byte	*src, *dest;
 	int		x, y;
 
@@ -658,6 +579,7 @@ void R_DrawTopBorder (void)
 		V_DrawPatch(viewwindowx - 4, viewwindowy - 4, (patch_t *)W_CacheLumpName("bordtl", PU_CACHE));
 		V_DrawPatch(viewwindowx + viewwidth, viewwindowy - 4, (patch_t *)W_CacheLumpName("bordtr", PU_CACHE));
 	}
-#endif
 }
+
+#endif	/* RENDER3D */
 

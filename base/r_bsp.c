@@ -4,13 +4,16 @@
 //** r_bsp.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_bsp.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.5 $
+//** $Date: 2008-06-28 17:30:17 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 #include "h2stdinc.h"
+
+#ifndef RENDER3D
+
 #include "h2def.h"
 #include "r_local.h"
 
@@ -485,4 +488,6 @@ void R_RenderBSPNode (int bspnum)
 	if (R_CheckBBox (bsp->bbox[side^1]))	// possibly divide back space
 		R_RenderBSPNode (bsp->children[side^1]);
 }
+
+#endif	/* RENDER3D */
 

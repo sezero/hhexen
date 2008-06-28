@@ -27,9 +27,21 @@
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
+int			Sky1Texture;
+int			Sky2Texture;
+fixed_t			Sky1ColumnOffset;
+fixed_t			Sky2ColumnOffset;
+int			skyflatnum;
+int			skytexturemid;
+fixed_t			skyiscale;
+boolean			DoubleSky;
+
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
+
+extern fixed_t		Sky1ScrollDelta;
+extern fixed_t		Sky2ScrollDelta;
 
 extern float		texw, texh;
 
@@ -275,5 +287,33 @@ void R_RenderSkyHemispheres(int hemis)
 	// Enable the disabled things.
 	glPopAttrib();
 	glDepthMask(GL_TRUE);
+}
+
+
+// THESE COPIED OVER FROM R_PLANES.C ---------------------------------------
+
+// R_InitSky -  Called at level load.
+void R_InitSky(int map)
+{
+	Sky1Texture = P_GetMapSky1Texture(map);
+	Sky2Texture = P_GetMapSky2Texture(map);
+	Sky1ScrollDelta = P_GetMapSky1ScrollDelta(map);
+	Sky2ScrollDelta = P_GetMapSky2ScrollDelta(map);
+	Sky1ColumnOffset = 0;
+	Sky2ColumnOffset = 0;
+	DoubleSky = P_GetMapDoubleSky(map);
+}
+
+// R_InitSkyMap - Called whenever the view size changes.
+void R_InitSkyMap(void)
+{
+	skyflatnum = R_FlatNumForName("F_SKY");
+	skytexturemid = 200*FRACUNIT;
+	skyiscale = FRACUNIT;
+}
+
+// R_InitPlanes - Called at game startup.
+void R_InitPlanes(void)
+{
 }
 

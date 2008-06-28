@@ -58,6 +58,7 @@ GLOBJS = \
 	opengl/ogl_scr.o \
 	opengl/ogl_sky.o \
 	opengl/ogl_tex.o \
+	opengl/ogl_main.o \
 	opengl/m_bams.o
 
 BASEOBJS = \

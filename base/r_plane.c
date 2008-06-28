@@ -4,8 +4,8 @@
 //** r_plane.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_plane.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-26 09:52:28 $
+//** $Revision: 1.7 $
+//** $Date: 2008-06-28 17:30:17 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -13,6 +13,9 @@
 // HEADER FILES ------------------------------------------------------------
 
 #include "h2stdinc.h"
+
+#ifndef RENDER3D
+
 #include "h2def.h"
 #include "r_local.h"
 
@@ -133,7 +136,6 @@ void R_InitPlanes(void)
 
 void R_MapPlane(int y, int x1, int x2)
 {
-#ifndef RENDER3D
 	angle_t angle;
 	fixed_t distance, length;
 	unsigned index;
@@ -183,7 +185,6 @@ void R_MapPlane(int y, int x1, int x2)
 	ds_x2 = x2;
 
 	spanfunc();	// High or low detail
-#endif	/* !RENDER3D */
 }
 
 //==========================================================================
@@ -370,7 +371,6 @@ void R_MakeSpans(int x, int t1, int b1, int t2, int b2)
 
 void R_DrawPlanes(void)
 {
-#ifndef RENDER3D
 	visplane_t *pl;
 	int light;
 	int x, stop;
@@ -547,6 +547,6 @@ void R_DrawPlanes(void)
 		}
 		Z_ChangeTag(tempSource, PU_CACHE);
 	}
-#endif	/* !RENDER3D */
 }
+#endif	/* !RENDER3D */
 

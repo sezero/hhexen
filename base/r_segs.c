@@ -4,8 +4,8 @@
 //** r_segs.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_segs.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-25 08:25:52 $
+//** $Revision: 1.6 $
+//** $Date: 2008-06-28 17:30:17 $
 //** $Author: sezero $
 //**
 //** This version has the tall-sector-crossing-precision-bug fixed.
@@ -13,6 +13,9 @@
 //**************************************************************************
 
 #include "h2stdinc.h"
+
+#ifndef RENDER3D
+
 #include "h2def.h"
 #include "r_local.h"
 
@@ -52,14 +55,6 @@ lighttable_t	**walllights;
 
 short		*maskedtexturecol;
 
-
-#ifdef RENDER3D
-
-void R_RenderMaskedSegRange (drawseg_t *ds, int x1, int x2) {}
-void R_RenderSegLoop (void) {}
-void R_StoreWallRange (int start, int stop) {}
-
-#else
 
 /*
 ================

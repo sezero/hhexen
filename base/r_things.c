@@ -4,8 +4,8 @@
 //** r_things.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_things.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-27 07:23:11 $
+//** $Revision: 1.12 $
+//** $Date: 2008-06-28 17:30:17 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -43,8 +43,10 @@ This is not the same as the angle, which increases counter clockwise
 fixed_t			pspritescale, pspriteiscale;
 
 // constant arrays used for psprite clipping and initializing clipping
+#ifndef RENDER3D
 short			negonearray[SCREENWIDTH];
 short			screenheightarray[SCREENWIDTH];
+#endif
 
 boolean			LevelUseFullBright;
 
@@ -52,7 +54,9 @@ boolean			LevelUseFullBright;
 spritedef_t		*sprites;
 int			numsprites;
 
+#ifndef RENDER3D
 static lighttable_t	**spritelights;
+#endif
 
 static spriteframe_t	sprtemp[30];
 static int		maxframe;
@@ -264,13 +268,14 @@ vissprite_t	vissprites[MAXVISSPRITES], *vissprite_p;
 
 void R_InitSprites (const char **namelist)
 {
+#ifndef RENDER3D
 	int		i;
 
 	for (i = 0; i < SCREENWIDTH; i++)
 	{
 		negonearray[i] = -1;
 	}
-
+#endif
 	R_InitSpriteDefs (namelist);
 }
 
@@ -679,24 +684,30 @@ void R_ProjectSprite (mobj_t *thing)
 
 void R_AddSprites (sector_t *sec)
 {
-	mobj_t		*thing;
-	int		lightnum;
-
 	if (sec->validcount == validcount)
+	{
 		return;		// already added
-
-	sec->validcount = validcount;
-
-	lightnum = (sec->lightlevel >> LIGHTSEGSHIFT) + extralight;
-	if (lightnum < 0)
-		spritelights = scalelight[0];
-	else if (lightnum >= LIGHTLEVELS)
-		spritelights = scalelight[LIGHTLEVELS-1];
+	}
 	else
-		spritelights = scalelight[lightnum];
+	{
+		mobj_t		*thing;
+#ifndef RENDER3D
+		int		lightnum;
 
-	for (thing = sec->thinglist ; thing ; thing = thing->snext)
-		R_ProjectSprite (thing);
+		lightnum = (sec->lightlevel >> LIGHTSEGSHIFT) + extralight;
+		if (lightnum < 0)
+			spritelights = scalelight[0];
+		else if (lightnum >= LIGHTLEVELS)
+			spritelights = scalelight[LIGHTLEVELS-1];
+		else
+			spritelights = scalelight[lightnum];
+#endif
+
+		sec->validcount = validcount;
+
+		for (thing = sec->thinglist ; thing ; thing = thing->snext)
+			R_ProjectSprite (thing);
+	}
 }
 
 
@@ -910,8 +921,10 @@ void R_DrawPSprite (pspdef_t *psp)
 
 void R_DrawPlayerSprites (void)
 {
-	int		i, lightnum;
+	int		i;
 	pspdef_t	*psp;
+#ifndef RENDER3D
+	int		lightnum;
 
 //
 // get light level
@@ -926,7 +939,6 @@ void R_DrawPlayerSprites (void)
 //
 // clip to screen bounds
 //
-#ifndef RENDER3D
 	mfloorclip = screenheightarray;
 	mceilingclip = negonearray;
 #endif

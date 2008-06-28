@@ -51,10 +51,14 @@ extern subsector_t	*currentssec;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
+int	viewwidth, scaledviewwidth, viewheight, viewwindowx, viewwindowy;
+
 int		sbarscale = 20;
 
 boolean		whitefog = false;	/* Is the white fog in use? */
 boolean		special200;
+boolean		BorderNeedRefresh;
+boolean		BorderTopRefresh;
 
 float		vx, vy, vz, vang, vpitch;
 
@@ -1140,5 +1144,108 @@ void OGL_DrawPSprite(int x, int y, float scale, int flip, int lump)
 	glVertex2f(x, y + h*scale);
 
 	glEnd();
+}
+
+
+/*
+================
+=
+= R_InitBuffer
+=
+= from r_draw.c
+=================
+*/
+void R_InitBuffer (int width, int height)
+{
+	viewwindowx = (SCREENWIDTH - width) >> 1;
+	if (width == SCREENWIDTH)
+		viewwindowy = 0;
+	else
+		viewwindowy = (SCREENHEIGHT - SBARHEIGHT - height) >> 1;
+}
+
+/*
+==================
+=
+= R_DrawViewBorder
+=
+= Draws the border around the view for different size windows
+==================
+*/
+void R_DrawViewBorder (void)
+{
+	int lump;
+
+//	if (scaledviewwidth == SCREENWIDTH)
+	if ((scaledviewwidth == 320 && sbarscale == 20) ||
+		(sbarscale != 20 && viewheight == 200))
+		return;
+
+	// View background.
+	OGL_SetColorAndAlpha(1, 1, 1, 1);
+	OGL_SetFlat(W_GetNumForName("F_022") - firstflat);
+
+//	OGL_DrawRectTiled(0, 0, SCREENWIDTH, SCREENHEIGHT-SBARHEIGHT, 64, 64);
+//	OGL_DrawCutRectTiled(0, 0, 320, 200 - (sbarscale == 20 ? SBARHEIGHT : 0)
+//			/**sbarscale/20*/, 64, 64,
+//			viewwindowx - 4, viewwindowy - 4, viewwidth + 8, viewheight + 8);
+	OGL_DrawCutRectTiled(0, 0, 320, 200 - SBARHEIGHT, 64, 64,
+			viewwindowx - 4, viewwindowy - 4, viewwidth + 8, viewheight + 8);
+
+	// The border top.
+	OGL_SetPatch(lump = W_GetNumForName("bordt"));
+	OGL_DrawRectTiled(viewwindowx, viewwindowy - 4, viewwidth,
+			  lumptexsizes[lump].h, 16, lumptexsizes[lump].h);
+	// Border bottom.
+	OGL_SetPatch(lump = W_GetNumForName("bordb"));
+	OGL_DrawRectTiled(viewwindowx, viewwindowy + viewheight, viewwidth,
+			  lumptexsizes[lump].h, 16, lumptexsizes[lump].h);
+	// Left view border.
+	OGL_SetPatch(lump = W_GetNumForName("bordl"));
+	OGL_DrawRectTiled(viewwindowx - 4, viewwindowy, lumptexsizes[lump].w,
+			  viewheight, lumptexsizes[lump].w, 16);
+	// Right view border.
+	OGL_SetPatch(lump=W_GetNumForName("bordr"));
+	OGL_DrawRectTiled(viewwindowx + viewwidth, viewwindowy,
+			  lumptexsizes[lump].w, viewheight, lumptexsizes[lump].w, 16);
+
+	OGL_DrawPatch(viewwindowx - 4, viewwindowy - 4, W_GetNumForName("bordtl"));
+	OGL_DrawPatch(viewwindowx + viewwidth, viewwindowy - 4, W_GetNumForName("bordtr"));
+	OGL_DrawPatch(viewwindowx + viewwidth, viewwindowy + viewheight, W_GetNumForName("bordbr"));
+	OGL_DrawPatch(viewwindowx - 4, viewwindowy + viewheight, W_GetNumForName("bordbl"));
+}
+
+/*
+==================
+=
+= R_DrawTopBorder
+=
+= Draws the top border around the view for different size windows
+==================
+*/
+void R_DrawTopBorder (void)
+{
+	if (scaledviewwidth == SCREENWIDTH)
+		return;
+
+	OGL_SetColorAndAlpha(1, 1, 1, 1);
+	OGL_SetFlat(W_GetNumForName("F_022") - firstflat);
+
+	OGL_DrawRectTiled(0, 0, 320, 64, 64, 64);
+	if (viewwindowy < 65)
+	{
+		int	lump;
+		OGL_SetPatch(lump = W_GetNumForName("bordt"));
+		OGL_DrawRectTiled(viewwindowx, viewwindowy - 4, viewwidth,
+				  lumptexsizes[lump].h, 16, lumptexsizes[lump].h);
+
+		OGL_DrawPatch(viewwindowx - 4, viewwindowy, W_GetNumForName("bordl"));
+		OGL_DrawPatch(viewwindowx + viewwidth, viewwindowy, W_GetNumForName("bordr"));
+		OGL_DrawPatch(viewwindowx - 4, viewwindowy + 16, W_GetNumForName("bordl"));
+		OGL_DrawPatch(viewwindowx + viewwidth, viewwindowy + 16, W_GetNumForName("bordr"));
+
+		OGL_DrawPatch(viewwindowx - 4, viewwindowy - 4, W_GetNumForName("bordtl"));
+		OGL_DrawPatch(viewwindowx + viewwidth, viewwindowy - 4, W_GetNumForName("bordtr"));
+	}
 }
 
