@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdlgl.c,v 1.15 2008-06-22 16:20:46 sezero Exp $
+//** $Id: i_sdlgl.c,v 1.16 2008-06-29 16:20:32 sezero Exp $
 //**
 //**************************************************************************
 
@@ -32,8 +32,6 @@ boolean useexterndriver;
 boolean mousepresent;
 
 // Extern Data
-
-extern void **lumpcache;
 
 extern int usemouse, usejoystick;
 

@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdl.c,v 1.16 2008-06-25 18:50:33 sezero Exp $
+//** $Id: i_sdl.c,v 1.17 2008-06-29 16:20:31 sezero Exp $
 //**
 //**************************************************************************
 
@@ -24,8 +24,6 @@ boolean mousepresent;
 
 
 // Extern Data
-
-extern void **lumpcache;
 
 extern int usemouse, usejoystick;
 
@@ -128,7 +126,7 @@ void I_Update (void)
 //
 	if (DisplayTicker)
 	{
-		if (screenblocks > 9 || UpdateState&(I_FULLSCRN|I_MESSAGES))
+		if (screenblocks > 9 || UpdateState & (I_FULLSCRN|I_MESSAGES))
 		{
 			dest = (byte *)screen;
 		}
