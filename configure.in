@@ -8,13 +8,67 @@ dnl ==================================================================
 dnl Default values
 dnl ==================================================================
 
-GLHEXEN="false"
+GLHEXEN="true"
+SVGAHEXEN="false"
+no_svga="yes"
+
+LIBS=""
+BASELIBS="-lm"
 GLLIBS=""
-BASELIBS=""
-LIBS="-L/usr/X11R6/lib"
-HAVEGL="no"
-HAVEGLU="no"
+SVGALIBS=""
+
 BUILDNAMES=""
+
+
+dnl ================================================================== 
+dnl Command-line args. Check for mutually-exclusive options.
+dnl ================================================================== 
+
+AC_ARG_ENABLE(svga,
+AC_HELP_STRING([--enable-svga], [Enable SVGALib version [[default=no]]]),
+						[], [enable_svga=no])
+if test x$enable_svga = xyes; then
+	no_svga="no"
+	SVGAHEXEN="true"
+fi
+
+AC_ARG_ENABLE(gl,
+AC_HELP_STRING([--disable-gl], [Disable OpenGL version [[default=no]]]),
+						[], [enable_gl=$no_svga])
+if test x$enable_gl = xyes; then
+	if test x$no_svga = xno; then
+	    AC_MSG_ERROR([*** --enable-gl and --enable-svga can not be used together])
+	fi
+	AC_DEFINE(RENDER3D)
+	SDL_VERSION="1.1.2"
+else
+	GLHEXEN="false"
+	SDL_VERSION="1.1.0"
+fi
+
+AC_ARG_ENABLE(demowad,
+AC_HELP_STRING([--enable-demowad], [Compile for the demo version wadfile only [[default=no]]]),
+									[], [enable_demowad=no])
+if test x$enable_demowad = xyes; then
+	AC_DEFINE(DEMO_VERSION)
+fi
+
+AC_ARG_ENABLE(oldwad,
+AC_HELP_STRING([--enable-oldwad],  [Compile for the version 1.0 wadfiles only [[default=no]]]),
+									[], [enable_oldwad=no])
+if test x$enable_oldwad = xyes; then
+	AC_DEFINE(VERSION10_WAD)
+fi
+
+AC_ARG_ENABLE(assassin,
+AC_HELP_STRING([--enable-assassin], [Compile with support for the Assassin [[default=no]]]),
+									[], [enable_assassin=no])
+if test x$enable_assassin = xyes; then
+	AC_DEFINE(ASSASSIN)
+fi
+
+AC_SUBST(GLHEXEN)
+AC_SUBST(SVGAHEXEN)
 
 
 dnl ==================================================================
@@ -23,6 +77,7 @@ dnl ==================================================================
 
 AC_PROG_CC
 AC_PROG_CPP
+
 
 dnl ==================================================================
 dnl Checks for header files.
@@ -41,6 +96,7 @@ AC_CHECK_HEADERS(\
 	strings.h
 )
 AC_HEADER_STAT()
+
 
 dnl ==================================================================
 dnl Checks for typedefs, structures, and compiler characteristics
@@ -97,79 +153,67 @@ fi
 
 
 dnl ================================================================== 
-dnl Command-line arguments
-dnl ================================================================== 
-
-AC_ARG_ENABLE(gl,
-AC_HELP_STRING([--enable-gl], [Enable OpenGL mode ]),
-					[], [enable_gl=no])
-if test x$enable_gl = xyes; then
-	AC_DEFINE(RENDER3D)
-	GLHEXEN="true"
-	SDL_VERSION="1.1.2"
-else
-	SDL_VERSION="1.1.0"
-fi
-
-AC_ARG_ENABLE(demowad,
-AC_HELP_STRING([--enable-demowad], [Compile for the demo version wadfile only [[default=no]]]),
-									[], [enable_demowad=no])
-if test x$enable_demowad = xyes; then
-	AC_DEFINE(DEMO_VERSION)
-fi
-
-AC_ARG_ENABLE(oldwad,
-AC_HELP_STRING([--enable-oldwad],  [Compile for the version 1.0 wadfiles only [[default=no]]]),
-									[], [enable_oldwad=no])
-if test x$enable_oldwad = xyes; then
-	AC_DEFINE(VERSION10_WAD)
-fi
-
-AC_ARG_ENABLE(assassin,
-AC_HELP_STRING([--enable-assassin], [Compile with support for the Assassin [[default=no]]]),
-									[], [enable_assassin=no])
-if test x$enable_assassin = xyes; then
-	AC_DEFINE(ASSASSIN)
-fi
-
-AC_SUBST(GLHEXEN)
-
-
-dnl ================================================================== 
 dnl Checks for library functions. 
 dnl ==================================================================
 
-AC_CHECK_LIB(pthread, pthread_join, [BASELIBS="-lpthread"])
+AC_PATH_X
+dnl == What if autoconf fails finding X path? ==
+X11_INC="$ac_x_includes"
+X11_LIB="$ac_x_libraries"
+
+AC_CHECK_LIB(pthread, pthread_join, [BASELIBS="$BASELIBS -lpthread"],
+	AC_MSG_ERROR([*** libpthread not found! (required by sound code.)])
+)
 
 AC_SUBST(BASELIBS)
-
-AC_CHECK_LIB(dl, dlopen)
-AC_CHECK_LIB(m, pow)
-AC_CHECK_LIB(m, sqrt)
+AC_SUBST(X11_INC)
+AC_SUBST(X11_LIB)
 
 dnl === Check for SDL ================================================
 AM_PATH_SDL($SDL_VERSION,
-	[HAVESDL="yes";GLLIBS=""],
+	[HAVESDL="yes"],
 	[HAVESDL="no"]
 )
-if test "$HAVESDL" = "no"; then
+
+if test "$SVGAHEXEN" = "false";then
+  if test "$HAVESDL" = "no"; then
 	AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
+  fi
 fi
 
-AC_SUBST(GLLIBS)
-AC_SUBST(HAVESDL)
+AC_SUBST(SDL_CFLAGS)
+AC_SUBST(SDL_LIBS)
 
 dnl === Check for GL libraries =======================================
+AC_CHECK_LIB(GL, glBindTexture, [LIBS="$LIBS -lGL";HAVEGL="yes";], [HAVEGL="no";])
+if test "$HAVEGL" = "yes"; then
+   AC_CHECK_LIB(GLU, gluOrtho2D, [LIBS="$LIBS -lGLU";HAVEGLU="yes";], [HAVEGLU="no";])
+fi
+
 if test "$GLHEXEN" = "true"; then
-  AC_CHECK_LIB(GL, glBindTexture, [LIBS="$LIBS -lGL";HAVEGL="yes";], [HAVEGL="no";])
   if test "$HAVEGL" = "no"; then
 	AC_MSG_ERROR([*** GL library not found!])
   fi
-  AC_CHECK_LIB(GLU, gluOrtho2D, [LIBS="$LIBS -lGLU";HAVEGLU="yes";], [HAVEGLU="no";])
   if test "$HAVEGLU" = "no"; then
 	AC_MSG_ERROR([*** GLU library not found!])
   fi
 fi
+
+GLLIBS="$LIBS"
+AC_SUBST(GLLIBS)
+
+AC_CHECK_LIB(dl, dlopen)
+
+dnl === Check for SVGALib ============================================
+AC_CHECK_LIB(vga, vga_setmode, [SVGALIBS="-lvga"; HAVESVGA="yes"], [HAVESVGA="no"])
+
+if test "$SVGAHEXEN" = "true";then
+  if test "$HAVESVGA" = "no"; then
+	AC_MSG_ERROR([*** SVGALib not found!])
+  fi
+fi
+
+AC_SUBST(SVGALIBS)
 
 
 dnl ================================================================== 
@@ -187,10 +231,14 @@ dnl ==================================================================
 dnl Generate output files
 dnl ================================================================== 
 
-if test "$HAVEGL" = "yes"; then
-    BUILDNAMES="OpenGL (SDL)"
+if test "$SVGAHEXEN" = "true"; then
+    BUILDNAMES="Software (SVGALib)"
 else
+  if test "$HAVEGL" = "yes"; then
+    BUILDNAMES="OpenGL (SDL)"
+  else
     BUILDNAMES="Software (SDL)"
+  fi
 fi
 
 MAKE_NAME=Makefile

@@ -1,7 +1,8 @@
 # This Makefile understands the following targets:
 #
-# sdl			build SDL (software) version
-# opengl		build OpenGL version
+# svga			build Software (SVGALib) version
+# sdl			build Software (SDL) version
+# opengl		build OpenGL (SDL) version
 # clean:		remove all intermediate files
 
 # Basic stuff
@@ -14,22 +15,24 @@ prefix = @prefix@
 exec_prefix = @exec_prefix@
 bindir = $(exec_prefix)/bin
 infodir = $(prefix)/info
-libdir = $(prefix)/lib/gnudl
+libdir = $(prefix)/lib
 mandir = $(prefix)/man/man1
 includedir = $(prefix)/include
 
 CC = @CC@
-CXX = @CXX@
 DEFS = @DEFS@
-CPPFLAGS = @CPPFLAGS@ @CFLAGS@
-CFLAGS = $(CPPFLAGS)
+CFLAGS = @CFLAGS@
+CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
-BLIBS = @BASELIBS@
-GLLIBS = @GLLIBS@ -L/usr/X11R6/lib -lGL -lGLU
-SDLLIBS = @SDL_LIBS@ 
-SDLFLAGS = @SDL_CFLAGS@
+BASELIBS = @BASELIBS@
+X11_INC = @X11_INC@
+X11_LIB = @X11_LIB@
+GLLIBS = -L@X11_LIB@ @GLLIBS@
+SVGALIBS = @SVGALIBS@
+SDL_LIBS = @SDL_LIBS@
+SDL_CFLAGS = @SDL_CFLAGS@
 GLHEXEN = @GLHEXEN@
-HAVE_SDL = @HAVESDL@
+SVGAHEXEN = @SVGAHEXEN@
 
 # Directories
 
@@ -39,19 +42,25 @@ SRCDIR    = @srcdir@
 VPATH     = @srcdir@
 MODULE    = none
 
-INCSUBDIR = include
+INCSUBDIR = ./include
 
-CPPFLAGS += -I./include -I/usr/X11R6/include
+CPPFLAGS += -I$(INCSUBDIR)
+ifneq "$(SVGAHEXEN)" "true"
+CPPFLAGS += -I@X11_INC@ $(SDL_CFLAGS)
+endif
 
 # Objects to build
 
-SDLOBJS = \
+OBJ_SVGA = \
+	svgalib/i_svgalib.o
+
+OBJ_SWSDL = \
 	sdl/i_sdl.o
 
-GLSDL =  \
+OBJ_GLSDL =  \
 	sdl/i_sdlgl.o
 
-GLOBJS = \
+OBJ_OPENGL = \
 	opengl/ogl_clip.o \
 	opengl/ogl_draw.o \
 	opengl/ogl_rend.o \
@@ -62,7 +71,7 @@ GLOBJS = \
 	opengl/ogl_main.o \
 	opengl/m_bams.o
 
-BASEOBJS = \
+OBJ_BASE = \
 	base/i_linux.o \
 	base/oss.o \
 	base/i_sound.o \
@@ -122,22 +131,29 @@ BASEOBJS = \
 #	base/c_cvar.o \
 #	base/i_action.o \
 
-ifeq "$(GLHEXEN)" "true"
-opengl: $(GLSDL) $(GLOBJS) $(BASEOBJS)
-	$(CC) -o hhexen-gl $(GLSDL) $(GLOBJS) $(BASEOBJS) $(GLLIBS) $(SDLLIBS)
+
+%.o: %.c
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
+
+
+ifeq "$(SVGAHEXEN)" "true"
+svga: $(OBJ_SVGA) $(OBJ_BASE)
+	$(CC) -o hhexen-svga $(OBJ_SVGA) $(OBJ_BASE) $(BASELIBS) $(SVGALIBS)
 else
-sdl: $(SDLOBJS) $(BASEOBJS)
-	$(CC) -o hhexen-sdl $(SDLOBJS) $(BASEOBJS) $(SDLLIBS)
+
+ifeq "$(GLHEXEN)" "true"
+opengl: $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE)
+	$(CC) -o hhexen-gl $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE) $(BASELIBS) $(GLLIBS) $(SDL_LIBS)
+else
+sdl: $(OBJ_SWSDL) $(OBJ_BASE)
+	$(CC) -o hhexen-sdl $(OBJ_SWSDL) $(OBJ_BASE) $(BASELIBS) $(SDL_LIBS)
+endif
+
 endif
 
 clean:
 	$(RM) base/*.o
 	$(RM) opengl/*.o
 	$(RM) sdl/*.o
-
-%.o: %.c
-	$(CC) $< -o $@ -c $(CFLAGS) $(SDLFLAGS)
-
-%.o: %.cpp
-	$(CXX) $< -o $@ -c $(CPPFLAGS) $(SDLFLAGS)
+	$(RM) svgalib/*.o
 
