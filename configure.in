@@ -234,7 +234,7 @@ dnl ==================================================================
 if test "$SVGAHEXEN" = "true"; then
     BUILDNAMES="Software (SVGALib)"
 else
-  if test "$GLHEXEN" = "yes"; then
+  if test "$GLHEXEN" = "true"; then
     BUILDNAMES="OpenGL (SDL)"
   else
     BUILDNAMES="Software (SDL)"
