@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.39 $
-//** $Date: 2008-06-30 12:01:34 $
+//** $Revision: 1.40 $
+//** $Date: 2008-06-30 18:02:30 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -369,7 +369,8 @@ typedef struct
 typedef struct
 {
 	const char	*name;
-	char *location;		/* pointer to an 80 char array */
+	char	*location;	/* pointer to an 80 char array, null terminated */
+	char	*defaultvalue;	/* backup of the default value. malloc'ed at init */
 } default_str_t;
 
 /*

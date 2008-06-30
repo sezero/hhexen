@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.23 $
-//** $Date: 2008-06-30 12:01:33 $
+//** $Revision: 1.24 $
+//** $Date: 2008-06-30 18:02:30 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -466,7 +466,7 @@ default_t defaults[] =
 	{ "key_lookcenter", &key_lookcenter, KEY_END },
 	{ "key_invleft", &key_invleft, '[' },
 	{ "key_invright", &key_invright, ']' },
-	{ "key_useartifact", &key_useartifact, 13 },
+	{ "key_useartifact", &key_useartifact, KEY_ENTER },
 	{ "key_fire", &key_fire, KEY_RCTRL, 1 },
 	{ "key_use", &key_use, ' ', 1 },
 	{ "key_strafe", &key_strafe, KEY_RALT, 1 },
@@ -571,6 +571,12 @@ void M_LoadDefaults(const char *fileName)
 	for (i = 0; i < numdefaults; i++)
 	{
 		*defaults[i].location = defaults[i].defaultvalue;
+	}
+	// Make a backup of all default strings
+	for (i = 0; i < numstrings; i++)
+	{
+		default_strings[i].defaultvalue = (char *) calloc(1, 80);
+		strcpy (default_strings[i].defaultvalue, default_strings[i].location);
 	}
 
 	// Check for a custom config file
