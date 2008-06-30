@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_svgalib.c,v 1.6 2008-06-30 08:15:26 sezero Exp $
+//** $Id: i_svgalib.c,v 1.7 2008-06-30 08:32:17 sezero Exp $
 //**
 //**************************************************************************
 
@@ -428,7 +428,7 @@ void I_InitGraphics(void)
 	keyboard_seteventhandler(I_KeyboardHandler);
 	kbd_initialized = true;
 
-	I_SetPalette(W_CacheLumpName("PLAYPAL", PU_CACHE));
+	I_SetPalette((byte *)W_CacheLumpName("PLAYPAL", PU_CACHE));
 
 	if (!M_CheckParm("-nomouse"))
 	{
