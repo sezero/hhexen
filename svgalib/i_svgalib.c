@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_svgalib.c,v 1.5 2008-06-29 16:15:08 sezero Exp $
+//** $Id: i_svgalib.c,v 1.6 2008-06-30 08:15:26 sezero Exp $
 //**
 //**************************************************************************
 
@@ -346,10 +346,11 @@ static void I_MouseEventHandler(int button, int dx, int dy, int dz,
 
 void I_ShutdownGraphics(void)
 {
-	if (!vid_initialized)
-		return;
+	static boolean in_shutdown = false;
 
-	vid_initialized = false;
+	if (in_shutdown)
+		return;
+	in_shutdown = true;
 
 	if (mousepresent)
 		vga_setmousesupport(0);
@@ -359,7 +360,9 @@ void I_ShutdownGraphics(void)
 		keyboard_close();
 	kbd_initialized = false;
 
-	vga_setmode(TEXT);
+	if (vid_initialized)
+		vga_setmode(TEXT);
+	vid_initialized = false;
 
 	system("stty sane");
 }
@@ -429,7 +432,7 @@ void I_InitGraphics(void)
 
 	if (!M_CheckParm("-nomouse"))
 	{
-	/* FIXME: WHAT IF MOUSE INIT FAILED ?? !!! */
+	/* FIXME: WHAT IF SVGALIB FAILED INITING THE MOUSE ??? */
 		mouse_seteventhandler((void *) I_MouseEventHandler);
 		mousepresent = true;
 	}
