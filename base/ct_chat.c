@@ -4,8 +4,8 @@
 //** ct_chat.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: ct_chat.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-27 17:48:33 $
+//** $Revision: 1.12 $
+//** $Date: 2008-06-30 12:01:32 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -60,7 +60,19 @@ char CT_dequeueChatChar(void);
 
 boolean chatmodeon;
 
-char *chat_macros[10];
+char chat_macros[10][80] =
+{
+	HUSTR_CHATMACRO0,
+	HUSTR_CHATMACRO1,
+	HUSTR_CHATMACRO2,
+	HUSTR_CHATMACRO3,
+	HUSTR_CHATMACRO4,
+	HUSTR_CHATMACRO5,
+	HUSTR_CHATMACRO6,
+	HUSTR_CHATMACRO7,
+	HUSTR_CHATMACRO8,
+	HUSTR_CHATMACRO9
+};
 
 // Private data
 

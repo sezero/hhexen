@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.22 $
-//** $Date: 2008-06-25 20:10:22 $
+//** $Revision: 1.23 $
+//** $Date: 2008-06-30 12:01:33 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -432,8 +432,6 @@ extern int viewwidth, viewheight;
 
 extern int screenblocks;
 
-extern char *chat_macros[10];
-
 #ifndef __NeXT__
 extern int snd_Channels;
 extern int snd_DesiredMusicDevice, snd_DesiredSfxDevice;
@@ -497,22 +495,26 @@ default_t defaults[] =
 
 	{ "messageson", &messageson, 1 },
 
-	{ "chatmacro0", (int *) &chat_macros[0], (int) HUSTR_CHATMACRO0 },
-	{ "chatmacro1", (int *) &chat_macros[1], (int) HUSTR_CHATMACRO1 },
-	{ "chatmacro2", (int *) &chat_macros[2], (int) HUSTR_CHATMACRO2 },
-	{ "chatmacro3", (int *) &chat_macros[3], (int) HUSTR_CHATMACRO3 },
-	{ "chatmacro4", (int *) &chat_macros[4], (int) HUSTR_CHATMACRO4 },
-	{ "chatmacro5", (int *) &chat_macros[5], (int) HUSTR_CHATMACRO5 },
-	{ "chatmacro6", (int *) &chat_macros[6], (int) HUSTR_CHATMACRO6 },
-	{ "chatmacro7", (int *) &chat_macros[7], (int) HUSTR_CHATMACRO7 },
-	{ "chatmacro8", (int *) &chat_macros[8], (int) HUSTR_CHATMACRO8 },
-	{ "chatmacro9", (int *) &chat_macros[9], (int) HUSTR_CHATMACRO9 },
 	{ "mouselook", &mouselook, 1 },
 	{ "cdaudio", &cdaudio, 0 },
 	{ "alwaysrun", &alwaysrun, 0 }
 };
 
-static int numdefaults;
+default_str_t default_strings[] =
+{
+	{ "chatmacro0", chat_macros[0] },
+	{ "chatmacro1", chat_macros[1] },
+	{ "chatmacro2", chat_macros[2] },
+	{ "chatmacro3", chat_macros[3] },
+	{ "chatmacro4", chat_macros[4] },
+	{ "chatmacro5", chat_macros[5] },
+	{ "chatmacro6", chat_macros[6] },
+	{ "chatmacro7", chat_macros[7] },
+	{ "chatmacro8", chat_macros[8] },
+	{ "chatmacro9", chat_macros[9] }
+};
+
+static int numdefaults, numstrings;
 static char defaultfile[MAX_OSPATH];
 
 /*
@@ -534,17 +536,14 @@ void M_SaveDefaults (void)
 
 	for (i = 0; i < numdefaults; i++)
 	{
-		if (defaults[i].defaultvalue > -0xfff  &&
-		    defaults[i].defaultvalue < 0xfff)
-		{
-			v = *defaults[i].location;
-			fprintf (f, "%s\t\t%i\n", defaults[i].name, v);
-		}
-		else
-		{
-			fprintf (f, "%s\t\t\"%s\"\n", defaults[i].name,
-					*(char **)(defaults[i].location));
-		}
+		v = *defaults[i].location;
+		fprintf (f, "%s\t\t%i\n", defaults[i].name, v);
+	}
+
+	for (i = 0; i < numstrings; i++)
+	{
+		fprintf (f, "%s\t\t\"%s\"\n", default_strings[i].name,
+					default_strings[i].location);
 	}
 
 	fclose (f);
@@ -563,13 +562,12 @@ void M_LoadDefaults(const char *fileName)
 	FILE *f;
 	char def[80];
 	char strparm[100];
-	char *newstring = NULL;
 	int parm;
-	boolean isstring;
 
-	// Set everything to base values
 	numdefaults = sizeof(defaults) / sizeof(defaults[0]);
-	ST_Message("M_LoadDefaults: %d default settings loaded\n", numdefaults);
+	numstrings = sizeof(default_strings) / sizeof(default_strings[0]);
+	ST_Message("Loading default settings\n");
+	// Set everything to base values
 	for (i = 0; i < numdefaults; i++)
 	{
 		*defaults[i].location = defaults[i].defaultvalue;
@@ -593,21 +591,34 @@ void M_LoadDefaults(const char *fileName)
 	{
 		while (!feof(f))
 		{
-			isstring = false;
 			if (fscanf(f, "%79s %[^\n]\n", def, strparm) == 2)
 			{
-				if (strparm[0] == '"')
+				if (strparm[0] == '"') /* string values */
 				{
-					// Get a string default
-					isstring = true;
-					len = strlen(strparm);
-					newstring = (char *)malloc(len);
-					if (newstring == NULL)
-						I_Error("can't malloc newstring");
-					strparm[len - 1] = 0;
-					strcpy(newstring, strparm + 1);
+					for (i = 0; i < numstrings; i++)
+					{
+						if (!strcmp(def, default_strings[i].name))
+						{
+							len = (int)strlen(strparm) - 2;
+							if (len <= 0)
+							{
+								default_strings[i].location[0] = '\0';
+								break;
+							}
+							if (len > 79)
+							{
+								len = 79;
+							}
+							strncpy(default_strings[i].location, strparm + 1, len);
+							default_strings[i].location[len] = '\0';
+							break;
+						}
+					}
+					continue;
 				}
-				else if (strparm[0] == '0' && strparm[1] == 'x')
+
+				/* numeric values */
+				if (strparm[0] == '0' && strparm[1] == 'x')
 				{
 					sscanf(strparm + 2, "%x", &parm);
 				}
@@ -619,14 +630,7 @@ void M_LoadDefaults(const char *fileName)
 				{
 					if (!strcmp(def, defaults[i].name))
 					{
-						if (!isstring)
-						{
-							*defaults[i].location = parm;
-						}
-						else
-						{
-							*defaults[i].location = (int)newstring;
-						}
+						*defaults[i].location = parm;
 						break;
 					}
 				}

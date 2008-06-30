@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.38 $
-//** $Date: 2008-06-28 17:11:55 $
+//** $Revision: 1.39 $
+//** $Date: 2008-06-30 12:01:34 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -365,6 +365,12 @@ typedef struct
 	int	scantranslate;		/* PC scan code hack */
 	int	untranslated;		/* lousy hack */
 } default_t;
+
+typedef struct
+{
+	const char	*name;
+	char *location;		/* pointer to an 80 char array */
+} default_str_t;
 
 /*
 ===============================================================================
@@ -1554,6 +1560,7 @@ boolean CT_Responder(event_t *ev);
 void CT_Ticker(void);
 char CT_dequeueChatChar(void);
 
+extern	char		chat_macros[10][80];
 extern	boolean		chatmodeon;
 
 
