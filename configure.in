@@ -20,9 +20,9 @@ SVGALIBS=""
 BUILDNAMES=""
 
 
-dnl ================================================================== 
+dnl ==================================================================
 dnl Command-line args. Check for mutually-exclusive options.
-dnl ================================================================== 
+dnl ==================================================================
 
 AC_ARG_ENABLE(svga,
 AC_HELP_STRING([--enable-svga], [Enable SVGALib version [[default=no]]]),
@@ -234,7 +234,7 @@ dnl ==================================================================
 if test "$SVGAHEXEN" = "true"; then
     BUILDNAMES="Software (SVGALib)"
 else
-  if test "$HAVEGL" = "yes"; then
+  if test "$GLHEXEN" = "yes"; then
     BUILDNAMES="OpenGL (SDL)"
   else
     BUILDNAMES="Software (SDL)"
