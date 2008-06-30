@@ -4,8 +4,8 @@
 //** r_data.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_data.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-06-26 09:52:28 $
+//** $Revision: 1.11 $
+//** $Date: 2008-06-30 16:38:37 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -461,7 +461,7 @@ static void R_InitColormaps (void)
 	lump = W_GetNumForName("COLORMAP");
 	length = W_LumpLength (lump) + 255;
 	colormaps = (lighttable_t *) Z_Malloc (length, PU_STATIC, NULL);
-	colormaps = (byte *)( ((int)colormaps + 255) & ~0xff);
+	colormaps = (byte *)( ((intptr_t)colormaps + 255) & ~0xff);
 	W_ReadLump (lump, colormaps);
 }
 
