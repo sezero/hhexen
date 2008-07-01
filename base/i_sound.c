@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sound.c,v 1.8 2008-06-22 16:20:45 sezero Exp $
+//** $Id: i_sound.c,v 1.9 2008-07-01 14:01:19 sezero Exp $
 //**
 //**************************************************************************
 
@@ -110,6 +110,8 @@ typedef struct
 
 typedef struct
 {
+/* Sample data is a lump from a wad: byteswap the a, freq
+ * and the length fields before using them		*/
 	short		a;		/* always 3	*/
 	short		freq;		/* always 11025	*/
 	int32_t		length;		/* sample length */
@@ -274,7 +276,7 @@ int I_StartSound(int id, void *data, int vol, int sep, int pitch, int priority)
 	// once it is non-zero.  Perhaps this should be protected by a mutex.
 	chan->pri = priority;
 	chan->time = soundTime;
-	chan->end = &sample->firstSample + sample->length;
+	chan->end = &sample->firstSample + LONG(sample->length);
 	chan->begin = &sample->firstSample;
 
 	soundTime++;
@@ -282,7 +284,7 @@ int I_StartSound(int id, void *data, int vol, int sep, int pitch, int priority)
 #if 0
 	printf ("I_StartSound %d: v:%d s:%d p:%d pri:%d | %d %d %d %d\n",
 		id, vol, sep, pitch, priority,
-		chanId, chan->pitch_step, sample->a, sample->freq);
+		chanId, chan->pitch_step, SHORT(sample->a), SHORT(sample->freq));
 #endif
 
 	return chanId + 1;
