@@ -4,8 +4,8 @@
 //** p_acs.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_acs.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-06-30 19:15:13 $
+//** $Revision: 1.11 $
+//** $Date: 2008-07-02 11:25:09 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -338,12 +338,10 @@ void P_LoadACScripts(int lump)
 		}
 	}
 	ACStringCount = LONG(*buffer++);
-	ACStrings = (char **)buffer;
+	ACStrings = (char **) Z_Malloc(ACStringCount*sizeof(char *), PU_LEVEL, NULL);
 	for (i = 0; i < ACStringCount; i++)
 	{
-	//	ACStrings[i] += (int)ActionCodeBase;
-		ACStrings[i] = (char *) (LONG((int)ACStrings[i]) + (int) ActionCodeBase);
-
+		ACStrings[i] = (char *)ActionCodeBase + LONG(buffer[i]);
 	}
 	memset(MapVars, 0, sizeof(MapVars));
 }
