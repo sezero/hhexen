@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.13 $
-//** $Date: 2008-06-25 20:10:22 $
+//** $Revision: 1.14 $
+//** $Date: 2008-07-07 11:05:41 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -18,7 +18,6 @@
 
 // MACROS ------------------------------------------------------------------
 
-#define MAX_TARGET_PLAYERS	512
 #define MOBJ_NULL		-1
 #define MOBJ_XX_PLAYER		-2
 
@@ -142,8 +141,6 @@ extern acsInfo_t *ACSInfo;
 
 static int MobjCount;
 static mobj_t **MobjList;
-static int **TargetPlayerAddrs;
-static int TargetPlayerCount;
 static void *SaveBuffer;
 static boolean SavingPlayers;
 static union
@@ -404,9 +401,6 @@ void SV_LoadGame(int slot)
 	// Load the current map
 	SV_LoadMap();
 
-	// Don't need the player mobj relocation info for load game
-	Z_Free(TargetPlayerAddrs);
-
 	// Restore player structs
 	inv_ptr = 0;
 	curpos = 0;
@@ -459,7 +453,6 @@ void SV_MapTeleport(int map, int position)
 	int j;
 	char fileName[MAX_OSPATH];
 	player_t playerBackup[MAXPLAYERS];
-	mobj_t *targetPlayerMobj;
 	mobj_t *mobj;
 	int inventoryPtr;
 	int currentInvPos;
@@ -494,10 +487,6 @@ void SV_MapTeleport(int map, int position)
 	inventoryPtr = inv_ptr;
 	currentInvPos = curpos;
 
-	// Only SV_LoadMap() uses TargetPlayerAddrs, so it's NULLed here
-	// for the following check (player mobj redirection)
-	TargetPlayerAddrs = NULL;
-
 	gamemap = map;
 	snprintf(fileName, sizeof(fileName), "%shex6%02d.hxs", basePath, gamemap);
 	if (!deathmatch && ExistingFile(fileName))
@@ -519,7 +508,6 @@ void SV_MapTeleport(int map, int position)
 	}
 
 	// Restore player structs
-	targetPlayerMobj = NULL;
 	for (i = 0; i < MAXPLAYERS; i++)
 	{
 		if (!playeringame[i])
@@ -581,23 +569,8 @@ void SV_MapTeleport(int map, int position)
 				players[i].pendingweapon = bestWeapon;
 			}
 		}
-
-		if (targetPlayerMobj == NULL)
-		{ // The poor sap
-			targetPlayerMobj = players[i].mo;
-		}
 	}
 	randomclass = rClass;
-
-	// Redirect anything targeting a player mobj
-	if (TargetPlayerAddrs)
-	{
-		for (i = 0; i < TargetPlayerCount; i++)
-		{
-			*TargetPlayerAddrs[i] = (int)targetPlayerMobj;
-		}
-		Z_Free(TargetPlayerAddrs);
-	}
 
 	// Destroy all things touching players
 	for (i = 0; i < MAXPLAYERS; i++)
@@ -965,8 +938,6 @@ static void UnarchiveMobjs(void)
 	mobj_t *mobj;
 
 	AssertSegment(ASEG_MOBJS);
-	TargetPlayerAddrs = (int **) Z_Malloc(MAX_TARGET_PLAYERS*sizeof(int *), PU_STATIC, NULL);
-	TargetPlayerCount = 0;
 	MobjCount = GET_LONG;
 	MobjList = (mobj_t **) Z_Malloc(MobjCount*sizeof(mobj_t *), PU_STATIC, NULL);
 	for (i = 0; i < MobjCount; i++)
@@ -1153,11 +1124,6 @@ static void SetMobjPtr(int *archiveNum)
 	}
 	if (*archiveNum == MOBJ_XX_PLAYER)
 	{
-		if (TargetPlayerCount == MAX_TARGET_PLAYERS)
-		{
-			I_Error("RestoreMobj: exceeded MAX_TARGET_PLAYERS");
-		}
-		TargetPlayerAddrs[TargetPlayerCount++] = archiveNum;
 		*archiveNum = 0;
 		return;
 	}
