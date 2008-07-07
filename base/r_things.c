@@ -4,8 +4,8 @@
 //** r_things.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_things.c,v $
-//** $Revision: 1.12 $
-//** $Date: 2008-06-28 17:30:17 $
+//** $Revision: 1.13 $
+//** $Date: 2008-07-07 12:21:41 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -154,7 +154,7 @@ Only called at startup
 void R_InitSpriteDefs (const char **namelist)
 {
 	const char	**check;
-	int		i, l, intname, frame, rotation;
+	int		i, l, frame, rotation;
 	int		start, end;
 
 // count the number of sprite names
@@ -180,14 +180,13 @@ void R_InitSpriteDefs (const char **namelist)
 		memset (sprtemp, -1, sizeof(sprtemp));
 
 		maxframe = -1;
-		intname = *(int *)namelist[i];
 
 		//
 		// scan the lumps, filling in the frames for whatever is found
 		//
 		for (l = start + 1; l < end; l++)
 		{
-			if (*(int *)lumpinfo[l].name == intname)
+			if (memcmp(lumpinfo[l].name, namelist[i], 4) == 0)
 			{
 				frame = lumpinfo[l].name[4] - 'A';
 				rotation = lumpinfo[l].name[5] - '0';
