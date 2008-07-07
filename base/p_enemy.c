@@ -4,8 +4,8 @@
 //** p_enemy.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_enemy.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-25 08:25:49 $
+//** $Revision: 1.6 $
+//** $Date: 2008-07-07 09:55:18 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -2574,7 +2574,7 @@ void A_BishopAttack2(mobj_t *actor)
 	mo = P_SpawnMissile(actor, actor->target, MT_BISH_FX);
 	if (mo)
 	{
-		mo->special1 = (int)actor->target;
+		mo->special1 = (intptr_t)actor->target;
 		mo->special2 = 16; // High word == x/y, Low word == z
 	}
 	actor->special1--;
@@ -2853,7 +2853,7 @@ static void DragonSeek(mobj_t *actor, angle_t thresh, angle_t turnMax)
 			if (bestArg != -1)
 			{
 				search = -1;
-				actor->special1 = (int)P_FindMobjFromTID(target->args[bestArg], &search);
+				actor->special1 = (intptr_t)P_FindMobjFromTID(target->args[bestArg], &search);
 			}
 		}
 		else
@@ -2863,7 +2863,7 @@ static void DragonSeek(mobj_t *actor, angle_t thresh, angle_t turnMax)
 				i = (P_Random() >> 2) % 5;
 			} while (!target->args[i]);
 			search = -1;
-			actor->special1 = (int)P_FindMobjFromTID(target->args[i], &search);
+			actor->special1 = (intptr_t)P_FindMobjFromTID(target->args[i], &search);
 		}
 	}
 }
@@ -2881,13 +2881,13 @@ void A_DragonInitFlight(mobj_t *actor)
 	search = -1;
 	do
 	{ // find the first tid identical to the dragon's tid
-		actor->special1 = (int)P_FindMobjFromTID(actor->tid, &search);
+		actor->special1 = (intptr_t)P_FindMobjFromTID(actor->tid, &search);
 		if (search == -1)
 		{
 			P_SetMobjState(actor, actor->info->spawnstate);
 			return;
 		}
-	} while (actor->special1 == (int)actor);
+	} while (actor->special1 == (intptr_t)actor);
 	P_RemoveMobjFromTIDList(actor);
 }
 
@@ -4173,7 +4173,7 @@ void A_SorcOffense1(mobj_t *actor)
 	if (mo)
 	{
 		mo->target = parent;
-		mo->special1 = (int)parent->target;
+		mo->special1 = (intptr_t)parent->target;
 		mo->args[4] = BOUNCE_TIME_UNIT;
 		mo->args[3] = 15;	// Bounce time in seconds
 	}
@@ -4181,7 +4181,7 @@ void A_SorcOffense1(mobj_t *actor)
 	if (mo)
 	{
 		mo->target = parent;
-		mo->special1 = (int)parent->target;
+		mo->special1 = (intptr_t)parent->target;
 		mo->args[4] = BOUNCE_TIME_UNIT;
 		mo->args[3] = 15;	// Bounce time in seconds
 	}
@@ -4897,19 +4897,19 @@ void KSpiritInit(mobj_t *spirit, mobj_t *korax)
 
 	spirit->health = KORAX_SPIRIT_LIFETIME;
 
-	spirit->special1 = (int)korax;		// Swarm around korax
+	spirit->special1 = (intptr_t)korax;	// Swarm around korax
 	spirit->special2 = 32+(P_Random()&7);	// Float bob index
 	spirit->args[0] = 10;			// initial turn value
 	spirit->args[1] = 0;			// initial look angle
 
 	// Spawn a tail for spirit
 	tail = P_SpawnMobj(spirit->x, spirit->y, spirit->z, MT_HOLY_TAIL);
-	tail->special2 = (int)spirit; // parent
+	tail->special2 = (intptr_t)spirit;	// parent
 	for (i = 1; i < 3; i++)
 	{
 		next = P_SpawnMobj(spirit->x, spirit->y, spirit->z, MT_HOLY_TAIL);
 		P_SetMobjState(next, next->info->spawnstate + 1);
-		tail->special1 = (int)next;
+		tail->special1 = (intptr_t)next;
 		tail = next;
 	}
 	tail->special1 = 0; // last tail bit

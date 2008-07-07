@@ -4,8 +4,8 @@
 //** p_map.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_map.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-25 08:25:50 $
+//** $Revision: 1.6 $
+//** $Date: 2008-07-07 09:55:18 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -426,13 +426,13 @@ static boolean PIT_CheckThing(mobj_t *thing)
 				if (thing->flags2 & MF2_REFLECTIVE
 					&& (thing->player || thing->flags2 & MF2_BOSS))
 				{
-					tmthing->special1 = (int)tmthing->target;
+					tmthing->special1 = (intptr_t)tmthing->target;
 					tmthing->target = thing;
 					return true;
 				}
 				if (thing->flags & MF_COUNTKILL || thing->player)
 				{
-					tmthing->special1 = (int)thing;
+					tmthing->special1 = (intptr_t)thing;
 				}
 				if (P_Random() < 96)
 				{
@@ -567,12 +567,12 @@ static boolean PIT_CheckThing(mobj_t *thing)
 					if (tmthing->special2 
 						&& !((mobj_t *)tmthing->special2)->special1)
 					{
-						((mobj_t *)tmthing->special2)->special1 = (int)thing;
+						((mobj_t *)tmthing->special2)->special1 = (intptr_t)thing;
 					}
 				}
 				else if (!tmthing->special1)
 				{
-					tmthing->special1 = (int)thing;
+					tmthing->special1 = (intptr_t)thing;
 				}
 			}
 			return true;	// lightning zaps through all sprites
@@ -591,12 +591,12 @@ static boolean PIT_CheckThing(mobj_t *thing)
 						if (lmo->special2 
 							&& !((mobj_t *)lmo->special2)->special1)
 						{
-							((mobj_t *)lmo->special2)->special1 = (int)thing;
+							((mobj_t *)lmo->special2)->special1 = (intptr_t)thing;
 						}
 					}
 					else if (!lmo->special1)
 					{
-						lmo->special1 = (int)thing;
+						lmo->special1 = (intptr_t)thing;
 					}
 					if (!(leveltime & 3))
 					{

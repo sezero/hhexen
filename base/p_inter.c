@@ -4,8 +4,8 @@
 //** p_inter.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_inter.c,v $
-//** $Revision: 1.13 $
-//** $Date: 2008-06-25 08:25:50 $
+//** $Revision: 1.14 $
+//** $Date: 2008-07-07 09:55:18 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -348,7 +348,7 @@ static boolean P_GiveWeapon(player_t *player, pclass_t pClass, weapontype_t weap
 	{ // Cooperative net-game
 		if (player->weaponowned[weapon])
 		{
-			return(false);
+			return false;
 		}
 		player->bonuscount += BONUSADD;
 		player->weaponowned[weapon] = true;
@@ -365,7 +365,7 @@ static boolean P_GiveWeapon(player_t *player, pclass_t pClass, weapontype_t weap
 		{
 			S_StartSound(NULL, SFX_PICKUP_WEAPON);
 		}
-		return(false);
+		return false;
 	}
 	if (weapon == WP_SECOND)
 	{

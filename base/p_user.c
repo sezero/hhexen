@@ -4,8 +4,8 @@
 //** p_user.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_user.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-06-27 22:45:42 $
+//** $Revision: 1.11 $
+//** $Date: 2008-07-07 09:55:19 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1172,7 +1172,7 @@ static void P_BlastMobj(mobj_t *source, mobj_t *victim, fixed_t strength)
 			case MT_SORCBALL3:
 				return;
 			case MT_MSTAFF_FX2:	// Reflect to originator
-				victim->special1 = (int)victim->target;
+				victim->special1 = (intptr_t)victim->target;
 				victim->target = source;
 				break;
 			default:
@@ -1183,7 +1183,7 @@ static void P_BlastMobj(mobj_t *source, mobj_t *victim, fixed_t strength)
 		{
 			if ((mobj_t *)(victim->special1) == source)
 			{
-				victim->special1 = (int)victim->target;
+				victim->special1 = (intptr_t)victim->target;
 				victim->target = source;
 			}
 		}
@@ -1546,7 +1546,7 @@ boolean P_UseArtifact(player_t *player, artitype_t arti)
 	case arti_fly:
 		if (!P_GivePower(player, pw_flight))
 		{
-			return(false);
+			return false;
 		}
 		if (player->mo->momz <= -35*FRACUNIT)
 		{ // stop falling scream
@@ -1558,7 +1558,7 @@ boolean P_UseArtifact(player_t *player, artitype_t arti)
 		if (mo)
 		{
 			mo->target = player->mo;
-			mo->special1 = (int)(player->mo);
+			mo->special1 = (intptr_t)(player->mo);
 			mo->momz = 5*FRACUNIT;
 		}
 		break;

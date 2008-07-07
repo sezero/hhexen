@@ -4,8 +4,8 @@
 //** a_action.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: a_action.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-26 09:52:27 $
+//** $Revision: 1.6 $
+//** $Date: 2008-07-07 09:55:18 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1077,7 +1077,7 @@ void A_ThrustInitDn(mobj_t *actor)
 	actor->flags = 0;
 	actor->flags2 = MF2_NOTELEPORT|MF2_FLOORCLIP|MF2_DONTDRAW;
 	mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_DIRTCLUMP);
-	actor->special1 = (int)mo;
+	actor->special1 = (intptr_t)mo;
 }
 
 void A_ThrustRaise(mobj_t *actor)

@@ -4,8 +4,8 @@
 //** p_mobj.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_mobj.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-26 09:52:28 $
+//** $Revision: 1.12 $
+//** $Date: 2008-07-07 09:55:18 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -555,7 +555,7 @@ static void P_XYMovement(mobj_t *mo)
 				//	mo->momz = -mo->momz;
 					if (mo->flags2 & MF2_SEEKERMISSILE)
 					{
-						mo->special1 = (int)(mo->target);
+						mo->special1 = (intptr_t)(mo->target);
 					}
 					mo->target = BlockingMobj;
 					return;

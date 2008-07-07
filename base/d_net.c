@@ -4,8 +4,8 @@
 //** d_net.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: d_net.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-06-25 08:25:49 $
+//** $Revision: 1.10 $
+//** $Date: 2008-07-07 09:55:18 $
 //** $Author: sezero $
 //**
 //** This version has the fixed ticdup code.
@@ -75,9 +75,9 @@ extern void ST_NetDone(void);
 //============================================================================
 
 
-static int NetbufferSize (void)
+static intptr_t NetbufferSize (void)
 {
-	return (int)&(((doomdata_t *)0)->cmds[netbuffer->numtics]);
+	return (intptr_t)&(((doomdata_t *)0)->cmds[netbuffer->numtics]);
 }
 
 static unsigned int NetbufferChecksum (void)
@@ -91,7 +91,7 @@ static unsigned int NetbufferChecksum (void)
 	return 0;	/* byte order problems */
 #endif
 
-	l = (NetbufferSize () - (int)&(((doomdata_t *)0)->retransmitfrom))/4;
+	l = (int) (NetbufferSize() - (intptr_t)&(((doomdata_t *)0)->retransmitfrom))/4;
 	for (i = 0; i < l; i++)
 		c += ((unsigned int *)&netbuffer->retransmitfrom)[i] * (i + 1);
 
@@ -146,7 +146,7 @@ static void HSendPacket (int node, int flags)
 
 	doomcom->command = CMD_SEND;
 	doomcom->remotenode = node;
-	doomcom->datalength = NetbufferSize ();
+	doomcom->datalength = (int) NetbufferSize();
 
 	if (debugfile)
 	{
@@ -200,7 +200,7 @@ void NET_SendFrags(player_t *player)
 	}
 	doomcom->command = CMD_FRAG;
 	doomcom->remotenode = frags;
-	doomcom->datalength = NetbufferSize ();
+	doomcom->datalength = (int) NetbufferSize();
 
 	I_NetCmd ();
 }
@@ -235,7 +235,7 @@ static boolean HGetPacket (void)
 	if (doomcom->remotenode == -1)
 		return false;
 
-	if (doomcom->datalength != NetbufferSize ())
+	if (doomcom->datalength != (int) NetbufferSize())
 	{
 		if (debugfile)
 			fprintf (debugfile, "bad packet length %i\n", doomcom->datalength);

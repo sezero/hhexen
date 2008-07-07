@@ -4,8 +4,8 @@
 //** p_pspr.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_pspr.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-27 22:45:40 $
+//** $Revision: 1.9 $
+//** $Date: 2008-07-07 09:55:19 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1041,7 +1041,7 @@ void A_LightningZap(mobj_t *actor)
 			 actor->z + deltaZ, MT_LIGHTNING_ZAP);
 	if (mo)
 	{
-		mo->special2 = (int)actor;
+		mo->special2 = (intptr_t)actor;
 		mo->momx = actor->momx;
 		mo->momy = actor->momy;
 		mo->target = actor->target;
@@ -1060,7 +1060,7 @@ void A_LightningZap(mobj_t *actor)
 			 actor->z+deltaZ, MT_LIGHTNING_ZAP);
 	if (mo)
 	{
-		mo->special2 = (int)actor;
+		mo->special2 = (intptr_t)actor;
 		mo->momx = actor->momx;
 		mo->momy = actor->momy;
 		mo->target = actor->target;
@@ -1095,13 +1095,13 @@ void A_MLightningAttack2(mobj_t *actor)
 	if (fmo)
 	{
 		fmo->special1 = 0;
-		fmo->special2 = (int)cmo;
+		fmo->special2 = (intptr_t)cmo;
 		A_LightningZap(fmo);
 	}
 	if (cmo)
 	{
 		cmo->special1 = 0;	// mobj that it will track
-		cmo->special2 = (int)fmo;
+		cmo->special2 = (intptr_t)fmo;
 		A_LightningZap(cmo);
 	}
 	S_StartSound(actor, SFX_MAGE_LIGHTNING_FIRE);
@@ -1196,7 +1196,7 @@ static void MStaffSpawn(mobj_t *pmo, angle_t angle)
 	if (mo)
 	{
 		mo->target = pmo;
-		mo->special1 = (int)P_RoughMonsterSearch(mo, 10);
+		mo->special1 = (intptr_t)P_RoughMonsterSearch(mo, 10);
 	}
 }
 
@@ -1290,7 +1290,7 @@ void A_MStaffTrack(mobj_t *actor)
 {
 	if ((actor->special1 == 0) && (P_Random() < 50))
 	{
-		actor->special1 = (int)P_RoughMonsterSearch(actor, 10);
+		actor->special1 = (intptr_t)P_RoughMonsterSearch(actor, 10);
 	}
 	P_SeekerMissile(actor, ANGLE_1*2, ANGLE_1*10);
 }
@@ -1309,7 +1309,7 @@ static void MStaffSpawn2(mobj_t *actor, angle_t angle)
 	if (mo)
 	{
 		mo->target = actor;
-		mo->special1 = (int)P_RoughMonsterSearch(mo, 10);
+		mo->special1 = (intptr_t)P_RoughMonsterSearch(mo, 10);
 	}
 }
 
@@ -1921,17 +1921,17 @@ void A_CHolyAttack2(mobj_t *actor)
 		}
 		if (linetarget)
 		{
-			mo->special1 = (int)linetarget;
+			mo->special1 = (intptr_t)linetarget;
 			mo->flags |= MF_NOCLIP|MF_SKULLFLY;
 			mo->flags &= ~MF_MISSILE;
 		}
 		tail = P_SpawnMobj(mo->x, mo->y, mo->z, MT_HOLY_TAIL);
-		tail->special2 = (int)mo; // parent
+		tail->special2 = (intptr_t)mo;	// parent
 		for (i = 1; i < 3; i++)
 		{
 			next = P_SpawnMobj(mo->x, mo->y, mo->z, MT_HOLY_TAIL);
 			P_SetMobjState(next, next->info->spawnstate + 1);
-			tail->special1 = (int)next;
+			tail->special1 = (intptr_t)next;
 			tail = next;
 		}
 		tail->special1 = 0; // last tail bit
@@ -1993,7 +1993,7 @@ static void CHolyFindTarget(mobj_t *actor)
 
 	if ((target = P_RoughMonsterSearch(actor, 6)))
 	{
-		actor->special1 = (int)target;
+		actor->special1 = (intptr_t)target;
 		actor->flags |= MF_NOCLIP|MF_SKULLFLY;
 		actor->flags &= ~MF_MISSILE;
 	}
