@@ -4,8 +4,8 @@
 //** am_map.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: am_map.c,v $
-//** $Revision: 1.16 $
-//** $Date: 2008-06-28 17:11:54 $
+//** $Revision: 1.17 $
+//** $Date: 2008-07-07 11:27:09 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -278,9 +278,6 @@ static void AM_changeWindowLoc(void)
 static void AM_initVariables(void)
 {
 	int pnum;
-	thinker_t *think;
-	mobj_t *mo;
-//	static event_t st_notify = { ev_keyup, AM_MSGENTERED };
 
 	automapactive = true;
 #ifndef RENDER3D
@@ -319,24 +316,6 @@ static void AM_initVariables(void)
 	old_m_y = m_y;
 	old_m_w = m_w;
 	old_m_h = m_h;
-
-	// load in the location of keys, if in baby mode
-
-//	memset(KeyPoints, 0, sizeof(vertex_t)*3);
-	if (gameskill == sk_baby)
-	{
-		for (think = thinkercap.next; think != &thinkercap; think = think->next)
-		{
-			if (think->function != P_MobjThinker)
-			{ //not a mobj
-				continue;
-			}
-			mo = (mobj_t *)think;
-		}
-	}
-
-	// inform the status bar of the change
-	//ST_Responder(&st_notify);
 }
 
 static void AM_loadPics(void)
@@ -1429,26 +1408,6 @@ static void AM_drawMarks(void)
 	}
 }
 */
-/*
-static void AM_drawkeys(void)
-{
-	if (KeyPoints[0].x != 0 || KeyPoints[0].y != 0)
-	{
-		AM_drawLineCharacter(keysquare, NUMKEYSQUARELINES, 0, 0, YELLOWKEY,
-			KeyPoints[0].x, KeyPoints[0].y);
-	}
-	if (KeyPoints[1].x != 0 || KeyPoints[1].y != 0)
-	{
-		AM_drawLineCharacter(keysquare, NUMKEYSQUARELINES, 0, 0, GREENKEY,
-			KeyPoints[1].x, KeyPoints[1].y);
-	}
-	if (KeyPoints[2].x != 0 || KeyPoints[2].y != 0)
-	{
-		AM_drawLineCharacter(keysquare, NUMKEYSQUARELINES, 0, 0, BLUEKEY,
-			KeyPoints[2].x, KeyPoints[2].y);
-	}
-}
-*/
 
 /*
 static void AM_drawCrosshair(int color)
@@ -1509,8 +1468,6 @@ void AM_Drawer (void)
 
 //	AM_drawCrosshair(XHAIRCOLORS);
 //	AM_drawMarks();
-//	if (gameskill == sk_baby)
-//		AM_drawkeys();
 
 #ifdef RENDER3D
 	glEnd();		/* bbm 3/9/2003: 'draw all lines at once' end */
