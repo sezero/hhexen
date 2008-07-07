@@ -4,8 +4,8 @@
 //** p_spec.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_spec.h,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-22 16:32:45 $
+//** $Revision: 1.7 $
+//** $Date: 2008-07-07 20:25:47 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -481,7 +481,7 @@ typedef struct acsInfo_s acsInfo_t;
 struct acsInfo_s
 {
 	int		number;
-	int		*address;
+	byte		*address;
 	int		argCount;
 	aste_t		state;
 	int		waitValue;
@@ -499,7 +499,7 @@ struct acs_s
 	int		stack[ACS_STACK_DEPTH];
 	int		stackPtr;
 	int		vars[MAX_ACS_SCRIPT_VARS];
-	int		*ip;
+	byte		*ip;
 };
 
 typedef struct

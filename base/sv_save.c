@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.14 $
-//** $Date: 2008-07-07 11:05:41 $
+//** $Revision: 1.15 $
+//** $Date: 2008-07-07 20:25:46 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -20,10 +20,6 @@
 
 #define MOBJ_NULL		-1
 #define MOBJ_XX_PLAYER		-2
-
-#define GET_BYTE	(*SavePtr.b++)
-#define GET_WORD	(*SavePtr.w++)
-#define GET_LONG	(*SavePtr.l++)
 
 #define MAX_MAPS		99
 #define BASE_SLOT		6
@@ -124,7 +120,7 @@ static void CopyFile(const char *sourceName, const char *destName);
 static boolean ExistingFile(const char *name);
 static void OpenStreamOut(const char *fileName);
 static void CloseStreamOut(void);
-static void StreamOutBuffer(const void *buffer, int size);
+static void StreamOutBuffer(const void *buffer, size_t size);
 static void StreamOutByte(byte val);
 static void StreamOutWord(unsigned short val);
 static void StreamOutLong(unsigned int val);
@@ -143,12 +139,7 @@ static int MobjCount;
 static mobj_t **MobjList;
 static void *SaveBuffer;
 static boolean SavingPlayers;
-static union
-{
-	byte	*b;
-	short	*w;
-	int	*l;
-} SavePtr;
+static byte *SavePtr;
 static FILE *SavingFP;
 
 // This list has been prioritized using frequency estimates
@@ -244,6 +235,26 @@ static thinkInfo_t ThinkerInfo[] =
 };
 
 // CODE --------------------------------------------------------------------
+
+static inline byte GET_BYTE (void)
+{
+	return *SavePtr++;
+}
+
+static inline int16_t GET_WORD (void)
+{
+	uint16_t val = SavePtr[0] | (SavePtr[1] << 8);
+	SavePtr += 2;
+	return (int16_t) val;
+}
+
+static inline int32_t GET_LONG (void)
+{
+	uint32_t val = SavePtr[0] | (SavePtr[1] << 8) |
+			(SavePtr[2] << 16) | (SavePtr[3] << 24);
+	SavePtr += 4;
+	return (int32_t) val;
+}
 
 //==========================================================================
 //
@@ -364,26 +375,26 @@ void SV_LoadGame(int slot)
 	M_ReadFile(fileName, &SaveBuffer);
 
 	// Set the save pointer and skip the description field
-	SavePtr.b = (byte *)SaveBuffer + HXS_DESCRIPTION_LENGTH;
+	SavePtr = (byte *)SaveBuffer + HXS_DESCRIPTION_LENGTH;
 
 	// Check the version text
-	if (strcmp((char *)SavePtr.b, HXS_VERSION_TEXT))
+	if (strcmp((char *)SavePtr, HXS_VERSION_TEXT))
 	{ // Bad version
 		return;
 	}
-	SavePtr.b += HXS_VERSION_TEXT_LENGTH;
+	SavePtr += HXS_VERSION_TEXT_LENGTH;
 
 	AssertSegment(ASEG_GAME_HEADER);
 
 	gameepisode = 1;
-	gamemap = GET_BYTE;
-	gameskill = GET_BYTE;
+	gamemap = GET_BYTE();
+	gameskill = GET_BYTE();
 
 	// Read global script info
-	memcpy(WorldVars, SavePtr.b, sizeof(WorldVars));
-	SavePtr.b += sizeof(WorldVars);
-	memcpy(ACSStore, SavePtr.b, sizeof(ACSStore));
-	SavePtr.b += sizeof(ACSStore);
+	memcpy(WorldVars, SavePtr, sizeof(WorldVars));
+	SavePtr += sizeof(WorldVars);
+	memcpy(ACSStore, SavePtr, sizeof(ACSStore));
+	SavePtr += sizeof(ACSStore);
 
 	// Read the player structures
 	UnarchivePlayers();
@@ -646,12 +657,12 @@ void SV_LoadMap(void)
 
 	// Load the file
 	M_ReadFile(fileName, &SaveBuffer);
-	SavePtr.b = (byte *) SaveBuffer;
+	SavePtr = (byte *) SaveBuffer;
 
 	AssertSegment(ASEG_MAP_HEADER);
 
 	// Read the level timer
-	leveltime = GET_LONG;
+	leveltime = GET_LONG();
 
 	UnarchiveWorld();
 	UnarchivePolyobjs();
@@ -729,7 +740,7 @@ static void UnarchivePlayers(void)
 	AssertSegment(ASEG_PLAYERS);
 	for (i = 0; i < MAXPLAYERS; i++)
 	{
-		playeringame[i] = GET_BYTE;
+		playeringame[i] = GET_BYTE();
 	}
 	for (i = 0; i < MAXPLAYERS; i++)
 	{
@@ -737,9 +748,9 @@ static void UnarchivePlayers(void)
 		{
 			continue;
 		}
-		PlayerClasses[i] = GET_BYTE;
-		memcpy(&players[i], SavePtr.b, sizeof(player_t));
-		SavePtr.b += sizeof(player_t);
+		PlayerClasses[i] = GET_BYTE();
+		memcpy(&players[i], SavePtr, sizeof(player_t));
+		SavePtr += sizeof(player_t);
 		players[i].mo = NULL; // Will be set when unarc thinker
 		P_ClearMessage(&players[i]);
 		players[i].attacker = NULL;
@@ -823,26 +834,26 @@ static void UnarchiveWorld(void)
 	AssertSegment(ASEG_WORLD);
 	for (i = 0, sec = sectors; i < numsectors; i++, sec++)
 	{
-		sec->floorheight = GET_WORD<<FRACBITS;
-		sec->ceilingheight = GET_WORD<<FRACBITS;
-		sec->floorpic = GET_WORD;
-		sec->ceilingpic = GET_WORD;
-		sec->lightlevel = GET_WORD;
-		sec->special = GET_WORD;
-		sec->tag = GET_WORD;
-		sec->seqType = GET_WORD;
-		sec->specialdata = 0;
-		sec->soundtarget = 0;
+		sec->floorheight = ((fixed_t) GET_WORD())<<FRACBITS;
+		sec->ceilingheight = ((fixed_t) GET_WORD())<<FRACBITS;
+		sec->floorpic = GET_WORD();
+		sec->ceilingpic = GET_WORD();
+		sec->lightlevel = GET_WORD();
+		sec->special = GET_WORD();
+		sec->tag = GET_WORD();
+		sec->seqType = GET_WORD();
+		sec->specialdata = NULL;
+		sec->soundtarget = NULL;
 	}
 	for (i = 0, li = lines; i < numlines; i++, li++)
 	{
-		li->flags = GET_WORD;
-		li->special = GET_BYTE;
-		li->arg1 = GET_BYTE;
-		li->arg2 = GET_BYTE;
-		li->arg3 = GET_BYTE;
-		li->arg4 = GET_BYTE;
-		li->arg5 = GET_BYTE;
+		li->flags = GET_WORD();
+		li->special = GET_BYTE();
+		li->arg1 = GET_BYTE();
+		li->arg2 = GET_BYTE();
+		li->arg3 = GET_BYTE();
+		li->arg4 = GET_BYTE();
+		li->arg5 = GET_BYTE();
 		for (j = 0; j < 2; j++)
 		{
 			if (li->sidenum[j] == -1)
@@ -850,11 +861,11 @@ static void UnarchiveWorld(void)
 				continue;
 			}
 			si = &sides[li->sidenum[j]];
-			si->textureoffset = GET_WORD<<FRACBITS;
-			si->rowoffset = GET_WORD<<FRACBITS;
-			si->toptexture = GET_WORD;
-			si->bottomtexture = GET_WORD;
-			si->midtexture = GET_WORD;
+			si->textureoffset = ((fixed_t) GET_WORD())<<FRACBITS;
+			si->rowoffset = ((fixed_t) GET_WORD())<<FRACBITS;
+			si->toptexture = GET_WORD();
+			si->bottomtexture = GET_WORD();
+			si->midtexture = GET_WORD();
 		}
 	}
 }
@@ -938,7 +949,7 @@ static void UnarchiveMobjs(void)
 	mobj_t *mobj;
 
 	AssertSegment(ASEG_MOBJS);
-	MobjCount = GET_LONG;
+	MobjCount = GET_LONG();
 	MobjList = (mobj_t **) Z_Malloc(MobjCount*sizeof(mobj_t *), PU_STATIC, NULL);
 	for (i = 0; i < MobjCount; i++)
 	{
@@ -947,8 +958,8 @@ static void UnarchiveMobjs(void)
 	for (i = 0; i < MobjCount; i++)
 	{
 		mobj = MobjList[i];
-		memcpy(mobj, SavePtr.b, sizeof(mobj_t));
-		SavePtr.b += sizeof(mobj_t);
+		memcpy(mobj, SavePtr, sizeof(mobj_t));
+		SavePtr += sizeof(mobj_t);
 		mobj->thinker.function = P_MobjThinker;
 		RestoreMobj(mobj);
 		P_AddThinker(&mobj->thinker);
@@ -1178,15 +1189,15 @@ static void UnarchiveThinkers(void)
 	thinkInfo_t *info;
 
 	AssertSegment(ASEG_THINKERS);
-	while ((tClass = GET_BYTE) != TC_NULL)
+	while ((tClass = GET_BYTE()) != TC_NULL)
 	{
 		for (info = ThinkerInfo; info->tClass != TC_NULL; info++)
 		{
 			if (tClass == info->tClass)
 			{
 				thinker = (thinker_t *) Z_Malloc(info->size, PU_LEVEL, NULL);
-				memcpy(thinker, SavePtr.b, info->size);
-				SavePtr.b += info->size;
+				memcpy(thinker, SavePtr, info->size);
+				SavePtr += info->size;
 				thinker->function = info->thinkerFunc;
 				if (info->restoreFunc)
 				{
@@ -1245,7 +1256,7 @@ static void RestoreSSThinkerNoSD(ssthinker_t *sst)
 
 static void MangleScript(acs_t *script)
 {
-	script->ip = (int *)((int)(script->ip)-(int)ActionCodeBase);
+	script->ip = (byte *)((int)(script->ip)-(int)ActionCodeBase);
 	script->line = script->line ? (line_t *)(script->line-lines) : (line_t *)-1;
 	script->activator = (mobj_t *)GetMobjNum(script->activator);
 }
@@ -1258,7 +1269,7 @@ static void MangleScript(acs_t *script)
 
 static void RestoreScript(acs_t *script)
 {
-	script->ip = (int *)(ActionCodeBase + (int)script->ip);
+	script->ip = (byte *)(ActionCodeBase + (int)script->ip);
 	if ((int)script->line == -1)
 	{
 		script->line = NULL;
@@ -1328,11 +1339,11 @@ static void UnarchiveScripts(void)
 	AssertSegment(ASEG_SCRIPTS);
 	for (i = 0; i < ACScriptCount; i++)
 	{
-		ACSInfo[i].state = GET_WORD;
-		ACSInfo[i].waitValue = GET_WORD;
+		ACSInfo[i].state = GET_WORD();
+		ACSInfo[i].waitValue = GET_WORD();
 	}
-	memcpy(MapVars, SavePtr.b, sizeof(MapVars));
-	SavePtr.b += sizeof(MapVars);
+	memcpy(MapVars, SavePtr, sizeof(MapVars));
+	SavePtr += sizeof(MapVars);
 }
 
 //==========================================================================
@@ -1365,7 +1376,7 @@ static void UnarchiveMisc(void)
 	AssertSegment(ASEG_MISC);
 	for (ix = 0; ix < MAXPLAYERS; ix++)
 	{
-		localQuakeHappening[ix] = GET_LONG;
+		localQuakeHappening[ix] = GET_LONG();
 	}
 }
 
@@ -1465,18 +1476,18 @@ static void UnarchiveSounds(void)
 	AssertSegment(ASEG_SOUNDS);
 
 	// Reload and restart all sound sequences
-	numSequences = GET_LONG;
+	numSequences = GET_LONG();
 	i = 0;
 	while (i < numSequences)
 	{
-		sequence = GET_LONG;
-		delayTics = GET_LONG;
-		volume = GET_LONG;
-		seqOffset = GET_LONG;
+		sequence = GET_LONG();
+		delayTics = GET_LONG();
+		volume = GET_LONG();
+		seqOffset = GET_LONG();
 
-		soundID = GET_LONG;
-		polySnd = GET_LONG;
-		secNum = GET_LONG;
+		soundID = GET_LONG();
+		polySnd = GET_LONG();
+		secNum = GET_LONG();
 		if (!polySnd)
 		{
 			sndMobj = (mobj_t *)&sectors[secNum].soundorg;
@@ -1525,19 +1536,19 @@ static void UnarchivePolyobjs(void)
 	fixed_t deltaY;
 
 	AssertSegment(ASEG_POLYOBJS);
-	if (GET_LONG != po_NumPolyobjs)
+	if (GET_LONG() != po_NumPolyobjs)
 	{
 		I_Error("UnarchivePolyobjs: Bad polyobj count");
 	}
 	for (i = 0; i < po_NumPolyobjs; i++)
 	{
-		if (GET_LONG != polyobjs[i].tag)
+		if (GET_LONG() != polyobjs[i].tag)
 		{
 			I_Error("UnarchivePolyobjs: Invalid polyobj tag");
 		}
-		PO_RotatePolyobj(polyobjs[i].tag, (angle_t)GET_LONG);
-		deltaX = GET_LONG-polyobjs[i].startSpot.x;
-		deltaY = GET_LONG-polyobjs[i].startSpot.y;
+		PO_RotatePolyobj(polyobjs[i].tag, (angle_t)GET_LONG());
+		deltaX = GET_LONG() - polyobjs[i].startSpot.x;
+		deltaY = GET_LONG() - polyobjs[i].startSpot.y;
 		PO_MovePolyobj(polyobjs[i].tag, deltaX, deltaY);
 	}
 }
@@ -1550,7 +1561,7 @@ static void UnarchivePolyobjs(void)
 
 static void AssertSegment(gameArchiveSegment_t segType)
 {
-	if (GET_LONG != segType)
+	if (GET_LONG() != segType)
 	{
 		I_Error("Corrupt save game: Segment [%d] failed alignment check", segType);
 	}
@@ -1677,7 +1688,7 @@ static void CloseStreamOut(void)
 //
 //==========================================================================
 
-static void StreamOutBuffer(const void *buffer, int size)
+static void StreamOutBuffer(const void *buffer, size_t size)
 {
 	fwrite(buffer, size, 1, SavingFP);
 }
@@ -1701,7 +1712,8 @@ static void StreamOutByte(byte val)
 
 static void StreamOutWord(unsigned short val)
 {
-	fwrite(&val, sizeof(unsigned short), 1, SavingFP);
+	uint16_t tmp = SHORT(val);
+	fwrite(&tmp, sizeof(uint16_t), 1, SavingFP);
 }
 
 //==========================================================================
@@ -1712,6 +1724,7 @@ static void StreamOutWord(unsigned short val)
 
 static void StreamOutLong(unsigned int val)
 {
-	fwrite(&val, sizeof(int), 1, SavingFP);
+	uint32_t tmp = LONG(val);
+	fwrite(&tmp, sizeof(uint32_t), 1, SavingFP);
 }
 
