@@ -313,6 +313,7 @@ SPR_ASP1,
 SPR_ASP2,
 SPR_ASSN,
 #endif
+SPR_NULL, /* for the terminator in sprnames[] */
 NUMSPRITES
 } spritenum_t;
 

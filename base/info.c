@@ -34,8 +34,9 @@ const char *sprnames[NUMSPRITES] = {
 "ETTN","ETTB","FDMN","FDMB","ICEY","ICPR","ICWS","SORC","SBMP","SBS4",
 "SBMB","SBS3","SBMG","SBS1","SBS2","SBFX","RADE","WATR","KORX","ABAT",
 #ifdef ASSASSIN
-"AKTR","ACSB","AGRN","ASTF","ASP1","ASP2","ASSN"
+"AKTR","ACSB","AGRN","ASTF","ASP1","ASP2","ASSN",
 #endif
+NULL
 };
 
 void A_FreeTargMobj ();
