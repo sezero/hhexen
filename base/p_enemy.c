@@ -4,8 +4,8 @@
 //** p_enemy.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_enemy.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-07-07 09:55:18 $
+//** $Revision: 1.7 $
+//** $Date: 2008-07-08 07:16:45 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -526,8 +526,11 @@ static boolean P_LookForPlayers(mobj_t *actor, boolean allaround)
 	}
 	sector = actor->subsector->sector;
 	c = 0;
-	stop = (actor->lastlook - 1) & 3;
-	for ( ; ; actor->lastlook = (actor->lastlook + 1) & 3)
+	// O.S. - lastlook mask was 3 here, but it should have been
+	// a leftover from hexen-1.0 where MAXPLAYERS was 4..
+	// also see p_mobj.c :: P_SpawnMobj() where it is set.
+	stop = (actor->lastlook - 1) & (MAXPLAYERS - 1);
+	for ( ; ; actor->lastlook = (actor->lastlook + 1) & (MAXPLAYERS - 1))
 	{
 		if (!playeringame[actor->lastlook])
 			continue;
