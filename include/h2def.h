@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.42 $
-//** $Date: 2008-07-07 16:25:54 $
+//** $Revision: 1.43 $
+//** $Date: 2008-07-08 19:08:30 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1042,6 +1042,13 @@ int LongSwap (int);
 #define SHORT(x)	(x)
 #define LONG(x)		(x)
 #endif
+
+/* ---- READ_INT16/32 --- */
+
+#define READ_INT16(b)	((b)[0] | ((b)[1] << 8))
+#define READ_INT32(b)	((b)[0] | ((b)[1] << 8) | ((b)[2] << 16) | ((b)[3] << 24))
+#define INCR_INT16(b)	(b)+=2
+#define INCR_INT32(b)	(b)+=4
 
 
 /* ----- MEMORY ZONE ---- */

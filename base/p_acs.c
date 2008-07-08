@@ -4,8 +4,8 @@
 //** p_acs.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_acs.c,v $
-//** $Revision: 1.13 $
-//** $Date: 2008-07-08 17:44:33 $
+//** $Revision: 1.14 $
+//** $Date: 2008-07-08 19:08:30 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -300,21 +300,19 @@ static int (*PCodeCmds[])(void) =
 
 static inline int32_t ReadCodePtr (void)
 {
-	uint32_t val = PCodePtr[0] | (PCodePtr[1] << 8) |
-			(PCodePtr[2] << 16) | (PCodePtr[3] << 24);
+	uint32_t val = READ_INT32(PCodePtr);
 	return (int32_t) val;
 }
 
 static inline void IncrCodePtr (void)
 {
-	PCodePtr += 4;
+	INCR_INT32(PCodePtr);
 }
 
 static inline int32_t ReadAndIncrCodePtr (void)
 {
-	uint32_t val = PCodePtr[0] | (PCodePtr[1] << 8) |
-			(PCodePtr[2] << 16) | (PCodePtr[3] << 24);
-	PCodePtr += 4;
+	uint32_t val = READ_INT32(PCodePtr);
+	INCR_INT32(PCodePtr);
 	return (int32_t) val;
 }
 

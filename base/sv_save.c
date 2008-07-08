@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.15 $
-//** $Date: 2008-07-07 20:25:46 $
+//** $Revision: 1.16 $
+//** $Date: 2008-07-08 19:08:30 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -243,16 +243,15 @@ static inline byte GET_BYTE (void)
 
 static inline int16_t GET_WORD (void)
 {
-	uint16_t val = SavePtr[0] | (SavePtr[1] << 8);
-	SavePtr += 2;
+	uint16_t val = READ_INT16(SavePtr);
+	INCR_INT16(SavePtr);
 	return (int16_t) val;
 }
 
 static inline int32_t GET_LONG (void)
 {
-	uint32_t val = SavePtr[0] | (SavePtr[1] << 8) |
-			(SavePtr[2] << 16) | (SavePtr[3] << 24);
-	SavePtr += 4;
+	uint32_t val = READ_INT32(SavePtr);
+	INCR_INT32(SavePtr);
 	return (int32_t) val;
 }
 
