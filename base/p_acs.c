@@ -4,8 +4,8 @@
 //** p_acs.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_acs.c,v $
-//** $Revision: 1.12 $
-//** $Date: 2008-07-07 20:25:46 $
+//** $Revision: 1.13 $
+//** $Date: 2008-07-08 17:44:33 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -344,7 +344,7 @@ void P_LoadACScripts(int lump)
 	for (i = 0, info = ACSInfo; i < ACScriptCount; i++, info++)
 	{
 		info->number = LONG(*buffer++);
-		info->address = (byte *)ActionCodeBase + LONG(*buffer++);
+		info->address = ActionCodeBase + LONG(*buffer++);
 		info->argCount = LONG(*buffer++);
 		if (info->number >= OPEN_SCRIPTS_BASE)
 		{ // Auto-activate
@@ -1218,7 +1218,7 @@ static int CmdDecWorldVar(void)
 
 static int CmdGoto(void)
 {
-	PCodePtr = (byte *)(ActionCodeBase + ReadCodePtr());
+	PCodePtr = ActionCodeBase + ReadCodePtr();
 	return SCRIPT_CONTINUE;
 }
 
@@ -1226,7 +1226,7 @@ static int CmdIfGoto(void)
 {
 	if (Pop())
 	{
-		PCodePtr = (byte *)(ActionCodeBase + ReadCodePtr());
+		PCodePtr = ActionCodeBase + ReadCodePtr();
 	}
 	else
 	{
@@ -1516,7 +1516,7 @@ static int CmdIfNotGoto(void)
 	}
 	else
 	{
-		PCodePtr = (byte *)(ActionCodeBase + ReadCodePtr());
+		PCodePtr = ActionCodeBase + ReadCodePtr();
 	}
 	return SCRIPT_CONTINUE;
 }
@@ -1554,7 +1554,7 @@ static int CmdCaseGoto(void)
 {
 	if (Top() == ReadAndIncrCodePtr())
 	{
-		PCodePtr = (byte *)(ActionCodeBase + ReadCodePtr());
+		PCodePtr = ActionCodeBase + ReadCodePtr();
 		Drop();
 	}
 	else
