@@ -4,8 +4,8 @@
 //** r_data.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_data.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-30 16:38:37 $
+//** $Revision: 1.12 $
+//** $Date: 2008-07-08 19:25:22 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -266,7 +266,8 @@ static void R_InitTextures (void)
 	texpatch_t	*patch;
 	int		i, j;
 	int		*maptex, *maptex2, *maptex1;
-	char		name[9], *names, *name_p;
+	byte		*names;
+	char		name[9], *name_p;
 	int		*patchlookup;
 	int		totalwidth;
 	int		nummappatches;
@@ -278,9 +279,9 @@ static void R_InitTextures (void)
 // load the patch names from pnames.lmp
 //
 	name[8] = 0;
-	names = (char *) W_CacheLumpName ("PNAMES", PU_STATIC);
-	nummappatches = LONG ( *((int *)names) );
-	name_p = names + 4;
+	names = (byte *) W_CacheLumpName ("PNAMES", PU_STATIC);
+	nummappatches = READ_INT32(names);
+	name_p = (char *)names + 4;
 	patchlookup = (int *)malloc(nummappatches*sizeof(*patchlookup));
 	for (i = 0; i < nummappatches; i++)
 	{
