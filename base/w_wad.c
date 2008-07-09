@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.25 $
-//** $Date: 2008-06-26 09:52:29 $
+//** $Revision: 1.26 $
+//** $Date: 2008-07-09 19:55:01 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -20,11 +20,24 @@
 
 // MACROS ------------------------------------------------------------------
 
-#define	DEMO_LUMPS	2856
-#define	DEMO_WADSIZE	10644136
-
+/* PC Shareware : */
+#define	PCDEMO_LUMPS	2856
+#define	PCDEMO_WADSIZE	10644136
+/* Mac Shareware: */
 #define	MACDEMO_LUMPS	3500
 #define	MACDEMO_WADSIZE	13596228
+/* PC Retail, original: */
+#define	RETAIL10_LUMPS	4249
+#define	RETAIL10_SIZE	20128392
+/* PC Retail, patched : */
+#define	RETAIL11_LUMPS	4270
+#define	RETAIL11_SIZE	20083672
+/* DeathKings, original: */
+#define	DKINGS10_LUMPS	325
+#define	DKINGS10_SIZE	4429700
+/* DeathKings, patched : */
+#define	DKINGS11_LUMPS	326
+#define	DKINGS11_SIZE	4440584
 
 // TYPES -------------------------------------------------------------------
 
@@ -140,7 +153,7 @@ void W_AddFile(const char *filename)
 		header.infotableofs = LONG(header.infotableofs);
 		length = header.numlumps * sizeof(filelump_t);
 		if (strncmp(header.identification, "IWAD", 4) == 0 &&
-		    header.numlumps == DEMO_LUMPS && flength == DEMO_WADSIZE)
+		    header.numlumps == PCDEMO_LUMPS && flength == PCDEMO_WADSIZE)
 		{
 			shareware = true;
 			ST_Message("Shareware WAD detected (4 level 1.0 PC version).\n");
