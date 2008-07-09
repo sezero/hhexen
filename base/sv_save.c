@@ -4,9 +4,13 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.16 $
-//** $Date: 2008-07-08 19:08:30 $
+//** $Revision: 1.17 $
+//** $Date: 2008-07-09 18:55:02 $
 //** $Author: sezero $
+//**
+//** Games are always saved Little Endian, with 32 bit offsets.
+//** The saved games then can be properly read on 64 bit and/or
+//** Big Endian machines all the same.
 //**
 //**************************************************************************
 
@@ -15,6 +19,7 @@
 #include "h2stdinc.h"
 #include "h2def.h"
 #include "p_local.h"
+#include "sv_save.h"
 
 // MACROS ------------------------------------------------------------------
 
@@ -65,8 +70,8 @@ typedef struct
 {
 	thinkClass_t tClass;
 	think_t thinkerFunc;
-	void (*mangleFunc)();
-	void (*restoreFunc)();
+	void (*mangleFunc)(void *, void *);
+	void (*restoreFunc)(void *, void *);
 	size_t size;
 } thinkInfo_t;
 
@@ -102,17 +107,32 @@ static void ArchiveMisc(void);
 static void UnarchiveMisc(void);
 static void SetMobjArchiveNums(void);
 static void RemoveAllThinkers(void);
-static void MangleMobj(mobj_t *mobj);
-static void RestoreMobj(mobj_t *mobj);
-static int GetMobjNum(mobj_t *mobj);
-static void SetMobjPtr(int *archiveNum);
-static void MangleSSThinker(ssthinker_t *sst);
-static void RestoreSSThinker(ssthinker_t *sst);
-static void RestoreSSThinkerNoSD(ssthinker_t *sst);
-static void MangleScript(acs_t *script);
-static void RestoreScript(acs_t *script);
-static void RestorePlatRaise(plat_t *plat);
-static void RestoreMoveCeiling(ceiling_t *ceiling);
+static void MangleMobj(mobj_t *mobj, save_mobj_t *temp);
+static void RestoreMobj(mobj_t *mobj, save_mobj_t *temp);
+static int32_t GetMobjNum(mobj_t *mobj);
+static mobj_t *GetMobjPtr(int archiveNum);
+static void MangleFloorMove(void *arg1, void *arg2);
+static void RestoreFloorMove(void *arg1, void *arg2);
+static void MangleLight(void *arg1, void *arg2);
+static void RestoreLight(void *arg1, void *arg2);
+static void MangleVerticalDoor(void *arg1, void *arg2);
+static void RestoreVerticalDoor(void *arg1, void *arg2);
+static void ManglePhase(void *arg1, void *arg2);
+static void RestorePhase(void *arg1, void *arg2);
+static void ManglePillar(void *arg1, void *arg2);
+static void RestorePillar(void *arg1, void *arg2);
+static void MangleFloorWaggle(void *arg1, void *arg2);
+static void RestoreFloorWaggle(void *arg1, void *arg2);
+static void ManglePolyEvent(void *arg1, void *arg2);
+static void RestorePolyEvent(void *arg1, void *arg2);
+static void ManglePolyDoor(void *arg1, void *arg2);
+static void RestorePolyDoor(void *arg1, void *arg2);
+static void MangleScript(void *arg1, void *arg2);
+static void RestoreScript(void *arg1, void *arg2);
+static void ManglePlatRaise(void *arg1, void *arg2);
+static void RestorePlatRaise(void *arg1, void *arg2);
+static void MangleMoveCeiling(void *arg1, void *arg2);
+static void RestoreMoveCeiling(void *arg1, void *arg2);
 static void AssertSegment(gameArchiveSegment_t segType);
 static void ClearSaveSlot(int slot);
 static void CopySaveSlot(int sourceSlot, int destSlot);
@@ -148,86 +168,86 @@ static thinkInfo_t ThinkerInfo[] =
 	{
 		TC_MOVE_FLOOR,
 		T_MoveFloor,
-		MangleSSThinker,
-		RestoreSSThinker,
-		sizeof(floormove_t)
+		MangleFloorMove,
+		RestoreFloorMove,
+		sizeof(save_floormove_t)
 	},
 	{
 		TC_PLAT_RAISE,
 		T_PlatRaise,
-		MangleSSThinker,
+		ManglePlatRaise,
 		RestorePlatRaise,
-		sizeof(plat_t)
+		sizeof(save_plat_t)
 	},
 	{
 		TC_MOVE_CEILING,
 		T_MoveCeiling,
-		MangleSSThinker,
+		MangleMoveCeiling,
 		RestoreMoveCeiling,
-		sizeof(ceiling_t)
+		sizeof(save_ceiling_t)
 	},
 	{
 		TC_LIGHT,
 		T_Light,
-		MangleSSThinker,
-		RestoreSSThinkerNoSD,
-		sizeof(light_t)
+		MangleLight,
+		RestoreLight,
+		sizeof(save_light_t)
 	},
 	{
 		TC_VERTICAL_DOOR,
 		T_VerticalDoor,
-		MangleSSThinker,
-		RestoreSSThinker,
-		sizeof(vldoor_t)
+		MangleVerticalDoor,
+		RestoreVerticalDoor,
+		sizeof(save_vldoor_t)
 	},
 	{
 		TC_PHASE,
 		T_Phase,
-		MangleSSThinker,
-		RestoreSSThinkerNoSD,
-		sizeof(phase_t)
+		ManglePhase,
+		RestorePhase,
+		sizeof(save_phase_t)
 	},
 	{
 		TC_INTERPRET_ACS,
 		T_InterpretACS,
 		MangleScript,
 		RestoreScript,
-		sizeof(acs_t)
+		sizeof(save_acs_t)
 	},
 	{
 		TC_ROTATE_POLY,
 		T_RotatePoly,
-		NULL,
-		NULL,
-		sizeof(polyevent_t)
+		ManglePolyEvent,
+		RestorePolyEvent,
+		sizeof(save_polyevent_t)
 	},
 	{
 		TC_BUILD_PILLAR,
 		T_BuildPillar,
-		MangleSSThinker,
-		RestoreSSThinker,
-		sizeof(pillar_t)
+		ManglePillar,
+		RestorePillar,
+		sizeof(save_pillar_t)
 	},
 	{
 		TC_MOVE_POLY,
 		T_MovePoly,
-		NULL,
-		NULL,
-		sizeof(polyevent_t)
+		ManglePolyEvent,
+		RestorePolyEvent,
+		sizeof(save_polyevent_t)
 	},
 	{
 		TC_POLY_DOOR,
 		T_PolyDoor,
-		NULL,
-		NULL,
-		sizeof(polydoor_t)
+		ManglePolyDoor,
+		RestorePolyDoor,
+		sizeof(save_polydoor_t)
 	},
 	{
 		TC_FLOOR_WAGGLE,
 		T_FloorWaggle,
-		MangleSSThinker,
-		RestoreSSThinker,
-		sizeof(floorWaggle_t)
+		MangleFloorWaggle,
+		RestoreFloorWaggle,
+		sizeof(save_floorWaggle_t)
 	},
 	{ // Terminator
 		TC_NULL, NULL, NULL, NULL, 0
@@ -263,6 +283,7 @@ static inline int32_t GET_LONG (void)
 
 void SV_SaveGame(int slot, const char *description)
 {
+	int i;
 	char fileName[MAX_OSPATH];
 	char versionText[HXS_VERSION_TEXT_LENGTH];
 
@@ -286,8 +307,16 @@ void SV_SaveGame(int slot, const char *description)
 	StreamOutByte(gameskill);
 
 	// Write global script info
-	StreamOutBuffer(WorldVars, sizeof(WorldVars));
-	StreamOutBuffer(ACSStore, sizeof(ACSStore));
+	for (i = 0; i < MAX_ACS_WORLD_VARS; i++)
+	{
+		StreamOutLong(WorldVars[i]);
+	}
+	for (i = 0; i <= MAX_ACS_STORE; i++)
+	{
+		StreamOutLong(ACSStore[i].map);
+		StreamOutLong(ACSStore[i].script);
+		StreamOutBuffer(ACSStore[i].args, 4);
+	}
 
 	ArchivePlayers();
 
@@ -394,6 +423,15 @@ void SV_LoadGame(int slot)
 	SavePtr += sizeof(WorldVars);
 	memcpy(ACSStore, SavePtr, sizeof(ACSStore));
 	SavePtr += sizeof(ACSStore);
+	for (i = 0; i < MAX_ACS_WORLD_VARS; i++)
+	{
+		WorldVars[i] = (int) LONG(WorldVars[i]);
+	}
+	for (i = 0; i <= MAX_ACS_STORE; i++)
+	{
+		ACSStore[i].map = (int) LONG(ACSStore[i].map);
+		ACSStore[i].script = (int) LONG(ACSStore[i].script);
+	}
 
 	// Read the player structures
 	UnarchivePlayers();
@@ -697,9 +735,8 @@ void SV_InitBaseSlot(void)
 
 static void ArchivePlayers(void)
 {
-	int i;
-	int j;
-	player_t tempPlayer;
+	int i, j;
+	save_player_t tempPlayer;
 
 	StreamOutLong(ASEG_PLAYERS);
 	for (i = 0; i < MAXPLAYERS; i++)
@@ -713,16 +750,95 @@ static void ArchivePlayers(void)
 			continue;
 		}
 		StreamOutByte(PlayerClasses[i]);
-		tempPlayer = players[i];
+
+		tempPlayer.mo_idx = 0;
+		tempPlayer.poisoner_idx = 0;
+		tempPlayer.attacker_idx = 0;
+		tempPlayer.playerstate		= (playerstate_t) LONG(players[i].playerstate);
+		tempPlayer.cmd.forwardmove	= players[i].cmd.forwardmove;
+		tempPlayer.cmd.sidemove		= players[i].cmd.sidemove;
+		tempPlayer.cmd.angleturn	= (short) SHORT(players[i].cmd.angleturn);
+		tempPlayer.cmd.consistancy	= (short) SHORT(players[i].cmd.consistancy);
+		tempPlayer.cmd.chatchar		= players[i].cmd.chatchar;
+		tempPlayer.cmd.buttons		= players[i].cmd.buttons;
+		tempPlayer.cmd.lookfly		= players[i].cmd.lookfly;
+		tempPlayer.cmd.arti		= players[i].cmd.arti;
+		tempPlayer.playerclass		= (pclass_t) LONG(players[i].playerclass);
+		tempPlayer.viewz		= (fixed_t) LONG(players[i].viewz);
+		tempPlayer.viewheight		= (fixed_t) LONG(players[i].viewheight);
+		tempPlayer.deltaviewheight	= (fixed_t) LONG(players[i].deltaviewheight);
+		tempPlayer.bob			= (fixed_t) LONG(players[i].bob);
+		tempPlayer.flyheight		= (int) LONG(players[i].flyheight);
+		tempPlayer.lookdir		= (int) LONG(players[i].lookdir);
+		tempPlayer.centering		= (boolean) LONG(players[i].centering);
+		tempPlayer.health		= (int) LONG(players[i].health);
+		for (j = 0; j < NUMARMOR; j++)
+		{
+			tempPlayer.armorpoints[j] = (int) LONG(players[i].armorpoints[j]);
+		}
+		for (j = 0; j < NUMINVENTORYSLOTS; j++)
+		{
+			tempPlayer.inventory[j] = (inventory_t) LONG(players[i].inventory[j]);
+		}
+		tempPlayer.readyArtifact	= (artitype_t) LONG(players[i].readyArtifact);
+		tempPlayer.inventorySlotNum	= (int) LONG(players[i].inventorySlotNum);
+		tempPlayer.artifactCount	= (int) LONG(players[i].artifactCount);
+		for (j = 0; j < NUMPOWERS; j++)
+		{
+			tempPlayer.powers[j]	= (int) LONG(players[i].powers[j]);
+		}
+		tempPlayer.keys			= (int) LONG(players[i].keys);
+		tempPlayer.pieces		= (int) LONG(players[i].pieces);
+		for (j = 0; j < MAXPLAYERS; j++)
+		{
+			tempPlayer.frags[j]	= (signed int) LONG(players[i].frags[j]);
+		}
+		tempPlayer.readyweapon		= (weapontype_t) LONG(players[i].readyweapon);
+		tempPlayer.pendingweapon	= (weapontype_t) LONG(players[i].pendingweapon);
+		for (j = 0; j < NUMWEAPONS; j++)
+		{
+			tempPlayer.weaponowned[j] = (boolean) LONG(players[i].weaponowned[j]);
+		}
+		for (j = 0; j < NUMMANA; j++)
+		{
+			tempPlayer.mana[j]	= (int) LONG(players[i].mana[j]);
+		}
+		tempPlayer.attackdown		= (int) LONG(players[i].attackdown);
+		tempPlayer.usedown		= (int) LONG(players[i].usedown);
+		tempPlayer.cheats		= (int) LONG(players[i].cheats);
+		tempPlayer.refire		= (int) LONG(players[i].refire);
+		tempPlayer.killcount		= (int) LONG(players[i].killcount);
+		tempPlayer.itemcount		= (int) LONG(players[i].itemcount);
+		tempPlayer.secretcount		= (int) LONG(players[i].secretcount);
+		memcpy (tempPlayer.message, players[i].message, 80);
+		tempPlayer.messageTics		= (int) LONG(players[i].messageTics);
+		tempPlayer.ultimateMessage	= (short) SHORT(players[i].ultimateMessage);
+		tempPlayer.yellowMessage	= (short) SHORT(players[i].yellowMessage);
+		tempPlayer.damagecount		= (int) LONG(players[i].damagecount);
+		tempPlayer.bonuscount		= (int) LONG(players[i].bonuscount);
+		tempPlayer.poisoncount		= (int) LONG(players[i].poisoncount);
+		tempPlayer.extralight		= (int) LONG(players[i].extralight);
+		tempPlayer.fixedcolormap	= (int) LONG(players[i].fixedcolormap);
+		tempPlayer.colormap		= (int) LONG(players[i].colormap);
+		tempPlayer.morphTics		= (int) LONG(players[i].morphTics);
+		tempPlayer.jumpTics		= (unsigned int) LONG(players[i].jumpTics);
+		tempPlayer.worldTimer		= (unsigned int) LONG(players[i].worldTimer);
 		for (j = 0; j < NUMPSPRITES; j++)
 		{
-			if (tempPlayer.psprites[j].state)
+			tempPlayer.psprites[j].tics = (int) LONG(players[i].psprites[j].tics);
+			tempPlayer.psprites[j].sx = (fixed_t) LONG(players[i].psprites[j].sx);
+			tempPlayer.psprites[j].sy = (fixed_t) LONG(players[i].psprites[j].sy);
+			if (players[i].psprites[j].state)
 			{
-				tempPlayer.psprites[j].state =
-					(state_t *)(tempPlayer.psprites[j].state-states);
+				tempPlayer.psprites[j].state_idx =
+					LONG((int32_t) (players[i].psprites[j].state - states));
+			}
+			else
+			{
+				tempPlayer.psprites[j].state_idx = 0;
 			}
 		}
-		StreamOutBuffer(&tempPlayer, sizeof(player_t));
+		StreamOutBuffer(&tempPlayer, sizeof(save_player_t));
 	}
 }
 
@@ -735,6 +851,7 @@ static void ArchivePlayers(void)
 static void UnarchivePlayers(void)
 {
 	int i, j;
+	save_player_t tempPlayer;
 
 	AssertSegment(ASEG_PLAYERS);
 	for (i = 0; i < MAXPLAYERS; i++)
@@ -748,18 +865,97 @@ static void UnarchivePlayers(void)
 			continue;
 		}
 		PlayerClasses[i] = GET_BYTE();
-		memcpy(&players[i], SavePtr, sizeof(player_t));
-		SavePtr += sizeof(player_t);
+		memcpy(&tempPlayer, SavePtr, sizeof(save_player_t));
+		SavePtr += sizeof(save_player_t);
+
 		players[i].mo = NULL; // Will be set when unarc thinker
-		P_ClearMessage(&players[i]);
 		players[i].attacker = NULL;
 		players[i].poisoner = NULL;
+		players[i].playerstate		= (playerstate_t) LONG(tempPlayer.playerstate);
+		players[i].cmd.forwardmove	= tempPlayer.cmd.forwardmove;
+		players[i].cmd.sidemove		= tempPlayer.cmd.sidemove;
+		players[i].cmd.angleturn	= (short) SHORT(tempPlayer.cmd.angleturn);
+		players[i].cmd.consistancy	= (short) SHORT(tempPlayer.cmd.consistancy);
+		players[i].cmd.chatchar		= tempPlayer.cmd.chatchar;
+		players[i].cmd.buttons		= tempPlayer.cmd.buttons;
+		players[i].cmd.lookfly		= tempPlayer.cmd.lookfly;
+		players[i].cmd.arti		= tempPlayer.cmd.arti;
+		players[i].playerclass		= (pclass_t) LONG(tempPlayer.playerclass);
+		players[i].viewz		= (fixed_t) LONG(tempPlayer.viewz);
+		players[i].viewheight		= (fixed_t) LONG(tempPlayer.viewheight);
+		players[i].deltaviewheight	= (fixed_t) LONG(tempPlayer.deltaviewheight);
+		players[i].bob			= (fixed_t) LONG(tempPlayer.bob);
+		players[i].flyheight		= (int) LONG(tempPlayer.flyheight);
+		players[i].lookdir		= (int) LONG(tempPlayer.lookdir);
+		players[i].centering		= (boolean) LONG(tempPlayer.centering);
+		players[i].health		= (int) LONG(tempPlayer.health);
+		for (j = 0; j < NUMARMOR; j++)
+		{
+			players[i].armorpoints[j] = (int) LONG(tempPlayer.armorpoints[j]);
+		}
+		for (j = 0; j < NUMINVENTORYSLOTS; j++)
+		{
+			players[i].inventory[j] = (inventory_t) LONG(tempPlayer.inventory[j]);
+		}
+		players[i].readyArtifact	= (artitype_t) LONG(tempPlayer.readyArtifact);
+		players[i].artifactCount	= (int) LONG(tempPlayer.artifactCount);
+		players[i].inventorySlotNum	= (int) LONG(tempPlayer.inventorySlotNum);
+		for (j = 0; j < NUMPOWERS; j++)
+		{
+			players[i].powers[j]	= (int) LONG(tempPlayer.powers[j]);
+		}
+		players[i].keys			= (int) LONG(tempPlayer.keys);
+		players[i].pieces		= (int) LONG(tempPlayer.pieces);
+		for (j = 0; j < MAXPLAYERS; j++)
+		{
+			players[i].frags[j]	= (signed int) LONG(tempPlayer.frags[j]);
+		}
+		players[i].readyweapon		= (weapontype_t) LONG(tempPlayer.readyweapon);
+		players[i].pendingweapon	= (weapontype_t) LONG(tempPlayer.pendingweapon);
+		for (j = 0; j < NUMWEAPONS; j++)
+		{
+			players[i].weaponowned[j] = (boolean) LONG(tempPlayer.weaponowned[j]);
+		}
+		for (j = 0; j < NUMMANA; j++)
+		{
+			players[i].mana[j]	= (int) LONG(tempPlayer.mana[j]);
+		}
+		players[i].attackdown		= (int) LONG(tempPlayer.attackdown);
+		players[i].usedown		= (int) LONG(tempPlayer.usedown);
+		players[i].cheats		= (int) LONG(tempPlayer.cheats);
+		players[i].refire		= (int) LONG(tempPlayer.refire);
+		players[i].killcount		= (int) LONG(tempPlayer.killcount);
+		players[i].itemcount		= (int) LONG(tempPlayer.itemcount);
+		players[i].secretcount		= (int) LONG(tempPlayer.secretcount);
+		memcpy (players[i].message, tempPlayer.message, 80);
+		players[i].messageTics		= (int) LONG(tempPlayer.messageTics);
+		players[i].ultimateMessage	= (short) SHORT(tempPlayer.ultimateMessage);
+		players[i].yellowMessage	= (short) SHORT(tempPlayer.yellowMessage);
+		players[i].damagecount		= (int) LONG(tempPlayer.damagecount);
+		players[i].bonuscount		= (int) LONG(tempPlayer.bonuscount);
+		players[i].poisoncount		= (int) LONG(tempPlayer.poisoncount);
+		players[i].extralight		= (int) LONG(tempPlayer.extralight);
+		players[i].fixedcolormap	= (int) LONG(tempPlayer.fixedcolormap);
+		players[i].colormap		= (int) LONG(tempPlayer.colormap);
+		players[i].morphTics		= (int) LONG(tempPlayer.morphTics);
+		players[i].jumpTics		= (unsigned int) LONG(tempPlayer.jumpTics);
+		players[i].worldTimer		= (unsigned int) LONG(tempPlayer.worldTimer);
+		P_ClearMessage(&players[i]);
 		for (j = 0; j < NUMPSPRITES; j++)
 		{
-			if (players[i].psprites[j].state)
+			players[i].psprites[j].tics = (int) LONG(tempPlayer.psprites[j].tics);
+			players[i].psprites[j].sx = (fixed_t) LONG(tempPlayer.psprites[j].sx);
+			players[i].psprites[j].sy = (fixed_t) LONG(tempPlayer.psprites[j].sy);
+			if (tempPlayer.psprites[j].state_idx)
 			{
+				tempPlayer.psprites[j].state_idx =
+					LONG(tempPlayer.psprites[j].state_idx);
 				players[i].psprites[j].state =
-					&states[(int)players[i].psprites[j].state];
+					&states[tempPlayer.psprites[j].state_idx];
+			}
+			else
+			{
+				players[i].psprites[j].state = NULL;
 			}
 		}
 	}
@@ -909,7 +1105,8 @@ static void ArchiveMobjs(void)
 {
 	int count;
 	thinker_t *thinker;
-	mobj_t tempMobj;
+	save_mobj_t tempMobj;
+	mobj_t *mobj;
 
 	StreamOutLong(ASEG_MOBJS);
 	StreamOutLong(MobjCount);
@@ -921,14 +1118,15 @@ static void ArchiveMobjs(void)
 		{ // Not a mobj thinker
 			continue;
 		}
-		if (((mobj_t *)thinker)->player && !SavingPlayers)
+		mobj = (mobj_t *)thinker;
+		if (mobj->player && !SavingPlayers)
 		{ // Skipping player mobjs
 			continue;
 		}
 		count++;
-		memcpy(&tempMobj, thinker, sizeof(mobj_t));
-		MangleMobj(&tempMobj);
-		StreamOutBuffer(&tempMobj, sizeof(mobj_t));
+		memset(&tempMobj, 0, sizeof(save_mobj_t));
+		MangleMobj(mobj, &tempMobj);
+		StreamOutBuffer(&tempMobj, sizeof(save_mobj_t));
 	}
 	if (count != MobjCount)
 	{
@@ -945,6 +1143,7 @@ static void ArchiveMobjs(void)
 static void UnarchiveMobjs(void)
 {
 	int i;
+	save_mobj_t tempMobj;
 	mobj_t *mobj;
 
 	AssertSegment(ASEG_MOBJS);
@@ -957,10 +1156,11 @@ static void UnarchiveMobjs(void)
 	for (i = 0; i < MobjCount; i++)
 	{
 		mobj = MobjList[i];
-		memcpy(mobj, SavePtr, sizeof(mobj_t));
-		SavePtr += sizeof(mobj_t);
-		mobj->thinker.function = P_MobjThinker;
-		RestoreMobj(mobj);
+		memset(&tempMobj, 0, sizeof(save_mobj_t));
+		memset(mobj, 0, sizeof(mobj_t));
+		memcpy(&tempMobj, SavePtr, sizeof(save_mobj_t));
+		SavePtr += sizeof(save_mobj_t);
+		RestoreMobj(mobj, &tempMobj);
 		P_AddThinker(&mobj->thinker);
 	}
 	P_CreateTIDList();
@@ -973,23 +1173,67 @@ static void UnarchiveMobjs(void)
 //
 //==========================================================================
 
-static void MangleMobj(mobj_t *mobj)
+static void MangleMobj(mobj_t *mobj, save_mobj_t *temp)
 {
 	boolean corpse;
+	uint32_t swap;
+
+	temp->x			= (fixed_t) LONG(mobj->x);
+	temp->y			= (fixed_t) LONG(mobj->y);
+	temp->z			= (fixed_t) LONG(mobj->z);
+	temp->angle		= (angle_t) LONG(mobj->angle);
+	temp->sprite		= (spritenum_t) LONG(mobj->sprite);
+	temp->frame		= (int) LONG(mobj->frame);
+	temp->floorpic		= (fixed_t) LONG(mobj->floorpic);
+	temp->radius		= (fixed_t) LONG(mobj->radius);
+	temp->height		= (fixed_t) LONG(mobj->height);
+	temp->momx		= (fixed_t) LONG(mobj->momx);
+	temp->momy		= (fixed_t) LONG(mobj->momy);
+	temp->momz		= (fixed_t) LONG(mobj->momz);
+	temp->validcount	= (int) LONG(mobj->validcount);
+	temp->type		= (mobjtype_t) LONG(mobj->type);
+	temp->tics		= (int) LONG(mobj->tics);
+	temp->damage		= (int) LONG(mobj->damage);
+	temp->flags		= (int) LONG(mobj->flags);
+	temp->flags2		= (int) LONG(mobj->flags2);
+	temp->health		= (int) LONG(mobj->health);
+	temp->movedir		= (int) LONG(mobj->movedir);
+	temp->movecount		= (int) LONG(mobj->movecount);
+	temp->reactiontime	= (int) LONG(mobj->reactiontime);
+	temp->threshold		= (int) LONG(mobj->threshold);
+	temp->lastlook		= (int) LONG(mobj->lastlook);
+	temp->floorclip		= (fixed_t) LONG(mobj->floorclip);
+	temp->archiveNum	= (int) LONG(mobj->archiveNum);
+	temp->tid		= (short) SHORT(mobj->tid);
+	temp->special		= mobj->special;
+	/*
+	temp->args[0]		= mobj->args[0];
+	temp->args[1]		= mobj->args[1];
+	temp->args[2]		= mobj->args[2];
+	temp->args[3]		= mobj->args[3];
+	*/
+	/* byte swap args 0 to 3:  this stupidity is here, because
+	 * of the way the summon time of minotaurs are kept/traced.
+	 * FIXME: should I do a if(mo->type == MT_MINOTAUR) check?
+	 */
+	memcpy(&swap, mobj->args, 4);
+	swap = (uint32_t) LONG(swap);
+	memcpy(temp->args, &swap, 4);
+	temp->args[4]		= mobj->args[4];
 
 	corpse = mobj->flags & MF_CORPSE;
-	mobj->state = (state_t *)(mobj->state-states);
+	temp->state_idx = LONG((int32_t)(mobj->state - states));
 	if (mobj->player)
 	{
-		mobj->player = (player_t *)((mobj->player-players) + 1);
+		temp->player_idx = LONG((int32_t)((mobj->player - players) + 1));
 	}
 	if (corpse)
 	{
-		mobj->target = (mobj_t *)MOBJ_NULL;
+		temp->target_idx = (int32_t) LONG(MOBJ_NULL);
 	}
 	else
 	{
-		mobj->target = (mobj_t *)GetMobjNum(mobj->target);
+		temp->target_idx = (int32_t) LONG(GetMobjNum(mobj->target));
 	}
 	switch (mobj->type)
 	{
@@ -1004,11 +1248,11 @@ static void MangleMobj(mobj_t *mobj)
 	case MT_MSTAFF_FX2:
 		if (corpse)
 		{
-			mobj->special1 = MOBJ_NULL;
+			temp->special1 = (int32_t) LONG(MOBJ_NULL);
 		}
 		else
 		{
-			mobj->special1 = GetMobjNum((mobj_t *)mobj->special1);
+			temp->special1 = (int32_t) LONG(GetMobjNum((mobj_t *)mobj->special1));
 		}
 		break;
 
@@ -1017,11 +1261,11 @@ static void MangleMobj(mobj_t *mobj)
 	case MT_LIGHTNING_ZAP:
 		if (corpse)
 		{
-			mobj->special2 = MOBJ_NULL;
+			temp->special2 = (int32_t) LONG(MOBJ_NULL);
 		}
 		else
 		{
-			mobj->special2 = GetMobjNum((mobj_t *)mobj->special2);
+			temp->special2 = (int32_t) LONG(GetMobjNum((mobj_t *)mobj->special2));
 		}
 		break;
 
@@ -1030,19 +1274,19 @@ static void MangleMobj(mobj_t *mobj)
 	case MT_LIGHTNING_CEILING:
 		if (corpse)
 		{
-			mobj->special1 = MOBJ_NULL;
-			mobj->special2 = MOBJ_NULL;
+			temp->special1 = (int32_t) LONG(MOBJ_NULL);
+			temp->special2 = (int32_t) LONG(MOBJ_NULL);
 		}
 		else
 		{
-			mobj->special1 = GetMobjNum((mobj_t *)mobj->special1);
-			mobj->special2 = GetMobjNum((mobj_t *)mobj->special2);
+			temp->special1 = (int32_t) LONG(GetMobjNum((mobj_t *)mobj->special1));
+			temp->special2 = (int32_t) LONG(GetMobjNum((mobj_t *)mobj->special2));
 		}
 		break;
 
 	// Miscellaneous
 	case MT_KORAX:
-		mobj->special1 = 0; // Searching index
+		temp->special1 = 0; // Searching index
 		break;
 
 	default:
@@ -1056,7 +1300,7 @@ static void MangleMobj(mobj_t *mobj)
 //
 //==========================================================================
 
-static int GetMobjNum(mobj_t *mobj)
+static int32_t GetMobjNum(mobj_t *mobj)
 {
 	if (mobj == NULL)
 	{
@@ -1075,19 +1319,71 @@ static int GetMobjNum(mobj_t *mobj)
 //
 //==========================================================================
 
-static void RestoreMobj(mobj_t *mobj)
+static void RestoreMobj(mobj_t *mobj, save_mobj_t *temp)
 {
-	mobj->state = &states[(int)mobj->state];
-	if (mobj->player)
+	uint32_t	swap;
+
+	mobj->x			= (fixed_t) LONG(temp->x);
+	mobj->y			= (fixed_t) LONG(temp->y);
+	mobj->z			= (fixed_t) LONG(temp->z);
+	mobj->angle		= (angle_t) LONG(temp->angle);
+	mobj->sprite		= (spritenum_t) LONG(temp->sprite);
+	mobj->frame		= (int) LONG(temp->frame);
+	mobj->floorpic		= (fixed_t) LONG(temp->floorpic);
+	mobj->radius		= (fixed_t) LONG(temp->radius);
+	mobj->height		= (fixed_t) LONG(temp->height);
+	mobj->momx		= (fixed_t) LONG(temp->momx);
+	mobj->momy		= (fixed_t) LONG(temp->momy);
+	mobj->momz		= (fixed_t) LONG(temp->momz);
+	mobj->validcount	= (int) LONG(temp->validcount);
+	mobj->type		= (mobjtype_t) LONG(temp->type);
+	mobj->tics		= (int) LONG(temp->tics);
+	mobj->damage		= (int) LONG(temp->damage);
+	mobj->flags		= (int) LONG(temp->flags);
+	mobj->flags2		= (int) LONG(temp->flags2);
+	mobj->health		= (int) LONG(temp->health);
+	mobj->movedir		= (int) LONG(temp->movedir);
+	mobj->movecount		= (int) LONG(temp->movecount);
+	mobj->reactiontime	= (int) LONG(temp->reactiontime);
+	mobj->threshold		= (int) LONG(temp->threshold);
+	mobj->lastlook		= (int) LONG(temp->lastlook);
+	mobj->floorclip		= (fixed_t) LONG(temp->floorclip);
+	mobj->archiveNum	= (int) LONG(temp->archiveNum);
+	mobj->tid		= (short) SHORT(temp->tid);
+	mobj->special		= temp->special;
+	/*
+	mobj->args[0]		= temp->args[0];
+	mobj->args[1]		= temp->args[1];
+	mobj->args[2]		= temp->args[2];
+	mobj->args[3]		= temp->args[3];
+	*/
+	/* byte swap args 0 to 3:  this stupidity is here, because
+	 * of the way the summon time of minotaurs are kept/traced.
+	 * FIXME: should I do a if(mo->type == MT_MINOTAUR) check?
+	 */
+	memcpy(&swap, temp->args, 4);
+	swap = (uint32_t) LONG(swap);
+	memcpy(mobj->args, &swap, 4);
+	mobj->args[4]		= temp->args[4];
+
+	temp->state_idx		= (int32_t) LONG(temp->state_idx);
+	temp->player_idx	= (int32_t) LONG(temp->player_idx);
+	temp->target_idx	= (int32_t) LONG(temp->target_idx);
+	temp->special1		= (int32_t) LONG(temp->special1);
+	temp->special2		= (int32_t) LONG(temp->special2);
+
+	mobj->thinker.function	= P_MobjThinker;
+	mobj->state		= &states[temp->state_idx];
+	if (temp->player_idx)
 	{
-		mobj->player = &players[(int)mobj->player - 1];
+		mobj->player	= &players[temp->player_idx - 1];
 		mobj->player->mo = mobj;
 	}
 	P_SetThingPosition(mobj);
 	mobj->info = &mobjinfo[mobj->type];
 	mobj->floorz = mobj->subsector->sector->floorheight;
 	mobj->ceilingz = mobj->subsector->sector->ceilingheight;
-	SetMobjPtr((int *)&mobj->target);
+	mobj->target = GetMobjPtr(temp->target_idx);
 	switch (mobj->type)
 	{
 	// Just special1
@@ -1098,20 +1394,20 @@ static void RestoreMobj(mobj_t *mobj)
 	case MT_THRUSTFLOOR_DOWN:
 	case MT_MINOTAUR:
 	case MT_SORCFX1:
-		SetMobjPtr(&mobj->special1);
+		mobj->special1 = (intptr_t) GetMobjPtr(temp->special1);
 		break;
 
 	// Just special2
 	case MT_LIGHTNING_FLOOR:
 	case MT_LIGHTNING_ZAP:
-		SetMobjPtr(&mobj->special2);
+		mobj->special2 = (intptr_t) GetMobjPtr(temp->special2);
 		break;
 
 	// Both special1 and special2
 	case MT_HOLY_TAIL:
 	case MT_LIGHTNING_CEILING:
-		SetMobjPtr(&mobj->special1);
-		SetMobjPtr(&mobj->special2);
+		mobj->special1 = (intptr_t) GetMobjPtr(temp->special1);
+		mobj->special2 = (intptr_t) GetMobjPtr(temp->special2);
 		break;
 
 	default:
@@ -1121,23 +1417,21 @@ static void RestoreMobj(mobj_t *mobj)
 
 //==========================================================================
 //
-// SetMobjPtr
+// GetMobjPtr
 //
 //==========================================================================
 
-static void SetMobjPtr(int *archiveNum)
+static mobj_t *GetMobjPtr(int archiveNum)
 {
-	if (*archiveNum == MOBJ_NULL)
+	if (archiveNum == MOBJ_NULL)
 	{
-		*archiveNum = 0;
-		return;
+		return NULL;
 	}
-	if (*archiveNum == MOBJ_XX_PLAYER)
+	if (archiveNum == MOBJ_XX_PLAYER)
 	{
-		*archiveNum = 0;
-		return;
+		return NULL;
 	}
-	*archiveNum = (int)MobjList[*archiveNum];
+	return MobjList[archiveNum];
 }
 
 //==========================================================================
@@ -1161,11 +1455,8 @@ static void ArchiveThinkers(void)
 			if (thinker->function == info->thinkerFunc)
 			{
 				StreamOutByte(info->tClass);
-				memcpy(buffer, thinker, info->size);
-				if (info->mangleFunc)
-				{
-					info->mangleFunc(buffer);
-				}
+				memset(buffer, 0, sizeof(buffer));
+				info->mangleFunc(thinker, buffer);
 				StreamOutBuffer(buffer, info->size);
 				break;
 			}
@@ -1186,6 +1477,7 @@ static void UnarchiveThinkers(void)
 	int tClass;
 	thinker_t *thinker;
 	thinkInfo_t *info;
+	byte buffer[MAX_THINKER_SIZE];
 
 	AssertSegment(ASEG_THINKERS);
 	while ((tClass = GET_BYTE()) != TC_NULL)
@@ -1195,13 +1487,12 @@ static void UnarchiveThinkers(void)
 			if (tClass == info->tClass)
 			{
 				thinker = (thinker_t *) Z_Malloc(info->size, PU_LEVEL, NULL);
-				memcpy(thinker, SavePtr, info->size);
+				memset(thinker, 0, sizeof(thinker_t));
+				memset(buffer, 0, sizeof(buffer));
+				memcpy(buffer, SavePtr, info->size);
 				SavePtr += info->size;
 				thinker->function = info->thinkerFunc;
-				if (info->restoreFunc)
-				{
-					info->restoreFunc(thinker);
-				}
+				info->restoreFunc(thinker, buffer);
 				P_AddThinker(thinker);
 				break;
 			}
@@ -1215,36 +1506,352 @@ static void UnarchiveThinkers(void)
 
 //==========================================================================
 //
-// MangleSSThinker
+// MangleFloorMove
 //
 //==========================================================================
 
-static void MangleSSThinker(ssthinker_t *sst)
+static void MangleFloorMove(void *arg1, void *arg2)
 {
-	sst->sector = (sector_t *)(sst->sector-sectors);
+	floormove_t	*fm	= (floormove_t *)	arg1;
+	save_floormove_t *temp	= (save_floormove_t *)	arg2;
+
+	temp->sector_idx	= LONG((int32_t)(fm->sector - sectors));
+	temp->type		= (floor_e) LONG(fm->type);
+	temp->crush		= (int) LONG(fm->crush);
+	temp->direction		= (int) LONG(fm->direction);
+	temp->newspecial	= (int) LONG(fm->newspecial);
+	temp->texture		= (short) SHORT(fm->texture);
+	temp->floordestheight	= (fixed_t) LONG(fm->floordestheight);
+	temp->speed		= (fixed_t) LONG(fm->speed);
+	temp->delayCount	= (int) LONG(fm->delayCount);
+	temp->delayTotal	= (int) LONG(fm->delayTotal);
+	temp->stairsDelayHeight	= (fixed_t) LONG(fm->stairsDelayHeight);
+	temp->stairsDelayHeightDelta = (fixed_t) LONG(fm->stairsDelayHeightDelta);
+	temp->resetHeight	= (fixed_t) LONG(fm->resetHeight);
+	temp->resetDelay	= (short) SHORT(fm->resetDelay);
+	temp->resetDelayCount	= (short) SHORT(fm->resetDelayCount);
+	temp->textureChange	= fm->textureChange;
 }
 
 //==========================================================================
 //
-// RestoreSSThinker
+// RestoreFloorMove
 //
 //==========================================================================
 
-static void RestoreSSThinker(ssthinker_t *sst)
+static void RestoreFloorMove(void *arg1, void *arg2)
 {
-	sst->sector = &sectors[(int)sst->sector];
-	sst->sector->specialdata = sst->thinker.function;
+	floormove_t	*fm	= (floormove_t *)	arg1;
+	save_floormove_t *temp	= (save_floormove_t *)	arg2;
+
+	temp->sector_idx	= LONG(temp->sector_idx);
+	fm->sector		= &sectors[temp->sector_idx];
+	fm->sector->specialdata	= T_MoveFloor;	//fm->thinker.function
+	fm->type		= (floor_e) LONG(temp->type);
+	fm->crush		= (int) LONG(temp->crush);
+	fm->direction		= (int) LONG(temp->direction);
+	fm->newspecial		= (int) LONG(temp->newspecial);
+	fm->texture		= (short) SHORT(temp->texture);
+	fm->floordestheight	= (fixed_t) LONG(temp->floordestheight);
+	fm->speed		= (fixed_t) LONG(temp->speed);
+	fm->delayCount		= (int) LONG(temp->delayCount);
+	fm->delayTotal		= (int) LONG(temp->delayTotal);
+	fm->stairsDelayHeight	= (fixed_t) LONG(temp->stairsDelayHeight);
+	fm->stairsDelayHeightDelta = (fixed_t) LONG(temp->stairsDelayHeightDelta);
+	fm->resetHeight		= (fixed_t) LONG(temp->resetHeight);
+	fm->resetDelay		= (short) SHORT(temp->resetDelay);
+	fm->resetDelayCount	= (short) SHORT(temp->resetDelayCount);
+	fm->textureChange	= temp->textureChange;
 }
 
 //==========================================================================
 //
-// RestoreSSThinkerNoSD
+// MangleLight
 //
 //==========================================================================
 
-static void RestoreSSThinkerNoSD(ssthinker_t *sst)
+static void MangleLight(void *arg1, void *arg2)
 {
-	sst->sector = &sectors[(int)sst->sector];
+	light_t		*light	= (light_t *)	arg1;
+	save_light_t	*temp	= (save_light_t *) arg2;
+
+	temp->sector_idx	= LONG((int32_t)(light->sector - sectors));
+	temp->type		= (lighttype_t) LONG(light->type);
+	temp->value1		= (int) LONG(light->value1);
+	temp->value2		= (int) LONG(light->value2);
+	temp->tics1		= (int) LONG(light->tics1);
+	temp->tics2		= (int) LONG(light->tics2);
+	temp->count		= (int) LONG(light->count);
+}
+
+//==========================================================================
+//
+// RestoreLight
+//
+//==========================================================================
+
+static void RestoreLight(void *arg1, void *arg2)
+{
+	light_t		*light	= (light_t *)	arg1;
+	save_light_t	*temp	= (save_light_t *) arg2;
+
+	temp->sector_idx	= LONG(temp->sector_idx);
+	light->sector		= &sectors[temp->sector_idx];
+	light->type		= (lighttype_t) LONG(temp->type);
+	light->value1		= (int) LONG(temp->value1);
+	light->value2		= (int) LONG(temp->value2);
+	light->tics1		= (int) LONG(temp->tics1);
+	light->tics2		= (int) LONG(temp->tics2);
+	light->count		= (int) LONG(temp->count);
+}
+
+//==========================================================================
+//
+// MangleVerticalDoor
+//
+//==========================================================================
+
+static void MangleVerticalDoor(void *arg1, void *arg2)
+{
+	vldoor_t	*vldoor = (vldoor_t *)	arg1;
+	save_vldoor_t	*temp	= (save_vldoor_t *) arg2;
+
+	temp->sector_idx	= LONG((int32_t)(vldoor->sector - sectors));
+	temp->type		= (vldoor_e) LONG(vldoor->type);
+	temp->topheight		= (fixed_t) LONG(vldoor->topheight);
+	temp->speed		= (fixed_t) LONG(vldoor->speed);
+	temp->direction		= (int) LONG(vldoor->direction);
+	temp->topwait		= (int) LONG(vldoor->topwait);
+	temp->topcountdown	= (int) LONG(vldoor->topcountdown);
+}
+
+//==========================================================================
+//
+// RestoreVerticalDoor
+//
+//==========================================================================
+
+static void RestoreVerticalDoor(void *arg1, void *arg2)
+{
+	vldoor_t	*vldoor = (vldoor_t *)	arg1;
+	save_vldoor_t	*temp	= (save_vldoor_t *) arg2;
+
+	temp->sector_idx	= LONG(temp->sector_idx);
+	vldoor->sector		= &sectors[temp->sector_idx];
+	vldoor->sector->specialdata = T_VerticalDoor;	//vldoor->thinker.function
+	vldoor->type		= (vldoor_e) LONG(temp->type);
+	vldoor->topheight	= (fixed_t) LONG(temp->topheight);
+	vldoor->speed		= (fixed_t) LONG(temp->speed);
+	vldoor->direction	= (int) LONG(temp->direction);
+	vldoor->topwait		= (int) LONG(temp->topwait);
+	vldoor->topcountdown	= (int) LONG(temp->topcountdown);
+}
+
+//==========================================================================
+//
+// ManglePhase
+//
+//==========================================================================
+
+static void ManglePhase(void *arg1, void *arg2)
+{
+	phase_t		*phase	= (phase_t *)	arg1;
+	save_phase_t	*temp	= (save_phase_t *) arg2;
+
+	temp->sector_idx	= LONG((int32_t)(phase->sector - sectors));
+	temp->index		= (int) LONG(phase->index);
+	temp->base		= (int) LONG(phase->base);
+}
+
+//==========================================================================
+//
+// RestorePhase
+//
+//==========================================================================
+
+static void RestorePhase(void *arg1, void *arg2)
+{
+	phase_t		*phase	= (phase_t *)	arg1;
+	save_phase_t	*temp	= (save_phase_t *) arg2;
+
+	temp->sector_idx	= LONG(temp->sector_idx);
+	phase->sector		= &sectors[temp->sector_idx];
+	phase->index		= (int) LONG(temp->index);
+	phase->base		= (int) LONG(temp->base);
+}
+
+//==========================================================================
+//
+// ManglePillar
+//
+//==========================================================================
+
+static void ManglePillar(void *arg1, void *arg2)
+{
+	pillar_t	*pillar = (pillar_t *)	arg1;
+	save_pillar_t	*temp	= (save_pillar_t *) arg2;
+
+	temp->sector_idx	= LONG((int32_t)(pillar->sector - sectors));
+	temp->ceilingSpeed	= (int) LONG(pillar->ceilingSpeed);
+	temp->floorSpeed	= (int) LONG(pillar->floorSpeed);
+	temp->floordest		= (int) LONG(pillar->floordest);
+	temp->ceilingdest	= (int) LONG(pillar->ceilingdest);
+	temp->direction		= (int) LONG(pillar->direction);
+	temp->crush		= (int) LONG(pillar->crush);
+}
+
+//==========================================================================
+//
+// RestorePillar
+//
+//==========================================================================
+
+static void RestorePillar(void *arg1, void *arg2)
+{
+	pillar_t	*pillar = (pillar_t *)	arg1;
+	save_pillar_t	*temp	= (save_pillar_t *) arg2;
+
+	temp->sector_idx	= LONG(temp->sector_idx);
+	pillar->sector		= &sectors[temp->sector_idx];
+	pillar->sector->specialdata = T_BuildPillar;	//pillar->thinker.function
+	pillar->ceilingSpeed	= (int) LONG(temp->ceilingSpeed);
+	pillar->floorSpeed	= (int) LONG(temp->floorSpeed);
+	pillar->floordest	= (int) LONG(temp->floordest);
+	pillar->ceilingdest	= (int) LONG(temp->ceilingdest);
+	pillar->direction	= (int) LONG(temp->direction);
+	pillar->crush		= (int) LONG(temp->crush);
+}
+
+//==========================================================================
+//
+// MangleFloorWaggle
+//
+//==========================================================================
+
+static void MangleFloorWaggle(void *arg1, void *arg2)
+{
+	floorWaggle_t	*fw	= (floorWaggle_t *)	arg1;
+	save_floorWaggle_t *temp = (save_floorWaggle_t *) arg2;
+
+	temp->sector_idx	= LONG((int32_t)(fw->sector - sectors));
+	temp->originalHeight	= (fixed_t) LONG(fw->originalHeight);
+	temp->accumulator	= (fixed_t) LONG(fw->accumulator);
+	temp->accDelta		= (fixed_t) LONG(fw->accDelta);
+	temp->targetScale	= (fixed_t) LONG(fw->targetScale);
+	temp->scale		= (fixed_t) LONG(fw->scale);
+	temp->scaleDelta	= (fixed_t) LONG(fw->scaleDelta);
+	temp->ticker		= (int) LONG(fw->ticker);
+	temp->state		= (int) LONG(fw->state);
+}
+
+//==========================================================================
+//
+// RestoreFloorWaggle
+//
+//==========================================================================
+
+static void RestoreFloorWaggle(void *arg1, void *arg2)
+{
+	floorWaggle_t	*fw	= (floorWaggle_t *)	arg1;
+	save_floorWaggle_t *temp = (save_floorWaggle_t *) arg2;
+
+	temp->sector_idx	= LONG(temp->sector_idx);
+	fw->sector		= &sectors[temp->sector_idx];
+	fw->sector->specialdata = T_FloorWaggle;	//fw->thinker.function
+	fw->originalHeight	= (fixed_t) LONG(temp->originalHeight);
+	fw->accumulator		= (fixed_t) LONG(temp->accumulator);
+	fw->accDelta		= (fixed_t) LONG(temp->accDelta);
+	fw->targetScale		= (fixed_t) LONG(temp->targetScale);
+	fw->scale		= (fixed_t) LONG(temp->scale);
+	fw->scaleDelta		= (fixed_t) LONG(temp->scaleDelta);
+	fw->ticker		= (int) LONG(temp->ticker);
+	fw->state		= (int) LONG(temp->state);
+}
+
+//==========================================================================
+//
+// ManglePolyEvent
+//
+//==========================================================================
+
+static void ManglePolyEvent(void *arg1, void *arg2)
+{
+	polyevent_t	*pe	= (polyevent_t *) arg1;
+	save_polyevent_t *temp	= (save_polyevent_t *) arg2;
+
+	temp->polyobj		= LONG(pe->polyobj);
+	temp->speed		= LONG(pe->speed);
+	temp->dist		= LONG(pe->dist);
+	temp->angle		= LONG(pe->angle);
+	temp->xSpeed		= LONG(pe->xSpeed);
+	temp->ySpeed		= LONG(pe->ySpeed);
+}
+
+//==========================================================================
+//
+// RestorePolyEvent
+//
+//==========================================================================
+
+static void RestorePolyEvent(void *arg1, void *arg2)
+{
+	polyevent_t	*pe	= (polyevent_t *) arg1;
+	save_polyevent_t *temp	= (save_polyevent_t *) arg2;
+
+	pe->polyobj		= (int) LONG(temp->polyobj);
+	pe->speed		= (int) LONG(temp->speed);
+	pe->dist		= (unsigned int) LONG(temp->dist);
+	pe->angle		= (int) LONG(temp->angle);
+	pe->xSpeed		= (fixed_t) LONG(temp->xSpeed);
+	pe->ySpeed		= (fixed_t) LONG(temp->ySpeed);
+}
+
+//==========================================================================
+//
+// ManglePolyDoor
+//
+//==========================================================================
+
+static void ManglePolyDoor(void *arg1, void *arg2)
+{
+	polydoor_t	*pd	= (polydoor_t *) arg1;
+	save_polydoor_t *temp	= (save_polydoor_t *) arg2;
+
+	temp->polyobj		= (int) LONG(pd->polyobj);
+	temp->speed		= (int) LONG(pd->speed);
+	temp->dist		= (int) LONG(pd->dist);
+	temp->totalDist		= (int) LONG(pd->totalDist);
+	temp->direction		= (int) LONG(pd->direction);
+	temp->xSpeed		= (fixed_t) LONG(pd->xSpeed);
+	temp->ySpeed		= (fixed_t) LONG(pd->ySpeed);
+	temp->tics		= (int) LONG(pd->tics);
+	temp->waitTics		= (int) LONG(pd->waitTics);
+	temp->type		= (podoortype_t) LONG(pd->type);
+	temp->close		= (boolean) LONG(pd->close);
+}
+
+//==========================================================================
+//
+// RestorePolyEvent
+//
+//==========================================================================
+
+static void RestorePolyDoor(void *arg1, void *arg2)
+{
+	polydoor_t	*pd	= (polydoor_t *) arg1;
+	save_polydoor_t *temp	= (save_polydoor_t *) arg2;
+
+	pd->polyobj		= (int) LONG(temp->polyobj);
+	pd->speed		= (int) LONG(temp->speed);
+	pd->dist		= (int) LONG(temp->dist);
+	pd->totalDist		= (int) LONG(temp->totalDist);
+	pd->direction		= (int) LONG(temp->direction);
+	pd->xSpeed		= (fixed_t) LONG(temp->xSpeed);
+	pd->ySpeed		= (fixed_t) LONG(temp->ySpeed);
+	pd->tics		= (int) LONG(temp->tics);
+	pd->waitTics		= (int) LONG(temp->waitTics);
+	pd->type		= (podoortype_t) LONG(temp->type);
+	pd->close		= (boolean) LONG(temp->close);
 }
 
 //==========================================================================
@@ -1253,11 +1860,28 @@ static void RestoreSSThinkerNoSD(ssthinker_t *sst)
 //
 //==========================================================================
 
-static void MangleScript(acs_t *script)
+static void MangleScript(void *arg1, void *arg2)
 {
-	script->ip = (byte *)((int)(script->ip)-(int)ActionCodeBase);
-	script->line = script->line ? (line_t *)(script->line-lines) : (line_t *)-1;
-	script->activator = (mobj_t *)GetMobjNum(script->activator);
+	int		i;
+	acs_t 	*script		= (acs_t *)	arg1;
+	save_acs_t *temp	= (save_acs_t *) arg2;
+
+	temp->ip_idx		= LONG((int32_t)((intptr_t)(script->ip) - (intptr_t)ActionCodeBase));
+	temp->line_idx		= script->line ? LONG((int32_t)(script->line - lines)) : (int32_t)LONG(-1);
+	temp->activator_idx	= (int32_t) LONG(GetMobjNum(script->activator));
+	temp->side		= (int) LONG(script->side);
+	temp->number		= (int) LONG(script->number);
+	temp->infoIndex		= (int) LONG(script->infoIndex);
+	temp->delayCount	= (int) LONG(script->delayCount);
+	temp->stackPtr		= (int) LONG(script->stackPtr);
+	for (i = 0; i < ACS_STACK_DEPTH; i++)
+	{
+		temp->stack[i]	= (int) LONG(script->stack[i]);
+	}
+	for (i = 0; i < MAX_ACS_SCRIPT_VARS; i++)
+	{
+		temp->vars[i]	= (int) LONG(script->vars[i]);
+	}
 }
 
 //==========================================================================
@@ -1266,18 +1890,62 @@ static void MangleScript(acs_t *script)
 //
 //==========================================================================
 
-static void RestoreScript(acs_t *script)
+static void RestoreScript(void *arg1, void *arg2)
 {
-	script->ip = (byte *)(ActionCodeBase + (int)script->ip);
-	if ((int)script->line == -1)
+	int		i;
+	acs_t 	*script		= (acs_t *)	arg1;
+	save_acs_t *temp	= (save_acs_t *) arg2;
+
+	temp->ip_idx		= (int32_t) LONG(temp->ip_idx);
+	temp->line_idx		= (int32_t) LONG(temp->line_idx);
+	temp->activator_idx	= (int32_t) LONG(temp->activator_idx);
+	script->ip		= ActionCodeBase + temp->ip_idx;
+	if (temp->line_idx == -1)
 	{
-		script->line = NULL;
+		script->line	= NULL;
 	}
 	else
 	{
-		script->line = &lines[(int)script->line];
+		script->line	= &lines[temp->line_idx];
 	}
-	SetMobjPtr((int *)&script->activator);
+	script->activator	= GetMobjPtr(temp->activator_idx);
+	script->side		= (int) LONG(temp->side);
+	script->number		= (int) LONG(temp->number);
+	script->infoIndex	= (int) LONG(temp->infoIndex);
+	script->delayCount	= (int) LONG(temp->delayCount);
+	script->stackPtr	= (int) LONG(temp->stackPtr);
+	for (i = 0; i < ACS_STACK_DEPTH; i++)
+	{
+		script->stack[i] = (int) LONG(temp->stack[i]);
+	}
+	for (i = 0; i < MAX_ACS_SCRIPT_VARS; i++)
+	{
+		script->vars[i]	= (int) LONG(temp->vars[i]);
+	}
+}
+
+//==========================================================================
+//
+// ManglePlatRaise
+//
+//==========================================================================
+
+static void ManglePlatRaise(void *arg1, void *arg2)
+{
+	plat_t		*plat	= (plat_t *)	arg1;
+	save_plat_t	*temp	= (save_plat_t *) arg2;
+
+	temp->sector_idx	= LONG((int32_t)(plat->sector - sectors));
+	temp->speed		= (fixed_t) LONG(plat->speed);
+	temp->low		= (fixed_t) LONG(plat->low);
+	temp->high		= (fixed_t) LONG(plat->high);
+	temp->wait		= (int) LONG(plat->wait);
+	temp->count		= (int) LONG(plat->count);
+	temp->status		= (plat_e) LONG(plat->status);
+	temp->oldstatus		= (plat_e) LONG(plat->oldstatus);
+	temp->crush		= (int) LONG(plat->crush);
+	temp->tag		= (int) LONG(plat->tag);
+	temp->type		= (plattype_e) LONG(plat->type);
 }
 
 //==========================================================================
@@ -1286,11 +1954,47 @@ static void RestoreScript(acs_t *script)
 //
 //==========================================================================
 
-static void RestorePlatRaise(plat_t *plat)
+static void RestorePlatRaise(void *arg1, void *arg2)
 {
-	plat->sector = &sectors[(int)plat->sector];
+	plat_t		*plat	= (plat_t *)	arg1;
+	save_plat_t	*temp	= (save_plat_t *) arg2;
+
+	temp->sector_idx	= LONG(temp->sector_idx);
+	plat->sector		= &sectors[temp->sector_idx];
 	plat->sector->specialdata = T_PlatRaise;
+	plat->speed		= (fixed_t) LONG(temp->speed);
+	plat->low		= (fixed_t) LONG(temp->low);
+	plat->high		= (fixed_t) LONG(temp->high);
+	plat->wait		= (int) LONG(temp->wait);
+	plat->count		= (int) LONG(temp->count);
+	plat->status		= (plat_e) LONG(temp->status);
+	plat->oldstatus		= (plat_e) LONG(temp->oldstatus);
+	plat->crush		= (int) LONG(temp->crush);
+	plat->tag		= (int) LONG(temp->tag);
+	plat->type		= (plattype_e) LONG(temp->type);
 	P_AddActivePlat(plat);
+}
+
+//==========================================================================
+//
+// MangleMoveCeiling
+//
+//==========================================================================
+
+static void MangleMoveCeiling(void *arg1, void *arg2)
+{
+	ceiling_t	*ceiling = (ceiling_t *) arg1;
+	save_ceiling_t	*temp	= (save_ceiling_t *) arg2;
+
+	temp->sector_idx	= LONG((int32_t)(ceiling->sector - sectors));
+	temp->type		= (ceiling_e) LONG(ceiling->type);
+	temp->bottomheight	= (fixed_t) LONG(ceiling->bottomheight);
+	temp->topheight		= (fixed_t) LONG(ceiling->topheight);
+	temp->speed		= (fixed_t) LONG(ceiling->speed);
+	temp->crush		= (int) LONG(ceiling->crush);
+	temp->direction		= (int) LONG(ceiling->direction);
+	temp->tag		= (int) LONG(ceiling->tag);
+	temp->olddirection	= (int) LONG(ceiling->olddirection);
 }
 
 //==========================================================================
@@ -1299,10 +2003,22 @@ static void RestorePlatRaise(plat_t *plat)
 //
 //==========================================================================
 
-static void RestoreMoveCeiling(ceiling_t *ceiling)
+static void RestoreMoveCeiling(void *arg1, void *arg2)
 {
-	ceiling->sector = &sectors[(int)ceiling->sector];
+	ceiling_t	*ceiling = (ceiling_t *) arg1;
+	save_ceiling_t	*temp	= (save_ceiling_t *) arg2;
+
+	temp->sector_idx	= LONG(temp->sector_idx);
+	ceiling->sector		= &sectors[temp->sector_idx];
 	ceiling->sector->specialdata = T_MoveCeiling;
+	ceiling->type		= (ceiling_e) LONG(temp->type);
+	ceiling->bottomheight	= (fixed_t) LONG(temp->bottomheight);
+	ceiling->topheight	= (fixed_t) LONG(temp->topheight);
+	ceiling->speed		= (fixed_t) LONG(temp->speed);
+	ceiling->crush		= (int) LONG(temp->crush);
+	ceiling->direction	= (int) LONG(temp->direction);
+	ceiling->tag		= (int) LONG(temp->tag);
+	ceiling->olddirection	= (int) LONG(temp->olddirection);
 	P_AddActiveCeiling(ceiling);
 }
 
@@ -1322,7 +2038,10 @@ static void ArchiveScripts(void)
 		StreamOutWord(ACSInfo[i].state);
 		StreamOutWord(ACSInfo[i].waitValue);
 	}
-	StreamOutBuffer(MapVars, sizeof(MapVars));
+	for (i = 0; i < MAX_ACS_MAP_VARS; i++)
+	{
+		StreamOutLong(MapVars[i]);
+	}
 }
 
 //==========================================================================
@@ -1341,8 +2060,10 @@ static void UnarchiveScripts(void)
 		ACSInfo[i].state = GET_WORD();
 		ACSInfo[i].waitValue = GET_WORD();
 	}
-	memcpy(MapVars, SavePtr, sizeof(MapVars));
-	SavePtr += sizeof(MapVars);
+	for (i = 0; i < MAX_ACS_MAP_VARS; i++)
+	{
+		MapVars[i] = GET_LONG();
+	}
 }
 
 //==========================================================================
@@ -1441,7 +2162,7 @@ static void ArchiveSounds(void)
 		if (i == po_NumPolyobjs)
 		{ // Sound is attached to a sector, not a polyobj
 			sec = R_PointInSubsector(node->mobj->x, node->mobj->y)->sector;
-			difference = (int)((byte *)sec - (byte *)&sectors[0]) / sizeof(sector_t);
+			difference = (int)(((byte *)sec - (byte *)&sectors[0]) / sizeof(sector_t));
 			StreamOutLong(0); // 0 -- sector sound origin
 		}
 		else
