@@ -4,8 +4,8 @@
 //** xddefs.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: xddefs.h,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-22 16:20:46 $
+//** $Revision: 1.5 $
+//** $Date: 2008-07-11 08:02:10 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -175,7 +175,10 @@ typedef struct
 	boolean		masked;	
 	short		width;
 	short		height;
-	void		**columndirectory;	/* OBSOLETE */
+//	void		**columndirectory;	/* OBSOLETE */
+	int32_t		columndirectory;	/* OBSOLETE */
+	/* must be non-pointer with 32 bit size for 64 bit! */
+
 	short		patchcount;
 	mappatch_t	patches[1];
 } maptexture_t;
