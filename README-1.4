@@ -1,0 +1,107 @@
+
+				   HHexen 1.4
+
+--------------------------------------------------------------------------------
+
+				     About
+
+This is a new release of Dan's excellent Hacked Hexen, by the authors of
+Hammer of Thyrion (HexenII). We're just applying fixes we have, and putting
+this game back in the wild so people can contribute to it again.
+
+Major changes with this release are:
+
+  * OpenGL screenshots (now bound to F12 and enabled by default)
+  * Game saves/loads work fine (CVS was broken for a while)
+  * Transparent map feature (TAB key)
+  * Many excellent GCC/C/portability bugfixes from Oz
+  * Removal of incomplete assassin class now possible (with configure --disable-assassin)
+  * More complete support for punctuation keys in the control-setup menu.
+
+--------------------------------------------------------------------------------
+
+				    Prereqs
+
+There exist several versions of the hexen.wad file:
+
+1.0 wads:
+  b2543a03521365261d0a0f74d5dd90f0  hexen.wad (20,128,392 bytes)
+  1077432e2690d390c256ac908b5f4efa  hexdd.wad (4,429,700 bytes)
+
+1.1 wads:
+  abb033caf81e26f12a2103e1fa25453f  hexen.wad (20,083,672 bytes)
+  78d5898e99e220e4de64edaa0e479593  hexdd.wad (4,440,584 bytes)
+
+Demo version:
+  876a5a44c7b68f04b3bb9bc7a5bd69d6  hexen.wad (10,644,136 bytes)
+
+The 1.0 wads may not be properly supported, and if you're having problems try
+recompiling with the "991_possible_bug_fix" patch.
+
+To run the demo, configure with:
+  "./configure --enable-demowad"
+
+--------------------------------------------------------------------------------
+
+				   Compiling
+
+Of course you'll need SDL and SDL-devel packages installed.
+To compile the OpenGL version, type
+	./autogen.sh
+	./configure --enable-gl --disable-assassin
+	make
+This will hopefully give you a working binary, "hhexen-gl"
+
+--------------------------------------------------------------------------------
+
+				     Hints
+
+Fullscreen is enabled by the ALT-Tab key combination.
+
+Dan's fourth class, the Assassin, is not quite finished yet, and can be
+disabled with "configure --disable-assassin". The precompiled binaries with
+HHexen-1.4 do not have the assassin enabled. 
+(*Warning*: There may be issues with game saves made from assassin enabled
+binaries and from those without.  Enemies have been noticed to disappear!)
+
+There is still no way to assign mouse buttons to actions in the
+control-setup menu; it still needs some work. Currently mouse buttons can
+still only be assigned to a few actions:
+
+  mouseb_fire    (fire)
+  mouseb_strafe  (strafe)
+  mouseb_forward (move forward)
+  mouseb_jump    (jump)
+
+Which is done by editing $HOME/.hhexen/hhexen.cfg and changing these values.
+Button values are:
+
+  left   mouse button = 0
+  middle mouse button = 1
+  right  mouse button = 2
+  unused              =-1
+
+So, to make the right button jump, change the mouseb_jump line (in
+.hhexen/hhexen.cfg) thus:
+
+  mouseb_jump 2
+--------------------------------------------------------------------------------
+
+				      Todo
+
+* Do a full game run-through.
+* Make a "Fullscreen" menu item
+* Complete the list of options given by "--help"
+* Make a menu item for mouse buttons... There is quite a lot of changes that
+  need to be done to allow for the mouse buttons to be very configurable
+* 64 bit compatibility (broken at present).
+* Make sure big endian and non-intel compilations work.
+
+--------------------------------------------------------------------------------
+
+				    Contact
+
+http://sourceforge.net/projects/hhexen
+sezero_at_gmail.com
+stevenaaus_at_yahoo_com
+

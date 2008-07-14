@@ -1,18 +1,15 @@
 TODO for HHexen
 
  - Add networking (multiplayer) support.
- - Make sure big endian and non-intel compilations work.
- - 64 bit compatibility (broken at present).
  - Make a menu item for mouse buttons... or, for better:
  - Change input system to allow for Quake style key binding.
- - A thorough re-visit / clean-up of all #ifdef RENDER3D's.
  - In-game resolution and fullscreen/windowed switching
+ - High resolution support for software renderer.
  - Midi Music.
  - CD Audio.
- - 3D sound support.
  - ALSA sound support.
- - In-game MP3 music.
- - High resolution support for software renderer.
+ - In-game OGG/MP3 music.
+ - 3D sound support.
  - SDL joystick support.
  - More eye candy (lens flares, dynamic lights)
  - More bug fixes (if there aren't any, add some ;)

@@ -1,4 +1,24 @@
 -------------------------------------------------------------------------------
+Release notes for version 1.5
+-------------------------------------------------------------------------------
+
+New Features:
+ - Implemented intermission and finale screens for OpenGL.
+ - Support for the Mac version of the demo hexen.wad file.
+ - Support for big endian and 64 bit machines.
+
+Bug Fixes:
+ - Fixed a crash with binaries compiled by gcc-4.0.x series compilers.
+ - Fixed a sound related crash on FreeBSD.
+
+Notes:
+ - Shareware wad files don't need a special configuration anymore.
+ - HHexen now looks in the user directory for wad and lmp files, too.
+ - The recorded demos are now written in the user directory.
+ - All of gcc-4.x series compilers are supported.
+ - See ChangeLog for details.
+
+-------------------------------------------------------------------------------
 Release notes for version 1.4
 -------------------------------------------------------------------------------
 
@@ -10,8 +30,6 @@ Bug Fixes:
  - Mouse skipping fixed once and for all
 
 Notes:
- - Support for the Mac version of the demo hexen.wad file.
- - Shareware wad files don't need a special configuration anymore.
  - Compiles with GCC 2.95 and newer versions.
  - See ChangeLog for details.
 

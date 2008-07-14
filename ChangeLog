@@ -1,8 +1,13 @@
 HHexen ChangeLog
 
-v1.4.1
+v1.5
  - Intermission and finale screens now work in OpenGL.
+ - Added support for 64 bit machines.
+ - Added support for big endian machines.
+ - Saved games from 32 bit, 64 bit, little endian and big endian machines are
+   compatible with each other.
  - Added support for the Mac version of the demo hexen.wad file.
+ - OpenGL is the default configuration, now.
  - The demo wad files doesn't need a special configuration anymore.
  - Various hacks/fixes for the proper handling of different 1.0 and 1.1 wad
    file versions; read WADFILES for technical details.
@@ -14,6 +19,9 @@ v1.4.1
  - The recorded demos are now written in the user directory (~/.hhexen/).
  - Incomplete assassin class is now disabled by default.  If you want it,
    configure with --enable-assassin
+ - Fixed a crash with binaries compiled by gcc-4.0.x series compilers.
+ - Fixed a sound related crash on FreeBSD.
+ - Made the svgalib driver to actually work.
  - Many other bugfixes
 
 v1.4
