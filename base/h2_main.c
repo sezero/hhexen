@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.30 $
-//** $Date: 2008-06-28 17:11:54 $
+//** $Revision: 1.31 $
+//** $Date: 2008-07-14 09:15:20 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -227,10 +227,10 @@ void H2_Main(void)
 
 	InitMapMusicInfo();		// Init music fields in mapinfo
 
-#if defined(__linux)
+//#ifdef __WATCOMC__
 	ST_Message("S_InitScript\n");
 	S_InitScript();
-#endif
+//#endif
 
 	ST_Message("SN_InitSequenceScript: Registering sound sequences.\n");
 	SN_InitSequenceScript();
