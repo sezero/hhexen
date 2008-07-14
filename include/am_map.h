@@ -4,18 +4,14 @@
 //** am_map.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: am_map.h,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.4 $
+//** $Date: 2008-07-14 09:17:55 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 #ifndef __AMMAP_H__
 #define __AMMAP_H__
-
-#ifndef __linux
-#pragma once
-#endif
 
 /* For use if I do walls with outsides/insides */
 #define REDS		(12 * 8)

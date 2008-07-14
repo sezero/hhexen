@@ -4,18 +4,14 @@
 //** am_data.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: am_data.h,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.4 $
+//** $Date: 2008-07-14 09:17:55 $
 //** $Author: sezero $
 //**
 //**************************************************************************
 
 #ifndef __AMDATA_H__
 #define __AMDATA_H__
-
-#ifndef __linux
-#pragma once
-#endif
 
 /* a line drawing of the player pointing right, starting from the middle. */
 
