@@ -3,8 +3,8 @@
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.30 $
-//** $Date: 2008-06-28 17:11:54 $
+//** $Revision: 1.31 $
+//** $Date: 2008-07-14 09:27:15 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -430,7 +430,7 @@ static const char *stupidtable[] =
 	"Z"
 };
 
-#if defined(__linux) || defined(__FreeBSD__)
+//#ifdef __WATCOMC__
 static const char *GammaText[] =
 {
 	TXT_GAMMA_LEVEL_OFF,
@@ -439,7 +439,7 @@ static const char *GammaText[] =
 	TXT_GAMMA_LEVEL_3,
 	TXT_GAMMA_LEVEL_4
 };
-#endif
+//#endif
 
 // CODE --------------------------------------------------------------------
 
