@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.18 $
-//** $Date: 2008-07-14 12:18:57 $
+//** $Revision: 1.19 $
+//** $Date: 2008-07-14 13:03:38 $
 //** $Author: sezero $
 //**
 //** Games are always saved Little Endian, with 32 bit offsets.
@@ -1499,7 +1499,7 @@ static void UnarchiveThinkers(void)
 			if (tClass == info->tClass)
 			{
 				thinker = (thinker_t *) Z_Malloc(info->realsize, PU_LEVEL, NULL);
-				memset(thinker, 0, sizeof(thinker_t));
+				memset(thinker, 0, info->realsize);
 				memset(buffer, 0, sizeof(buffer));
 				memcpy(buffer, SavePtr, info->savesize);
 				SavePtr += info->savesize;
