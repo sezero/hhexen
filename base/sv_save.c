@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.17 $
-//** $Date: 2008-07-09 18:55:02 $
+//** $Revision: 1.18 $
+//** $Date: 2008-07-14 12:18:57 $
 //** $Author: sezero $
 //**
 //** Games are always saved Little Endian, with 32 bit offsets.
@@ -72,7 +72,7 @@ typedef struct
 	think_t thinkerFunc;
 	void (*mangleFunc)(void *, void *);
 	void (*restoreFunc)(void *, void *);
-	size_t size;
+	size_t realsize, savesize;
 } thinkInfo_t;
 
 typedef struct
@@ -170,6 +170,7 @@ static thinkInfo_t ThinkerInfo[] =
 		T_MoveFloor,
 		MangleFloorMove,
 		RestoreFloorMove,
+		sizeof(floormove_t),
 		sizeof(save_floormove_t)
 	},
 	{
@@ -177,6 +178,7 @@ static thinkInfo_t ThinkerInfo[] =
 		T_PlatRaise,
 		ManglePlatRaise,
 		RestorePlatRaise,
+		sizeof(plat_t),
 		sizeof(save_plat_t)
 	},
 	{
@@ -184,6 +186,7 @@ static thinkInfo_t ThinkerInfo[] =
 		T_MoveCeiling,
 		MangleMoveCeiling,
 		RestoreMoveCeiling,
+		sizeof(ceiling_t),
 		sizeof(save_ceiling_t)
 	},
 	{
@@ -191,6 +194,7 @@ static thinkInfo_t ThinkerInfo[] =
 		T_Light,
 		MangleLight,
 		RestoreLight,
+		sizeof(light_t),
 		sizeof(save_light_t)
 	},
 	{
@@ -198,6 +202,7 @@ static thinkInfo_t ThinkerInfo[] =
 		T_VerticalDoor,
 		MangleVerticalDoor,
 		RestoreVerticalDoor,
+		sizeof(vldoor_t),
 		sizeof(save_vldoor_t)
 	},
 	{
@@ -205,6 +210,7 @@ static thinkInfo_t ThinkerInfo[] =
 		T_Phase,
 		ManglePhase,
 		RestorePhase,
+		sizeof(phase_t),
 		sizeof(save_phase_t)
 	},
 	{
@@ -212,6 +218,7 @@ static thinkInfo_t ThinkerInfo[] =
 		T_InterpretACS,
 		MangleScript,
 		RestoreScript,
+		sizeof(acs_t),
 		sizeof(save_acs_t)
 	},
 	{
@@ -219,6 +226,7 @@ static thinkInfo_t ThinkerInfo[] =
 		T_RotatePoly,
 		ManglePolyEvent,
 		RestorePolyEvent,
+		sizeof(polyevent_t),
 		sizeof(save_polyevent_t)
 	},
 	{
@@ -226,6 +234,7 @@ static thinkInfo_t ThinkerInfo[] =
 		T_BuildPillar,
 		ManglePillar,
 		RestorePillar,
+		sizeof(pillar_t),
 		sizeof(save_pillar_t)
 	},
 	{
@@ -233,6 +242,7 @@ static thinkInfo_t ThinkerInfo[] =
 		T_MovePoly,
 		ManglePolyEvent,
 		RestorePolyEvent,
+		sizeof(polyevent_t),
 		sizeof(save_polyevent_t)
 	},
 	{
@@ -240,6 +250,7 @@ static thinkInfo_t ThinkerInfo[] =
 		T_PolyDoor,
 		ManglePolyDoor,
 		RestorePolyDoor,
+		sizeof(polydoor_t),
 		sizeof(save_polydoor_t)
 	},
 	{
@@ -247,6 +258,7 @@ static thinkInfo_t ThinkerInfo[] =
 		T_FloorWaggle,
 		MangleFloorWaggle,
 		RestoreFloorWaggle,
+		sizeof(floorWaggle_t),
 		sizeof(save_floorWaggle_t)
 	},
 	{ // Terminator
@@ -1457,7 +1469,7 @@ static void ArchiveThinkers(void)
 				StreamOutByte(info->tClass);
 				memset(buffer, 0, sizeof(buffer));
 				info->mangleFunc(thinker, buffer);
-				StreamOutBuffer(buffer, info->size);
+				StreamOutBuffer(buffer, info->savesize);
 				break;
 			}
 		}
@@ -1486,11 +1498,11 @@ static void UnarchiveThinkers(void)
 		{
 			if (tClass == info->tClass)
 			{
-				thinker = (thinker_t *) Z_Malloc(info->size, PU_LEVEL, NULL);
+				thinker = (thinker_t *) Z_Malloc(info->realsize, PU_LEVEL, NULL);
 				memset(thinker, 0, sizeof(thinker_t));
 				memset(buffer, 0, sizeof(buffer));
-				memcpy(buffer, SavePtr, info->size);
-				SavePtr += info->size;
+				memcpy(buffer, SavePtr, info->savesize);
+				SavePtr += info->savesize;
 				thinker->function = info->thinkerFunc;
 				info->restoreFunc(thinker, buffer);
 				P_AddThinker(thinker);
