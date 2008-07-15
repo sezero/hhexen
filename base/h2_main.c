@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.31 $
-//** $Date: 2008-07-14 09:15:20 $
+//** $Revision: 1.32 $
+//** $Date: 2008-07-15 17:41:29 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -892,6 +892,8 @@ static void AddWADFile(const char *file)
 //
 //==========================================================================
 
+#if defined(_HAVE_FIXED_ASM)
+
 #if defined(__i386__) || defined(__386__) || defined(_M_IX86)
 #if defined(__GNUC__) && !defined(_INLINE_FIXED_ASM)
 fixed_t	FixedMul (fixed_t a, fixed_t b)
@@ -924,8 +926,8 @@ fixed_t	FixedDiv2 (fixed_t a, fixed_t b)
 #endif	/* GCC and !_INLINE_FIXED_ASM */
 #endif	/* x86 */
 
+#else	/* C-only versions */
 
-#if !defined(_HAVE_FIXED_ASM)	/* for non-i386 */
 fixed_t FixedMul (fixed_t a, fixed_t b)
 {
 	return ((int64_t) a * (int64_t) b) >> 16;

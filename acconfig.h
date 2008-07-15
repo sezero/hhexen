@@ -4,7 +4,7 @@
  */
 
 /* Define if including the assassin in compile */
-#undef ASSASSIN 
+#undef ASSASSIN
 
 /* Define if building with OpenGL support */
 #undef RENDER3D
@@ -21,4 +21,7 @@
 /* Needed for pthread support in OSS sound code. Don't like this
    at all.. Find a better solution for this!!! */
 #undef _REENTRANT
+
+/* Define if not want to use assembly language */
+#undef _DISABLE_ASM
 

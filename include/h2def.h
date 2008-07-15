@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.44 $
-//** $Date: 2008-07-14 13:05:37 $
+//** $Revision: 1.45 $
+//** $Date: 2008-07-15 17:41:29 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -968,6 +968,7 @@ fixed_t	FixedDiv2 (fixed_t a, fixed_t b);
 
 #undef	_HAVE_FIXED_ASM
 
+#if !defined(_DISABLE_ASM)
 #if defined(__i386__) || defined(__386__) || defined(_M_IX86)
 #if defined(__WATCOMC__)
 
@@ -1007,7 +1008,8 @@ fixed_t	FixedDiv2 (fixed_t a, fixed_t b);
 
 # endif	/* _INLINE_FIXED_ASM */
 #endif
-#endif
+#endif	/* X86 */
+#endif	/* !_DISABLE_ASM */
 
 #define FIX2FLT(x)	((float)((x)>>FRACBITS) + (float)((x)&(FRACUNIT-1)) / (float)(FRACUNIT))
 #define Q_FIX2FLT(x)	((float)((x)>>FRACBITS))
