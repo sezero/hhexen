@@ -3,13 +3,13 @@
 	includes the minimum necessary stdc headers,
 	defines common and / or missing types.
 
-	$Id: h2stdinc.h,v 1.3 2008-06-20 07:04:27 sezero Exp $
+	$Id: h2stdinc.h,v 1.4 2008-07-15 17:39:32 sezero Exp $
 */
 
 #ifndef __H2STDINC_H
 #define __H2STDINC_H
 
-#include <config.h>
+#include "config.h"
 
 #include <sys/types.h>
 #include <stddef.h>
