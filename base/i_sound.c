@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sound.c,v 1.9 2008-07-01 14:01:19 sezero Exp $
+//** $Id: i_sound.c,v 1.10 2008-07-16 07:40:51 sezero Exp $
 //**
 //**************************************************************************
 
@@ -43,8 +43,8 @@ int dmxCodes[NUM_SCARDS];	/* the dmx code for a given card */
 int snd_SBport, snd_SBirq, snd_SBdma;	/* sound blaster variables */
 int snd_Mport;				/* midi variables */
 
-extern boolean  snd_MusicAvail,		/* whether music is available */
-		snd_SfxAvail;		/* whether sfx are available */
+boolean snd_MusicAvail,		/* whether music is available */
+	snd_SfxAvail;		/* whether sfx are available */
 
 void I_PauseSong(int handle)
 {
@@ -126,17 +126,17 @@ static pthread_t	audio_thread;
 
 
 #define CHAN_COUNT	8
-Channel channel[CHAN_COUNT];
+static Channel	channel[CHAN_COUNT];
 
 #define MAX_VOL		64	/* 64 keeps our table down to 16Kb */
-SAMPLE_TYPE vol_lookup[MAX_VOL * 256];
+static SAMPLE_TYPE	vol_lookup[MAX_VOL * 256];
 
-int steptable[256];		/* Pitch to stepping lookup */
+static int	steptable[256];		/* Pitch to stepping lookup */
 
 #define BUF_LEN		(256 * 2)
 
 
-void *audio_loop (void *arg)
+static void *audio_loop (void *arg)
 {
 	Channel* chan;
 	Channel* cend;
@@ -181,7 +181,7 @@ void *audio_loop (void *arg)
 					// Check whether we are done.
 					if (chan->begin >= chan->end)
 					{
-						chan->begin = 0;
+						chan->begin = NULL;
 					//	printf ("  channel done %d\n", chan);
 					}
 				}
@@ -294,14 +294,14 @@ void I_StopSound(int handle)
 {
 	handle--;
 	handle &= 7;
-	channel[handle].begin = 0;
+	channel[handle].begin = NULL;
 }
 
 int I_SoundIsPlaying(int handle)
 {
 	handle--;
 	handle &= 7;
-	return (channel[ handle ].begin != 0);
+	return (channel[ handle ].begin != NULL);
 }
 
 void I_UpdateSoundParams(int handle, int vol, int sep, int pitch)
@@ -363,6 +363,8 @@ void I_StartupSound (void)
 
 	snd_MusicDevice = snd_SfxDevice = 0;
 
+	snd_SfxAvail = false;
+
 	if (M_CheckParm("--nosound") || M_CheckParm("-s") || M_CheckParm("-nosound"))
 	{
 		ST_Message("I_StartupSound: Sound Disabled.\n");
@@ -385,6 +387,8 @@ void I_StartupSound (void)
 	{
 		audio_exit_thread = 0;
 		pthread_create(&audio_thread, NULL, audio_loop, NULL);
+		fprintf (stdout, "I_StartupSound: success\n");
+		snd_SfxAvail = true;
 	}
 	else
 	{
@@ -393,19 +397,16 @@ void I_StartupSound (void)
 }
 
 // shuts down all sound stuff
-
 void I_ShutdownSound (void)
 {
-	if (audioPI)
+	if (audioPI && !audio_exit_thread)
 	{
-		if (! audio_exit_thread)
-		{
-			audio_exit_thread = 1;
-			pthread_join(audio_thread, NULL);
-		}
+		audio_exit_thread = 1;
+		snd_SfxAvail = false;
+		pthread_join(audio_thread, NULL);
 		audioPI->close_audio();
+		audioPI = NULL;
 	}
-	audioPI = NULL;
 }
 
 void I_SetChannels(int channels)
@@ -417,16 +418,16 @@ void I_SetChannels(int channels)
 
 	for (j = 0; j < CHAN_COUNT; j++)
 	{
-		channel[ j ].begin = 0;
-		channel[ j ].end = 0;
-		channel[ j ].time = 0;
+		channel[j].begin = NULL;
+		channel[j].end   = NULL;
+		channel[j].time = 0;
 	}
 
 	// This table provides step widths for pitch parameters.
 	steptablemid = steptable + 128;
 	for (j = -128; j < 128; j++)
 	{
-		steptablemid[ j ] = (int) (pow(2.0, (j/64.0)) * 65536.0);
+		steptablemid[j] = (int) (pow(2.0, (j/64.0)) * 65536.0);
 	}
 
 	// Generate the volume lookup tables.
