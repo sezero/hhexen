@@ -497,15 +497,6 @@ static int oss_open(AFormat fmt, int rate, int nch)
 			return 0;
 	}
 
-	going = 1;
-	flush = -1;
-	prebuffer = 1;
-	wr_index = rd_index = output_time_offset = written = output_bytes = 0;
-	paused = FALSE;
-	do_pause = FALSE;
-	unpause = FALSE;
-	remove_prebuffer = FALSE;
-
 	if (oss_cfg.audio_device > 0)
 		snprintf(device_name, sizeof(device_name), "/dev/dsp%d", oss_cfg.audio_device);
 	else
@@ -522,7 +513,18 @@ static int oss_open(AFormat fmt, int rate, int nch)
 		buffer = NULL;
 		return 0;
 	}
+
 	oss_set_audio_params();
+
+	flush = -1;
+	prebuffer = 1;
+	wr_index = rd_index = output_time_offset = written = output_bytes = 0;
+	paused = FALSE;
+	do_pause = FALSE;
+	unpause = FALSE;
+	remove_prebuffer = FALSE;
+	going = 1;
+
 	if (!realtime)
 		pthread_create(&buffer_thread, NULL, oss_loop, NULL);
 	return 1;
