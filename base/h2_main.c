@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.32 $
-//** $Date: 2008-07-15 17:41:29 $
+//** $Revision: 1.33 $
+//** $Date: 2008-07-20 07:40:25 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -815,7 +815,7 @@ void H2_DoAdvanceDemo(void)
 	case 5:
 		pagetic = 200;
 		gamestate = GS_DEMOSCREEN;
-		pagename = "CREDIT";
+		pagename = "CREDIT";	// Mac demo draws "PRSGCRED" here
 		break;
 	case 6:
 		BorderNeedRefresh = true;
