@@ -79,7 +79,7 @@ static pthread_t buffer_thread;
 static gboolean realtime = FALSE;
 
 
-OSSConfig oss_cfg;
+static OSSConfig oss_cfg;
 
 
 static void oss_about(void)
@@ -190,7 +190,7 @@ static int oss_playing(void)
 	return TRUE;
 }
 
-int oss_free(void)
+static int oss_free(void)
 {
 	if (!realtime)
 	{

@@ -16,8 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef OSS_H
-#define OSS_H
+#ifndef _SNDOSS_H
+#define _SNDOSS_H
 
 
 #include "audio_plugin.h"
@@ -33,8 +33,5 @@ typedef struct
 }
 OSSConfig;
 
-extern OSSConfig oss_cfg;
-
-
-#endif	/* OSS_H */
+#endif	/* _SNDOSS_H */
 
