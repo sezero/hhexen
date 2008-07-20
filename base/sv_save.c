@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.19 $
-//** $Date: 2008-07-14 13:03:38 $
+//** $Revision: 1.20 $
+//** $Date: 2008-07-20 09:57:35 $
 //** $Author: sezero $
 //**
 //** Games are always saved Little Endian, with 32 bit offsets.
@@ -790,7 +790,8 @@ static void ArchivePlayers(void)
 		}
 		for (j = 0; j < NUMINVENTORYSLOTS; j++)
 		{
-			tempPlayer.inventory[j] = (inventory_t) LONG(players[i].inventory[j]);
+			tempPlayer.inventory[j].type = (int) LONG(players[i].inventory[j].type);
+			tempPlayer.inventory[j].count = (int) LONG(players[i].inventory[j].count);
 		}
 		tempPlayer.readyArtifact	= (artitype_t) LONG(players[i].readyArtifact);
 		tempPlayer.inventorySlotNum	= (int) LONG(players[i].inventorySlotNum);
@@ -907,7 +908,8 @@ static void UnarchivePlayers(void)
 		}
 		for (j = 0; j < NUMINVENTORYSLOTS; j++)
 		{
-			players[i].inventory[j] = (inventory_t) LONG(tempPlayer.inventory[j]);
+			players[i].inventory[j].type = (int) LONG(tempPlayer.inventory[j].type);
+			players[i].inventory[j].count = (int) LONG(tempPlayer.inventory[j].count);
 		}
 		players[i].readyArtifact	= (artitype_t) LONG(tempPlayer.readyArtifact);
 		players[i].artifactCount	= (int) LONG(tempPlayer.artifactCount);
