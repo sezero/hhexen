@@ -5,19 +5,9 @@
 typedef struct
 {
 	int32_t	state_idx;
-	int		tics;
+	int	tics;
 	fixed_t	sx, sy;
 } save_pspdef_t;
-
-typedef struct
-{
-	spritenum_t	sprite;
-	int32_t			frame;
-	int32_t			tics;
-	int32_t			action_func_idx;
-	statenum_t		nextstate;
-	int32_t			misc1, misc2;
-} save_state_t;
 
 typedef struct
 {
