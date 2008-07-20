@@ -4,8 +4,8 @@
 //** r_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_main.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-28 17:30:17 $
+//** $Revision: 1.7 $
+//** $Date: 2008-07-20 12:05:50 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -55,7 +55,7 @@ int			viewangletox[FINEANGLES/2];
 angle_t			xtoviewangle[SCREENWIDTH+1];
 
 // the finetangentgent[angle+FINEANGLES/4] table holds the fixed_t tangent
-// values for view angles, ranging from MININT to 0 to MAXINT.
+// values for view angles, ranging from H2MININT to 0 to H2MAXINT.
 // fixed_t		finetangent[FINEANGLES/2];
 
 // fixed_t		finesine[5*FINEANGLES/4];

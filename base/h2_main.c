@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.33 $
-//** $Date: 2008-07-20 07:40:25 $
+//** $Revision: 1.34 $
+//** $Date: 2008-07-20 12:05:50 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -945,7 +945,7 @@ fixed_t FixedDiv (fixed_t a, fixed_t b)
 {
 	if ((abs(a) >> 14) >= abs(b))
 	{
-		return ((a^b) < 0 ? MININT : MAXINT);
+		return ((a^b) < 0 ? H2MININT : H2MAXINT);
 	}
 	return (FixedDiv2(a, b));
 }

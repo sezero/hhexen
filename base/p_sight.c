@@ -4,8 +4,8 @@
 //** p_sight.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_sight.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-22 16:20:45 $
+//** $Revision: 1.5 $
+//** $Date: 2008-07-20 12:05:50 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -203,7 +203,7 @@ static boolean P_SightTraverseIntercepts (void)
 
 	while (count--)
 	{
-		dist = MAXINT;
+		dist = H2MAXINT;
 		for (scan = intercepts; scan < intercept_p; scan++)
 		{
 			if (scan->frac < dist)
@@ -215,7 +215,7 @@ static boolean P_SightTraverseIntercepts (void)
 
 		if ( !PTR_SightTraverse (in) )
 			return false;                   // don't bother going farther
-		in->frac = MAXINT;
+		in->frac = H2MAXINT;
 	}
 
 	return true;		// everything was traversed

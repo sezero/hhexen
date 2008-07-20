@@ -4,8 +4,8 @@
 //** p_map.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_map.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-07-07 09:55:18 $
+//** $Revision: 1.7 $
+//** $Date: 2008-07-20 12:05:50 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -526,7 +526,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 		{
 			if (thing->flags & MF_SHOOTABLE && thing != tmthing->target)
 			{
-				if (thing->info->mass != MAXINT)
+				if (thing->info->mass != H2MAXINT)
 				{
 					thing->momx += tmthing->momx>>4;
 					thing->momy += tmthing->momy>>4;

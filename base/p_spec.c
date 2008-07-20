@@ -4,8 +4,8 @@
 //** p_spec.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_spec.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-25 20:10:22 $
+//** $Revision: 1.9 $
+//** $Date: 2008-07-20 12:05:50 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -268,7 +268,7 @@ fixed_t P_FindLowestCeilingSurrounding(sector_t *sec)
 	int		i;
 	line_t		*check;
 	sector_t	*other;
-	fixed_t		height = MAXINT;
+	fixed_t		height = H2MAXINT;
 
 	for (i = 0; i < sec->linecount; i++)
 	{

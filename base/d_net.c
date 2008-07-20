@@ -4,8 +4,8 @@
 //** d_net.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: d_net.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-07-07 09:55:18 $
+//** $Revision: 1.11 $
+//** $Date: 2008-07-20 12:05:50 $
 //** $Author: sezero $
 //**
 //** This version has the fixed ticdup code.
@@ -808,7 +808,7 @@ void TryRunTics (void)
 //
 	NetUpdate ();
 
-	lowtic = MAXINT;
+	lowtic = H2MAXINT;
 	numplaying = 0;
 	for (i = 0; i < doomcom->numnodes; i++)
 	{
@@ -874,7 +874,7 @@ void TryRunTics (void)
 	while (lowtic < gametic/ticdup + counts)
 	{
 		NetUpdate ();
-		lowtic = MAXINT;
+		lowtic = H2MAXINT;
 
 		for (i = 0; i < doomcom->numnodes; i++)
 		{

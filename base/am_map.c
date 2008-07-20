@@ -4,8 +4,8 @@
 //** am_map.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: am_map.c,v $
-//** $Revision: 1.17 $
-//** $Date: 2008-07-07 11:27:09 $
+//** $Revision: 1.18 $
+//** $Date: 2008-07-20 12:05:50 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -137,11 +137,11 @@ static void AM_getIslope(mline_t *ml, islope_t *is)
 	dy = ml->a.y - ml->b.y;
 	dx = ml->b.x - ml->a.x;
 	if (!dy)
-		is->islp = (dx < 0 ? -MAXINT : MAXINT);
+		is->islp = (dx < 0 ? -H2MAXINT : H2MAXINT);
 	else
 		is->islp = FixedDiv(dx, dy);
 	if (!dx)
-		is->slp = (dy < 0 ? -MAXINT : MAXINT);
+		is->slp = (dy < 0 ? -H2MAXINT : H2MAXINT);
 	else
 		is->slp = FixedDiv(dy, dx);
 }
@@ -203,8 +203,8 @@ static void AM_findMinMaxBoundaries(void)
 	int i;
 	fixed_t a, b;
 
-	min_x = min_y = MAXINT;
-	max_x = max_y = -MAXINT;
+	min_x = min_y = H2MAXINT;
+	max_x = max_y = -H2MAXINT;
 	for (i = 0; i < numvertexes; i++)
 	{
 		if (vertexes[i].x < min_x)
@@ -233,7 +233,7 @@ static void AM_changeWindowLoc(void)
 	if (m_paninc.x || m_paninc.y)
 	{
 		followplayer = 0;
-		f_oldloc.x = MAXINT;
+		f_oldloc.x = H2MAXINT;
 	}
 
 	m_x += m_paninc.x;
@@ -284,7 +284,7 @@ static void AM_initVariables(void)
 	fb = screen;
 #endif
 
-	f_oldloc.x = MAXINT;
+	f_oldloc.x = H2MAXINT;
 	amclock = 0;
 	lightlev = 0;
 
@@ -483,7 +483,7 @@ boolean AM_Responder (event_t *ev)
 			break;
 		case AM_FOLLOWKEY:
 			followplayer = !followplayer;
-			f_oldloc.x = MAXINT;
+			f_oldloc.x = H2MAXINT;
 			P_SetMessage(plr, 
 				followplayer ? AMSTR_FOLLOWON : AMSTR_FOLLOWOFF, true);
 			break;
@@ -570,8 +570,8 @@ static void AM_doFollowPlayer(void)
 		dmapx = (MTOF(plr->mo->x)-MTOF(f_oldloc.x)); //fixed point
 		dmapy = (MTOF(f_oldloc.y)-MTOF(plr->mo->y));
 
-		if (f_oldloc.x == MAXINT) //to eliminate an error when the user first
-			dmapx = 0;  //goes into the automap.
+		if (f_oldloc.x == H2MAXINT)	//to eliminate an error when the user first
+			dmapx = 0;				//goes into the automap.
 		mapxstart += dmapx;
 		mapystart += dmapy;
 
@@ -650,7 +650,7 @@ static void AM_clearFB(int color)
 
 		oldplr.x = plr->mo->x;
 		oldplr.y = plr->mo->y;
-	//	if (f_oldloc.x == MAXINT)	//to eliminate an error when the user first
+	//	if (f_oldloc.x == H2MAXINT)	//to eliminate an error when the user first
 	//		dmapx = 0;				//goes into the automap.
 		mapxstart += dmapx>>1;
 		mapystart += dmapy>>1;

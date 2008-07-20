@@ -4,8 +4,8 @@
 //** r_segs.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_segs.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-28 17:30:17 $
+//** $Revision: 1.7 $
+//** $Date: 2008-07-20 12:05:50 $
 //** $Author: sezero $
 //**
 //** This version has the tall-sector-crossing-precision-bug fixed.
@@ -124,7 +124,7 @@ void R_RenderMaskedSegRange (drawseg_t *ds, int x1, int x2)
 	for (dc_x = x1 ; dc_x <= x2 ; dc_x++)
 	{
 	// calculate lighting
-		if (maskedtexturecol[dc_x] != MAXSHORT)
+		if (maskedtexturecol[dc_x] != H2MAXSHORT)
 		{
 			if (!fixedcolormap)
 			{
@@ -144,7 +144,7 @@ void R_RenderMaskedSegRange (drawseg_t *ds, int x1, int x2)
 				(byte *)R_GetColumn(texnum,maskedtexturecol[dc_x]) -3);
 
 			R_DrawMaskedColumn (col, -1);
-			maskedtexturecol[dc_x] = MAXSHORT;
+			maskedtexturecol[dc_x] = H2MAXSHORT;
 		}
 		spryscale += rw_scalestep;
 	}
@@ -417,8 +417,8 @@ void R_StoreWallRange (int start, int stop)
 		ds_p->silhouette = SIL_BOTH;
 		ds_p->sprtopclip = screenheightarray;
 		ds_p->sprbottomclip = negonearray;
-		ds_p->bsilheight = MAXINT;
-		ds_p->tsilheight = MININT;
+		ds_p->bsilheight = H2MAXINT;
+		ds_p->tsilheight = H2MININT;
 	}
 	else
 	{
@@ -435,7 +435,7 @@ void R_StoreWallRange (int start, int stop)
 		else if (backsector->floorheight > viewz)
 		{
 			ds_p->silhouette = SIL_BOTTOM;
-			ds_p->bsilheight = MAXINT;
+			ds_p->bsilheight = H2MAXINT;
 //			ds_p->sprbottomclip = negonearray;
 		}
 		if (frontsector->ceilingheight < backsector->ceilingheight)
@@ -446,20 +446,20 @@ void R_StoreWallRange (int start, int stop)
 		else if (backsector->ceilingheight < viewz)
 		{
 			ds_p->silhouette |= SIL_TOP;
-			ds_p->tsilheight = MININT;
+			ds_p->tsilheight = H2MININT;
 //			ds_p->sprtopclip = screenheightarray;
 		}
 
 		if (backsector->ceilingheight <= frontsector->floorheight)
 		{
 			ds_p->sprbottomclip = negonearray;
-			ds_p->bsilheight = MAXINT;
+			ds_p->bsilheight = H2MAXINT;
 			ds_p->silhouette |= SIL_BOTTOM;
 		}
 		if (backsector->floorheight >= frontsector->ceilingheight)
 		{
 			ds_p->sprtopclip = screenheightarray;
-			ds_p->tsilheight = MININT;
+			ds_p->tsilheight = H2MININT;
 			ds_p->silhouette |= SIL_TOP;
 		}
 		worldhigh = backsector->ceilingheight - viewz;
@@ -631,12 +631,12 @@ void R_StoreWallRange (int start, int stop)
 	if (maskedtexture && !(ds_p->silhouette & SIL_TOP))
 	{
 		ds_p->silhouette |= SIL_TOP;
-		ds_p->tsilheight = MININT;
+		ds_p->tsilheight = H2MININT;
 	}
 	if (maskedtexture && !(ds_p->silhouette & SIL_BOTTOM))
 	{
 		ds_p->silhouette |= SIL_BOTTOM;
-		ds_p->bsilheight = MAXINT;
+		ds_p->bsilheight = H2MAXINT;
 	}
 	ds_p++;
 }

@@ -3,7 +3,7 @@
 	includes the minimum necessary stdc headers,
 	defines common and / or missing types.
 
-	$Id: h2stdinc.h,v 1.4 2008-07-15 17:39:32 sezero Exp $
+	$Id: h2stdinc.h,v 1.5 2008-07-20 12:05:51 sezero Exp $
 */
 
 #ifndef __H2STDINC_H
@@ -52,15 +52,12 @@
 #endif
 #endif
 
-#define	MAXCHAR		((char)0x7f)
-#define	MAXSHORT	((short)0x7fff)
-#define	MAXINT		((int)0x7fffffff)	/* max positive 32-bit integer */
-#define	MAXLONG		((long)0x7fffffff)
-
-#define	MINCHAR		((char)0x80)
-#define	MINSHORT	((short)0x8000)
-#define	MININT		((int)0x80000000)	/* max negative 32-bit integer */
-#define	MINLONG		((long)0x80000000)
+#define	H2MAXCHAR	((char)0x7f)
+#define	H2MAXSHORT	((short)0x7fff)
+#define	H2MAXINT	((int)0x7fffffff)	/* max positive 32-bit integer */
+#define	H2MINCHAR	((char)0x80)
+#define	H2MINSHORT	((short)0x8000)
+#define	H2MININT	((int)0x80000000)	/* max negative 32-bit integer */
 
 /* Make sure the types really have the right
  * sizes: These macros are from SDL headers.

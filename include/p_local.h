@@ -4,8 +4,8 @@
 //** p_local.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_local.h,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-22 21:40:13 $
+//** $Revision: 1.8 $
+//** $Date: 2008-07-20 12:05:51 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -128,10 +128,10 @@ enum
 	FLOOR_SLUDGE
 };
 
-#define ONFLOORZ	MININT
-#define ONCEILINGZ	MAXINT
-#define FLOATRANDZ	(MAXINT - 1)
-#define FROMCEILINGZ128	(MAXINT - 2)
+#define ONFLOORZ	H2MININT
+#define ONCEILINGZ	H2MAXINT
+#define FLOATRANDZ	(H2MAXINT - 1)
+#define FROMCEILINGZ128	(H2MAXINT - 2)
 
 extern	mobjtype_t	PuffType;
 extern	mobj_t		*MissileMobj;

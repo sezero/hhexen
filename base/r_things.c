@@ -4,8 +4,8 @@
 //** r_things.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_things.c,v $
-//** $Revision: 1.13 $
-//** $Date: 2008-07-07 12:21:41 $
+//** $Revision: 1.14 $
+//** $Date: 2008-07-20 12:05:51 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -993,7 +993,7 @@ void R_SortVisSprites (void)
 	vsprsortedhead.next = vsprsortedhead.prev = &vsprsortedhead;
 	for (i = 0; i < count; i++)
 	{
-		bestscale = MAXINT;
+		bestscale = H2MAXINT;
 		for (ds = unsorted.next; ds != &unsorted; ds = ds->next)
 		{
 			if (ds->scale < bestscale)

@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.24 $
-//** $Date: 2008-06-30 18:02:30 $
+//** $Revision: 1.25 $
+//** $Date: 2008-07-20 12:05:50 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -176,8 +176,8 @@ void M_ClearRandom (void)
 
 void M_ClearBox (fixed_t *box)
 {
-	box[BOXTOP] = box[BOXRIGHT] = MININT;
-	box[BOXBOTTOM] = box[BOXLEFT] = MAXINT;
+	box[BOXTOP] = box[BOXRIGHT] = H2MININT;
+	box[BOXBOTTOM] = box[BOXLEFT] = H2MAXINT;
 }
 
 void M_AddToBox (fixed_t *box, fixed_t x, fixed_t y)
