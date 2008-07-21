@@ -4,8 +4,8 @@
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: g_game.c,v $
-//** $Revision: 1.20 $
-//** $Date: 2008-06-26 09:52:28 $
+//** $Revision: 1.21 $
+//** $Date: 2008-07-21 07:48:24 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -753,9 +753,10 @@ boolean G_Responder(event_t *ev)
 			}
 			return true;
 		}
-		if (ev->data1 == KEY_PAUSE && !MenuActive)
+		if (ev->data1 == KEY_PAUSE)
 		{
-			sendpause = true;
+			if (!MenuActive && gamestate != GS_FINALE)
+				sendpause = true;
 			return true;
 		}
 		if (ev->data1 < MAXKEYS)
