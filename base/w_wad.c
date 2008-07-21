@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.26 $
-//** $Date: 2008-07-09 19:55:01 $
+//** $Revision: 1.27 $
+//** $Date: 2008-07-21 07:45:09 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -97,16 +97,13 @@ void W_AddFile(const char *filename)
 {
 	wadinfo_t header;
 	lumpinfo_t *lump_p;
-	unsigned i;
 	char path[MAX_OSPATH], *waddir;
 	int handle, length, flength;
 	int startlump;
 	filelump_t *fileinfo, singleinfo;
 	filelump_t *freeFileInfo;
-
-	int	fixlumpnames = 0;
+	int	i, j;
 	byte	*c;
-
 
 	handle = -1;
 	/* Add support for HHEXEN_DATA envirionment variable */
@@ -161,11 +158,6 @@ void W_AddFile(const char *filename)
 		else if (strncmp(header.identification, "IWAD", 4) == 0 &&
 			 header.numlumps == MACDEMO_LUMPS && flength == MACDEMO_WADSIZE)
 		{
-			/* in the Mac demo wad, some of the lump names begin
-			 * with a character that has the high bit (0x80) set,
-			 * for reasons unknown to me. we must clear the high
-			 * bit for this wad to work in this engine. */
-			fixlumpnames = 1;
 			shareware = true;
 			ST_Message("Shareware WAD detected (4 level 1.1 Mac version).\n");
 		}
@@ -189,27 +181,23 @@ void W_AddFile(const char *filename)
 	lump_p = &lumpinfo[startlump];
 	for (i = startlump; i < numlumps; i++, lump_p++, fileinfo++)
 	{
+		memset(lump_p->name, 0, 8);
 		lump_p->handle = handle;
 		lump_p->position = LONG(fileinfo->filepos);
 		lump_p->size = LONG(fileinfo->size);
 		strncpy(lump_p->name, fileinfo->name, 8);
-		if (fixlumpnames)
-		{
-			c = (byte *)lump_p->name;
-			if (*c > 127)
-			{
-				*c -= 128;
-				fixlumpnames++;
-			}
-		}
+		/* In the Mac demo wad, many (1784) of the lump names
+		 * have their first character with the high bit (0x80)
+		 * set.  I don't know the reason for that..  We must
+		 * clear the high bits for such Mac wad files to work
+		 * in this engine. This shouldn't break other wads. */
+		c = (byte *)lump_p->name;
+		for (j = 0; j < 8; c++, j++)
+			*c &= 0x7f;
 	}
 	if (freeFileInfo)
 	{
 		free(freeFileInfo);
-	}
-	if (--fixlumpnames > 0)
-	{
-		ST_Message("Cleared highbit (0x80) from %i lump names.\n", fixlumpnames);
 	}
 }
 
