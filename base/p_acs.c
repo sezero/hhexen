@@ -4,8 +4,8 @@
 //** p_acs.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_acs.c,v $
-//** $Revision: 1.14 $
-//** $Date: 2008-07-08 19:08:30 $
+//** $Revision: 1.15 $
+//** $Date: 2008-07-21 11:15:48 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -506,7 +506,11 @@ static boolean AddToACSStore(int map, int number, byte *args)
 	}
 	ACSStore[index].map = map;
 	ACSStore[index].script = number;
-	*((int *)ACSStore[index].args) = *((int *)args);
+//	*((int *)ACSStore[index].args) = *((int *)args);
+	ACSStore[index].args[0] = args[0];
+	ACSStore[index].args[1] = args[1];
+	ACSStore[index].args[2] = args[2];
+	ACSStore[index].args[3] = 0;	/* unused */
 	return true;
 }
 
