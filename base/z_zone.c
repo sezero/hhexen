@@ -4,8 +4,8 @@
 //** z_zone.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: z_zone.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-26 09:52:29 $
+//** $Revision: 1.9 $
+//** $Date: 2008-07-21 22:10:24 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -163,6 +163,7 @@ void *Z_Malloc (int size, int tag, void *user)
 // of sufficient size, throwing out any purgable blocks along the way
 //
 	size += sizeof(memblock_t);	// account for size of block header
+	size = (size + 7) & ~7;		// align to 8-byte boundary
 
 //
 // if there is a free block behind the rover, back up over them
