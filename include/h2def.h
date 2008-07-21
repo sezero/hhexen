@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.45 $
-//** $Date: 2008-07-15 17:41:29 $
+//** $Revision: 1.46 $
+//** $Date: 2008-07-21 22:12:29 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1019,14 +1019,16 @@ short ShortSwap (short);
 int LongSwap (int);
 
 #if defined(__GNUC__)
-#define _H2_SWAP16(l)	({  uint16_t x = (uint16_t) (l);				\
-							x = ( ((x >> 8) & 0xff) |	\
-								 ((x << 8) & 0xff00) );	\
-							x;	})
-#define _H2_SWAP32(l)	({  uint32_t z = (uint32_t) (l);				\
-							z = (_H2_SWAP16(z >> 16)) |	\
-								(_H2_SWAP16(z) << 16);	\
-							z;	})
+static inline __attribute__((const)) int16_t _H2_SWAP16(int16_t x)
+{
+	return (int16_t) (((uint16_t)x << 8) | ((uint16_t)x >> 8));
+}
+static inline __attribute__((const)) int32_t _H2_SWAP32(int32_t x)
+{
+	return (int32_t) (((uint32_t)x << 24) | ((uint32_t)x >> 24) |
+			  (((uint32_t)x & (uint32_t)0x0000ff00UL) << 8) |
+			  (((uint32_t)x & (uint32_t)0x00ff0000UL) >> 8));
+}
 #endif	/* GCC */
 
 /*
