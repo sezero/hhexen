@@ -4,8 +4,8 @@
 //** r_data.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_data.c,v $
-//** $Revision: 1.12 $
-//** $Date: 2008-07-08 19:25:22 $
+//** $Revision: 1.13 $
+//** $Date: 2008-07-21 22:11:30 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -340,7 +340,9 @@ static void R_InitTextures (void)
 		texture->width = SHORT(mtexture->width);
 		texture->height = SHORT(mtexture->height);
 		texture->patchcount = SHORT(mtexture->patchcount);
-		memcpy (texture->name, mtexture->name, sizeof(texture->name));
+//		memcpy (texture->name, mtexture->name, sizeof(texture->name));
+		name_p = (char *)maptex + offset;
+		memcpy (texture->name, name_p, sizeof(texture->name));
 		mpatch = &mtexture->patches[0];
 		patch = &texture->patches[0];
 		for (j = 0; j < texture->patchcount; j++, mpatch++, patch++)
