@@ -4,8 +4,8 @@
 //** p_inter.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_inter.c,v $
-//** $Revision: 1.14 $
-//** $Date: 2008-07-07 09:55:18 $
+//** $Revision: 1.15 $
+//** $Date: 2008-07-21 11:55:26 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1295,7 +1295,7 @@ static mobj_t *ActiveMinotaur(player_t *master)
 	mobj_t *mo;
 	player_t *plr;
 	thinker_t *think;
-	unsigned int *starttime;
+	unsigned int summontime;
 
 	for (think = thinkercap.next; think != &thinkercap; think = think->next)
 	{
@@ -1310,8 +1310,8 @@ static mobj_t *ActiveMinotaur(player_t *master)
 			continue;		// for morphed minotaurs
 		if (mo->flags & MF_CORPSE)
 			continue;
-		starttime = (unsigned int *)mo->args;
-		if ((leveltime - *starttime) >= MAULATORTICS)
+		memcpy (&summontime, mo->args, 4);
+		if ((leveltime - summontime) >= MAULATORTICS)
 			continue;
 		plr = ((mobj_t *)mo->special1)->player;
 		if (plr == master)

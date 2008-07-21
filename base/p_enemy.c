@@ -4,8 +4,8 @@
 //** p_enemy.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_enemy.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-07-08 07:16:45 $
+//** $Revision: 1.8 $
+//** $Date: 2008-07-21 11:55:25 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1089,12 +1089,13 @@ void A_MinotaurLook(mobj_t *actor);
 
 void A_MinotaurRoam(mobj_t *actor)
 {
-	unsigned int *starttime = (unsigned int *)actor->args;
+	unsigned int	summontime;
 
 	actor->flags &= ~MF_SHADOW;	// In case pain caused him to 
 	actor->flags &= ~MF_ALTSHADOW;		// skip his fade in.
 
-	if ((leveltime - *starttime) >= MAULATORTICS)
+	memcpy (&summontime, actor->args, 4);
+	if ((leveltime - summontime) >= MAULATORTICS)
 	{
 		P_DamageMobj(actor, NULL, NULL, 10000);
 		return;
@@ -1205,12 +1206,13 @@ void A_MinotaurLook(mobj_t *actor)
 
 void A_MinotaurChase(mobj_t *actor)
 {
-	unsigned int *starttime = (unsigned int *)actor->args;
+	unsigned int	summontime;
 
 	actor->flags &= ~MF_SHADOW;	// In case pain caused him to 
 	actor->flags &= ~MF_ALTSHADOW;		// skip his fade in.
 
-	if ((leveltime - *starttime) >= MAULATORTICS)
+	memcpy (&summontime, actor->args, 4);
+	if ((leveltime - summontime) >= MAULATORTICS)
 	{
 		P_DamageMobj(actor, NULL, NULL, 10000);
 		return;
