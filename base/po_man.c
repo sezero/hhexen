@@ -4,8 +4,8 @@
 //** PO_MAN.C : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: po_man.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-26 09:52:28 $
+//** $Revision: 1.8 $
+//** $Date: 2008-07-21 13:00:44 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1413,10 +1413,8 @@ void PO_Init(int lump)
 	mt = (mapthing_t *)data;
 	for (i = 0; i < numthings; i++, mt++)
 	{
-		mt->x = SHORT(mt->x);
-		mt->y = SHORT(mt->y);
-		mt->angle = SHORT(mt->angle);
-		mt->type = SHORT(mt->type);
+		/* NOTE: we byte swapped the fields in
+		the above loop, don't swap here again */
 		if (mt->type == PO_ANCHOR_TYPE)
 		{ // Polyobj Anchor Pt.
 			TranslateToStartSpot(mt->angle, mt->x<<FRACBITS, mt->y<<FRACBITS);
