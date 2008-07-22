@@ -1,0 +1,123 @@
+
+				 HHexen 1.5.0
+
+--------------------------------------------------------------------------------
+
+				     About
+
+This is a new release of Dan's excellent Hacked Hexen by the authors of
+Hammer of Thyrion (Hexen II).  We're just applying fixes and enhancements we have
+and putting this port back in the wild so people can contribute to it again.
+
+Major changes with this release since the previous 1.4 version, are:
+
+  * OpenGL intermission and finale screens
+  * Support for big endian and 64 bit machines
+  * Many GCC/C/portability fixes and usual bugfixes
+  * Various hacks/fixes for the proper handling of different 1.0 and 1.1
+    wad file versions
+  * OpenGL is the default configuration now
+  * Incomplete assassin class is now disabled by default
+  * See ChangeLog for details.
+
+--------------------------------------------------------------------------------
+
+				    Prereqs
+
+There exist several versions of the hexen.wad file:
+
+1.0 wads:
+  b2543a03521365261d0a0f74d5dd90f0  hexen.wad (20,128,392 bytes)
+  1077432e2690d390c256ac908b5f4efa  hexdd.wad (4,429,700 bytes)
+
+1.1 wads:
+  abb033caf81e26f12a2103e1fa25453f  hexen.wad (20,083,672 bytes)
+  78d5898e99e220e4de64edaa0e479593  hexdd.wad (4,440,584 bytes)
+
+Demo wad 1.0 (from PC shareware hexndemo.zip):
+  876a5a44c7b68f04b3bb9bc7a5bd69d6  hexen.wad (10,644,136 bytes)
+
+Demo wad 1.1 (from Macintosh shareware MacHexenDemo.hqx):
+  925f9f5000e17dc84b0a6a3bed3a6f31  hexen.wad (13,596,228 bytes)
+
+We did our best to support the old 1.0 wad files in HHexen 1.5, but we strongly
+suggest that you always patch your wads to version 1.1 to avoid possible issues.
+If, for some reason, patching is not an option and you run into problems, then
+compile hhexen to specifically use version 1.0 hexen.wad:
+  ./configure --enable-oldwad
+
+Remember that saved games and recorded demos from different wad versions are not
+compatible.
+
+If you don't have the full retail version of Hexen, you can still play the demo
+version.  We suggest that you download the demo wad from our site:  it is the
+the 4-level version 1.1 demo wad file from the MacHexen shareware.  On the other
+hand, the PC shareware wad is a version 1.0 wad and we don't recommend it. (If
+you specifically want to use the PC demo and ordinary hhexen gives you trouble
+with it, recompiling hhexen with the --enable-oldwad configuration might help.)
+
+--------------------------------------------------------------------------------
+
+				   Compiling
+
+You'll need SDL and SDL-devel packages installed.
+
+To compile the OpenGL version (hhexen-gl):
+	./autogen.sh
+	./configure
+	make
+
+To compile the software version (hhexen-sdl):
+	./configure --disable-gl
+	make
+
+To compile the software version (hhexen-svga, for the old-fashioned :)
+	./configure --enable-svga
+	make
+
+--------------------------------------------------------------------------------
+
+				     Hints
+
+While the game is running, you can switch to/from windowed/fullscreen rendering
+by the ALT-Enter key combination.
+
+You can double click with your mouse2 or mouse3 button and it will act as the
+'activate' (use) key.
+
+There is still no way to assign mouse buttons to actions in the control-setup
+menu; it still needs some work.  Currently, the mouse buttons can still only be
+assigned to a few actions:
+
+  mouseb_fire    (fire)
+  mouseb_strafe  (strafe)
+  mouseb_forward (move forward)
+  mouseb_jump    (jump)
+
+which is done by editing $HOME/.hhexen/hhexen.cfg and changing these values.
+Button values are:
+
+  left   mouse button = 0
+  middle mouse button = 1
+  right  mouse button = 2
+  unused              =-1
+
+So, to make the right button jump, change the mouseb_jump line in hhexen.cfg,
+like so:
+
+  mouseb_jump 2
+
+The add-on fourth class, Assassin, is not quite finished yet, and is disabled by
+default.  It can be enabled with "configure --enable-assassin".  The precompiled
+binaries with HHexen-1.5 do not have the assassin enabled.
+*Warning*: There may be issues with the game saves made from assassin enabled
+binaries and from those without.  Enemies have been noticed to disappear!
+
+--------------------------------------------------------------------------------
+
+				    Contact
+
+http://sourceforge.net/projects/hhexen
+sezero_at_users.sourceforge.net
+stevenaaus_at_yahoo_com
+
