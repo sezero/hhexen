@@ -4,8 +4,8 @@
 //** h2_main.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2_main.c,v $
-//** $Revision: 1.34 $
-//** $Date: 2008-07-20 12:05:50 $
+//** $Revision: 1.35 $
+//** $Date: 2008-07-22 09:30:59 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -956,14 +956,15 @@ fixed_t FixedDiv (fixed_t a, fixed_t b)
 //
 //==========================================================================
 
-short ShortSwap (short x)
+int16_t ShortSwap (int16_t x)
 {
-	return ((x & 0xff) << 8) | ((x & 0xff00) >> 8);
+	return (int16_t) (((uint16_t)x << 8) | ((uint16_t)x >> 8));
 }
 
-int LongSwap (int x)
+int32_t LongSwap (int32_t x)
 {
-	return (((x & 0xff) << 24) | ((x & 0xff00) << 8) |
-		((x & 0xff0000) >> 8) | ((x & 0xff000000) >> 24));
+	return (int32_t) (((uint32_t)x << 24) | ((uint32_t)x >> 24) |
+			  (((uint32_t)x & (uint32_t)0x0000ff00UL) << 8) |
+			  (((uint32_t)x & (uint32_t)0x00ff0000UL) >> 8));
 }
 

@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.46 $
-//** $Date: 2008-07-21 22:12:29 $
+//** $Revision: 1.47 $
+//** $Date: 2008-07-22 09:30:59 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1015,8 +1015,8 @@ fixed_t	FixedDiv2 (fixed_t a, fixed_t b);
 #define Q_FIX2FLT(x)	((float)((x)>>FRACBITS))
 
 
-short ShortSwap (short);
-int LongSwap (int);
+int16_t ShortSwap(int16_t) __attribute__((const));
+int32_t LongSwap (int32_t) __attribute__((const));
 
 #if defined(__GNUC__)
 static inline __attribute__((const)) int16_t _H2_SWAP16(int16_t x)
