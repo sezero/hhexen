@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.20 $
-//** $Date: 2008-07-20 09:57:35 $
+//** $Revision: 1.21 $
+//** $Date: 2008-07-22 09:28:56 $
 //** $Author: sezero $
 //**
 //** Games are always saved Little Endian, with 32 bit offsets.
@@ -142,8 +142,8 @@ static void OpenStreamOut(const char *fileName);
 static void CloseStreamOut(void);
 static void StreamOutBuffer(const void *buffer, size_t size);
 static void StreamOutByte(byte val);
-static void StreamOutWord(unsigned short val);
-static void StreamOutLong(unsigned int val);
+static void StreamOutWord(uint16_t val);
+static void StreamOutLong(uint32_t val);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
@@ -2444,9 +2444,9 @@ static void StreamOutByte(byte val)
 //
 //==========================================================================
 
-static void StreamOutWord(unsigned short val)
+static void StreamOutWord(uint16_t val)
 {
-	uint16_t tmp = SHORT(val);
+	uint16_t tmp = (uint16_t) SHORT(val);
 	fwrite(&tmp, sizeof(uint16_t), 1, SavingFP);
 }
 
@@ -2456,9 +2456,9 @@ static void StreamOutWord(unsigned short val)
 //
 //==========================================================================
 
-static void StreamOutLong(unsigned int val)
+static void StreamOutLong(uint32_t val)
 {
-	uint32_t tmp = LONG(val);
+	uint32_t tmp = (uint32_t) LONG(val);
 	fwrite(&tmp, sizeof(uint32_t), 1, SavingFP);
 }
 
