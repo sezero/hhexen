@@ -20,6 +20,7 @@
 #define _SNDOSS_H
 
 
+#include "config.h"
 #include "audio_plugin.h"
 
 
