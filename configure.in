@@ -192,10 +192,16 @@ AC_SUBST(SDL_CFLAGS)
 AC_SUBST(SDL_LIBS)
 
 dnl === Check for GL libraries =======================================
-AC_CHECK_LIB(GL, glBindTexture, [LIBS="$LIBS -lGL";HAVEGL="yes";], [HAVEGL="no";])
-if test "$HAVEGL" = "yes"; then
-   AC_CHECK_LIB(GLU, gluOrtho2D, [LIBS="$LIBS -lGLU";HAVEGLU="yes";], [HAVEGLU="no";])
+saved_libs="$LIBS"
+if test x$ac_x_libraries != x; then
+   LIBS="$LIBS -L$ac_x_libraries "
 fi
+AC_CHECK_LIB(GL, glBindTexture, [GLLIBS="$GLLIBS -lGL";HAVEGL="yes";], [HAVEGL="no";])
+if test "$HAVEGL" = "yes"; then
+   LIBS="$LIBS $GLLIBS"
+   AC_CHECK_LIB(GLU, gluOrtho2D, [GLLIBS="$GLLIBS -lGLU";HAVEGLU="yes";], [HAVEGLU="no";])
+fi
+LIBS="$saved_libs"
 
 if test "$GLHEXEN" = "true"; then
   if test "$HAVEGL" = "no"; then
@@ -206,10 +212,7 @@ if test "$GLHEXEN" = "true"; then
   fi
 fi
 
-GLLIBS="$LIBS"
 AC_SUBST(GLLIBS)
-
-AC_CHECK_LIB(dl, dlopen)
 
 dnl === Check for SVGALib ============================================
 AC_CHECK_LIB(vga, vga_setmode, [SVGALIBS="-lvga"; HAVESVGA="yes"], [HAVESVGA="no"])
