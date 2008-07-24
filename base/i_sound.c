@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sound.c,v 1.10 2008-07-16 07:40:51 sezero Exp $
+//** $Id: i_sound.c,v 1.11 2008-07-24 13:26:03 sezero Exp $
 //**
 //**************************************************************************
 
@@ -14,7 +14,7 @@
 #include "audio_plugin.h"
 
 
-#define SAMPLE_FORMAT	FMT_S16_LE
+#define SAMPLE_FORMAT	FMT_S16_NE
 #define SAMPLE_ZERO	0
 #define SAMPLE_RATE	11025	/* Hz */
 #define SAMPLE_CHANNELS	2
