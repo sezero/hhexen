@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.21 $
-//** $Date: 2008-07-22 09:28:56 $
+//** $Revision: 1.22 $
+//** $Date: 2008-07-29 12:45:46 $
 //** $Author: sezero $
 //**
 //** Games are always saved Little Endian, with 32 bit offsets.
@@ -23,6 +23,7 @@
 
 // MACROS ------------------------------------------------------------------
 
+#define MAX_TARGET_PLAYERS	512
 #define MOBJ_NULL		-1
 #define MOBJ_XX_PLAYER		-2
 
@@ -110,7 +111,7 @@ static void RemoveAllThinkers(void);
 static void MangleMobj(mobj_t *mobj, save_mobj_t *temp);
 static void RestoreMobj(mobj_t *mobj, save_mobj_t *temp);
 static int32_t GetMobjNum(mobj_t *mobj);
-static mobj_t *GetMobjPtr(int archiveNum);
+static mobj_t *GetMobjPtr(int archiveNum, intptr_t *target);
 static void MangleFloorMove(void *arg1, void *arg2);
 static void RestoreFloorMove(void *arg1, void *arg2);
 static void MangleLight(void *arg1, void *arg2);
@@ -157,6 +158,8 @@ extern acsInfo_t *ACSInfo;
 
 static int MobjCount;
 static mobj_t **MobjList;
+static intptr_t **TargetPlayerAddrs;
+static int TargetPlayerCount;
 static void *SaveBuffer;
 static boolean SavingPlayers;
 static byte *SavePtr;
@@ -461,6 +464,9 @@ void SV_LoadGame(int slot)
 	// Load the current map
 	SV_LoadMap();
 
+	// Don't need the player mobj relocation info for load game
+	Z_Free(TargetPlayerAddrs);
+
 	// Restore player structs
 	inv_ptr = 0;
 	curpos = 0;
@@ -514,6 +520,7 @@ void SV_MapTeleport(int map, int position)
 	char fileName[MAX_OSPATH];
 	player_t playerBackup[MAXPLAYERS];
 	mobj_t *mobj;
+	mobj_t *targetPlayerMobj;
 	int inventoryPtr;
 	int currentInvPos;
 	boolean rClass;
@@ -547,6 +554,10 @@ void SV_MapTeleport(int map, int position)
 	inventoryPtr = inv_ptr;
 	currentInvPos = curpos;
 
+	// Only SV_LoadMap() uses TargetPlayerAddrs, so it's NULLed here
+	// for the following check (player mobj redirection)
+	TargetPlayerAddrs = NULL;
+
 	gamemap = map;
 	snprintf(fileName, sizeof(fileName), "%shex6%02d.hxs", basePath, gamemap);
 	if (!deathmatch && ExistingFile(fileName))
@@ -568,6 +579,7 @@ void SV_MapTeleport(int map, int position)
 	}
 
 	// Restore player structs
+	targetPlayerMobj = NULL;
 	for (i = 0; i < MAXPLAYERS; i++)
 	{
 		if (!playeringame[i])
@@ -629,8 +641,23 @@ void SV_MapTeleport(int map, int position)
 				players[i].pendingweapon = bestWeapon;
 			}
 		}
+
+		if (targetPlayerMobj == NULL)
+		{ // The poor sap
+			targetPlayerMobj = players[i].mo;
+		}
 	}
 	randomclass = rClass;
+
+	// Redirect anything targeting a player mobj
+	if (TargetPlayerAddrs)
+	{
+		for (i = 0; i < TargetPlayerCount; i++)
+		{
+			*TargetPlayerAddrs[i] = (intptr_t)targetPlayerMobj;
+		}
+		Z_Free(TargetPlayerAddrs);
+	}
 
 	// Destroy all things touching players
 	for (i = 0; i < MAXPLAYERS; i++)
@@ -1161,6 +1188,8 @@ static void UnarchiveMobjs(void)
 	mobj_t *mobj;
 
 	AssertSegment(ASEG_MOBJS);
+	TargetPlayerAddrs = (intptr_t **) Z_Malloc(MAX_TARGET_PLAYERS*sizeof(int *), PU_STATIC, NULL);
+	TargetPlayerCount = 0;
 	MobjCount = GET_LONG();
 	MobjList = (mobj_t **) Z_Malloc(MobjCount*sizeof(mobj_t *), PU_STATIC, NULL);
 	for (i = 0; i < MobjCount; i++)
@@ -1397,7 +1426,7 @@ static void RestoreMobj(mobj_t *mobj, save_mobj_t *temp)
 	mobj->info = &mobjinfo[mobj->type];
 	mobj->floorz = mobj->subsector->sector->floorheight;
 	mobj->ceilingz = mobj->subsector->sector->ceilingheight;
-	mobj->target = GetMobjPtr(temp->target_idx);
+	mobj->target = GetMobjPtr(temp->target_idx, (intptr_t *)&mobj->target);
 	switch (mobj->type)
 	{
 	// Just special1
@@ -1408,20 +1437,20 @@ static void RestoreMobj(mobj_t *mobj, save_mobj_t *temp)
 	case MT_THRUSTFLOOR_DOWN:
 	case MT_MINOTAUR:
 	case MT_SORCFX1:
-		mobj->special1 = (intptr_t) GetMobjPtr(temp->special1);
+		mobj->special1 = (intptr_t) GetMobjPtr(temp->special1, (intptr_t *)&mobj->special1);
 		break;
 
 	// Just special2
 	case MT_LIGHTNING_FLOOR:
 	case MT_LIGHTNING_ZAP:
-		mobj->special2 = (intptr_t) GetMobjPtr(temp->special2);
+		mobj->special2 = (intptr_t) GetMobjPtr(temp->special2, (intptr_t *)&mobj->special2);
 		break;
 
 	// Both special1 and special2
 	case MT_HOLY_TAIL:
 	case MT_LIGHTNING_CEILING:
-		mobj->special1 = (intptr_t) GetMobjPtr(temp->special1);
-		mobj->special2 = (intptr_t) GetMobjPtr(temp->special2);
+		mobj->special1 = (intptr_t) GetMobjPtr(temp->special1, (intptr_t *)&mobj->special1);
+		mobj->special2 = (intptr_t) GetMobjPtr(temp->special2, (intptr_t *)&mobj->special2);
 		break;
 
 	default:
@@ -1435,7 +1464,7 @@ static void RestoreMobj(mobj_t *mobj, save_mobj_t *temp)
 //
 //==========================================================================
 
-static mobj_t *GetMobjPtr(int archiveNum)
+static mobj_t *GetMobjPtr(int archiveNum, intptr_t *target)
 {
 	if (archiveNum == MOBJ_NULL)
 	{
@@ -1443,6 +1472,11 @@ static mobj_t *GetMobjPtr(int archiveNum)
 	}
 	if (archiveNum == MOBJ_XX_PLAYER)
 	{
+		if (TargetPlayerCount == MAX_TARGET_PLAYERS)
+		{
+			I_Error("RestoreMobj: exceeded MAX_TARGET_PLAYERS");
+		}
+		TargetPlayerAddrs[TargetPlayerCount++] = target;
 		return NULL;
 	}
 	return MobjList[archiveNum];
@@ -1922,7 +1956,7 @@ static void RestoreScript(void *arg1, void *arg2)
 	{
 		script->line	= &lines[temp->line_idx];
 	}
-	script->activator	= GetMobjPtr(temp->activator_idx);
+	script->activator	= GetMobjPtr(temp->activator_idx, (intptr_t *)&script->activator);
 	script->side		= (int) LONG(temp->side);
 	script->number		= (int) LONG(temp->number);
 	script->infoIndex	= (int) LONG(temp->infoIndex);
