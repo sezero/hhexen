@@ -15,6 +15,8 @@ Notes:
  - Shareware wad files don't need a special configuration anymore.
  - HHexen now looks in the user directory for wad and lmp files, too.
  - The recorded demos are now written in the user directory.
+ - All saved games from 32 bit, 64 bit, little endian and big endian machines
+   are compatible with each other.
  - All of gcc-4.x series compilers are supported.
  - See ChangeLog for details.
 

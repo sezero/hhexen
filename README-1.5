@@ -5,21 +5,30 @@
 
 				     About
 
-This is a new release of Dan's excellent Hacked Hexen by the authors of
-Hammer of Thyrion (Hexen II).  We're applying fixes and enhancements we have
-and putting this port back in the wild so people can contribute to it again.
+This is a new release of Dan's excellent Hacked Hexen, by the authors of
+Hammer of Thyrion (Hexen II).  We're applying fixes, adding a few features, 
+and ensuring it runs on most *nix operating systems.
 
-Major changes with this release since the previous 1.4 version, are:
+Major changes since 1.4:
 
-  * OpenGL intermission and finale screens
+  * OpenGL intermission and finale screens fixed
   * Support for big endian and 64 bit machines
   * Fixed FreeBSD support
   * Various hacks/fixes for the proper handling of different 1.0 and 1.1
     wad file versions
   * OpenGL is the default configuration now
   * Incomplete assassin class is now disabled by default
-  * Other usual bugfixes.
-  * See ChangeLog for details.
+  * Other usual bug-fixes.
+
+Changes with our first release include:
+
+  * OpenGL screenshots (now bound to F12 and enabled by default)
+  * Game saves/loads work fine (CVS was broken for a while)
+  * Transparent map feature (TAB key)
+  * Many excellent GCC/C/portability bug-fixes from Oz
+  * Removal of incomplete assassin class now possible (with configure
+    --disable-assassin)
+  * More complete support for punctuation keys in the control-setup menu.
 
 --------------------------------------------------------------------------------
 
@@ -41,21 +50,20 @@ Demo wad 1.0 (from PC shareware hexndemo.zip):
 Demo wad 1.1 (from Macintosh shareware MacHexenDemo.hqx):
   925f9f5000e17dc84b0a6a3bed3a6f31  hexen.wad (13,596,228 bytes)
 
-We did our best to support the old 1.0 wad files in HHexen 1.5, but we strongly
-suggest that you always patch your wads to version 1.1 to avoid possible issues.
-If, for some reason, patching is not an option and you run into problems, then
+We've done our best to support the old 1.0 wad files, but strongly
+suggest that you patch your wads to version 1.1 to avoid possible issues.
+If for some reason patching is not an option and you run into problems,
 compile hhexen to specifically use version 1.0 hexen.wad:
   ./configure --enable-oldwad
 
-Remember that saved games and recorded demos from different wad versions are not
+Saved games and recorded demos from different wad versions are not
 compatible.
 
-If you don't have the full retail version of Hexen, you can still play the demo
-version.  We suggest that you download the demo wad from our site:  it is the
-the 4-level version 1.1 demo wad file from the MacHexen shareware.  On the other
-hand, the PC shareware wad is a version 1.0 wad and we don't recommend it. (If
-you specifically want to use the PC demo and ordinary hhexen gives you trouble
-with it, recompiling hhexen with the --enable-oldwad configuration might help.)
+Those without the full retail version of Hexen can still play the demo.  The
+newest demo wad (a 4 level version from the MacHexen shareware) can be
+downloaded from http://hhexen.sf.net. (The PC shareware demo is older, and not
+recommended. If you specifically want to use it, we recommend recompiling
+hhexen with the --enable-oldwad option.)
 
 --------------------------------------------------------------------------------
 
@@ -72,7 +80,7 @@ To compile the software version (hhexen-sdl):
 	./configure --disable-gl
 	make
 
-To compile the software version (hhexen-svga, for the old-fashioned :)
+To compile the software version (hhexen-svga, for the old-fashioned :))
 	./configure --enable-svga
 	make
 
@@ -80,14 +88,13 @@ To compile the software version (hhexen-svga, for the old-fashioned :)
 
 				     Hints
 
-While the game is running, you can switch to/from windowed/fullscreen rendering
-by the ALT-Enter key combination.
+You can switch between windowed and fullscreen modes
+with the ALT-Enter key combination.
 
-You can double click with your mouse2 or mouse3 button and it will act as the
-'activate' (use) key.
+Double-clicking with Mouse2 or Mouse3 acts as the 'activate' (or 'use') key.
 
 There is still no way to assign mouse buttons to actions in the control-setup
-menu; it still needs some work.  Currently, the mouse buttons can still only be
+menu; it needs some work.  Currently, the mouse buttons can only be
 assigned to a few actions:
 
   mouseb_fire    (fire)
@@ -108,7 +115,7 @@ like so:
 
   mouseb_jump 2
 
-The add-on fourth class, Assassin, is not quite finished yet, and is disabled by
+The user created 4th class, Assassin, is not quite finished yet, and disabled by
 default.  It can be enabled with "configure --enable-assassin".  The precompiled
 binaries with HHexen-1.5 do not have the assassin enabled.
 *Warning*: There may be issues with the game saves made from assassin enabled
