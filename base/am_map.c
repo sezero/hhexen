@@ -4,8 +4,8 @@
 //** am_map.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: am_map.c,v $
-//** $Revision: 1.18 $
-//** $Date: 2008-07-20 12:05:50 $
+//** $Revision: 1.19 $
+//** $Date: 2008-07-29 07:43:51 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1351,8 +1351,8 @@ static void AM_drawPlayers(void)
 	if (!netgame)
 	{
 		AM_drawLineCharacter(player_arrow, NUMPLYRLINES, 0, plr->mo->angle,
-							GREENKEY, plr->mo->x, plr->mo->y);
-				// S.A. GREENKEY is color, used to be WHITE - couldn't see it!
+						AM_PLR5_COLOR, plr->mo->x, plr->mo->y);
+		// AM_PLR5_COLOR: Jade. Used to be WHITE, couldn't see it! - S.A.
 		return;
 	}
 
