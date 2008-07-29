@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_svgalib.c,v 1.7 2008-06-30 08:32:17 sezero Exp $
+//** $Id: i_svgalib.c,v 1.8 2008-07-29 07:46:24 sezero Exp $
 //**
 //**************************************************************************
 
@@ -15,10 +15,6 @@
 
 #include "h2def.h"
 #include "r_local.h"
-#include "p_local.h"	/* for P_AproxDistance */
-#include "sounds.h"
-#include "i_sound.h"
-#include "soundst.h"
 #include "st_start.h"
 
 // Macros

@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdlgl.c,v 1.16 2008-06-29 16:20:32 sezero Exp $
+//** $Id: i_sdlgl.c,v 1.17 2008-07-29 07:46:24 sezero Exp $
 //**
 //**************************************************************************
 
@@ -13,9 +13,6 @@
 #include "h2def.h"
 #include "r_local.h"
 #include "ogl_def.h"
-#include "sounds.h"
-#include "i_sound.h"
-#include "soundst.h"
 #include "st_start.h"
 
 // Public Data
