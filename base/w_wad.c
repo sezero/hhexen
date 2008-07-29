@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.27 $
-//** $Date: 2008-07-21 07:45:09 $
+//** $Revision: 1.28 $
+//** $Date: 2008-07-29 07:55:21 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -661,13 +661,13 @@ void W_CheckForOldFiles (void)
 
 	for (i = 1; i <= 4 && oldwad_10 != true; i++)
 	{
-		sprintf (lumpmsg, "clus%imsg", i);
+		sprintf (lumpmsg, "CLUS%iMSG", i);
 		if (W_CheckNumForName(lumpmsg) == -1)
 			oldwad_10 = true;
 	}
 	for (i = 1; i <= 3 && oldwad_10 != true; i++)
 	{
-		sprintf (lumpmsg, "win%imsg", i);
+		sprintf (lumpmsg, "WIN%iMSG", i);
 		if (W_CheckNumForName(lumpmsg) == -1)
 			oldwad_10 = true;
 	}

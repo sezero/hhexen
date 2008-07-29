@@ -4,8 +4,8 @@
 //** h_hubmsg.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h_hubmsg.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2008-06-22 16:32:43 $
+//** $Revision: 1.3 $
+//** $Date: 2008-07-29 07:55:21 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -36,34 +36,34 @@ static char ClusterMessage[MAX_INTRMSN_MESSAGE_SIZE];
 
 static const char *ClusMsgLumpNames[] =
 {
-	"clus1msg",
-	"clus2msg", 
-	"clus3msg",
-	"clus4msg", 
-	"clus5msg"
+	"CLUS1MSG",
+	"CLUS2MSG", 
+	"CLUS3MSG",
+	"CLUS4MSG", 
+	"CLUS5MSG"
 };
 
 static const char *winMsgLumpNames[] =
 {
-	"win1msg",
-	"win2msg",
-	"win3msg"
+	"WIN1MSG",
+	"WIN2MSG",
+	"WIN3MSG"
 };
 
 static const char *winMsg_OldWad[] =
 {
-	WIN1MSG,
-	WIN2MSG,
-	WIN3MSG
+	TXT_WIN1MSG,
+	TXT_WIN2MSG,
+	TXT_WIN3MSG
 };
 
 static const char *ClusMsg_OldWad[] =
 {
-	CLUS1MSG,
-	CLUS2MSG, 
-	CLUS3MSG,
-	CLUS4MSG, 
-	CLUS5MSG
+	TXT_CLUS1MSG,
+	TXT_CLUS2MSG, 
+	TXT_CLUS3MSG,
+	TXT_CLUS4MSG, 
+	TXT_CLUS5MSG
 };
 
 // CODE --------------------------------------------------------------------

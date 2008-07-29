@@ -4,8 +4,8 @@
 //** h_hubmsg.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h_hubmsg.h,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-06-22 16:32:45 $
+//** $Revision: 1.4 $
+//** $Date: 2008-07-29 07:55:21 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -21,7 +21,7 @@ const char *GetFinaleText (int sequence);
 /* Hardcoded Cluster Ending Messages for Version 1.0 WAD files: ----------*/
 /* h_hubmsg.c  -----------------------------------------------------------*/
 
-#define CLUS1MSG	"HAVING PASSED THE SEVEN PORTALS\n"		\
+#define TXT_CLUS1MSG	"HAVING PASSED THE SEVEN PORTALS\n"		\
 			"WHICH SEALED THIS REALM, A VAST\n"		\
 			"DOMAIN OF HARSH WILDERNESS STRETCHES\n"	\
 			"BEFORE YOU. FIRE, ICE, AND STEEL HAVE\n"	\
@@ -39,7 +39,7 @@ const char *GetFinaleText (int sequence);
 			"OF THE HYPOSTYLE SEEM TO MOCK\n"		\
 			"YOUR EVERY EFFORT."
 
-#define CLUS2MSG	"YOUR MIND STILL REELING FROM YOUR\n"		\
+#define TXT_CLUS2MSG	"YOUR MIND STILL REELING FROM YOUR\n"		\
 			"ENCOUNTERS WITHIN THE HYPOSTYLE, YOU\n"	\
 			"STAGGER TOWARD WHAT YOU HOPE IS\n"		\
 			"A WAY OUT, THINGS SEEM TO MOVE FASTER\n"	\
@@ -59,7 +59,7 @@ const char *GetFinaleText (int sequence);
 			"PAIN, HOW WILL YOU EVER FIND YOUR\n"		\
 			"WAY OUT?"
 
-#define CLUS3MSG	"THE MIGHTIEST WEAPONS AND ARTIFACTS\n"		\
+#define TXT_CLUS3MSG	"THE MIGHTIEST WEAPONS AND ARTIFACTS\n"		\
 			"OF THE ANCIENTS BARELY SUFFICED TO\n"		\
 			"DEFEAT THE HERESIARCH AND HIS\n"		\
 			"MINIONS, BUT NOW THEIR FOUL REMAINS\n"		\
@@ -80,7 +80,7 @@ const char *GetFinaleText (int sequence);
 			"SOMEWHERE WITHIN, YOUR ENEMIES ARE\n"		\
 			"WAITING..."
 
-#define CLUS4MSG	"\"... AND HE SHALL JOURNEY INTO THE\n"		\
+#define TXT_CLUS4MSG	"\"... AND HE SHALL JOURNEY INTO THE\n"		\
 			"REALMS OF THE DEAD, AND CONTEST WITH\n"	\
 			"THE FORCES THEREIN, UNTO THE VERY\n"		\
 			"GATES OF DESPAIR, BUT WHETHER HE\n"		\
@@ -89,14 +89,14 @@ const char *GetFinaleText (int sequence);
 			"\n\n\n\n\n"					\
 			"DAMN."
 
-#define CLUS5MSG	"PLEASE EMAIL THE DEVELOPERS\n"			\
+#define TXT_CLUS5MSG	"PLEASE EMAIL THE DEVELOPERS\n"			\
 			"AND TELL THEM HOW YOU FOUND\n"			\
 			"THIS MESSAGE IN AS MUCH DETAIL\n"		\
 			"AS POSSIBLE SO THEY CAN PUT\n"			\
 			"THE RIGHT MESSAGE HERE.\n\n"			\
 			"THANKS."
 
-#define WIN1MSG		"WITH A SCREAM OF AGONY YOU ARE\n"		\
+#define TXT_WIN1MSG	"WITH A SCREAM OF AGONY YOU ARE\n"		\
 			"WRENCHED FROM THIS WORLD INTO\n"		\
 			"ANTOHER, EVERY PART OF YOUR BODY\n"		\
 			"WREATHED IN MYSTIC FIRE. WHEN YOUR\n"		\
@@ -107,7 +107,7 @@ const char *GetFinaleText (int sequence);
 			"SEE A RAISED DAIS, AND UPON IT THE\n"		\
 			"ONLY SOURCE OF LIGHT IN THIS WORLD."
 
-#define WIN2MSG		"THIS CAN ONLY BE THE CHAOS SPHERE,\n"		\
+#define TXT_WIN2MSG	"THIS CAN ONLY BE THE CHAOS SPHERE,\n"		\
 			"THE SOURCE OF KORAX'S POWER. WITH\n"		\
 			"THIS, YOU CAN CREATE WORLDS... OR\n"		\
 			"DESTROY THEM. BY RIGHTS OF BATTLE\n"		\
@@ -119,7 +119,7 @@ const char *GetFinaleText (int sequence);
 			"SUDDENLY THE VERY REACHES OF THE\n"		\
 			"BOARD SEEM TO BE WITHIN YOUR GRASP."
 
-#define WIN3MSG		"BUT THERE ARE OTHER PLAYERS MIGHTIER\n"	\
+#define TXT_WIN3MSG	"BUT THERE ARE OTHER PLAYERS MIGHTIER\n"	\
 			"THAN YOU, AND WHO CAN KNOW THEIR\n"		\
 			"NEXT MOVES?"
 
