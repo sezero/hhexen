@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.22 $
-//** $Date: 2008-07-29 12:45:46 $
+//** $Revision: 1.24 $
+//** $Date: 2008-07-29 22:34:12 $
 //** $Author: sezero $
 //**
 //** Games are always saved Little Endian, with 32 bit offsets.
@@ -111,7 +111,7 @@ static void RemoveAllThinkers(void);
 static void MangleMobj(mobj_t *mobj, save_mobj_t *temp);
 static void RestoreMobj(mobj_t *mobj, save_mobj_t *temp);
 static int32_t GetMobjNum(mobj_t *mobj);
-static mobj_t *GetMobjPtr(int archiveNum, intptr_t *target);
+static mobj_t *GetMobjPtr(int32_t archiveNum, intptr_t *target);
 static void MangleFloorMove(void *arg1, void *arg2);
 static void RestoreFloorMove(void *arg1, void *arg2);
 static void MangleLight(void *arg1, void *arg2);
@@ -1188,7 +1188,7 @@ static void UnarchiveMobjs(void)
 	mobj_t *mobj;
 
 	AssertSegment(ASEG_MOBJS);
-	TargetPlayerAddrs = (intptr_t **) Z_Malloc(MAX_TARGET_PLAYERS*sizeof(int *), PU_STATIC, NULL);
+	TargetPlayerAddrs = (intptr_t **) Z_Malloc(MAX_TARGET_PLAYERS*sizeof(intptr_t *), PU_STATIC, NULL);
 	TargetPlayerCount = 0;
 	MobjCount = GET_LONG();
 	MobjList = (mobj_t **) Z_Malloc(MobjCount*sizeof(mobj_t *), PU_STATIC, NULL);
@@ -1437,20 +1437,20 @@ static void RestoreMobj(mobj_t *mobj, save_mobj_t *temp)
 	case MT_THRUSTFLOOR_DOWN:
 	case MT_MINOTAUR:
 	case MT_SORCFX1:
-		mobj->special1 = (intptr_t) GetMobjPtr(temp->special1, (intptr_t *)&mobj->special1);
+		mobj->special1 = (intptr_t) GetMobjPtr(temp->special1, &mobj->special1);
 		break;
 
 	// Just special2
 	case MT_LIGHTNING_FLOOR:
 	case MT_LIGHTNING_ZAP:
-		mobj->special2 = (intptr_t) GetMobjPtr(temp->special2, (intptr_t *)&mobj->special2);
+		mobj->special2 = (intptr_t) GetMobjPtr(temp->special2, &mobj->special2);
 		break;
 
 	// Both special1 and special2
 	case MT_HOLY_TAIL:
 	case MT_LIGHTNING_CEILING:
-		mobj->special1 = (intptr_t) GetMobjPtr(temp->special1, (intptr_t *)&mobj->special1);
-		mobj->special2 = (intptr_t) GetMobjPtr(temp->special2, (intptr_t *)&mobj->special2);
+		mobj->special1 = (intptr_t) GetMobjPtr(temp->special1, &mobj->special1);
+		mobj->special2 = (intptr_t) GetMobjPtr(temp->special2, &mobj->special2);
 		break;
 
 	default:
@@ -1464,7 +1464,7 @@ static void RestoreMobj(mobj_t *mobj, save_mobj_t *temp)
 //
 //==========================================================================
 
-static mobj_t *GetMobjPtr(int archiveNum, intptr_t *target)
+static mobj_t *GetMobjPtr(int32_t archiveNum, intptr_t *target)
 {
 	if (archiveNum == MOBJ_NULL)
 	{
@@ -1941,7 +1941,7 @@ static void MangleScript(void *arg1, void *arg2)
 static void RestoreScript(void *arg1, void *arg2)
 {
 	int		i;
-	acs_t 	*script		= (acs_t *)	arg1;
+	acs_t	*script		= (acs_t *)	arg1;
 	save_acs_t *temp	= (save_acs_t *) arg2;
 
 	temp->ip_idx		= (int32_t) LONG(temp->ip_idx);
