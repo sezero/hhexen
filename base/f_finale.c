@@ -4,8 +4,8 @@
 //** f_finale.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: f_finale.c,v $
-//** $Revision: 1.18 $
-//** $Date: 2008-06-28 17:11:54 $
+//** $Revision: 1.19 $
+//** $Date: 2008-07-29 07:40:57 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -284,14 +284,14 @@ static void InitializeFade(boolean fadeIn)
 		for (i = 0; i < 768; i++)
 		{
 			Palette[i] = 0;
-			PaletteDelta[i] = FixedDiv((*((byte *)W_CacheLumpName("playpal", PU_CACHE) + i))<<FRACBITS, 70*FRACUNIT);
+			PaletteDelta[i] = FixedDiv((*((byte *)W_CacheLumpName("PLAYPAL", PU_CACHE) + i))<<FRACBITS, 70*FRACUNIT);
 		}
 	}
 	else
 	{
 		for (i = 0; i < 768; i++)
 		{
-			RealPalette[i] = *((byte *)W_CacheLumpName("playpal", PU_CACHE) + i);
+			RealPalette[i] = *((byte *)W_CacheLumpName("PLAYPAL", PU_CACHE) + i);
 			Palette[i] = RealPalette[i]<<FRACBITS;
 			PaletteDelta[i] = FixedDiv(Palette[i], -70*FRACUNIT);
 		}
