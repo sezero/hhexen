@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.47 $
-//** $Date: 2008-07-22 09:30:59 $
+//** $Revision: 1.48 $
+//** $Date: 2008-08-26 11:00:48 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -993,7 +993,22 @@ fixed_t	FixedDiv2 (fixed_t a, fixed_t b);
 #elif defined(__GNUC__)
 
 #define	_HAVE_FIXED_ASM			1
+
 # if defined(_INLINE_FIXED_ASM)
+# if (__GNUC__ == 2) && (__GNUC_MINOR__ <= 91)
+# define FixedMul(fa,fb) ({ int __value, __fb = (fb);	\
+	__asm__("imul %%ebx; shrd $16,%%edx,%%eax"	\
+		: "=a" (__value)			\
+		: "0" (fa), "b" (__fb)			\
+		: "eax", "edx" ); __value; })
+
+# define FixedDiv2(fa,fb) ({ int __value;		\
+	__asm__("cdq; shld $16,%%eax,%%edx; sall $16,%%eax; idiv %%ebx"	\
+		: "=a" (__value)			\
+		: "0" (fa), "b" (fb)			\
+		: "eax", "edx" ); __value; })
+
+# else	/* GCC > 2.91.x */
 # define FixedMul(fa,fb) ({ int __value, __fb = (fb);	\
 	__asm__("imul %%ebx; shrd $16,%%edx,%%eax"	\
 		: "=a" (__value)			\
@@ -1005,6 +1020,8 @@ fixed_t	FixedDiv2 (fixed_t a, fixed_t b);
 		: "=a" (__value)			\
 		: "0" (fa), "b" (fb)			\
 		: "edx" ); __value; })
+
+# endif	/* GCC/EGCS versions */
 
 # endif	/* _INLINE_FIXED_ASM */
 #endif
