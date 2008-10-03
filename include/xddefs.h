@@ -4,8 +4,8 @@
 //** xddefs.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: xddefs.h,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-10-03 12:41:13 $
+//** $Revision: 1.7 $
+//** $Date: 2008-10-03 12:45:18 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -37,6 +37,7 @@ typedef struct
 	short		x;
 	short		y;
 } mapvertex_t;
+COMPILE_TIME_ASSERT(mapvertex_t, sizeof(mapvertex_t) == 4);
 
 typedef struct
 {
@@ -47,6 +48,7 @@ typedef struct
 	char		midtexture[8];
 	short		sector;	/* on viewer's side */
 } __attribute__((packed)) mapsidedef_t;
+COMPILE_TIME_ASSERT(mapsidedef_t, sizeof(mapsidedef_t) == 30);
 
 typedef struct
 {
@@ -61,6 +63,7 @@ typedef struct
 	byte		arg5;
 	short		sidenum[2];	/* sidenum[1] will be -1 if one sided */
 } maplinedef_t;
+COMPILE_TIME_ASSERT(maplinedef_t, sizeof(maplinedef_t) == 16);
 
 #define	ML_BLOCKING		0x0001
 #define	ML_BLOCKMONSTERS	0x0002
@@ -94,12 +97,14 @@ typedef	struct
 	short		special;
 	short		tag;
 } __attribute__((packed)) mapsector_t;
+COMPILE_TIME_ASSERT(mapsector_t, sizeof(mapsector_t) == 26);
 
 typedef struct
 {
 	short		numsegs;
 	short		firstseg;	/* segs are stored sequentially */
 } mapsubsector_t;
+COMPILE_TIME_ASSERT(mapsubsector_t, sizeof(mapsubsector_t) == 4);
 
 typedef struct
 {
@@ -110,6 +115,7 @@ typedef struct
 	short		side;
 	short		offset;
 } mapseg_t;
+COMPILE_TIME_ASSERT(mapseg_t, sizeof(mapseg_t) == 12);
 
 /* bbox coordinates */
 enum
@@ -127,6 +133,7 @@ typedef struct
 	short		bbox[2][4];	/* bounding box for each child */
 	unsigned short	children[2];	/* if NF_SUBSECTOR its a subsector */
 } mapnode_t;
+COMPILE_TIME_ASSERT(mapnode_t, sizeof(mapnode_t) == 28);
 
 typedef struct
 {
@@ -144,6 +151,7 @@ typedef struct
 	byte		arg4;
 	byte		arg5;
 } mapthing_t;
+COMPILE_TIME_ASSERT(mapthing_t, sizeof(mapthing_t) == 20);
 
 #define MTF_EASY		1
 #define MTF_NORMAL		2
@@ -168,6 +176,7 @@ typedef struct
 	short		stepdir;
 	short		colormap;
 } __attribute__((packed)) mappatch_t;
+COMPILE_TIME_ASSERT(mappatch_t, sizeof(mappatch_t) == 10);
 
 typedef struct
 {
@@ -179,6 +188,7 @@ typedef struct
 	short		patchcount;
 	mappatch_t	patches[1];
 } __attribute__((packed)) maptexture_t;
+COMPILE_TIME_ASSERT(maptexture_t, sizeof(maptexture_t) == 32);
 
 
 /* ---- Graphics ---- */
@@ -190,6 +200,7 @@ typedef struct
 	byte		length;
 	/* length data bytes follows */
 } __attribute__((packed)) post_t;
+COMPILE_TIME_ASSERT(post_t, sizeof(post_t) == 2);
 
 /* column_t is a list of 0 or more post_t, (byte)-1 terminated */
 typedef post_t	column_t;
@@ -206,13 +217,7 @@ typedef struct
 	int		columnofs[8];		/* only [width] used */
 							/* the [0] is &columnofs[width] */
 } patch_t;
-
-/* a pic is an unmasked block of pixels */
-typedef struct
-{
-	byte		width, height;
-	byte		data;
-} pic_t;
+COMPILE_TIME_ASSERT(patch_t, sizeof(patch_t) == 40);
 
 #endif	/* __XDDEFS__ */
 

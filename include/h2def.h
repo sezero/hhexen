@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.48 $
-//** $Date: 2008-08-26 11:00:48 $
+//** $Revision: 1.49 $
+//** $Date: 2008-10-03 12:45:18 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -1121,6 +1121,7 @@ typedef struct
 	char		name[8];
 	int		handle, position, size;
 } lumpinfo_t;
+COMPILE_TIME_ASSERT(lumpinfo_t, sizeof(lumpinfo_t) == 20);
 
 extern	lumpinfo_t	*lumpinfo;
 extern	int		numlumps;
