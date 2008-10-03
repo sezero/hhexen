@@ -4,8 +4,8 @@
 //** xddefs.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: xddefs.h,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-07-11 08:02:10 $
+//** $Revision: 1.6 $
+//** $Date: 2008-10-03 12:41:13 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -46,7 +46,7 @@ typedef struct
 	char		bottomtexture[8];
 	char		midtexture[8];
 	short		sector;	/* on viewer's side */
-} mapsidedef_t;
+} __attribute__((packed)) mapsidedef_t;
 
 typedef struct
 {
@@ -93,7 +93,7 @@ typedef	struct
 	short		lightlevel;
 	short		special;
 	short		tag;
-} mapsector_t;
+} __attribute__((packed)) mapsector_t;
 
 typedef struct
 {
@@ -167,7 +167,7 @@ typedef struct
 	short		patch;
 	short		stepdir;
 	short		colormap;
-} mappatch_t;
+} __attribute__((packed)) mappatch_t;
 
 typedef struct
 {
@@ -175,13 +175,10 @@ typedef struct
 	boolean		masked;	
 	short		width;
 	short		height;
-//	void		**columndirectory;	/* OBSOLETE */
 	int32_t		columndirectory;	/* OBSOLETE */
-	/* must be non-pointer with 32 bit size for 64 bit! */
-
 	short		patchcount;
 	mappatch_t	patches[1];
-} maptexture_t;
+} __attribute__((packed)) maptexture_t;
 
 
 /* ---- Graphics ---- */
@@ -192,7 +189,7 @@ typedef struct
 	byte		topdelta;	/* -1 is the last post in a column */
 	byte		length;
 	/* length data bytes follows */
-} post_t;
+} __attribute__((packed)) post_t;
 
 /* column_t is a list of 0 or more post_t, (byte)-1 terminated */
 typedef post_t	column_t;
