@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.28 2008-06-29 16:06:27 sezero Exp $
+//** $Id: i_linux.c,v 1.29 2008-10-06 08:33:16 sezero Exp $
 //**
 //**************************************************************************
 
@@ -1348,7 +1348,6 @@ static void PrintVersion (void)
 
 static void PrintHelp (const char *name)
 {
-	PrintVersion ();
 	printf ("http://sourceforge.net/projects/hhexen\n");
 	printf ("http://icculus.org/hast\n");
 	printf ("\n");
@@ -1372,16 +1371,14 @@ static void PrintHelp (const char *name)
 
 int main (int argc, char **argv)
 {
+	PrintVersion ();
 	myargc = argc;
 	myargv = (const char **) argv;
+	if (M_CheckParm("--version") || M_CheckParm("-v"))
+		return 0;
 	if (M_CheckParm("--help") || M_CheckParm("-h") || M_CheckParm("-?"))
 	{
 		PrintHelp (argv[0]);
-		return 0;
-	}
-	if (M_CheckParm("--version") || M_CheckParm("-v"))
-	{
-		PrintVersion ();
 		return 0;
 	}
 
