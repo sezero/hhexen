@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.29 2008-10-06 08:33:16 sezero Exp $
+//** $Id: i_linux.c,v 1.30 2008-10-06 08:49:06 sezero Exp $
 //**
 //**************************************************************************
 
@@ -1369,6 +1369,62 @@ static void PrintHelp (const char *name)
 	printf ("\n");
 }
 
+#define H2_LITTLE_ENDIAN	0	/* 1234 */
+#define H2_BIG_ENDIAN		1	/* 4321 */
+#define H2_PDP_ENDIAN		2	/* 3412 */
+
+#if defined(WORDS_BIGENDIAN)
+#define COMPILED_BYTEORDER	H2_BIG_ENDIAN
+#else
+#define COMPILED_BYTEORDER	H2_LITTLE_ENDIAN
+#endif
+
+static int DetectByteorder (void)
+{
+	int	i = 0x12345678;
+		/*    U N I X */
+
+	/*
+	BE_ORDER:  12 34 56 78
+		   U  N  I  X
+
+	LE_ORDER:  78 56 34 12
+		   X  I  N  U
+
+	PDP_ORDER: 34 12 78 56
+		   N  U  X  I
+	*/
+
+	if ( *(char *)&i == 0x12 )
+		return H2_BIG_ENDIAN;
+	else if ( *(char *)&i == 0x78 )
+		return H2_LITTLE_ENDIAN;
+	else if ( *(char *)&i == 0x34 )
+		return H2_PDP_ENDIAN;
+
+	return -1;
+}
+
+static void ValidateByteorder (void)
+{
+	const char	*endianism[] = { "LE", "BE", "PDP" };
+	int		host_byteorder;
+
+	host_byteorder = DetectByteorder ();
+	if (host_byteorder < 0)
+	{
+		fprintf (stderr, "Unsupported byte order.\n");
+		exit (1);
+	}
+	if (host_byteorder != COMPILED_BYTEORDER)
+	{
+		fprintf (stderr, "Detected byte order %s doesn't match compiled %s order!\n",
+				 endianism[host_byteorder], endianism[COMPILED_BYTEORDER]);
+		exit (1);
+	}
+	printf ("Detected byte order: %s\n", endianism[host_byteorder]);
+}
+
 int main (int argc, char **argv)
 {
 	PrintVersion ();
@@ -1382,6 +1438,7 @@ int main (int argc, char **argv)
 		return 0;
 	}
 
+	ValidateByteorder();
 	CreateBasePath();
 
 	H2_Main();
