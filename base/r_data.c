@@ -4,8 +4,8 @@
 //** r_data.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: r_data.c,v $
-//** $Revision: 1.13 $
-//** $Date: 2008-07-21 22:11:30 $
+//** $Revision: 1.14 $
+//** $Date: 2008-10-06 11:02:48 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -207,8 +207,11 @@ static void R_GenerateLookup (int texnum)
 	{
 		if (!patchcount[x])
 		{
+			char	name[9];
+			name[8] = 0;
+			memcpy (name, texture->name, 8);
 		//	I_Error ("R_GenerateLookup: column without a patch");
-			ST_Message ("R_GenerateLookup: column without a patch (%s)\n", texture->name);
+			ST_Message ("R_GenerateLookup: column without a patch (%s)\n", name);
 			free (patchcount);
 			return;
 		}
@@ -335,12 +338,12 @@ static void R_InitTextures (void)
 		if (offset > maxoff)
 			I_Error ("R_InitTextures: bad texture directory");
 		mtexture = (maptexture_t *) ( (byte *)maptex + offset);
+		j = SHORT(mtexture->patchcount);
 		texture = textures[i] = (texture_t *) 
-			Z_Malloc (sizeof(texture_t) + sizeof(texpatch_t)*(SHORT(mtexture->patchcount) - 1), PU_STATIC, NULL);
+			Z_Malloc (sizeof(texture_t) + sizeof(texpatch_t)*(j - 1), PU_STATIC, NULL);
 		texture->width = SHORT(mtexture->width);
 		texture->height = SHORT(mtexture->height);
 		texture->patchcount = SHORT(mtexture->patchcount);
-//		memcpy (texture->name, mtexture->name, sizeof(texture->name));
 		name_p = (char *)maptex + offset;
 		memcpy (texture->name, name_p, sizeof(texture->name));
 		mpatch = &mtexture->patches[0];
@@ -351,7 +354,10 @@ static void R_InitTextures (void)
 			patch->originy = SHORT(mpatch->originy);
 			patch->patch = patchlookup[SHORT(mpatch->patch)];
 			if (patch->patch == -1)
-				I_Error ("R_InitTextures: Missing patch in texture %s", texture->name);
+			{
+				memcpy (name, texture->name, 8);
+				I_Error ("R_InitTextures: Missing patch in texture %s", name);
+			}
 		}
 		texturecolumnlump[i] = (short *) Z_Malloc (texture->width*2, PU_STATIC, NULL);
 		texturecolumnofs[i] = (unsigned short *) Z_Malloc (texture->width*2, PU_STATIC, NULL);
@@ -530,7 +536,6 @@ int R_CheckTextureNumForName (const char *name)
 
 	for (i = 0; i < numtextures; i++)
 	{
-	//	printf ("%d %s\n", i, textures[i]->name);
 		if (!strncasecmp(textures[i]->name, name, 8))
 			return i;
 	}
