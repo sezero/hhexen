@@ -1,4 +1,4 @@
-/* $Id: i_sndsdl.c,v 1.1 2008-10-07 07:44:38 sezero Exp $
+/* $Id: i_sndsdl.c,v 1.2 2008-10-07 07:50:28 sezero Exp $
  *
  *  Ripped && Adapted from the PrBoom project:
  *  PrBoom: a Doom port merged with LxDoom and LSDLDoom
@@ -33,7 +33,6 @@
 
 #include "h2stdinc.h"
 #include <math.h>	/* pow() */
-#include <pthread.h>
 #include "SDL.h"
 #include "h2def.h"
 #include "sounds.h"
