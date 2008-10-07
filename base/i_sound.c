@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sound.c,v 1.12 2008-10-03 12:45:18 sezero Exp $
+//** $Id: i_sound.c,v 1.13 2008-10-07 07:38:06 sezero Exp $
 //**
 //**************************************************************************
 
@@ -117,7 +117,7 @@ typedef struct
 	int32_t		length;		/* sample length */
 	unsigned char	firstSample;
 } Sample;
-COMPILE_TIME_ASSERT(Sample, sizeof(Sample) == 12);
+COMPILE_TIME_ASSERT(Sample, offsetof(Sample,firstSample) == 8);
 
 
 extern OutputPlugin *get_oplugin_info();
