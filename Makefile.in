@@ -145,15 +145,15 @@ OBJ_BASE = \
 
 ifeq "$(SVGAHEXEN)" "true"
 svga: $(OBJ_SVGA) $(OBJ_BASE)
-	$(CC) -o hhexen-svga $(OBJ_SVGA) $(OBJ_BASE) $(BASELIBS) $(SVGALIBS)
+	$(CC) -o hhexen-svga $(OBJ_SVGA) $(OBJ_BASE) $(BASELIBS) $(SVGALIBS) $(LDFLAGS)
 else
 
 ifeq "$(GLHEXEN)" "true"
 opengl: $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE)
-	$(CC) -o hhexen-gl $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE) $(BASELIBS) $(GLLIBS) $(SDL_LIBS)
+	$(CC) -o hhexen-gl $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE) $(BASELIBS) $(GLLIBS) $(SDL_LIBS) $(LDFLAGS)
 else
 sdl: $(OBJ_SWSDL) $(OBJ_BASE)
-	$(CC) -o hhexen-sdl $(OBJ_SWSDL) $(OBJ_BASE) $(BASELIBS) $(SDL_LIBS)
+	$(CC) -o hhexen-sdl $(OBJ_SWSDL) $(OBJ_BASE) $(BASELIBS) $(SDL_LIBS) $(LDFLAGS)
 endif
 
 endif
