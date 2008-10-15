@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sound.c,v 1.13 2008-10-07 07:38:06 sezero Exp $
+//** $Id: i_sound.c,v 1.14 2008-10-15 06:32:48 sezero Exp $
 //**
 //**************************************************************************
 
@@ -45,49 +45,6 @@ int snd_Mport;				/* midi variables */
 
 boolean snd_MusicAvail,		/* whether music is available */
 	snd_SfxAvail;		/* whether sfx are available */
-
-void I_PauseSong(int handle)
-{
-}
-
-void I_ResumeSong(int handle)
-{
-}
-
-void I_SetMusicVolume(int volume)
-{
-}
-
-void I_SetSfxVolume(int volume)
-{
-}
-
-/*
- *	SONG API
- */
-
-int I_RegisterSong(void *data)
-{
-	return 0;
-}
-
-void I_UnRegisterSong(int handle)
-{
-}
-
-int I_QrySongPlaying(int handle)
-{
-	return 0;
-}
-
-// Stops a song.  MUST be called before I_UnregisterSong().
-void I_StopSong(int handle)
-{
-}
-
-void I_PlaySong(int handle, boolean looping)
-{
-}
 
 /*
  *	SOUND FX API
@@ -144,7 +101,6 @@ static void *audio_loop (void *arg)
 	char buf[BUF_LEN];
 	SAMPLE_TYPE *begin;
 	SAMPLE_TYPE *end;
-//	int remain;
 	unsigned int sample;
 	register int dl;
 	register int dr;
@@ -220,6 +176,10 @@ static void *audio_loop (void *arg)
 	pthread_exit(NULL);
 }
 
+
+void I_SetSfxVolume(int volume)
+{
+}
 
 // Gets lump nums of the named sound.  Returns pointer which will be
 // passed to I_StartSound() when you want to start an SFX.  Must be
@@ -448,5 +408,45 @@ void I_SetChannels(int channels)
 		//	printf ("vol_lookup[%d*256+%d] = %d\n", v, j, vol_lookup[v*256+j]);
 		}
 	}
+}
+
+
+/*
+ *	SONG API
+ */
+
+int I_RegisterSong(void *data)
+{
+	return 0;
+}
+
+void I_UnRegisterSong(int handle)
+{
+}
+
+void I_PauseSong(int handle)
+{
+}
+
+void I_ResumeSong(int handle)
+{
+}
+
+void I_SetMusicVolume(int volume)
+{
+}
+
+int I_QrySongPlaying(int handle)
+{
+	return 0;
+}
+
+// Stops a song.  MUST be called before I_UnregisterSong().
+void I_StopSong(int handle)
+{
+}
+
+void I_PlaySong(int handle, boolean looping)
+{
 }
 
