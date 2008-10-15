@@ -1,4 +1,4 @@
-/* $Id: i_sndsdl.c,v 1.2 2008-10-07 07:50:28 sezero Exp $
+/* $Id: i_sndsdl.c,v 1.3 2008-10-15 06:28:19 sezero Exp $
  *
  *  Ripped && Adapted from the PrBoom project:
  *  PrBoom: a Doom port merged with LxDoom and LSDLDoom
@@ -124,7 +124,7 @@ static void audio_loop (void *unused, Uint8 *stream, int len)
 	register int dl;
 	register int dr;
 
-	end = (SAMPLE_TYPE *)stream + len/2;
+	end = (SAMPLE_TYPE *) (stream + len);
 	cend = channel + CHAN_COUNT;
 
 		begin = (SAMPLE_TYPE *) stream;
