@@ -3,7 +3,7 @@
 	includes the minimum necessary stdc headers,
 	defines common and / or missing types.
 
-	$Id: h2stdinc.h,v 1.6 2008-10-31 07:23:15 sezero Exp $
+	$Id: h2stdinc.h,v 1.7 2008-10-31 14:50:09 sezero Exp $
 */
 
 #ifndef __H2STDINC_H
@@ -71,6 +71,12 @@ COMPILE_TIME_ASSERT(long, sizeof(long) >= 4);
 COMPILE_TIME_ASSERT(int, sizeof(int) == 4);
 COMPILE_TIME_ASSERT(short, sizeof(short) == 2);
 
+/* make sure enums are the size of ints for structure packing */
+typedef enum {
+	THE_DUMMY_VALUE
+} THE_DUMMY_ENUM;
+COMPILE_TIME_ASSERT(enum, sizeof(THE_DUMMY_ENUM) == sizeof(int));
+
 
 /*==========================================================================*/
 
@@ -79,9 +85,15 @@ typedef unsigned char		byte;
 #undef true
 #undef false
 #if defined(__cplusplus)
-typedef bool	boolean;
+/* do NOT use the bool of C++ because some structures have boolean and they
+ * expect it to be 4 bytes long. as a hack, typedef it as int. */
+/* DO HOPE that the compiler built-ins for true and false are 1 and 0 ... */
+typedef int	boolean;
 #else
-typedef	enum	{false, true} boolean;
+typedef enum {
+	false = 0,
+	true  = 1
+} boolean;
 #endif
 
 
