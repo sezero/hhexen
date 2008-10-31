@@ -22,7 +22,7 @@ typedef struct
 	fixed_t			x, y, z;
 	int32_t		snext_idx, sprev_idx;
 	angle_t			angle;
-	spritenum_t		sprite;
+	int			sprite; /* spritenum_t */
 	int			frame;
 
 	int32_t		bnext_idx, bprev_idx;
@@ -32,7 +32,7 @@ typedef struct
 	fixed_t			radius, height;
 	fixed_t			momx, momy, momz;
 	int			validcount;
-	mobjtype_t		type;
+	int			type; /* mobjtype_t */
 	int32_t			info_idx;
 	int			tics;
 	int32_t			state_idx;
@@ -59,10 +59,10 @@ typedef struct
 typedef struct
 {
 	int32_t		mo_idx;
-	playerstate_t	playerstate;
+	int		playerstate; /* playerstate_t */
 	ticcmd_t	cmd;
 
-	pclass_t	playerclass;
+	int		playerclass; /* pclass_t */
 
 	fixed_t		viewz;
 	fixed_t		viewheight;
@@ -71,21 +71,21 @@ typedef struct
 
 	int		flyheight;
 	int		lookdir;
-	boolean		centering;
+	int		centering; /* boolean */
 	int		health;
 	int		armorpoints[NUMARMOR];
 
 	inventory_t	inventory[NUMINVENTORYSLOTS];
-	artitype_t	readyArtifact;
+	int		readyArtifact; /* artitype_t */
 	int		artifactCount;
 	int		inventorySlotNum;
 	int		powers[NUMPOWERS];
 	int		keys;
 	int		pieces;
 	signed int	frags[MAXPLAYERS];
-	weapontype_t	readyweapon;
-	weapontype_t	pendingweapon;
-	boolean		weaponowned[NUMWEAPONS];
+	int		readyweapon; /* weapontype_t */
+	int		pendingweapon; /* weapontype_t */
+	int		weaponowned[NUMWEAPONS]; /* boolean */
 	int		mana[NUMMANA];
 	int		attackdown, usedown;
 	int		cheats;
@@ -114,7 +114,7 @@ typedef struct
 {
 	save_thinker_t	thinker;
 	int32_t		sector_idx;
-	floor_e		type;
+	int		type; /* floor_e */
 	int		crush;
 	int		direction;
 	int		newspecial;
@@ -166,18 +166,18 @@ typedef struct
 	fixed_t		high;
 	int		wait;
 	int		count;
-	plat_e		status;
-	plat_e		oldstatus;
+	int		status; /* plat_e */
+	int		oldstatus; /* plat_e */
 	int		crush;
 	int		tag;
-	plattype_e	type;
+	int		type; /* plattype_e */
 } save_plat_t;
 
 typedef struct
 {
 	save_thinker_t	thinker;
 	int32_t		sector_idx;
-	ceiling_e	type;
+	int		type; /* ceiling_e */
 	fixed_t		bottomheight, topheight;
 	fixed_t		speed;
 	int		crush;
@@ -190,7 +190,7 @@ typedef struct
 {
 	save_thinker_t	thinker;
 	int32_t		sector_idx;
-	lighttype_t	type;
+	int		type; /* lighttype_t */
 	int		value1;
 	int		value2;
 	int		tics1;
@@ -210,7 +210,7 @@ typedef struct
 {
 	save_thinker_t	thinker;
 	int32_t		sector_idx;
-	vldoor_e	type;
+	int		type; /* vldoor_e */
 	fixed_t		topheight;
 	fixed_t		speed;
 	int		direction;
@@ -240,8 +240,8 @@ typedef struct
 	fixed_t xSpeed, ySpeed;
 	int tics;
 	int waitTics;
-	podoortype_t type;
-	boolean close;
+	int type; /* podoortype_t */
+	int close; /* boolean */
 } save_polydoor_t;
 
 typedef struct

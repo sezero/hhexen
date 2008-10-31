@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.24 $
-//** $Date: 2008-07-29 22:34:12 $
+//** $Revision: 1.25 $
+//** $Date: 2008-10-31 14:55:47 $
 //** $Author: sezero $
 //**
 //** Games are always saved Little Endian, with 32 bit offsets.
@@ -793,7 +793,7 @@ static void ArchivePlayers(void)
 		tempPlayer.mo_idx = 0;
 		tempPlayer.poisoner_idx = 0;
 		tempPlayer.attacker_idx = 0;
-		tempPlayer.playerstate		= (playerstate_t) LONG(players[i].playerstate);
+		tempPlayer.playerstate		= (int) LONG(players[i].playerstate);
 		tempPlayer.cmd.forwardmove	= players[i].cmd.forwardmove;
 		tempPlayer.cmd.sidemove		= players[i].cmd.sidemove;
 		tempPlayer.cmd.angleturn	= (short) SHORT(players[i].cmd.angleturn);
@@ -802,14 +802,14 @@ static void ArchivePlayers(void)
 		tempPlayer.cmd.buttons		= players[i].cmd.buttons;
 		tempPlayer.cmd.lookfly		= players[i].cmd.lookfly;
 		tempPlayer.cmd.arti		= players[i].cmd.arti;
-		tempPlayer.playerclass		= (pclass_t) LONG(players[i].playerclass);
+		tempPlayer.playerclass		= (int) LONG(players[i].playerclass);
 		tempPlayer.viewz		= (fixed_t) LONG(players[i].viewz);
 		tempPlayer.viewheight		= (fixed_t) LONG(players[i].viewheight);
 		tempPlayer.deltaviewheight	= (fixed_t) LONG(players[i].deltaviewheight);
 		tempPlayer.bob			= (fixed_t) LONG(players[i].bob);
 		tempPlayer.flyheight		= (int) LONG(players[i].flyheight);
 		tempPlayer.lookdir		= (int) LONG(players[i].lookdir);
-		tempPlayer.centering		= (boolean) LONG(players[i].centering);
+		tempPlayer.centering		= (int) LONG(players[i].centering);
 		tempPlayer.health		= (int) LONG(players[i].health);
 		for (j = 0; j < NUMARMOR; j++)
 		{
@@ -820,7 +820,7 @@ static void ArchivePlayers(void)
 			tempPlayer.inventory[j].type = (int) LONG(players[i].inventory[j].type);
 			tempPlayer.inventory[j].count = (int) LONG(players[i].inventory[j].count);
 		}
-		tempPlayer.readyArtifact	= (artitype_t) LONG(players[i].readyArtifact);
+		tempPlayer.readyArtifact	= (int) LONG(players[i].readyArtifact);
 		tempPlayer.inventorySlotNum	= (int) LONG(players[i].inventorySlotNum);
 		tempPlayer.artifactCount	= (int) LONG(players[i].artifactCount);
 		for (j = 0; j < NUMPOWERS; j++)
@@ -833,11 +833,11 @@ static void ArchivePlayers(void)
 		{
 			tempPlayer.frags[j]	= (signed int) LONG(players[i].frags[j]);
 		}
-		tempPlayer.readyweapon		= (weapontype_t) LONG(players[i].readyweapon);
-		tempPlayer.pendingweapon	= (weapontype_t) LONG(players[i].pendingweapon);
+		tempPlayer.readyweapon		= (int) LONG(players[i].readyweapon);
+		tempPlayer.pendingweapon	= (int) LONG(players[i].pendingweapon);
 		for (j = 0; j < NUMWEAPONS; j++)
 		{
-			tempPlayer.weaponowned[j] = (boolean) LONG(players[i].weaponowned[j]);
+			tempPlayer.weaponowned[j] = (int) LONG(players[i].weaponowned[j]);
 		}
 		for (j = 0; j < NUMMANA; j++)
 		{
@@ -927,7 +927,7 @@ static void UnarchivePlayers(void)
 		players[i].bob			= (fixed_t) LONG(tempPlayer.bob);
 		players[i].flyheight		= (int) LONG(tempPlayer.flyheight);
 		players[i].lookdir		= (int) LONG(tempPlayer.lookdir);
-		players[i].centering		= (boolean) LONG(tempPlayer.centering);
+		players[i].centering		= !!(LONG(tempPlayer.centering));
 		players[i].health		= (int) LONG(tempPlayer.health);
 		for (j = 0; j < NUMARMOR; j++)
 		{
@@ -955,7 +955,7 @@ static void UnarchivePlayers(void)
 		players[i].pendingweapon	= (weapontype_t) LONG(tempPlayer.pendingweapon);
 		for (j = 0; j < NUMWEAPONS; j++)
 		{
-			players[i].weaponowned[j] = (boolean) LONG(tempPlayer.weaponowned[j]);
+			players[i].weaponowned[j] = !!(LONG(tempPlayer.weaponowned[j]));
 		}
 		for (j = 0; j < NUMMANA; j++)
 		{
@@ -1225,7 +1225,7 @@ static void MangleMobj(mobj_t *mobj, save_mobj_t *temp)
 	temp->y			= (fixed_t) LONG(mobj->y);
 	temp->z			= (fixed_t) LONG(mobj->z);
 	temp->angle		= (angle_t) LONG(mobj->angle);
-	temp->sprite		= (spritenum_t) LONG(mobj->sprite);
+	temp->sprite		= (int) LONG(mobj->sprite);
 	temp->frame		= (int) LONG(mobj->frame);
 	temp->floorpic		= (fixed_t) LONG(mobj->floorpic);
 	temp->radius		= (fixed_t) LONG(mobj->radius);
@@ -1234,7 +1234,7 @@ static void MangleMobj(mobj_t *mobj, save_mobj_t *temp)
 	temp->momy		= (fixed_t) LONG(mobj->momy);
 	temp->momz		= (fixed_t) LONG(mobj->momz);
 	temp->validcount	= (int) LONG(mobj->validcount);
-	temp->type		= (mobjtype_t) LONG(mobj->type);
+	temp->type		= (int) LONG(mobj->type);
 	temp->tics		= (int) LONG(mobj->tics);
 	temp->damage		= (int) LONG(mobj->damage);
 	temp->flags		= (int) LONG(mobj->flags);
@@ -1564,7 +1564,7 @@ static void MangleFloorMove(void *arg1, void *arg2)
 	save_floormove_t *temp	= (save_floormove_t *)	arg2;
 
 	temp->sector_idx	= LONG((int32_t)(fm->sector - sectors));
-	temp->type		= (floor_e) LONG(fm->type);
+	temp->type		= (int) LONG(fm->type);
 	temp->crush		= (int) LONG(fm->crush);
 	temp->direction		= (int) LONG(fm->direction);
 	temp->newspecial	= (int) LONG(fm->newspecial);
@@ -1624,7 +1624,7 @@ static void MangleLight(void *arg1, void *arg2)
 	save_light_t	*temp	= (save_light_t *) arg2;
 
 	temp->sector_idx	= LONG((int32_t)(light->sector - sectors));
-	temp->type		= (lighttype_t) LONG(light->type);
+	temp->type		= (int) LONG(light->type);
 	temp->value1		= (int) LONG(light->value1);
 	temp->value2		= (int) LONG(light->value2);
 	temp->tics1		= (int) LONG(light->tics1);
@@ -1665,7 +1665,7 @@ static void MangleVerticalDoor(void *arg1, void *arg2)
 	save_vldoor_t	*temp	= (save_vldoor_t *) arg2;
 
 	temp->sector_idx	= LONG((int32_t)(vldoor->sector - sectors));
-	temp->type		= (vldoor_e) LONG(vldoor->type);
+	temp->type		= (int) LONG(vldoor->type);
 	temp->topheight		= (fixed_t) LONG(vldoor->topheight);
 	temp->speed		= (fixed_t) LONG(vldoor->speed);
 	temp->direction		= (int) LONG(vldoor->direction);
@@ -1874,8 +1874,8 @@ static void ManglePolyDoor(void *arg1, void *arg2)
 	temp->ySpeed		= (fixed_t) LONG(pd->ySpeed);
 	temp->tics		= (int) LONG(pd->tics);
 	temp->waitTics		= (int) LONG(pd->waitTics);
-	temp->type		= (podoortype_t) LONG(pd->type);
-	temp->close		= (boolean) LONG(pd->close);
+	temp->type		= (int) LONG(pd->type);
+	temp->close		= (int) LONG(pd->close);
 }
 
 //==========================================================================
@@ -1899,7 +1899,7 @@ static void RestorePolyDoor(void *arg1, void *arg2)
 	pd->tics		= (int) LONG(temp->tics);
 	pd->waitTics		= (int) LONG(temp->waitTics);
 	pd->type		= (podoortype_t) LONG(temp->type);
-	pd->close		= (boolean) LONG(temp->close);
+	pd->close		= !!(LONG(temp->close));
 }
 
 //==========================================================================
@@ -1989,11 +1989,11 @@ static void ManglePlatRaise(void *arg1, void *arg2)
 	temp->high		= (fixed_t) LONG(plat->high);
 	temp->wait		= (int) LONG(plat->wait);
 	temp->count		= (int) LONG(plat->count);
-	temp->status		= (plat_e) LONG(plat->status);
-	temp->oldstatus		= (plat_e) LONG(plat->oldstatus);
+	temp->status		= (int) LONG(plat->status);
+	temp->oldstatus		= (int) LONG(plat->oldstatus);
 	temp->crush		= (int) LONG(plat->crush);
 	temp->tag		= (int) LONG(plat->tag);
-	temp->type		= (plattype_e) LONG(plat->type);
+	temp->type		= (int) LONG(plat->type);
 }
 
 //==========================================================================
@@ -2035,7 +2035,7 @@ static void MangleMoveCeiling(void *arg1, void *arg2)
 	save_ceiling_t	*temp	= (save_ceiling_t *) arg2;
 
 	temp->sector_idx	= LONG((int32_t)(ceiling->sector - sectors));
-	temp->type		= (ceiling_e) LONG(ceiling->type);
+	temp->type		= (int) LONG(ceiling->type);
 	temp->bottomheight	= (fixed_t) LONG(ceiling->bottomheight);
 	temp->topheight		= (fixed_t) LONG(ceiling->topheight);
 	temp->speed		= (fixed_t) LONG(ceiling->speed);
