@@ -3,7 +3,7 @@
 	includes the minimum necessary stdc headers,
 	defines common and / or missing types.
 
-	$Id: h2stdinc.h,v 1.5 2008-07-20 12:05:51 sezero Exp $
+	$Id: h2stdinc.h,v 1.6 2008-10-31 07:23:15 sezero Exp $
 */
 
 #ifndef __H2STDINC_H
@@ -129,6 +129,24 @@ typedef int	fixed_t;
 #define	__fp_attribute__	__attribute__
 #else
 #define	__fp_attribute__(x)
+#endif
+
+/*==========================================================================*/
+
+/* Some compilers, such as OpenWatcom, and possibly other compilers
+ * from the DOS universe, define __386__ instead of __i386__
+ */
+#if defined(__386__) && !defined(__i386__)
+#define __i386__	1
+#endif
+
+/*==========================================================================*/
+
+/* Provide a substitute for offsetof() if we don't have one.
+ * This variant works on most (but not *all*) systems...
+ */
+#ifndef offsetof
+#define offsetof(t,m) ((size_t)&(((t *)0)->m))
 #endif
 
 /*==========================================================================*/
