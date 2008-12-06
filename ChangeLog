@@ -1,5 +1,12 @@
 HHexen ChangeLog
 
+v1.5.1
+ - Fixed ARM support.
+ - Added SDL audio driver.
+ - Added SDL_mixer audio driver with midi playback support.
+ - Fixed a few minor coding issues with big endian support.
+ - A few other minor fixes.
+
 v1.5
  - Intermission and finale screens now work in OpenGL.
  - Added support for 64 bit machines.

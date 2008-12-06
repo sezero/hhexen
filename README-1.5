@@ -1,5 +1,5 @@
 
-				 HHexen 1.5.0
+				 HHexen 1.5.1
 
 --------------------------------------------------------------------------------
 
@@ -14,13 +14,16 @@ Major changes since 1.4:
   * OpenGL intermission and finale screens fixed
   * Support for big endian and 64 bit machines
   * Fixed FreeBSD support
+  * Fixed ARM support
   * Various hacks/fixes for the proper handling of different 1.0 and 1.1
     wad file versions
+  * Added SDL audio driver: it is the default audio driver.
+  * Added SDL_mixer audio driver with midi playback support
   * OpenGL is the default configuration now
   * Incomplete assassin class is now disabled by default
   * Other usual bug-fixes.
 
-Changes with our first release include:
+Changes with our first 1.4 release include:
 
   * OpenGL screenshots (now bound to F12 and enabled by default)
   * Game saves/loads work fine (CVS was broken for a while)
@@ -83,6 +86,10 @@ To compile the software version (hhexen-sdl):
 To compile the software version (hhexen-svga, for the old-fashioned :))
 	./configure --enable-svga
 	make
+
+The configure script accepts a new --with-audio=<driver> option.  Valid
+values are oss, sdl, and sdlmixer.  sdl is the default option.  sdlmixer
+adds the ability of midi music playback.
 
 --------------------------------------------------------------------------------
 

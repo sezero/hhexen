@@ -1,4 +1,21 @@
 -------------------------------------------------------------------------------
+Release notes for version 1.5.1
+-------------------------------------------------------------------------------
+
+New Features:
+ - Added SDL audio driver.
+ - Added SDL_mixer audio driver with midi playback support.
+
+Bug Fixes:
+ - Fixed ARM support.
+ - Fixed a few minor coding issues with big endian support.
+
+Notes:
+ - The configure script accepts a new --with-audio=<driver> option.  Valid
+   values are oss, sdl, and sdlmixer.  sdl is the default option.  sdlmixer
+   adds the ability of midi music playback.
+
+-------------------------------------------------------------------------------
 Release notes for version 1.5
 -------------------------------------------------------------------------------
 
