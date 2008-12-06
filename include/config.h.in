@@ -1,10 +1,20 @@
-/* include/config.h.in.  Generated automatically from configure.in by autoheader.  */
+/* include/config.h.in.  Generated from configure.in by autoheader.  */
 
-/* Define to empty if the keyword does not work.  */
+/* Define this if the GCC __builtin_expect keyword is available */
+#undef HAVE___BUILTIN_EXPECT
+#ifndef HAVE___BUILTIN_EXPECT
+# define __builtin_expect(x,c) x
+#endif
+
+/* Define this if C symbols are prefixed with an underscore */
+#undef HAVE_SYM_PREFIX_UNDERSCORE
+
+/* Define to empty if `const' does not conform to ANSI C. */
 #undef const
 
-/* Define to one of _getb67, GETB67, getb67 for Cray-2 and Cray-YMP systems.
-   This function is required for alloca.c support on those systems.  */
+/* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
+   systems. This function is required for `alloca.c' support on those systems.
+   */
 #undef CRAY_STACKSEG_END
 
 /* Define to `__inline__' or `__inline' if that's what the C compiler
@@ -13,50 +23,61 @@
 #undef inline
 #endif
 
-/* Define to `unsigned' if <sys/types.h> doesn't define.  */
+/* Define to `unsigned int' if <sys/types.h> does not define. */
 #undef size_t
 
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
-   automatically deduced at run-time.
- STACK_DIRECTION > 0 => grows toward higher addresses
- STACK_DIRECTION < 0 => grows toward lower addresses
- STACK_DIRECTION = 0 => direction of growth unknown
- */
+   automatically deduced at runtime.
+	STACK_DIRECTION > 0 => grows toward higher addresses
+	STACK_DIRECTION < 0 => grows toward lower addresses
+	STACK_DIRECTION = 0 => direction of growth unknown */
 #undef STACK_DIRECTION
 
 /* Define if the `S_IS*' macros in <sys/stat.h> do not work properly.  */
 #undef STAT_MACROS_BROKEN
 
-/* Define if you have the ANSI C header files.  */
+/* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 
 /* Define to 1 if your processor stores words with the most significant byte
    first (like Motorola and SPARC, unlike Intel and VAX). */
 #undef WORDS_BIGENDIAN
 
-/* Define if type char is unsigned and you are not using gcc.  */
+/* Define to 1 if type `char' is unsigned and you are not using gcc.  */
 #ifndef __CHAR_UNSIGNED__
-#undef __CHAR_UNSIGNED__
+# undef __CHAR_UNSIGNED__
 #endif
 
-/* The number of bytes in a char.  */
+/* The size of `char', as computed by sizeof. */
 #undef SIZEOF_CHAR
 
-/* The number of bytes in a short.  */
+/* The size of `short', as computed by sizeof. */
 #undef SIZEOF_SHORT
 
-/* The number of bytes in a int.  */
+/* The size of `int', as computed by sizeof. */
 #undef SIZEOF_INT
 
-/* The number of bytes in a long.  */
+/* The size of `long', as computed by sizeof. */
 #undef SIZEOF_LONG
 
-/* The number of bytes in a long long.  */
+/* The size of `long long', as computed by sizeof. */
 #undef SIZEOF_LONG_LONG
 
-/* The number of bytes in a size_t.  */
+/* The size of `size_t', as computed by sizeof. */
 #undef SIZEOF_SIZE_T
+
+/* The size of `void *', as computed by sizeof. */
+#undef SIZEOF_VOID_P
+
+/* The size of `float', as computed by sizeof. */
+#undef SIZEOF_FLOAT
+
+/* The size of `double', as computed by sizeof. */
+#undef SIZEOF_DOUBLE
+
+/* The size of `long double', as computed by sizeof. */
+#undef SIZEOF_LONG_DOUBLE
 
 /* Define if you have the <linux/cdrom.h> header file.  */
 #undef HAVE_LINUX_CDROM_H
@@ -121,10 +142,11 @@
 /* Define to not compile most parameter validation debugging code */
 #undef NORANGECHECKING
 
-/* Needed for pthread support in OSS sound code. Don't like this
-   at all.. Find a better solution for this!!! */
-#undef _REENTRANT
-
 /* Define if not want to use assembly language */
 #undef _DISABLE_ASM
+
+/* For pthread support in OSS audio code. */
+#ifndef _REENTRANT
+# undef _REENTRANT
+#endif
 

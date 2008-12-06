@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
-dnl configure.in for HHexen v1.4
+dnl configure.in for HHexen v1.5
 AC_REVISION([configure.in 1.00])
-AC_INIT(base/a_action.c)		
+AC_INIT(base/a_action.c)
 AC_CONFIG_HEADER(include/config.h)
 
 dnl ==================================================================
@@ -28,7 +28,7 @@ AC_ARG_ENABLE(asm,
 AC_HELP_STRING([--disable-asm], [Disable assembly language [[default=no]]]),
 							[], [enable_asm=yes])
 if test x$enable_asm != xyes; then
-	AC_DEFINE(_DISABLE_ASM)
+	AC_DEFINE(_DISABLE_ASM, 1, [Define if not want to use assembly language])
 fi
 
 AC_ARG_ENABLE(svga,
@@ -46,7 +46,7 @@ if test x$enable_gl = xyes; then
 	if test x$no_svga = xno; then
 	    AC_MSG_ERROR([*** --enable-gl and --enable-svga can not be used together])
 	fi
-	AC_DEFINE(RENDER3D)
+	AC_DEFINE(RENDER3D, 1, [Define if building with OpenGL support])
 	SDL_VERSION="1.1.2"
 else
 	GLHEXEN="false"
@@ -57,21 +57,21 @@ AC_ARG_ENABLE(demowad,
 AC_HELP_STRING([--enable-demowad], [Build for the demo version wad only [[default=no]]]),
 								[], [enable_demowad=no])
 if test x$enable_demowad = xyes; then
-	AC_DEFINE(DEMO_VERSION)
+	AC_DEFINE(DEMO_VERSION, 1, [Define if building for the 4 level shareware wad files only])
 fi
 
 AC_ARG_ENABLE(oldwad,
 AC_HELP_STRING([--enable-oldwad], [Build for the version 1.0 wad only [[default=no]]]),
 								[], [enable_oldwad=no])
 if test x$enable_oldwad = xyes; then
-	AC_DEFINE(VERSION10_WAD)
+	AC_DEFINE(VERSION10_WAD, 1, [Define if building for version 1.0 (4-player) wadfiles only])
 fi
 
 AC_ARG_ENABLE(assassin,
 AC_HELP_STRING([--enable-assassin], [Build with support for the Assassin [[default=no]]]),
 								[], [enable_assassin=no])
 if test x$enable_assassin = xyes; then
-	AC_DEFINE(ASSASSIN)
+	AC_DEFINE(ASSASSIN, 1, [Define if including the assassin in compile])
 fi
 
 AC_SUBST(GLHEXEN)
@@ -149,28 +149,46 @@ AC_CHECK_SIZEOF(int,0)
 AC_CHECK_SIZEOF(long,0)
 AC_CHECK_SIZEOF(long long,0)
 AC_CHECK_SIZEOF(size_t,0)
+AC_CHECK_SIZEOF(void *,0)
+AC_CHECK_SIZEOF(float,0)
+AC_CHECK_SIZEOF(double,0)
+AC_CHECK_SIZEOF(long double,0)
+
+AC_FUNC_ALLOCA
+AC_FUNC_MEMCMP
 
 AC_C_BIGENDIAN
 
 dnl === Check for underscore on external symbols =====================
-AC_CACHE_CHECK("whether external symbols need an underscore prefix",
-               ac_cv_c_extern_prefix,
-[saved_libs=$LIBS
-LIBS="conftest_asm.s $LIBS"
-cat > conftest_asm.s <<EOF
-	.globl _ac_test
-_ac_test:
-	.long 0
-EOF
-AC_TRY_LINK([extern int ac_test;],[if (ac_test) return 1],
-            ac_cv_c_extern_prefix="yes",ac_cv_c_extern_prefix="no")
-LIBS=$saved_libs])
+AC_MSG_CHECKING(whether external symbols need an underscore prefix)
+AC_TRY_LINK(
+	[asm(".long _bar");
+	int bar;],
+	[],
+	AC_DEFINE(HAVE_SYM_PREFIX_UNDERSCORE, 1, [Define this if C symbols are prefixed with an underscore]) AC_MSG_RESULT(yes),
+	AC_MSG_RESULT(no)
+)
+
+dnl === Check if the GCC __builtin_expect keyword is available =======
+AC_MSG_CHECKING(for __builtin_expect)
+AC_TRY_COMPILE(
+	[long (*foo) (long, long) = __builtin_expect;],
+	[],
+	AC_DEFINE(HAVE___BUILTIN_EXPECT) AC_MSG_RESULT(yes),
+	AC_MSG_RESULT(no)
+)
+AH_VERBATIM([HAVE___BUILTIN_EXPECT],
+[/* Define this if the GCC __builtin_expect keyword is available */
+#undef HAVE___BUILTIN_EXPECT
+#ifndef HAVE___BUILTIN_EXPECT
+# define __builtin_expect(x,c) x
+#endif])
 
 dnl === Check for gcc strength-reduce bug ============================
 if test "x${GCC}" = "xyes"
 then
   CFLAGS="$CFLAGS -Wall"
-  AC_CACHE_CHECK( "for gcc strength-reduce bug", ac_cv_c_gcc_strength_bug,
+  AC_CACHE_CHECK( [for gcc strength-reduce bug], ac_cv_c_gcc_strength_bug,
                   AC_TRY_RUN([
 int main(void) {
   static int Array[[3]];
@@ -189,8 +207,8 @@ int main(void) {
 fi
 
 
-dnl ================================================================== 
-dnl Checks for library functions. 
+dnl ==================================================================
+dnl Checks for library functions.
 dnl ==================================================================
 
 AC_PATH_X
@@ -198,9 +216,11 @@ dnl == What if autoconf fails finding X path? ==
 X11_INC="$ac_x_includes"
 X11_LIB="$ac_x_libraries"
 
+if test "$SND_MODULE" = "oss";then
 AC_CHECK_LIB(pthread, pthread_join, [BASELIBS="$BASELIBS -lpthread"],
 	AC_MSG_ERROR([*** libpthread not found! (required by sound code.)])
 )
+fi
 
 AC_SUBST(BASELIBS)
 AC_SUBST(X11_INC)
@@ -268,20 +288,29 @@ fi
 AC_SUBST(SVGALIBS)
 
 
-dnl ================================================================== 
+dnl ==================================================================
 dnl Miscellaneous things
-dnl ================================================================== 
+dnl ==================================================================
 
 dnl === do not compile most parameter validation debugging code ======
-AC_DEFINE(NORANGECHECKING)
+AC_DEFINE(NORANGECHECKING, 1, [Define to not compile most parameter validation debugging code])
 
-dnl === don't like this one!. needed for pthread support in OSS sound.
-AC_DEFINE(_REENTRANT)
+dnl === OSS audio code requires pthread support ======================
+dnl === This is linux-centric, though. See the configure.in of SDL for
+dnl === other systems' pthreads support.
+if test "$SND_MODULE" = "oss";then
+	AC_DEFINE(_REENTRANT)
+fi
+AH_VERBATIM([_REENTRANT],
+[/* For pthread support in OSS audio code. */
+#ifndef _REENTRANT
+# undef _REENTRANT
+#endif])
 
 
-dnl ================================================================== 
+dnl ==================================================================
 dnl Generate output files
-dnl ================================================================== 
+dnl ==================================================================
 
 if test "$SVGAHEXEN" = "true"; then
     BUILDNAMES="Software (SVGALib)"
