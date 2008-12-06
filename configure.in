@@ -77,6 +77,36 @@ fi
 AC_SUBST(GLHEXEN)
 AC_SUBST(SVGAHEXEN)
 
+if test "$SVGAHEXEN" = "true";then
+  default_audio="oss"
+else
+  default_audio="sdl"
+fi
+
+AC_ARG_WITH(audio,
+[  --with-audio=<driver>   If set, will change the audio driver. Valid values
+                          are oss, sdl and sdlmixer.  sdl is the default.
+                          sdlmixer adds the ability of midi music playback.],
+audio_drv="$withval", audio_drv="$default_audio")
+
+if test "$SVGAHEXEN" = "true";then
+	if test "$audio_drv" != "$default_audio";then
+		AC_MSG_WARN([Ignoring --with-audio option for svgahexen])
+	fi
+	SND_MODULE="$default_audio"
+else
+  case "$audio_drv" in
+	oss|sdl|sdlmixer)
+		SND_MODULE="$audio_drv"
+		;;
+	*)
+		AC_MSG_ERROR([*** invalid value for --with-audio])
+		;;
+  esac
+fi
+
+AC_SUBST(SND_MODULE)
+
 
 dnl ==================================================================
 dnl Checks for programs.
@@ -188,6 +218,18 @@ if test "$SVGAHEXEN" = "false";then
   fi
 fi
 
+saved_libs="$LIBS"
+AC_CHECK_LIB(SDL_mixer, Mix_LoadMUS, [HAVE_SDLMIXER="yes"], [HAVE_SDLMIXER="no"])
+
+LIBS="$saved_libs"
+if test "$SND_MODULE" = "sdlmixer";then
+  if test $HAVE_SDLMIXER = "no";then
+	AC_MSG_ERROR([*** SDL_mixer not found!])
+  else
+	SDL_LIBS="$SDL_LIBS -lSDL_mixer"
+  fi
+fi
+
 AC_SUBST(SDL_CFLAGS)
 AC_SUBST(SDL_LIBS)
 
@@ -255,7 +297,8 @@ AC_OUTPUT(Makefile)
 
 echo
 echo "HHexen configuration finished."
-echo "Enabled targets: $BUILDNAMES"
+echo "Enabled target: $BUILDNAMES"
+echo "Audio driver  : $SND_MODULE"
 echo
 
 echo "Type 'make' to compile."
