@@ -1,4 +1,4 @@
-/* $Id: i_sndsdl.c,v 1.3 2008-10-15 06:28:19 sezero Exp $
+/* $Id: i_sndsdl.c,v 1.1 2008-12-06 12:12:31 sezero Exp $
  *
  *  Ripped && Adapted from the PrBoom project:
  *  PrBoom: a Doom port merged with LxDoom and LSDLDoom
