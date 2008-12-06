@@ -1,9 +1,12 @@
-# This Makefile understands the following targets:
 #
 # svga			build Software (SVGALib) version
 # sdl			build Software (SDL) version
 # opengl		build OpenGL (SDL) version
 # clean:		remove all intermediate files
+#
+# It is ESSENTIAL that you run make clean between different
+# types of builds or different types of targets.
+#
 
 # Basic stuff
 SHELL = /bin/sh
@@ -68,9 +71,6 @@ OBJ_SDLAUDIO = sdl/i_sndsdl.o
 OBJ_SDLMIXER = base/mmus2mid.o sdl/i_sdlmixer.o
 OBJ_CDA = base/i_cdmus.o
 
-ifeq ($(SVGAHEXEN),true)
-OBJ_SND:= $(OBJ_OSS)
-else
 ifeq ($(SND_MODULE),oss)
 OBJ_SND:= $(OBJ_OSS)
 endif
@@ -79,7 +79,6 @@ OBJ_SND:= $(OBJ_SDLAUDIO)
 endif
 ifeq ($(SND_MODULE),sdlmixer)
 OBJ_SND:= $(OBJ_SDLMIXER)
-endif
 endif
 
 OBJ_OPENGL = \
@@ -170,8 +169,5 @@ endif
 endif
 
 clean:
-	$(RM) base/*.o
-	$(RM) opengl/*.o
-	$(RM) sdl/*.o
-	$(RM) svgalib/*.o
+	$(RM) base/*.o opengl/*.o sdl/*.o svgalib/*.o
 
