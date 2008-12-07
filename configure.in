@@ -1,6 +1,7 @@
+dnl configure.in for HHexen-1.5.1
 dnl Process this file with autoconf to produce a configure script.
-dnl configure.in for HHexen v1.5
-AC_REVISION([configure.in 1.00])
+AC_PREREQ(2.52)
+AC_REVISION($Revision: 1.18 $)
 AC_INIT(base/a_action.c)
 AC_CONFIG_HEADER(include/config.h)
 
@@ -170,6 +171,12 @@ AC_TRY_LINK(
 )
 
 dnl === Check if the GCC __builtin_expect keyword is available =======
+AH_VERBATIM([HAVE___BUILTIN_EXPECT],
+[/* Define this if the GCC __builtin_expect keyword is available */
+#undef HAVE___BUILTIN_EXPECT
+#ifndef HAVE___BUILTIN_EXPECT
+# define __builtin_expect(x,c) x
+#endif])
 AC_MSG_CHECKING(for __builtin_expect)
 AC_TRY_COMPILE(
 	[long (*foo) (long, long) = __builtin_expect;],
@@ -177,12 +184,6 @@ AC_TRY_COMPILE(
 	AC_DEFINE(HAVE___BUILTIN_EXPECT) AC_MSG_RESULT(yes),
 	AC_MSG_RESULT(no)
 )
-AH_VERBATIM([HAVE___BUILTIN_EXPECT],
-[/* Define this if the GCC __builtin_expect keyword is available */
-#undef HAVE___BUILTIN_EXPECT
-#ifndef HAVE___BUILTIN_EXPECT
-# define __builtin_expect(x,c) x
-#endif])
 
 dnl === Check for gcc strength-reduce bug ============================
 if test "x${GCC}" = "xyes"
@@ -298,14 +299,14 @@ AC_DEFINE(NORANGECHECKING, 1, [Define to not compile most parameter validation d
 dnl === OSS audio code requires pthread support ======================
 dnl === This is linux-centric, though. See the configure.in of SDL for
 dnl === other systems' pthreads support.
-if test "$SND_MODULE" = "oss";then
-	AC_DEFINE(_REENTRANT)
-fi
 AH_VERBATIM([_REENTRANT],
 [/* For pthread support in OSS audio code. */
 #ifndef _REENTRANT
 # undef _REENTRANT
 #endif])
+if test "$SND_MODULE" = "oss";then
+	AC_DEFINE(_REENTRANT)
+fi
 
 
 dnl ==================================================================
