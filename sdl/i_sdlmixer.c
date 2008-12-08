@@ -1,4 +1,4 @@
-/* $Id: i_sdlmixer.c,v 1.1 2008-12-06 12:12:31 sezero Exp $
+/* $Id: i_sdlmixer.c,v 1.2 2008-12-08 10:44:17 sezero Exp $
  *
  *  Ripped && Adapted from the PrBoom project:
  *  PrBoom: a Doom port merged with LxDoom and LSDLDoom
@@ -41,7 +41,7 @@
 #include "mmus2mid.h"
 
 
-#define SAMPLE_FORMAT	AUDIO_S16
+#define SAMPLE_FORMAT	AUDIO_S16SYS
 #define SAMPLE_ZERO	0
 #define SAMPLE_RATE	11025	/* Hz */
 #define SAMPLE_CHANNELS	2
