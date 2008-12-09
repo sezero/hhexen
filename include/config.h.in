@@ -1,5 +1,15 @@
 /* include/config.h.in.  Generated from configure.in by autoheader.  */
 
+/* For pthread support in OSS audio code. */
+#ifndef _REENTRANT
+# undef _REENTRANT
+#endif
+
+/* For pthread support in OSS audio code. */
+#ifndef _THREAD_SAFE
+# undef _THREAD_SAFE
+#endif
+
 /* Define this if the GCC __builtin_expect keyword is available */
 #undef HAVE___BUILTIN_EXPECT
 #ifndef HAVE___BUILTIN_EXPECT
@@ -144,9 +154,4 @@
 
 /* Define if not want to use assembly language */
 #undef _DISABLE_ASM
-
-/* For pthread support in OSS audio code. */
-#ifndef _REENTRANT
-# undef _REENTRANT
-#endif
 
