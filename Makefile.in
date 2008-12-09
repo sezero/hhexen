@@ -158,15 +158,15 @@ OBJ_BASE = \
 
 ifeq ($(SVGAHEXEN),true)
 svga: $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_SVGA) $(OBJ_BASE)
-	$(CC) -o hhexen-svga $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_SVGA) $(OBJ_BASE) $(BASELIBS) $(SVGALIBS) $(LDFLAGS)
+	$(CC) $(LDFLAGS) $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_SVGA) $(OBJ_BASE) -o hhexen-svga $(BASELIBS) $(SVGALIBS)
 else
 
 ifeq ($(GLHEXEN),true)
 opengl: $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE)
-	$(CC) -o hhexen-gl $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE) $(BASELIBS) $(GLLIBS) $(SDL_LIBS) $(LDFLAGS)
+	$(CC) $(LDFLAGS) $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE) -o hhexen-gl $(BASELIBS) $(GLLIBS) $(SDL_LIBS)
 else
 sdl: $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_SWSDL) $(OBJ_BASE)
-	$(CC) -o hhexen-sdl $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_SWSDL) $(OBJ_BASE) $(BASELIBS) $(SDL_LIBS) $(LDFLAGS)
+	$(CC) $(LDFLAGS) $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_SWSDL) $(OBJ_BASE) -o hhexen-sdl $(BASELIBS) $(SDL_LIBS)
 endif
 
 endif
