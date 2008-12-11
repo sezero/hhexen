@@ -1,4 +1,19 @@
 -------------------------------------------------------------------------------
+Release notes for version 1.5.2
+-------------------------------------------------------------------------------
+
+Bug Fixes:
+ - Fixed SDL_mixer freeze with zero music volume in some cases.
+
+New Features:
+ - Added support for external music files to the sdlmixer driver:
+   External files with an .ogg, .mp3 or .mid extension are searched
+   first (in that given order) before playing the lumps in the wad
+   files.  The music files must be under the "music" subdirectory of
+   the normal installation folder. If not found, the ~/.hhexen/music
+   directory is searched.
+
+-------------------------------------------------------------------------------
 Release notes for version 1.5.1
 -------------------------------------------------------------------------------
 

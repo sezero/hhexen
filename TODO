@@ -5,10 +5,9 @@ TODO for HHexen
  - Change input system to allow for Quake style key binding.
  - In-game resolution and fullscreen/windowed switching
  - High resolution support for software renderer.
- - Midi music through /dev/sequencer ?.
+ - Midi music through /dev/sequencer ?
  - CD Audio.
  - ALSA sound support.
- - In-game OGG/MP3 music.
  - 3D sound support.
  - SDL joystick support.
  - More eye candy (lens flares, dynamic lights)
