@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.50 $
-//** $Date: 2008-10-06 11:03:50 $
+//** $Revision: 1.51 $
+//** $Date: 2008-12-11 17:01:14 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -35,7 +35,7 @@
 
 #define VERSION_MAJ	1
 #define VERSION_MIN	5
-#define VERSION_PATCH	1
+#define VERSION_PATCH	2
 #define HHEXEN_VERSION	"v" STRINGIFY(VERSION_MAJ) "." STRINGIFY(VERSION_MIN) "." STRINGIFY(VERSION_PATCH)
 
 /* if rangecheck is undefined, most parameter

@@ -1,7 +1,7 @@
-dnl configure.in for HHexen-1.5.1
+dnl configure.in for HHexen-1.5.2
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.19 $)
+AC_REVISION($Revision: 1.20 $)
 AC_INIT(base/a_action.c)
 AC_CONFIG_HEADER(include/config.h)
 
