@@ -26,6 +26,7 @@ void I_ResumeSong(int handle);
 void I_SetMusicVolume(int volume);
 void I_SetSfxVolume(int volume);
 int I_RegisterSong(void *data);
+int I_RegisterExternalSong(const char *name);	/* External music file support */
 void I_UnRegisterSong(int handle);
 int I_QrySongPlaying(int handle);
 void I_StopSong(int handle);
@@ -41,6 +42,7 @@ void I_ShutdownSound (void);
 void I_SetChannels(int channels);
 
 #endif	/* __SOUND__ */
+
 
 #ifndef __ICDMUS__
 #define __ICDMUS__

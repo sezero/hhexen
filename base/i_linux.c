@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.30 2008-10-06 08:49:06 sezero Exp $
+//** $Id: i_linux.c,v 1.31 2008-12-11 16:55:33 sezero Exp $
 //**
 //**************************************************************************
 
@@ -61,6 +61,7 @@ extern musicinfo_t S_music[];
 
 static channel_t Channel[MAX_CHANNELS];
 static int RegisteredSong; //the current registered song.
+static int isExternalSong;
 static int NextCleanup;
 static boolean MusicPaused;
 static int Mus_Song = -1;
@@ -147,19 +148,30 @@ void S_StartSong(int song, boolean loop)
 		{
 			I_StopSong(RegisteredSong);
 			I_UnRegisterSong(RegisteredSong);
-			if (UseSndScript)
+			if (!isExternalSong)
 			{
-				Z_Free(Mus_SndPtr);
-			}
-			else
-			{
-				Z_ChangeTag(lumpcache[Mus_LumpNum], PU_CACHE);
+				if (UseSndScript)
+				{
+					Z_Free(Mus_SndPtr);
+				}
+				else
+				{
+					Z_ChangeTag(lumpcache[Mus_LumpNum], PU_CACHE);
+				}
 			}
 			RegisteredSong = 0;
 		}
 		songLump = P_GetMapSongLump(song);
 		if (!songLump)
 		{
+			return;
+		}
+		isExternalSong = I_RegisterExternalSong(songLump);
+		if (isExternalSong)
+		{
+			RegisteredSong = isExternalSong;
+			I_PlaySong(RegisteredSong, loop);
+			Mus_Song = song;
 			return;
 		}
 		if (UseSndScript)
@@ -250,15 +262,26 @@ void S_StartSongName(const char *songLump, boolean loop)
 		{
 			I_StopSong(RegisteredSong);
 			I_UnRegisterSong(RegisteredSong);
-			if (UseSndScript)
+			if (!isExternalSong)
 			{
-				Z_Free(Mus_SndPtr);
-			}
-			else
-			{
-				Z_ChangeTag(lumpcache[Mus_LumpNum], PU_CACHE);
+				if (UseSndScript)
+				{
+					Z_Free(Mus_SndPtr);
+				}
+				else
+				{
+					Z_ChangeTag(lumpcache[Mus_LumpNum], PU_CACHE);
+				}
 			}
 			RegisteredSong = 0;
+		}
+		isExternalSong = I_RegisterExternalSong(songLump);
+		if (isExternalSong)
+		{
+			RegisteredSong = isExternalSong;
+			I_PlaySong(RegisteredSong, loop);
+			Mus_Song = -1;
+			return;
 		}
 		if (UseSndScript)
 		{

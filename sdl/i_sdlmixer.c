@@ -1,4 +1,4 @@
-/* $Id: i_sdlmixer.c,v 1.3 2008-12-11 10:28:19 sezero Exp $
+/* $Id: i_sdlmixer.c,v 1.4 2008-12-11 16:55:33 sezero Exp $
  *
  *  Ripped && Adapted from the PrBoom project:
  *  PrBoom: a Doom port merged with LxDoom and LSDLDoom
@@ -32,6 +32,7 @@
 
 
 #include "h2stdinc.h"
+#include <unistd.h>
 #include <math.h>	/* pow() */
 #include "SDL.h"
 #include "SDL_mixer.h"
@@ -474,6 +475,58 @@ int I_RegisterSong(void *data)
 	return 1;
 }
 
+/* External music file support : */
+static const struct
+{
+	Mix_MusicType	type;		/* as enum'ed in SDL_mixer.h	*/
+	const char	*ext;		/* the file extension		*/
+} MusicFile[] =
+{
+	{ MUS_OGG, "ogg" },
+	{ MUS_MP3, "mp3" },
+	{ MUS_MID, "mid" },	/* midi must be the last before NULL	*/
+	{ MUS_NONE, NULL }	/* the last entry must be NULL		*/
+};
+
+int I_RegisterExternalSong(const char *name)
+{
+	int i = 0, ret = -1;
+	char path[MAX_OSPATH];
+
+	if (!snd_initialized)
+		return 0;
+	if (!name || ! *name)
+		return 0;
+
+	while (MusicFile[i].ext != NULL)
+	{
+		/* first try from <userdir>/music */
+		snprintf (path, sizeof(path), "%smusic/%s.%s",
+				basePath, name, MusicFile[i].ext);
+		ret = access(path, R_OK);
+		if (ret == -1)
+		{
+			/* try from <CWD>/music */
+			snprintf (path, sizeof(path), "music/%s.%s",
+					name, MusicFile[i].ext);
+			ret = access(path, R_OK);
+		}
+		if (ret != -1)
+			break;
+		i++;
+	}
+	if (ret == -1)
+		return 0;
+	CurrentSong = Mix_LoadMUS(path);
+	if (!CurrentSong)
+	{
+		fprintf(stderr, "Mix_LoadMUS failed for %s.%s: %s\n",
+				name, MusicFile[i].ext, Mix_GetError());
+		return 0;
+	}
+	return 1;
+}
+
 void I_UnRegisterSong(int handle)
 {
 	if (handle != 1)
@@ -520,7 +573,7 @@ void I_StopSong(int handle)
 	if (handle != 1)
 		return;
 	if (CurrentSong)
-		Mix_HaltMusic();	//Mix_FadeOutMusic(500);
+		Mix_HaltMusic();
 }
 
 void I_PlaySong(int handle, boolean looping)

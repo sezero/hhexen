@@ -1,4 +1,4 @@
-/* $Id: i_sndsdl.c,v 1.2 2008-12-08 10:44:17 sezero Exp $
+/* $Id: i_sndsdl.c,v 1.3 2008-12-11 16:55:33 sezero Exp $
  *
  *  Ripped && Adapted from the PrBoom project:
  *  PrBoom: a Doom port merged with LxDoom and LSDLDoom
@@ -421,6 +421,11 @@ void I_SetChannels(int channels)
  */
 
 int I_RegisterSong(void *data)
+{
+	return 0;
+}
+
+int I_RegisterExternalSong(const char *name)
 {
 	return 0;
 }

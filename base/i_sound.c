@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sound.c,v 1.14 2008-10-15 06:32:48 sezero Exp $
+//** $Id: i_sound.c,v 1.15 2008-12-11 16:55:33 sezero Exp $
 //**
 //**************************************************************************
 
@@ -416,6 +416,11 @@ void I_SetChannels(int channels)
  */
 
 int I_RegisterSong(void *data)
+{
+	return 0;
+}
+
+int I_RegisterExternalSong(const char *nm)
 {
 	return 0;
 }
