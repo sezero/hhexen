@@ -1,4 +1,4 @@
-/* $Id: i_sdlmixer.c,v 1.4 2008-12-11 16:55:33 sezero Exp $
+/* $Id: i_sdlmixer.c,v 1.5 2008-12-11 21:48:49 sezero Exp $
  *
  *  Ripped && Adapted from the PrBoom project:
  *  PrBoom: a Doom port merged with LxDoom and LSDLDoom
@@ -491,24 +491,28 @@ static const struct
 int I_RegisterExternalSong(const char *name)
 {
 	int i = 0, ret = -1;
-	char path[MAX_OSPATH];
+	char path[MAX_OSPATH], fixedname[16];
 
 	if (!snd_initialized)
 		return 0;
 	if (!name || ! *name)
 		return 0;
 
+	strncpy(fixedname, name, 15);
+	fixedname[15] = '\0';
+	strlwr (fixedname);
+
 	while (MusicFile[i].ext != NULL)
 	{
 		/* first try from <userdir>/music */
 		snprintf (path, sizeof(path), "%smusic/%s.%s",
-				basePath, name, MusicFile[i].ext);
+				basePath, fixedname, MusicFile[i].ext);
 		ret = access(path, R_OK);
 		if (ret == -1)
 		{
 			/* try from <CWD>/music */
 			snprintf (path, sizeof(path), "music/%s.%s",
-					name, MusicFile[i].ext);
+					fixedname, MusicFile[i].ext);
 			ret = access(path, R_OK);
 		}
 		if (ret != -1)
@@ -521,9 +525,10 @@ int I_RegisterExternalSong(const char *name)
 	if (!CurrentSong)
 	{
 		fprintf(stderr, "Mix_LoadMUS failed for %s.%s: %s\n",
-				name, MusicFile[i].ext, Mix_GetError());
+			fixedname, MusicFile[i].ext, Mix_GetError());
 		return 0;
 	}
+//	printf ("playing music file %s\n", path);
 	return 1;
 }
 
