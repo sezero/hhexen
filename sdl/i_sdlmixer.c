@@ -1,4 +1,4 @@
-/* $Id: i_sdlmixer.c,v 1.2 2008-12-08 10:44:17 sezero Exp $
+/* $Id: i_sdlmixer.c,v 1.3 2008-12-11 10:28:19 sezero Exp $
  *
  *  Ripped && Adapted from the PrBoom project:
  *  PrBoom: a Doom port merged with LxDoom and LSDLDoom
@@ -520,7 +520,7 @@ void I_StopSong(int handle)
 	if (handle != 1)
 		return;
 	if (CurrentSong)
-		Mix_FadeOutMusic(500);
+		Mix_HaltMusic();	//Mix_FadeOutMusic(500);
 }
 
 void I_PlaySong(int handle, boolean looping)
