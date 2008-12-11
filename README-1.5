@@ -19,8 +19,8 @@ Major changes since 1.4:
     wad file versions
   * Added SDL audio driver: it is the default audio driver.
   * Added SDL_mixer audio driver with midi playback support
-  * Added support for external music files (ogg, mp3, midi. requires the
-    SDL_mixer audio driver.)
+  * Added support for external music files (ogg, mp3, midi) using the
+    SDL_mixer audio driver.
   * OpenGL is the default configuration now
   * Incomplete assassin class is now disabled by default
   * Other usual bug-fixes.
@@ -98,29 +98,32 @@ or different types of targets.
 
 --------------------------------------------------------------------------------
 
-			  High Quality Music playback
+			     Custom Music playback
 
-This requires that you compile hhexen with the --with-audio=sdlmixer
-option.  Visit the Sycraft site, they provide OGG versions of hexen
-soundtrack:  http://sycraft.org/content/audio/hexen.shtml
-I suggest that you download the normal quality hexensoundtrack.zip file,
-which is 128kbps. Unzip it, then unzip (again) the resulting "music.zip"
-file like this:
+Playback of external ogg, mp3 and midi files is available when hhexen is
+configured with the "--with-audio=sdlmixer" option. This is done by placing
+custom music files in $HOME/.hhexen/music.
 
-	unzip -j -d ~/.hhexen/music music.zip
+A high quality OGG version of the original Hexen soundtrack is available for
+download from http://sycraft.org/content/audio/hexen.shtml .
+To install, download the normal quality archive (or high quality if preferred),
+and unzip it (probably twice).  Create the music directory:
+	mkdir -p $HOME/.hhexen/music
+or:
+	mkdir -p <hhexen_dir>/music
 
-If you want, you can replace the ~/.hhexen directory with the main installation
-directory, such as:
-	unzip -j -d /usr/local/games/hhexen/music music.zip
+(replace <hhexen_dir> with the directory where hhexen is installed, such as
+/usr/local/games/hhexen )
 
-When you run the game, it will automatically make use of the ogg files.
+Place the ogg files in that new "music" directory you just created. Now, when
+the game is run, the new sound files should automatically be used.
 
 --------------------------------------------------------------------------------
 
 				     Hints
 
-You can switch between windowed and fullscreen modes
-with the ALT-Enter key combination.
+You can switch between windowed and fullscreen modes by the ALT-Enter key
+combination.
 
 Double-clicking with Mouse2 or Mouse3 acts as the 'activate' (or 'use') key.
 
