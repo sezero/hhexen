@@ -30,9 +30,8 @@ Changes with our first 1.4 release include:
   * OpenGL screenshots (now bound to F12 and enabled by default)
   * Game saves/loads work fine (CVS was broken for a while)
   * Transparent map feature (TAB key)
-  * Many excellent GCC/C/portability bug-fixes from Oz
-  * Removal of incomplete assassin class now possible (with configure
-    --disable-assassin)
+  * Many GCC/C/portability bug-fixes
+  * Removal of incomplete assassin class now possible
   * More complete support for punctuation keys in the control-setup menu.
 
 --------------------------------------------------------------------------------
@@ -102,14 +101,14 @@ or different types of targets.
 
 Playback of external ogg, mp3 and midi files is available when hhexen is
 configured with the "--with-audio=sdlmixer" option. This is done by placing
-custom music files in $HOME/.hhexen/music.
+custom music files in $HOME/.hhexen/music .
 
 A high quality OGG version of the original Hexen soundtrack is available for
-download from http://sycraft.org/content/audio/hexen.shtml .
+download from Sycraft.org :  http://sycraft.org/content/audio/hexen.shtml
 To install, download the normal quality archive (or high quality if preferred),
 and unzip it (probably twice).  Create the music directory:
 	mkdir -p $HOME/.hhexen/music
-or:
+ or:
 	mkdir -p <hhexen_dir>/music
 
 (replace <hhexen_dir> with the directory where hhexen is installed, such as
