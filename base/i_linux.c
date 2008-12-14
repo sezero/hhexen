@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.31 2008-12-11 16:55:33 sezero Exp $
+//** $Id: i_linux.c,v 1.32 2008-12-14 20:40:17 sezero Exp $
 //**
 //**************************************************************************
 
@@ -456,11 +456,22 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 		if (UseSndScript)
 		{
 			char name[MAX_OSPATH];
+			int len;
 			snprintf(name, sizeof(name), "%s%s.lmp", ArchivePath, S_sfx[sound_id].lumpname);
-			M_ReadFile(name, &S_sfx[sound_id].snd_ptr);
+			len = M_ReadFile(name, &S_sfx[sound_id].snd_ptr);
+			if (len <= 8)
+				I_Error("broken sound lump #%d (%s)\n", S_sfx[sound_id].lumpnum, name);
 		}
 		else
 		{
+			if (W_LumpLength(S_sfx[sound_id].lumpnum) <= 8)
+			{
+			//	I_Error("broken sound lump #%d (%s)\n",
+				fprintf(stderr, "broken sound lump #%d (%s)\n",
+						S_sfx[sound_id].lumpnum,
+						S_sfx[sound_id].lumpname);
+				return;
+			}
 			S_sfx[sound_id].snd_ptr = W_CacheLumpNum(S_sfx[sound_id].lumpnum, PU_SOUND);
 		}
 	}
