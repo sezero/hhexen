@@ -1,10 +1,8 @@
 #!/bin/sh
 
-aclocal
-#autoheader
-autoconf
+aclocal    || exit 1
+autoheader || exit 1
+autoconf   || exit 1
+rm -rf autom4te.cache
 
-if test -f ./configure; then
 echo "Now you are ready to run ./configure"
-fi
-
