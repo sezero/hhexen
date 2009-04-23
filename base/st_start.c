@@ -4,8 +4,8 @@
 //** st_start.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: st_start.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-06-22 16:35:14 $
+//** $Revision: 1.12 $
+//** $Date: 2009-04-23 07:37:07 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -231,7 +231,7 @@ void ST_Progress(void)
 		}
 	}
 #else	/* DOS :  I_IBM.C */
-	printf(".");
+	putchar ('.');
 #endif
 }
 
@@ -284,13 +284,14 @@ void ST_NetDone(void)
 void ST_Message(const char *message, ...)
 {
 	va_list argptr;
-	char buffer[256];
+	char buffer[MAX_ST_MSG];
 
 	va_start(argptr, message);
 	vsnprintf(buffer, sizeof(buffer), message, argptr);
 	va_end(argptr);
 
-	printf(buffer); 
+//	if (debugmode)
+		printf("%s", buffer);
 }
 
 //==========================================================================
@@ -302,13 +303,13 @@ void ST_Message(const char *message, ...)
 void ST_RealMessage(const char *message, ...)
 {
 	va_list argptr;
-	char buffer[256];
+	char buffer[MAX_ST_MSG];
 
 	va_start(argptr, message);
 	vsnprintf(buffer, sizeof(buffer), message, argptr);
 	va_end(argptr);
 
-	printf(buffer);		// Always print these messages
+	printf("%s", buffer);		// Always print these messages
 }
 
 
