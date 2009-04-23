@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.28 $
-//** $Date: 2008-07-29 07:55:21 $
+//** $Revision: 1.29 $
+//** $Date: 2009-04-23 06:36:07 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -528,23 +528,20 @@ int	W_NumLumps(void)
 int W_CheckNumForName(const char *name)
 {
 	char name8[9];
-	int v1, v2;
 	lumpinfo_t *lump_p;
 
 	// Make the name into two integers for easy compares
 	memset(name8, 0, sizeof(name8));
 	strncpy(name8, name, 8);
 	strupr(name8); // case insensitive
-	v1 = *(int *)name8;
-	v2 = *(int *)&name8[4];
 
 	// Scan backwards so patch lump files take precedence
-	lump_p = lumpinfo+numlumps;
+	lump_p = lumpinfo + numlumps;
 	while (lump_p-- != lumpinfo)
 	{
-		if (*(int *)lump_p->name == v1 && *(int *)&lump_p->name[4] == v2)
+		if (memcmp(lump_p->name, name8, 8) == 0)
 		{
-			return lump_p-lumpinfo;
+			return (int)(lump_p - lumpinfo);
 		}
 	}
 	return -1;
