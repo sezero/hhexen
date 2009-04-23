@@ -4,8 +4,8 @@
 //** p_spec.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_spec.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-07-20 12:05:50 $
+//** $Revision: 1.10 $
+//** $Date: 2009-04-23 06:37:18 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -224,6 +224,9 @@ fixed_t P_FindHighestFloorSurrounding(sector_t *sec)
 //
 //==================================================================
 
+
+#define MAX_ADJOINING_SECTORS	20	/* 20 adjoining sectors max! */
+
 fixed_t P_FindNextHighestFloor(sector_t *sec,int currentheight)
 {
 	int		i;
@@ -232,7 +235,7 @@ fixed_t P_FindNextHighestFloor(sector_t *sec,int currentheight)
 	line_t		*check;
 	sector_t	*other;
 	fixed_t		height = currentheight;
-	fixed_t		heightlist[20];		// 20 adjoining sectors max!
+	fixed_t		heightlist[MAX_ADJOINING_SECTORS];
 
 	for (i = 0, h = 0; i < sec->linecount; i++)
 	{
@@ -242,11 +245,19 @@ fixed_t P_FindNextHighestFloor(sector_t *sec,int currentheight)
 			continue;
 		if (other->floorheight > height)
 			heightlist[h++] = other->floorheight;
+		if (h >= MAX_ADJOINING_SECTORS)
+		{
+			ST_Message("Sector with more than 20 adjoining sectors\n");
+			break;
+		}
 	}
 
 	//
 	// Find lowest height in list
 	//
+	if(!h)
+		return currentheight;
+
 	min = heightlist[0];
 	for (i = 1; i < h; i++)
 	{
