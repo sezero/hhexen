@@ -4,8 +4,8 @@
 //** p_spec.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_spec.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2009-04-23 06:37:18 $
+//** $Revision: 1.11 $
+//** $Date: 2009-04-23 07:00:07 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -247,7 +247,8 @@ fixed_t P_FindNextHighestFloor(sector_t *sec,int currentheight)
 			heightlist[h++] = other->floorheight;
 		if (h >= MAX_ADJOINING_SECTORS)
 		{
-			ST_Message("Sector with more than 20 adjoining sectors\n");
+			ST_Message("Sector with more than %d adjoining sectors\n",
+				   MAX_ADJOINING_SECTORS);
 			break;
 		}
 	}
