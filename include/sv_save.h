@@ -1,53 +1,67 @@
 
+/*
+	sv_save.h: Heretic 2 (Hexen)
+	Structures used for saved games.
+
+	Games are always saved Little Endian, with 32 bit offsets.
+	The saved games then can be properly read on 64 bit and/or
+	Big Endian machines all the same.
+
+	$RCSfile: sv_save.h,v $
+	$Revision: 1.4 $
+	$Date: 2009-04-24 14:48:08 $
+	$Author: sezero $
+*/
+
 #ifndef __SAVE_DEFS
 #define __SAVE_DEFS
 
 typedef struct
 {
-	int32_t	state_idx;
+	int32_t	state_idx;				/* state_t	*state */
 	int	tics;
 	fixed_t	sx, sy;
 } save_pspdef_t;
 
 typedef struct
 {
-	int32_t		prev_idx, next_idx;
-	int32_t		function_idx;
+	int32_t		prev_idx, next_idx;		/* struct thinker_s *prev, *next; */
+	int32_t		function_idx;			/* think_t	function; */
 } save_thinker_t;
 
 typedef struct
 {
-	save_thinker_t		thinker;
+	save_thinker_t		thinker;		/* thinker_t	thinker; */
 
 	fixed_t			x, y, z;
-	int32_t		snext_idx, sprev_idx;
+	int32_t		snext_idx, sprev_idx;		/* struct mobj_s *snext, *sprev; */
 	angle_t			angle;
-	int			sprite; /* spritenum_t */
+	int			sprite;			/* spritenum_t	sprite */
 	int			frame;
 
-	int32_t		bnext_idx, bprev_idx;
-	int32_t		subsector_idx;
+	int32_t		bnext_idx, bprev_idx;		/* struct mobj_s *bnext, *bprev; */
+	int32_t		subsector_idx;			/* struct subsector_s *subsector; */
 	fixed_t			floorz, ceilingz;
 	fixed_t			floorpic;
 	fixed_t			radius, height;
 	fixed_t			momx, momy, momz;
 	int			validcount;
-	int			type; /* mobjtype_t */
-	int32_t			info_idx;
+	int			type;			/* mobjtype_t	type */
+	int32_t			info_idx;		/* mobjinfo_t	*info; */
 	int			tics;
-	int32_t			state_idx;
+	int32_t			state_idx;		/* state_t	*state; */
 	int			damage;
 	int			flags;
 	int			flags2;
-	int32_t			special1;
-	int32_t			special2;
+	int32_t			special1;		/* intptr_t	special1; */
+	int32_t			special2;		/* intptr_t	special2; */
 	int			health;
 	int			movedir;
 	int			movecount;
-	int32_t			target_idx;
+	int32_t			target_idx;		/* struct mobj_s *target; */
 	int			reactiontime;
 	int			threshold;
-	int32_t			player_idx;
+	int32_t			player_idx;		/* struct player_s *player; */
 	int			lastlook;
 	fixed_t			floorclip;
 	int			archiveNum;
@@ -58,11 +72,11 @@ typedef struct
 
 typedef struct
 {
-	int32_t		mo_idx;
-	int		playerstate; /* playerstate_t */
+	int32_t		mo_idx;				/* mobj_t	*mo; */
+	int		playerstate;			/* playerstate_t playerstate */
 	ticcmd_t	cmd;
 
-	int		playerclass; /* pclass_t */
+	int		playerclass;			/* pclass_t	playerclass */
 
 	fixed_t		viewz;
 	fixed_t		viewheight;
@@ -71,21 +85,21 @@ typedef struct
 
 	int		flyheight;
 	int		lookdir;
-	int		centering; /* boolean */
+	int		centering;			/* boolean	centering */
 	int		health;
 	int		armorpoints[NUMARMOR];
 
 	inventory_t	inventory[NUMINVENTORYSLOTS];
-	int		readyArtifact; /* artitype_t */
+	int		readyArtifact;			/* artitype_t	readyArtifact */
 	int		artifactCount;
 	int		inventorySlotNum;
 	int		powers[NUMPOWERS];
 	int		keys;
 	int		pieces;
 	signed int	frags[MAXPLAYERS];
-	int		readyweapon; /* weapontype_t */
-	int		pendingweapon; /* weapontype_t */
-	int		weaponowned[NUMWEAPONS]; /* boolean */
+	int		readyweapon;			/* weapontype_t	readyweapon */
+	int		pendingweapon;			/* weapontype_t	pendingweapon */
+	int		weaponowned[NUMWEAPONS];	/* boolean	weaponowned[NUMWEAPONS] */
 	int		mana[NUMMANA];
 	int		attackdown, usedown;
 	int		cheats;
@@ -99,12 +113,12 @@ typedef struct
 	short		yellowMessage;
 	int		damagecount, bonuscount;
 	int		poisoncount;
-	int32_t		poisoner_idx;
-	int32_t		attacker_idx;
+	int32_t		poisoner_idx;			/* mobj_t	*poisoner; */
+	int32_t		attacker_idx;			/* mobj_t	*attacker; */
 	int		extralight;
 	int		fixedcolormap;
 	int		colormap;
-	save_pspdef_t	psprites[NUMPSPRITES];
+	save_pspdef_t	psprites[NUMPSPRITES];		/* pspdef_t	psprites[NUMPSPRITES]; */
 	int		morphTics;
 	unsigned int	jumpTics;
 	unsigned int	worldTimer;
@@ -112,9 +126,9 @@ typedef struct
 
 typedef struct
 {
-	save_thinker_t	thinker;
-	int32_t		sector_idx;
-	int		type; /* floor_e */
+	save_thinker_t	thinker;			/* thinker_t	thinker; */
+	int32_t		sector_idx;			/* sector_t	*sector; */
+	int		type;				/* floor_e	type; */
 	int		crush;
 	int		direction;
 	int		newspecial;
@@ -133,8 +147,8 @@ typedef struct
 
 typedef struct
 {
-	save_thinker_t	thinker;
-	int32_t		sector_idx;
+	save_thinker_t	thinker;			/* thinker_t	thinker; */
+	int32_t		sector_idx;			/* sector_t	*sector; */
 	int		ceilingSpeed;
 	int		floorSpeed;
 	int		floordest;
@@ -145,8 +159,8 @@ typedef struct
 
 typedef struct
 {
-	save_thinker_t	thinker;
-	int32_t		sector_idx;
+	save_thinker_t	thinker;			/* thinker_t	thinker; */
+	int32_t		sector_idx;			/* sector_t	*sector; */
 	fixed_t		originalHeight;
 	fixed_t		accumulator;
 	fixed_t		accDelta;
@@ -159,25 +173,25 @@ typedef struct
 
 typedef struct
 {
-	save_thinker_t	thinker;
-	int32_t		sector_idx;
+	save_thinker_t	thinker;			/* thinker_t	thinker; */
+	int32_t		sector_idx;			/* sector_t	*sector; */
 	fixed_t		speed;
 	fixed_t		low;
 	fixed_t		high;
 	int		wait;
 	int		count;
-	int		status; /* plat_e */
-	int		oldstatus; /* plat_e */
+	int		status;				/* plat_e	status; */
+	int		oldstatus;			/* plat_e	oldstatus; */
 	int		crush;
 	int		tag;
-	int		type; /* plattype_e */
+	int		type;				/* plattype_e	type; */
 } save_plat_t;
 
 typedef struct
 {
-	save_thinker_t	thinker;
-	int32_t		sector_idx;
-	int		type; /* ceiling_e */
+	save_thinker_t	thinker;			/* thinker_t	thinker; */
+	int32_t		sector_idx;			/* sector_t	*sector; */
+	int		type;				/* ceiling_e	type; */
 	fixed_t		bottomheight, topheight;
 	fixed_t		speed;
 	int		crush;
@@ -188,9 +202,9 @@ typedef struct
 
 typedef struct
 {
-	save_thinker_t	thinker;
-	int32_t		sector_idx;
-	int		type; /* lighttype_t */
+	save_thinker_t	thinker;			/* thinker_t	thinker; */
+	int32_t		sector_idx;			/* sector_t	*sector; */
+	int		type;				/* lighttype_t	type; */
 	int		value1;
 	int		value2;
 	int		tics1;
@@ -200,17 +214,17 @@ typedef struct
 
 typedef struct
 {
-	save_thinker_t	thinker;
-	int32_t		sector_idx;
+	save_thinker_t	thinker;			/* thinker_t	thinker; */
+	int32_t		sector_idx;			/* sector_t	*sector; */
 	int		index;
 	int		base;
 } save_phase_t;
 
 typedef struct
 {
-	save_thinker_t	thinker;
-	int32_t		sector_idx;
-	int		type; /* vldoor_e */
+	save_thinker_t	thinker;			/* thinker_t	thinker; */
+	int32_t		sector_idx;			/* sector_t	*sector; */
+	int		type;				/* vldoor_e	type; */
 	fixed_t		topheight;
 	fixed_t		speed;
 	int		direction;
@@ -220,7 +234,7 @@ typedef struct
 
 typedef struct
 {
-	save_thinker_t thinker;
+	save_thinker_t thinker;				/* thinker_t thinker; */
 	int polyobj;
 	int speed;
 	unsigned int dist;
@@ -231,7 +245,7 @@ typedef struct
 
 typedef struct
 {
-	save_thinker_t thinker;
+	save_thinker_t thinker;				/* thinker_t thinker; */
 	int polyobj;
 	int speed;
 	int dist;
@@ -240,15 +254,15 @@ typedef struct
 	fixed_t xSpeed, ySpeed;
 	int tics;
 	int waitTics;
-	int type; /* podoortype_t */
-	int close; /* boolean */
+	int type;					/* podoortype_t type; */
+	int close;					/* boolean	close; */
 } save_polydoor_t;
 
 typedef struct
 {
-	save_thinker_t	thinker;
-	int32_t		activator_idx;
-	int32_t		line_idx;
+	save_thinker_t	thinker;			/* thinker_t	thinker; */
+	int32_t		activator_idx;			/* mobj_t	*activator; */
+	int32_t		line_idx;			/* line_t	*line; */
 	int		side;
 	int		number;
 	int		infoIndex;
@@ -256,7 +270,7 @@ typedef struct
 	int		stack[ACS_STACK_DEPTH];
 	int		stackPtr;
 	int		vars[MAX_ACS_SCRIPT_VARS];
-	int32_t		ip_idx;
+	int32_t		ip_idx;				/* byte		*ip; */
 } save_acs_t;
 
 #endif	/* __SAVE_DEFS */
