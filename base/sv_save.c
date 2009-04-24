@@ -4,8 +4,8 @@
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: sv_save.c,v $
-//** $Revision: 1.25 $
-//** $Date: 2008-10-31 14:55:47 $
+//** $Revision: 1.26 $
+//** $Date: 2009-04-24 15:12:29 $
 //** $Author: sezero $
 //**
 //** Games are always saved Little Endian, with 32 bit offsets.
@@ -466,6 +466,7 @@ void SV_LoadGame(int slot)
 
 	// Don't need the player mobj relocation info for load game
 	Z_Free(TargetPlayerAddrs);
+	TargetPlayerAddrs = NULL;
 
 	// Restore player structs
 	inv_ptr = 0;
@@ -553,10 +554,6 @@ void SV_MapTeleport(int map, int position)
 	// Save some globals that get trashed during the load
 	inventoryPtr = inv_ptr;
 	currentInvPos = curpos;
-
-	// Only SV_LoadMap() uses TargetPlayerAddrs, so it's NULLed here
-	// for the following check (player mobj redirection)
-	TargetPlayerAddrs = NULL;
 
 	gamemap = map;
 	snprintf(fileName, sizeof(fileName), "%shex6%02d.hxs", basePath, gamemap);
@@ -657,6 +654,7 @@ void SV_MapTeleport(int map, int position)
 			*TargetPlayerAddrs[i] = (intptr_t)targetPlayerMobj;
 		}
 		Z_Free(TargetPlayerAddrs);
+		TargetPlayerAddrs = NULL;
 	}
 
 	// Destroy all things touching players
