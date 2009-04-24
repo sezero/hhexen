@@ -4,8 +4,8 @@
 //** p_spec.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_spec.h,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-07-07 20:25:47 $
+//** $Revision: 1.8 $
+//** $Date: 2009-04-24 14:45:31 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -157,22 +157,10 @@ typedef struct
 	int		direction;
 } glow_t;
 
-typedef struct
-{
-	thinker_t	thinker;
-	sector_t	*sector;
-	int		index;
-	int		base;
-} phase_t;
-
 #define GLOWSPEED		8
 #define STROBEBRIGHT		5
 #define FASTDARK		15
 #define SLOWDARK		35
-
-#define LIGHT_SEQUENCE_START	2
-#define LIGHT_SEQUENCE		3
-#define LIGHT_SEQUENCE_ALT	4
 
 void T_LightFlash (lightflash_t *flash);
 void P_SpawnLightFlash (sector_t *sector);
