@@ -1,4 +1,18 @@
 -------------------------------------------------------------------------------
+Release notes for version 1.5.3
+-------------------------------------------------------------------------------
+
+Bug Fixes:
+ - None.
+
+New Features:
+ - None.
+
+Notes:
+ - Added size sanity check for sfx lumps.
+ - Ensured that the new gcc-4.4 series compilers are properly supported.
+
+-------------------------------------------------------------------------------
 Release notes for version 1.5.2
 -------------------------------------------------------------------------------
 

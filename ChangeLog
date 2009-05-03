@@ -1,5 +1,9 @@
 HHexen ChangeLog
 
+v1.5.3
+ - Ensured that the new gcc-4.4 series compilers are properly supported.
+ - A few other minor cleanups.
+
 v1.5.2
  - Fixed SDL_mixer freeze with zero music volume in some cases.
  - Added support for external music files to the SDL_mixer driver.
