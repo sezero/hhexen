@@ -3,7 +3,8 @@ Release notes for version 1.5.3
 -------------------------------------------------------------------------------
 
 Bug Fixes:
- - None.
+ - Fixed SDL and SDL_mixer audio drivers to honor the -nosound command
+   line option.
 
 New Features:
  - None.
@@ -11,6 +12,8 @@ New Features:
 Notes:
  - Added size sanity check for sfx lumps.
  - Ensured that the new gcc-4.4 series compilers are properly supported.
+ - Renamed the "novideo" developer command line switch to "-novideo". Made
+   the SVGALib driver to honor it.
 
 -------------------------------------------------------------------------------
 Release notes for version 1.5.2

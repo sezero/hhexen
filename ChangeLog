@@ -2,6 +2,8 @@ HHexen ChangeLog
 
 v1.5.3
  - Ensured that the new gcc-4.4 series compilers are properly supported.
+ - SDL and SDL_mixer audio drivers now honor the -nosound command line
+   option.
  - A few other minor cleanups.
 
 v1.5.2
