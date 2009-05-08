@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdl.c,v 1.18 2008-07-29 07:46:24 sezero Exp $
+//** $Id: i_sdl.c,v 1.19 2009-05-08 17:12:09 sezero Exp $
 //**
 //**************************************************************************
 
@@ -215,8 +215,11 @@ void I_InitGraphics(void)
 	char text[20];
 	Uint32 flags = SDL_SWSURFACE|SDL_HWPALETTE;
 
-	if (M_CheckParm("novideo"))	// if true, stay in text mode for debugging
+	if (M_CheckParm("-novideo"))	// if true, stay in text mode for debugging
+	{
+		ST_Message("I_InitGraphics: Video Disabled.\n");
 		return;
+	}
 
 	if (M_CheckParm("-f") || M_CheckParm("--fullscreen"))
 		flags |= SDL_FULLSCREEN;

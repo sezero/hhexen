@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_svgalib.c,v 1.8 2008-07-29 07:46:24 sezero Exp $
+//** $Id: i_svgalib.c,v 1.9 2009-05-08 17:12:09 sezero Exp $
 //**
 //**************************************************************************
 
@@ -383,6 +383,12 @@ static void comefrom_background (void)
 void I_InitGraphics(void)
 {
 	int		i;
+
+	if (M_CheckParm("-novideo"))	// if true, stay in text mode for debugging
+	{
+		ST_Message("I_InitGraphics: Video Disabled.\n");
+		return;
+	}
 
 	ST_Message("I_InitGraphics:\n");
 
