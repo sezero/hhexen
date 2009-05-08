@@ -1,4 +1,4 @@
-/* $Id: i_sndsdl.c,v 1.3 2008-12-11 16:55:33 sezero Exp $
+/* $Id: i_sndsdl.c,v 1.4 2009-05-08 17:11:12 sezero Exp $
  *
  *  Ripped && Adapted from the PrBoom project:
  *  PrBoom: a Doom port merged with LxDoom and LSDLDoom
@@ -340,6 +340,14 @@ void I_StartupSound (void)
 
 	if (snd_initialized)
 		return;
+
+	if (M_CheckParm("--nosound") || M_CheckParm("-s") || M_CheckParm("-nosound"))
+	{
+		fprintf(stdout, "I_StartupSound: Sound Disabled.\n");
+		return;
+	}
+
+	fprintf(stdout, "I_StartupSound (SDL):\n");
 
 	/* Initialize variables */
 	snd_SfxAvail = snd_MusicAvail = false;

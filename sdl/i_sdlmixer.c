@@ -1,4 +1,4 @@
-/* $Id: i_sdlmixer.c,v 1.5 2008-12-11 21:48:49 sezero Exp $
+/* $Id: i_sdlmixer.c,v 1.6 2009-05-08 17:11:11 sezero Exp $
  *
  *  Ripped && Adapted from the PrBoom project:
  *  PrBoom: a Doom port merged with LxDoom and LSDLDoom
@@ -348,6 +348,14 @@ void I_StartupSound (void)
 
 	if (snd_initialized)
 		return;
+
+	if (M_CheckParm("--nosound") || M_CheckParm("-s") || M_CheckParm("-nosound"))
+	{
+		fprintf(stdout, "I_StartupSound: Sound Disabled.\n");
+		return;
+	}
+
+	fprintf(stdout, "I_StartupSound (SDL_mixer):\n");
 
 	/* Initialize variables */
 	snd_SfxAvail = snd_MusicAvail = false;
