@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdlgl.c,v 1.18 2009-05-08 17:12:09 sezero Exp $
+//** $Id: i_sdlgl.c,v 1.19 2009-05-09 08:15:37 sezero Exp $
 //**
 //**************************************************************************
 
@@ -112,6 +112,7 @@ void I_InitGraphics(void)
 	if (M_CheckParm("-novideo"))	// if true, stay in text mode for debugging
 	{
 		ST_Message("I_InitGraphics: Video Disabled.\n");
+		I_Error("FIXME: -novideo switch doesn't work correctly with opengl!");
 		return;
 	}
 
