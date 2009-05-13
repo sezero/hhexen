@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.34 2009-05-13 08:32:44 sezero Exp $
+//** $Id: i_linux.c,v 1.35 2009-05-13 09:21:33 sezero Exp $
 //**
 //**************************************************************************
 
@@ -1459,8 +1459,11 @@ static void ValidateByteorder (void)
 	printf ("Detected byte order: %s\n", endianism[host_byteorder]);
 }
 
+static const char datadir[] = HHEXEN_DATAPATH;
+
 int main (int argc, char **argv)
 {
+	char *waddir;
 	PrintVersion ();
 	myargc = argc;
 	myargv = (const char **) argv;
@@ -1474,6 +1477,18 @@ int main (int argc, char **argv)
 
 	ValidateByteorder();
 	CreateBasePath();
+
+	waddir = getenv("HHEXEN_DATA");
+	if (waddir == NULL)
+	{
+		if (datadir[0])
+		{
+			setenv ("HHEXEN_DATA", datadir, 0);
+			waddir = getenv("HHEXEN_DATA");
+		}
+	}
+	if (waddir != NULL)
+		printf ("HHEXEN_DATA environment: %s\n", waddir);
 
 	H2_Main();
 	return 0;
