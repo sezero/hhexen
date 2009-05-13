@@ -4,8 +4,8 @@
 //** p_setup.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: p_setup.c,v $
-//** $Revision: 1.14 $
-//** $Date: 2008-06-26 09:52:28 $
+//** $Revision: 1.15 $
+//** $Date: 2009-05-13 19:27:07 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -919,11 +919,11 @@ static void P_CreateFloorsAndCeilings(int bspnode, int numdivlines, divline_t* d
 	// We have arrived at a subsector. The divline list contains all
 	// the partition lines that carve out the subsector.
 		int ssidx = bspnode & (~NF_SUBSECTOR);
-        	OGL_DEBUG("subsector %d: %d divlines\n", bspnode&(~NF_SUBSECTOR), numdivlines);
+		OGL_DEBUG("subsector %d: %d divlines\n", ssidx, numdivlines);
 	//	if (ssidx < 10)
 		P_ConvexCarver(subsectors+ssidx, numdivlines, divlines);
 
-        	OGL_DEBUG("subsector %d: %d edgeverts\n", ssidx, subsectors[ssidx].numedgeverts);
+		OGL_DEBUG("subsector %d: %d edgeverts\n", ssidx, subsectors[ssidx].numedgeverts);
 		return;	// This leaf is done.
 	}
 
