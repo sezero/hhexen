@@ -1,7 +1,7 @@
 dnl configure.in for HHexen-1.5.3
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.24 $)
+AC_REVISION($Revision: 1.25 $)
 AC_INIT(base/a_action.c)
 AC_CONFIG_HEADER(include/config.h)
 
@@ -85,6 +85,7 @@ AC_ARG_WITH(datapath,
 [  --with-datapath=<DIR>   Use DIR for shared game data. Not defined by default.],
 datapath="$withval", datapath="")
 AC_DEFINE_UNQUOTED(HHEXEN_DATAPATH, "$datapath", [Define this to the shared game directory root])
+HHEXEN_DATAPATH="$datapath"
 AC_SUBST(HHEXEN_DATAPATH)
 
 if test "$SVGAHEXEN" = "true";then
