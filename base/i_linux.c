@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.32 2008-12-14 20:40:17 sezero Exp $
+//** $Id: i_linux.c,v 1.33 2009-05-13 07:21:06 sezero Exp $
 //**
 //**************************************************************************
 
@@ -1392,10 +1392,10 @@ static void PrintHelp (const char *name)
 	printf ("     [ -w | --windowed]       Run the game windowed\n");
 	printf ("     [ -s | --nosound]        Run the game without sound\n");
 	printf ("     [ -g | --nograb]         Disable mouse grabbing\n");
+	printf ("     [ -file <wadfile> ]      Load extra wad files\n");
 #ifdef RENDER3D
 	printf ("     [ -width ]      Set screen width\n");
 	printf ("     [ -height ]     Set screen height\n");
-//	printf ("     [ -l | --gllibrary]      Select 3D rendering library\n");
 #endif
 	printf ("\n");
 	printf ("You can use the HHEXEN_DATA environment variable to force the\n");
