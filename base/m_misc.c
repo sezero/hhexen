@@ -4,8 +4,8 @@
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: m_misc.c,v $
-//** $Revision: 1.25 $
-//** $Date: 2008-07-20 12:05:50 $
+//** $Revision: 1.26 $
+//** $Date: 2009-05-13 19:35:53 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -772,7 +772,7 @@ void M_ScreenShot (void)
 	{
 		p[5] = i/10 + '0';
 		p[6] = i%10 + '0';
-		if (access(lbmname,0) == -1)
+		if (access(lbmname, F_OK) == -1)
 			break;	// file doesn't exist
 	}
 	if (i == 100)

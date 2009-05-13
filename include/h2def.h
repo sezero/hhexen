@@ -4,8 +4,8 @@
 //** h2def.h : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: h2def.h,v $
-//** $Revision: 1.53 $
-//** $Date: 2009-05-13 14:00:35 $
+//** $Revision: 1.54 $
+//** $Date: 2009-05-13 19:35:53 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -77,10 +77,21 @@
 #define VERSION_PLATFORM "Linux"
 #elif defined (__FreeBSD__)
 #define VERSION_PLATFORM "FreeBSD"
-#elif defined (WIN32)
+#elif defined (_WIN32)
 #define VERSION_PLATFORM "Windows"
 #else
 #define VERSION_PLATFORM "Unknown"
+#endif
+
+/* compatibility definitions: */
+#if defined(_WIN32) && !defined(F_OK)
+/* values for the mode argument of access(). MS does not define them.
+   these aren't in h2stdinc.h, because not all files include io.h or
+   unistd.h */
+#define	R_OK	4		/* Test for read permission.  */
+#define	W_OK	2		/* Test for write permission.  */
+#define	X_OK	1		/* Test for execute permission.  */
+#define	F_OK	0		/* Test for existence.  */
 #endif
 
 /* max length of a filesystem pathname	*/
@@ -1169,7 +1180,8 @@ void D_QuitNetGame (void);
 
 void TryRunTics (void);
 
-#if !(defined(__WATCOMC__) || defined(__DJGPP__) || defined(__DOS__) || defined(_WIN32) || defined(_WIN64))
+#if !(defined(__WATCOMC__) || defined(__DJGPP__) || defined(__DOS__) || \
+      defined(_WIN32) || defined(_WIN64))
 char *strupr (char *str);
 char *strlwr (char *str);
 int filelength(int handle);
