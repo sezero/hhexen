@@ -1,7 +1,7 @@
 dnl configure.in for HHexen-1.5.3
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.21 $)
+AC_REVISION($Revision: 1.22 $)
 AC_INIT(base/a_action.c)
 AC_CONFIG_HEADER(include/config.h)
 
@@ -23,6 +23,13 @@ BUILDNAMES=""
 dnl ==================================================================
 dnl Command-line args. Check for mutually-exclusive options.
 dnl ==================================================================
+
+AC_ARG_ENABLE(fullscreen,
+AC_HELP_STRING([--enable-fullscreen], [Run fullscreen by default [[default=no]]]),
+							[], [enable_fullscreen=no])
+if test x$enable_fullscreen = xyes; then
+	AC_DEFINE(FULLSCREEN_DEFAULT, 1, [Define if want to run fullscreen by default instead of windowed])
+fi
 
 AC_ARG_ENABLE(asm,
 AC_HELP_STRING([--disable-asm], [Disable assembly language [[default=no]]]),

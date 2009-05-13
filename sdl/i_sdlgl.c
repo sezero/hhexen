@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdlgl.c,v 1.19 2009-05-09 08:15:37 sezero Exp $
+//** $Id: i_sdlgl.c,v 1.20 2009-05-13 08:34:14 sezero Exp $
 //**
 //**************************************************************************
 
@@ -14,6 +14,13 @@
 #include "r_local.h"
 #include "ogl_def.h"
 #include "st_start.h"
+
+#define BASE_WINDOW_FLAGS	(SDL_OPENGL)
+#ifdef FULLSCREEN_DEFAULT
+#define DEFAULT_FLAGS		(BASE_WINDOW_FLAGS|SDL_FULLSCREEN)
+#else
+#define DEFAULT_FLAGS		(BASE_WINDOW_FLAGS)
+#endif
 
 // Public Data
 
@@ -107,7 +114,7 @@ void I_InitGraphics(void)
 {
 	int p;
 	char text[20];
-	Uint32 flags = SDL_OPENGL;
+	Uint32 flags = DEFAULT_FLAGS;
 
 	if (M_CheckParm("-novideo"))	// if true, stay in text mode for debugging
 	{
@@ -117,14 +124,14 @@ void I_InitGraphics(void)
 	}
 
 	if (M_CheckParm("-f") || M_CheckParm("--fullscreen"))
-	{
 		flags |= SDL_FULLSCREEN;
+	if (M_CheckParm("-w") || M_CheckParm("--windowed"))
+		flags &= ~SDL_FULLSCREEN;
+	if (flags & SDL_FULLSCREEN)
 		setenv ("MESA_GLX_FX", "fullscreen", 1);
-	}
 	else
-	{
 		setenv ("MESA_GLX_FX", "disable", 1);
-	}
+
 	p = M_CheckParm ("-height");
 	if (p && p < myargc - 1)
 	{

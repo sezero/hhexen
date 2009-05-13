@@ -17,6 +17,9 @@
 /* Define if building for the 4 level shareware wad files only */
 #undef DEMO_VERSION
 
+/* Define if want to run fullscreen by default instead of windowed */
+#undef FULLSCREEN_DEFAULT
+
 /* Define to 1 if you have `alloca', as a function or macro. */
 #undef HAVE_ALLOCA
 

@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_sdl.c,v 1.19 2009-05-08 17:12:09 sezero Exp $
+//** $Id: i_sdl.c,v 1.20 2009-05-13 08:34:14 sezero Exp $
 //**
 //**************************************************************************
 
@@ -11,6 +11,13 @@
 #include "h2def.h"
 #include "r_local.h"
 #include "st_start.h"
+
+#define BASE_WINDOW_FLAGS	(SDL_SWSURFACE|SDL_HWPALETTE)
+#ifdef FULLSCREEN_DEFAULT
+#define DEFAULT_FLAGS		(BASE_WINDOW_FLAGS|SDL_FULLSCREEN)
+#else
+#define DEFAULT_FLAGS		(BASE_WINDOW_FLAGS)
+#endif
 
 // Public Data
 
@@ -213,7 +220,7 @@ void I_Update (void)
 void I_InitGraphics(void)
 {
 	char text[20];
-	Uint32 flags = SDL_SWSURFACE|SDL_HWPALETTE;
+	Uint32 flags = DEFAULT_FLAGS;
 
 	if (M_CheckParm("-novideo"))	// if true, stay in text mode for debugging
 	{
@@ -223,6 +230,8 @@ void I_InitGraphics(void)
 
 	if (M_CheckParm("-f") || M_CheckParm("--fullscreen"))
 		flags |= SDL_FULLSCREEN;
+	if (M_CheckParm("-w") || M_CheckParm("--windowed"))
+		flags &= ~SDL_FULLSCREEN;
 
 	// Needs some work to get screenHeight and screenWidth working - S.A.
 
