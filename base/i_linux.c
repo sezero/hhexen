@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.35 2009-05-13 09:21:33 sezero Exp $
+//** $Id: i_linux.c,v 1.36 2009-05-13 09:48:36 sezero Exp $
 //**
 //**************************************************************************
 
@@ -1487,7 +1487,7 @@ int main (int argc, char **argv)
 			waddir = getenv("HHEXEN_DATA");
 		}
 	}
-	if (waddir != NULL)
+	if (waddir && *waddir)
 		printf ("HHEXEN_DATA environment: %s\n", waddir);
 
 	H2_Main();

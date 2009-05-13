@@ -4,8 +4,8 @@
 //** w_wad.c : Heretic 2 : Raven Software, Corp.
 //**
 //** $RCSfile: w_wad.c,v $
-//** $Revision: 1.29 $
-//** $Date: 2009-04-23 06:36:07 $
+//** $Revision: 1.30 $
+//** $Date: 2009-05-13 09:48:36 $
 //** $Author: sezero $
 //**
 //**************************************************************************
@@ -108,7 +108,7 @@ void W_AddFile(const char *filename)
 	handle = -1;
 	/* Add support for HHEXEN_DATA envirionment variable */
 	waddir = getenv("HHEXEN_DATA");
-	if (waddir != NULL)
+	if (waddir && *waddir)
 	{
 		snprintf (path, sizeof(path), "%s/%s", waddir, filename);
 		handle = open(path, O_RDONLY|O_BINARY);
