@@ -1,7 +1,7 @@
 dnl configure.in for HHexen-1.5.3
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.52)
-AC_REVISION($Revision: 1.23 $)
+AC_REVISION($Revision: 1.24 $)
 AC_INIT(base/a_action.c)
 AC_CONFIG_HEADER(include/config.h)
 
@@ -16,9 +16,6 @@ no_svga="yes"
 THREAD_LIBS=""
 GLLIBS=""
 SVGALIBS=""
-
-BUILDNAMES=""
-
 
 dnl ==================================================================
 dnl Command-line args. Check for mutually-exclusive options.
@@ -88,7 +85,7 @@ AC_ARG_WITH(datapath,
 [  --with-datapath=<DIR>   Use DIR for shared game data. Not defined by default.],
 datapath="$withval", datapath="")
 AC_DEFINE_UNQUOTED(HHEXEN_DATAPATH, "$datapath", [Define this to the shared game directory root])
-#AC_SUBST(HHEXEN_DATAPATH)
+AC_SUBST(HHEXEN_DATAPATH)
 
 if test "$SVGAHEXEN" = "true";then
   default_audio="oss"
@@ -333,22 +330,52 @@ dnl ==================================================================
 dnl Generate output files
 dnl ==================================================================
 
-if test "$SVGAHEXEN" = "true"; then
-    BUILDNAMES="Software (SVGALib)"
-else
-  if test "$GLHEXEN" = "true"; then
-    BUILDNAMES="OpenGL (SDL)"
-  else
-    BUILDNAMES="Software (SDL)"
-  fi
-fi
-
 AC_OUTPUT(Makefile)
 
+
+dnl ==================================================================
+dnl Make a short report :
+dnl ==================================================================
 echo
 echo "HHexen configuration finished."
-echo "Enabled target: $BUILDNAMES"
-echo "Audio driver  : $SND_MODULE"
+
+if test "$SVGAHEXEN" = "true"; then
+    report="Software (SVGALib)"
+else
+  if test "$GLHEXEN" = "true"; then
+    report="OpenGL (SDL)"
+  else
+    report="Software (SDL)"
+  fi
+fi
+echo "Enabled target       : $report"
+
+echo "Audio driver         : $SND_MODULE"
+
+if test x$enable_assassin = xyes; then
+    report="enabled"
+else
+    report="disabled"
+fi
+echo "Assassin player class: $report"
+
+if test x$datapath = x; then
+    report="(not set)"
+else
+    report="$datapath"
+fi
+echo "Shared game data path: $report"
+
+if test "$SVGAHEXEN" = "true"; then
+    report="N/A"
+else
+  if test x$enable_fullscreen = xyes; then
+    report="fullscreen"
+  else
+    report="windowed"
+  fi
+fi
+echo "Default window mode  : $report"
 echo
 
 echo "Type 'make' to compile."
