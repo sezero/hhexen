@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** $Id: i_linux.c,v 1.36 2009-05-13 09:48:36 sezero Exp $
+//** $Id: i_linux.c,v 1.37 2009-05-13 14:01:31 sezero Exp $
 //**
 //**************************************************************************
 
@@ -1164,10 +1164,10 @@ void I_Error (const char *error, ...)
 
 	D_QuitNetGame ();
 	I_Shutdown ();
-	va_start (argptr,error);
-	vprintf (error, argptr);
+	va_start (argptr, error);
+	vfprintf (stderr, error, argptr);
 	va_end (argptr);
-	printf ("\n");
+	fprintf (stderr, "\n");
 	exit (1);
 }
 
@@ -1180,7 +1180,7 @@ void I_Error (const char *error, ...)
 //
 //--------------------------------------------------------------------------
 
-#if 0 /* This would be great if I could find the WAD lump that has Hexen's ENDTEXT */
+#if 0 /* Can be used if someone writes a WAD lump as Hexen's ENDTEXT */
 static void put_dos2ansi (byte attrib)
 {
 	byte	fore, back, blink = 0, intens = 0;
