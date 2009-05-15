@@ -1,5 +1,18 @@
 HHexen ChangeLog
 
+v1.5.x [2009-05-15]
+ - added --with-datapath a new configure option. if not used, HHEXEN_DATAPATH
+   is defined as an empty string, otherwise as the directory path given on the
+   configure command line. if it isn't an empty string and the HHEXEN_DATA
+   environment variable isn't found, the engine will export HHEXEN_DATAPATH as
+   HHEXEN_DATA.
+ - made default behavior of running windowed or fullscreen changable by configure.
+   the default is running windowed, the --enable-fullscreen configure option makes
+   fullscreen the default.
+ - updated the readme file with basic information on how to play the game. also
+   documented the -file command line option. added the -file option to the help
+   display.
+
 v1.5.3
  - Ensured that the new gcc-4.4 series compilers are properly supported.
  - SDL and SDL_mixer audio drivers now honor the -nosound command line
