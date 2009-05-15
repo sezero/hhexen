@@ -852,7 +852,7 @@ void R_RenderSubsector(int ssecidx)
 				if ((hdiff = fabs(triangle.top - z)) > dlMaxRad)
 					continue;
 				triangle.light = 1.5f - 1.5f*hdiff/dlMaxRad;
-				// We can add the light quads.
+				// We can add the light quads. // FIXME: pointer to integer cast !!!
 				RL_AddFlatQuads(&triangle, (int)lum, ssec->numedgeverts, ssec->origedgeverts, 0);
 			}
 		}
@@ -899,7 +899,7 @@ void R_RenderSubsector(int ssecidx)
 				if ((hdiff = fabs(triangle.top - z)) > dlMaxRad)
 					continue;
 				triangle.light = 1.5f - 1.5f*hdiff/dlMaxRad;
-				// We can add the light quads.
+				// We can add the light quads. // FIXME: pointer to integer cast !!!
 				RL_AddFlatQuads(&triangle, (int)lum, ssec->numedgeverts, ssec->origedgeverts, 1);
 			}
 		}

@@ -264,7 +264,7 @@ void RL_AddFlatQuads(rendquad_t *base, GLuint quadtex, int numvrts,
 			qi->dist[2] = distances[i];
 
 			if (base->flags & RQF_LIGHT)
-				RL_DynLightQuad(qi, (lumobj_t*)quadtex);
+				RL_DynLightQuad(qi, (lumobj_t*)quadtex); // FIXME: integer to pointer cast!!!
 		}
 	}
 	else	// Reverse direction?
@@ -290,7 +290,7 @@ void RL_AddFlatQuads(rendquad_t *base, GLuint quadtex, int numvrts,
 			qi->dist[2] = distances[i];
 
 			if (base->flags & RQF_LIGHT)
-				RL_DynLightQuad(qi, (lumobj_t*)quadtex);
+				RL_DynLightQuad(qi, (lumobj_t*)quadtex); // FIXME: integer to pointer cast!!!
 		}
 	}
 	free (vrts);
