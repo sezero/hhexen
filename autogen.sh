@@ -1,6 +1,6 @@
 #!/bin/sh
 
-aclocal    || exit 1
+aclocal -I m4 || exit 1
 autoheader || exit 1
 autoconf   || exit 1
 rm -rf autom4te.cache
