@@ -14,6 +14,7 @@ v1.5.x [2009-05-15]
  - updated the readme file with basic information on how to play the game. also
    documented the -file command line option. added the -file option to the help
    display.
+ - some tweaks and re-organization in the build system.
 
 v1.5.3
  - Ensured that the new gcc-4.4 series compilers are properly supported.
