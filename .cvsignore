@@ -1,0 +1,14 @@
+Makefile
+config.status
+config.cache
+config.log
+configure
+hhexen-gl
+hhexen-vga
+hhexen-svga
+hhexen-x11
+hhexen-sdl
+hexdd.wad
+hexen.wad
+include/config.h
+autom4te.cache/
