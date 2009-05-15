@@ -87,6 +87,9 @@
 # define __builtin_expect(x,c) x
 #endif
 
+/* Define this to the shared game directory root */
+#undef HHEXEN_DATAPATH
+
 /* Define to not compile most parameter validation debugging code */
 #undef NORANGECHECKING
 
