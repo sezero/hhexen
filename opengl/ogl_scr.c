@@ -8,10 +8,12 @@
 // HEADER FILES ------------------------------------------------------------
 
 #include "h2stdinc.h"
-#include <unistd.h>
-#ifdef __WIN32
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <io.h>
+#else
+#include <unistd.h>
 #endif
 
 #include <GL/gl.h>
@@ -54,7 +56,7 @@ void OGL_GrabScreen (void)
 	{
 		p[5] = i/10 + '0';
 		p[6] = i%10 + '0';
-		if (access(tganame, 0) == -1)
+		if (access(tganame, F_OK) == -1)
 			break;	// file doesn't exist
 	}
 	if (i == 100)
