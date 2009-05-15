@@ -43,7 +43,7 @@ There exist several versions of the hexen.wad file:
 
 1.0 wads:
   b2543a03521365261d0a0f74d5dd90f0  hexen.wad (20,128,392 bytes)
-  1077432e2690d390c256ac908b5f4efa  hexdd.wad (4,429,700 bytes)
+  1077432e2690d390c256ac908b5f4efa  hexdd.wad ( 4,429,700 bytes)
 
 1.1 wads:
   abb033caf81e26f12a2103e1fa25453f  hexen.wad (20,083,672 bytes)
@@ -95,6 +95,27 @@ adds the ability of midi music playback.
 
 It's essential that you run make clean between different types of builds
 or different types of targets.
+
+--------------------------------------------------------------------------------
+
+				Playing the Game
+
+Put the file hexen.wad in the same directory where the hhexen binary is and
+simply run the binary, for example:
+
+	./hhexen-gl
+
+With the -h or --help option, you can see the basic command line switches.
+
+To play the Deathkings of the Dark Citadel expansion pack, put hexdd.wad in
+the same directory and run:
+
+	./hhexen-gl -file hexdd.wad
+
+The -file option can also be used to play any extra hexen wads that you may
+have. The option takes as many wad filename arguments as you give to it, at
+least one name, of course. Remember, though, that the -file option makes the
+engine to load extra wads: you always need hexen.wad as the base wad.
 
 --------------------------------------------------------------------------------
 
