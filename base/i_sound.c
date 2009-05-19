@@ -360,11 +360,14 @@ void I_StartupSound (void)
 // shuts down all sound stuff
 void I_ShutdownSound (void)
 {
-	if (audioPI && !audio_exit_thread)
+	snd_SfxAvail = false;
+	if (audioPI)
 	{
-		audio_exit_thread = 1;
-		snd_SfxAvail = false;
-		pthread_join(audio_thread, NULL);
+		if (!audio_exit_thread)
+		{
+			audio_exit_thread = 1;
+			pthread_join(audio_thread, NULL);
+		}
 		audioPI->close_audio();
 		audioPI = NULL;
 	}
