@@ -1,10 +1,10 @@
 //**************************************************************************
 //**
 //** OGL_DRAW.C
-//**
-//** Version:		1.0
-//** Last Build:	-?-
 //** Author:		jk
+//**
+//** $Revision$
+//** $Date$
 //**
 //** Rendering lists and other rendering.
 //**

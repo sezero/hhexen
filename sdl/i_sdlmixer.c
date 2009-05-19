@@ -1,4 +1,4 @@
-/* $Id: i_sdlmixer.c,v 1.6 2009-05-08 17:11:11 sezero Exp $
+/* $Id$
  *
  *  Ripped && Adapted from the PrBoom project:
  *  PrBoom: a Doom port merged with LxDoom and LSDLDoom

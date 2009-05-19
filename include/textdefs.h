@@ -3,10 +3,8 @@
 //**
 //** textdefs.h : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: textdefs.h,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-22 16:20:46 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

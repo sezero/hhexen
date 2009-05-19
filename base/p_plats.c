@@ -3,10 +3,8 @@
 //**
 //** p_plats.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: p_plats.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-25 20:10:22 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

@@ -3,10 +3,8 @@
 //**
 //** g_game.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: g_game.c,v $
-//** $Revision: 1.21 $
-//** $Date: 2008-07-21 07:48:24 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

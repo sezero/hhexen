@@ -3,10 +3,8 @@
 //**
 //** xddefs.h : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: xddefs.h,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-10-03 12:45:18 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

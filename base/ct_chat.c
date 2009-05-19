@@ -3,10 +3,8 @@
 //**
 //** ct_chat.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: ct_chat.c,v $
-//** $Revision: 1.12 $
-//** $Date: 2008-06-30 12:01:32 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

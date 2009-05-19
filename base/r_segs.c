@@ -3,10 +3,8 @@
 //**
 //** r_segs.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: r_segs.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-07-20 12:05:50 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //** This version has the tall-sector-crossing-precision-bug fixed.
 //**

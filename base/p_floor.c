@@ -3,10 +3,8 @@
 //**
 //** p_floor.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: p_floor.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-26 09:52:28 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

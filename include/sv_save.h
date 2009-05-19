@@ -7,10 +7,8 @@
 	The saved games then can be properly read on 64 bit and/or
 	Big Endian machines all the same.
 
-	$RCSfile: sv_save.h,v $
-	$Revision: 1.4 $
-	$Date: 2009-04-24 14:48:08 $
-	$Author: sezero $
+	$Revision$
+	$Date$
 */
 
 #ifndef __SAVE_DEFS

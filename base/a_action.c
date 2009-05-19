@@ -3,10 +3,8 @@
 //**
 //** a_action.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: a_action.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-07-07 09:55:18 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

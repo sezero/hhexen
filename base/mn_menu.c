@@ -2,10 +2,8 @@
 //**
 //** mn_menu.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: mn_menu.c,v $
-//** $Revision: 1.31 $
-//** $Date: 2008-07-14 09:27:15 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

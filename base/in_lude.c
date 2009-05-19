@@ -3,10 +3,8 @@
 //**
 //** in_lude.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: in_lude.c,v $
-//** $Revision: 1.14 $
-//** $Date: 2008-06-27 22:45:38 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

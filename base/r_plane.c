@@ -3,10 +3,8 @@
 //**
 //** r_plane.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: r_plane.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-28 17:30:17 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

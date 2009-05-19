@@ -3,10 +3,8 @@
 //**
 //** p_mobj.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: p_mobj.c,v $
-//** $Revision: 1.12 $
-//** $Date: 2008-07-07 09:55:18 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

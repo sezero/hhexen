@@ -3,10 +3,8 @@
 //**
 //** r_data.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: r_data.c,v $
-//** $Revision: 1.14 $
-//** $Date: 2008-10-06 11:02:48 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

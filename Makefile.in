@@ -1,5 +1,5 @@
-# HHexen Makefile $Revision: 1.23 $
-#
+# HHexen Makefile
+# $Revision$
 #
 # svga			build Software (SVGALib) version
 # sdl			build Software (SDL) version

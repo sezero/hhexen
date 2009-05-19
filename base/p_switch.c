@@ -3,10 +3,8 @@
 //**
 //** p_switch.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: p_switch.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-22 16:20:45 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

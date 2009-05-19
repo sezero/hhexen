@@ -3,10 +3,8 @@
 //**
 //** am_map.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: am_map.c,v $
-//** $Revision: 1.19 $
-//** $Date: 2008-07-29 07:43:51 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

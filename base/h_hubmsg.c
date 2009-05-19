@@ -3,10 +3,8 @@
 //**
 //** h_hubmsg.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: h_hubmsg.c,v $
-//** $Revision: 1.3 $
-//** $Date: 2008-07-29 07:55:21 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

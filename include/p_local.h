@@ -3,10 +3,8 @@
 //**
 //** p_local.h : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: p_local.h,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-07-20 12:05:51 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

@@ -3,12 +3,10 @@
 //**
 //** r_main.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: ogl_main.c,v $
-//** $Revision: 1.2 $
-//** $Date: 2008-06-28 17:55:07 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
-//** (r_main.c with necessary clean-ups for ogl)
+//** (ogl_main.c is r_main.c with necessary clean-ups for ogl)
 //**
 //**************************************************************************
 

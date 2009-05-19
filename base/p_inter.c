@@ -3,10 +3,8 @@
 //**
 //** p_inter.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: p_inter.c,v $
-//** $Revision: 1.15 $
-//** $Date: 2008-07-21 11:55:26 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

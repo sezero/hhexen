@@ -3,10 +3,8 @@
 //**
 //** f_finale.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: f_finale.c,v $
-//** $Revision: 1.19 $
-//** $Date: 2008-07-29 07:40:57 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

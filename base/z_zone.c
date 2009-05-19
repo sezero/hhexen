@@ -3,10 +3,8 @@
 //**
 //** z_zone.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: z_zone.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-07-21 22:10:24 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

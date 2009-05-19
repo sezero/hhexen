@@ -3,10 +3,8 @@
 //**
 //** v_video.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: v_video.c,v $
-//** $Revision: 1.7 $
-//** $Date: 2008-06-27 17:52:43 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

@@ -3,10 +3,8 @@
 //**
 //** p_spec.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: p_spec.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2009-04-23 07:00:07 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

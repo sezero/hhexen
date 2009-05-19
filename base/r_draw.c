@@ -3,10 +3,8 @@
 //**
 //** r_draw.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: r_draw.c,v $
-//** $Revision: 1.10 $
-//** $Date: 2008-06-30 16:38:37 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

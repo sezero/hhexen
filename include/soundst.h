@@ -3,10 +3,8 @@
 //**
 //** soundst.h : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: soundst.h,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-06-22 16:32:45 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

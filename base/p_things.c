@@ -3,10 +3,8 @@
 //**
 //** p_things.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: p_things.c,v $
-//** $Revision: 1.4 $
-//** $Date: 2008-06-22 16:20:45 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

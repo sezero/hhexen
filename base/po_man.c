@@ -3,10 +3,8 @@
 //**
 //** PO_MAN.C : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: po_man.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-07-21 13:00:44 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

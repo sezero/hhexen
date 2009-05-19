@@ -3,10 +3,8 @@
 //**
 //** p_sight.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: p_sight.c,v $
-//** $Revision: 1.5 $
-//** $Date: 2008-07-20 12:05:50 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

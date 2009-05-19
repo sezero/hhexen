@@ -3,10 +3,8 @@
 //**
 //** p_setup.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: p_setup.c,v $
-//** $Revision: 1.16 $
-//** $Date: 2009-05-15 21:50:17 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

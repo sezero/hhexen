@@ -3,10 +3,8 @@
 //**
 //** st_start.h : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: st_start.h,v $
-//** $Revision: 1.5 $
-//** $Date: 2009-04-23 07:37:07 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

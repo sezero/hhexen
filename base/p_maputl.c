@@ -3,10 +3,8 @@
 //**
 //** p_maputl.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: p_maputl.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-07-20 12:05:50 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

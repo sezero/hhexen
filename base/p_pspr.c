@@ -3,10 +3,8 @@
 //**
 //** p_pspr.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: p_pspr.c,v $
-//** $Revision: 1.9 $
-//** $Date: 2008-07-07 09:55:19 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

@@ -3,7 +3,7 @@
 	includes the minimum necessary stdc headers,
 	defines common and / or missing types.
 
-	$Id: h2stdinc.h,v 1.7 2008-10-31 14:50:09 sezero Exp $
+	$Id$
 */
 
 #ifndef __H2STDINC_H

@@ -3,10 +3,8 @@
 //**
 //** p_lights.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: p_lights.c,v $
-//** $Revision: 1.6 $
-//** $Date: 2008-06-25 20:10:22 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

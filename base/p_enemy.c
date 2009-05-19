@@ -3,10 +3,8 @@
 //**
 //** p_enemy.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: p_enemy.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-07-21 11:55:25 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

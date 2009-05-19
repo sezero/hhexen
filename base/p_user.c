@@ -3,10 +3,8 @@
 //**
 //** p_user.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: p_user.c,v $
-//** $Revision: 1.11 $
-//** $Date: 2008-07-07 09:55:19 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

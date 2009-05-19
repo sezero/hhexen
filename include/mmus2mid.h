@@ -1,4 +1,4 @@
-/* $Id: mmus2mid.h,v 1.1 2008-10-07 07:44:38 sezero Exp $
+/* $Id$
  *
  *  Ripped && Adapted from the PrBoom project:
  *  PrBoom: a Doom port merged with LxDoom and LSDLDoom

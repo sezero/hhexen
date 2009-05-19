@@ -3,10 +3,8 @@
 //**
 //** sc_man.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: sc_man.c,v $
-//** $Revision: 1.8 $
-//** $Date: 2008-06-22 16:32:44 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

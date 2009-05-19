@@ -3,10 +3,8 @@
 //**
 //** sb_bar.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: sb_bar.c,v $
-//** $Revision: 1.19 $
-//** $Date: 2008-06-28 17:11:54 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 

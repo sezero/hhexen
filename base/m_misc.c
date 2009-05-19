@@ -3,10 +3,8 @@
 //**
 //** m_misc.c : Heretic 2 : Raven Software, Corp.
 //**
-//** $RCSfile: m_misc.c,v $
-//** $Revision: 1.27 $
-//** $Date: 2009-05-15 21:50:17 $
-//** $Author: sezero $
+//** $Revision$
+//** $Date$
 //**
 //**************************************************************************
 
