@@ -1213,28 +1213,46 @@ static void put_dos2ansi (byte attrib)
 	else
 		printf ("\033[%d;25;%dm\033[%dm", intens, fore, back);
 }
-#endif	/* put_dos2ansi */
+
+static void I_ENDTEXT (void)
+{
+	int i, c, nl;
+	byte *scr = (byte *)W_CacheLumpName("ENDTEXT", PU_CACHE);
+	char *col = getenv("COLUMNS");
+
+	if (col == NULL)
+	{
+		nl = 1;
+		c = 80;
+	}
+	else
+	{
+		c = atoi(col);
+		if (c > 80)
+			nl = 1;
+		else	nl = 0;
+	}
+	for (i = 1; i <= 80*25; scr += 2, i++)
+	{
+		put_dos2ansi (scr[1]);
+		putchar (scr[0]);
+		if (nl && !(i % 80))
+			puts("\033[0m");
+	}
+	printf ("\033[m");	/* Cleanup */
+}
+#endif	/* ENDTEXT printing */
 
 void I_Quit (void)
 {
-#if 0
-	int i;
-	byte *scr = (byte *)W_CacheLumpName("ENDTEXT", PU_CACHE);
-#endif
-
 	D_QuitNetGame();
 	M_SaveDefaults();
 	I_Shutdown();
-
 #if 0
-	for (i = 0; i < 80*25*2; i += 2)
-	{
-		put_dos2ansi (scr[i+1]);
-		putchar (scr[i]);
-	}
-	printf ("\033[m");	/* Cleanup */
-#endif
+	I_ENDTEXT ();
+#else
 	printf("\nHexen: Beyond Heretic\n");
+#endif
 	exit(0);
 }
 
