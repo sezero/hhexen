@@ -138,16 +138,16 @@ static void MN_LoadSlotText(void);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
-extern int detailLevel;
-extern int screenblocks;
-extern int key_speed, key_strafe;
-extern boolean gamekeydown[MAXKEYS];
 extern default_t defaults[];
 
-extern int alwaysrun;
-extern boolean i_CDMusic;
+extern int detailLevel;
+extern int screenblocks;
+extern boolean gamekeydown[MAXKEYS];
 
+extern int alwaysrun;
 extern int mouselook;
+
+extern boolean i_CDMusic;
 
 extern int key_right,key_left,key_up,key_down;
 extern int key_straferight,key_strafeleft,key_jump;
@@ -388,11 +388,17 @@ static MenuItem_t Options3Items[] =
 	{ ITT_SETKEY, "SPEED :", SCSetKey, 19, MENU_NONE }
 };
 
+/* Many items in Options3Items[], only 15 can be drawn on a page:
+ * So, FirstKey changes between 0 and FIRSTKEY_MAX. This menu is
+ * way too fragile. Should we adapt from Quake's M_Menu_Keys and
+ * bindnames?? */
+#define FIRSTKEY_MAX	5
 static Menu_t Options3Menu =
 {
 	70, 20,
 	DrawOptions3Menu,
-	15, Options3Items,
+	15, /* actually 20 */
+	Options3Items,
 	0,
 	SMALL_ITEM_HEIGHT,
 	MENU_OPTIONS
@@ -443,17 +449,15 @@ static const char *GammaText[] =
 
 static const char *Key2String (int key)
 {
-
-// Hmmm... return "[" doesnt work!
-// Well, fuck me dead, this is because the there's no GL lump for these chars or something,
-// so we'll have to go wih RIGHT BRACKET and simliar for much punctuation
-
-// Prob wont work with internatinal keyboards, Sorry :<
-
+/* S.A.: return "[" or "]" or "\"" doesn't work
+ * because there are no lumps for these chars,
+ * therefore we have to go with "RIGHT BRACKET"
+ * and similar for much punctuation.  Probably
+ * won't work with international keyboards and
+ * dead keys, either.
+ */
 	switch (key)
 	{
-	// S.A. just support a few puncuation keys here
-	// Some of these must be WRITTEN (see above comment)
 	case KEY_LEFTBRACKET:	return "LEFT BRACK";
 	case KEY_RIGHTBRACKET:	return "RIGHT BRACK";
 	case KEY_BACKQUOTE:	return "BACK QUOTE";
@@ -484,11 +488,12 @@ static const char *Key2String (int key)
 	case KEY_RALT:		return "ALT";
 	case KEY_RCTRL:		return "CTRL";
 	}
-	// Handle letter keys (could also be done with toupper and >=a && <=z S.A.)
+	/* Handle letter keys */
+	/* S.A.: could also be done with toupper */
 	if (key >= 'a' && key <= 'z')
 		return stupidtable[(key - 'a')];
-	// Everything else
-	return "?";
+
+	return "?";		/* Everything else */
 }
 
 static void ClearControls (int key)
@@ -1132,6 +1137,9 @@ static void DrawOptionsMenu(void)
 	{
 		MN_DrTextB("OFF", 196, 50);
 	}
+
+	if (mouselook < 0 || mouselook > 2)
+		mouselook = 0;
 	MN_DrTextB(mlooktext[mouselook], 208, 110);
 
 	snprintf(num, sizeof(num), "%d", mouseSensitivity);
@@ -1571,7 +1579,9 @@ static void SCMouselook(int option)
 
 static void SCAlwaysRun(int option)
 {
-	alwaysrun ^= 1;
+	if (alwaysrun)
+		alwaysrun = 0;
+	else	alwaysrun = 1;
 }
 
 static void SCCDAudio(int option)
@@ -1956,9 +1966,9 @@ boolean MN_Responder(event_t *event)
 				if (CurrentMenu->items[CurrentItPos].type == ITT_SETKEY
 					&& CurrentItPos+1 > CurrentMenu->itemCount-1)
 				{
-					if (FirstKey == 5)
+					if (FirstKey == FIRSTKEY_MAX)
 					{
-						CurrentItPos = 0;  //End of Key menu
+						CurrentItPos = 0; // End of Key menu
 						FirstKey = 0;
 					}
 					else
@@ -1985,8 +1995,9 @@ boolean MN_Responder(event_t *event)
 				{
 					if (FirstKey == 0)
 					{
-						CurrentItPos = 14;  //End of Key menu
-						FirstKey = 5;
+						CurrentItPos = 14; // End of Key menu
+								   // 14 == 15 (max lines on a page) - 1
+						FirstKey = FIRSTKEY_MAX;
 					}
 					else
 					{
