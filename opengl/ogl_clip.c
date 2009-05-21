@@ -57,10 +57,9 @@ static void C_CountNodes(void)
 	int	i;
 	clipnode_t *ci;
 	for (i = 0, ci = cliphead; ci; i++, ci = ci->next)
-	{
-		if (i > maxnumnodes)
-			maxnumnodes = i;
-	}
+		;
+	if (i > maxnumnodes)
+		maxnumnodes = i;
 }
 */
 

@@ -677,7 +677,7 @@ void R_HandleSectorSpecials(sector_t *sect)
 static void DL_Clear(void)
 {
 	free(luminousList);
-	luminousList = 0;
+	luminousList = NULL;
 	maxLuminous = numLuminous = 0;
 }
 

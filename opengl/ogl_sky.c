@@ -30,15 +30,6 @@
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
-int			Sky1Texture;
-int			Sky2Texture;
-fixed_t			Sky1ColumnOffset;
-fixed_t			Sky2ColumnOffset;
-int			skyflatnum;
-int			skytexturemid;
-fixed_t			skyiscale;
-boolean			DoubleSky;
-
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
@@ -51,12 +42,18 @@ extern float		texw, texh;
 extern float		vx, vy, vz;
 
 extern boolean		special200;	/* Should sky2 be used? */
-extern int		Sky1Texture, Sky2Texture;
-extern fixed_t		Sky1ColumnOffset, Sky2ColumnOffset;
-extern boolean		DoubleSky;
 extern byte		topLineRGB[3];
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
+
+int			Sky1Texture;
+int			Sky2Texture;
+fixed_t			Sky1ColumnOffset;
+fixed_t			Sky2ColumnOffset;
+int			skyflatnum;
+int			skytexturemid;
+fixed_t			skyiscale;
+boolean			DoubleSky;
 
 int			skyDetail = 1;
 int			skyhemispheres;

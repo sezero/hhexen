@@ -21,8 +21,8 @@ typedef unsigned short	binangle;
 #define BANG_225	0xa000		/* To the southwest.	*/
 #define BANG_270	0xc000		/* To the south.	*/
 #define BANG_315	0xe000		/* To the southeast.	*/
-#define BANG_360	0x10000		/* Actually the same than angle 0.	*/
-#define BANG_MAX	0xffff		/* The largest possible angle.		*/
+#define BANG_360	0x10000		/* The same as angle 0.	*/
+#define BANG_MAX	0xffff		/* The largest possible angle.	*/
 
 /* Compass directions, for convenience. */
 #define BANG_EAST	BANG_0
