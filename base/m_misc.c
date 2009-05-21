@@ -490,9 +490,7 @@ default_t defaults[] =
 	{ "snd_mport", &snd_Mport, -1 },
 
 	{ "usegamma", &usegamma, 0 },
-
 	{ "messageson", &messageson, 1 },
-
 	{ "mouselook", &mouselook, 1 },
 	{ "cdaudio", &cdaudio, 0 },
 	{ "alwaysrun", &alwaysrun, 0 }

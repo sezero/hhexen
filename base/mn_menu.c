@@ -517,7 +517,7 @@ void MN_Init(void)
 {
 	InitFonts();
 	MenuActive = false;
-//	messageson = 1;			// Set by defaults in .CFG
+//	messageson = 1;	// Set by defaults in .CFG
 	MauloBaseLump = W_GetNumForName("FBULA0"); // ("M_SKL00");
 }
 
@@ -1243,14 +1243,15 @@ static void SCEndGame(int option)
 
 static void SCMessages(int option)
 {
-	messageson ^= 1;
 	if (messageson)
 	{
-		P_SetMessage(&players[consoleplayer], "MESSAGES ON", true);
+		messageson = 0;
+		P_SetMessage(&players[consoleplayer], "MESSAGES OFF", true);
 	}
 	else
 	{
-		P_SetMessage(&players[consoleplayer], "MESSAGES OFF", true);
+		messageson = 1;
+		P_SetMessage(&players[consoleplayer], "MESSAGES ON", true);
 	}
 	S_StartSound(NULL, SFX_CHAT);
 }
