@@ -1405,7 +1405,7 @@ static void PrintVersion (void)
 static void PrintHelp (const char *name)
 {
 	printf ("http://sourceforge.net/projects/hhexen\n");
-	printf ("http://icculus.org/hast\n");
+	printf ("http://hhexen.sf.net , http://icculus.org/hast\n");
 	printf ("\n");
 	printf ("Usage: %s [options]\n", name);
 	printf ("     [ -h | --help]           Display this help message\n");
