@@ -22,7 +22,6 @@
 
 // MACROS ------------------------------------------------------------------
 
-#define CONFIG_FILE_NAME	"hhexen.cfg"
 #define MAXWADFILES		20
 
 #include "v_compat.h"

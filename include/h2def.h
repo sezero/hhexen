@@ -11,6 +11,13 @@
 #ifndef __H2DEF__
 #define __H2DEF__
 
+/* if rangecheck is undefined, most parameter
+ * validation debugging code will not be compiled
+ */
+#ifndef NORANGECHECKING
+/* #define RANGECHECK */
+#endif
+
 #define __STRINGIFY(x) #x
 #define STRINGIFY(x) __STRINGIFY(x)
 
@@ -35,13 +42,6 @@
 #define VERSION_MIN	5
 #define VERSION_PATCH	4
 #define HHEXEN_VERSION	"v" STRINGIFY(VERSION_MAJ) "." STRINGIFY(VERSION_MIN) "." STRINGIFY(VERSION_PATCH)
-
-/* if rangecheck is undefined, most parameter
- * validation debugging code will not be compiled
- */
-#ifndef NORANGECHECKING
-#define RANGECHECK
-#endif
 
 #if 0
 /* Past distributions */
@@ -100,6 +100,8 @@
 
 /* path to the user directory		*/
 extern	const char		*basePath;
+
+#define CONFIG_FILE_NAME	"hhexen.cfg"
 
 
 #include "st_start.h"
