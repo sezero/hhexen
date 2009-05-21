@@ -1680,9 +1680,10 @@ boolean MN_Responder(event_t *event)
 
 	if (ravpic && key == KEY_F1)
 	{
-	// F12 is now screenshot
-	//	G_ScreenShot();
-	//	return true;
+	// F12 is screenshot now. This
+	// is here for reference, only.
+		G_ScreenShot();
+		return true;
 	}
 
 	if (askforquit)
@@ -1820,11 +1821,11 @@ boolean MN_Responder(event_t *event)
 				slottextloaded = false; //reload the slot text, when needed
 			}
 			return true;
-		case KEY_F5: // volume
+		case KEY_F4: // S.A.: made F4 Controls. was Volume, before.
 			MenuActive = true;
 			FileMenuKeySteal = false;
 			MenuTime = 0;
-			CurrentMenu = &Options2Menu;
+			CurrentMenu = &OptionsMenu;
 			CurrentItPos = CurrentMenu->oldItPos;
 			if (!netgame && !demoplayback)
 			{
@@ -1833,11 +1834,11 @@ boolean MN_Responder(event_t *event)
 			S_StartSound(NULL, SFX_DOOR_LIGHT_CLOSE);
 			slottextloaded = false; //reload the slot text, when needed
 			return true;
-		case KEY_F4: //controls S.A.
+		case KEY_F5: // volume
 			MenuActive = true;
 			FileMenuKeySteal = false;
 			MenuTime = 0;
-			CurrentMenu = &OptionsMenu;
+			CurrentMenu = &Options2Menu;
 			CurrentItPos = CurrentMenu->oldItPos;
 			if (!netgame && !demoplayback)
 			{
@@ -1939,7 +1940,26 @@ boolean MN_Responder(event_t *event)
 			SB_PaletteFlash(true); // force change
 			P_SetMessage(&players[consoleplayer], GammaText[usegamma], false);
 			return true;
-		case KEY_F12: // F12 Screenshot S.A.
+		/*
+		case KEY_F12: // F12 - reload current map (devmaps mode)
+			if (netgame || DevMaps == false)
+			{
+				return false;
+			}
+			if (gamekeydown[key_speed])
+			{ // Monsters ON
+				nomonsters = false;
+			}
+			if (gamekeydown[key_strafe])
+			{ // Monsters OFF
+				nomonsters = true;
+			}
+			G_DeferedInitNew(gameskill, gameepisode, gamemap);
+			P_SetMessage(&players[consoleplayer], TXT_CHEATWARP,
+				false);
+			return true;
+		*/
+		case KEY_F12: // S.A.: made F12 Screenshot
 			G_ScreenShot();
 			return true;
 #endif
