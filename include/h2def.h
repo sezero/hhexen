@@ -95,6 +95,8 @@
 /* max length of a filesystem pathname	*/
 #define	MAX_OSPATH		256
 
+#define	H_USERDIR		".hhexen"
+
 /* path to the user directory		*/
 extern	const char		*basePath;
 

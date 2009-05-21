@@ -1388,7 +1388,8 @@ static void CreateBasePath (void)
 	char *homedir = getenv("HOME");
 	if (homedir == NULL)
 		I_Error ("Unable to determine user home directory");
-	snprintf(base, sizeof(base), "%s/.hhexen/", homedir);
+	/* make sure that basePath has a trailing slash */
+	snprintf(base, sizeof(base), "%s/%s/", homedir, H_USERDIR);
 	basePath = base;
 	rc = mkdir(base, S_IRWXU|S_IRWXG|S_IRWXO);
 	if (rc != 0 && errno != EEXIST)
