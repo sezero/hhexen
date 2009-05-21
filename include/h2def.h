@@ -95,6 +95,7 @@
 /* max length of a filesystem pathname	*/
 #define	MAX_OSPATH		256
 
+#define	DATA_ENVVAR		"HHEXEN_DATA"
 #define	H_USERDIR		".hhexen"
 
 /* path to the user directory		*/

@@ -104,8 +104,10 @@ void W_AddFile(const char *filename)
 	byte	*c;
 
 	handle = -1;
-	/* Add support for HHEXEN_DATA envirionment variable */
-	waddir = getenv("HHEXEN_DATA");
+	/* try the directory specified by the
+	 * shared data environment variable first.
+	 */
+	waddir = getenv(DATA_ENVVAR);
 	if (waddir && *waddir)
 	{
 		snprintf (path, sizeof(path), "%s/%s", waddir, filename);

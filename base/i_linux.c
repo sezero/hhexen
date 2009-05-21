@@ -1420,8 +1420,9 @@ static void PrintHelp (const char *name)
 	printf ("     [ -height <height> ]     Set screen height\n");
 #endif
 	printf ("\n");
-	printf ("You can use the HHEXEN_DATA environment variable to force the\n");
-	printf ("HHexen data directory.\n");
+	printf ("You can use the %s environment variable to force\n",
+		DATA_ENVVAR);
+	printf ("the HHexen data directory.\n");
 	printf ("\n");
 }
 
@@ -1481,7 +1482,7 @@ static void ValidateByteorder (void)
 	printf ("Detected byte order: %s\n", endianism[host_byteorder]);
 }
 
-static const char datadir[] = HHEXEN_DATAPATH;
+static const char datadir[] = SHARED_DATAPATH;
 
 int main (int argc, char **argv)
 {
@@ -1500,17 +1501,17 @@ int main (int argc, char **argv)
 	ValidateByteorder();
 	CreateBasePath();
 
-	waddir = getenv("HHEXEN_DATA");
+	waddir = getenv(DATA_ENVVAR);
 	if (waddir == NULL)
 	{
 		if (datadir[0])
 		{
-			setenv ("HHEXEN_DATA", datadir, 0);
-			waddir = getenv("HHEXEN_DATA");
+			setenv (DATA_ENVVAR, datadir, 0);
+			waddir = getenv(DATA_ENVVAR);
 		}
 	}
 	if (waddir && *waddir)
-		printf ("HHEXEN_DATA environment: %s\n", waddir);
+		printf ("%s environment: %s\n", DATA_ENVVAR, waddir);
 
 	H2_Main();
 	return 0;

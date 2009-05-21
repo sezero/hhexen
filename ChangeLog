@@ -2,10 +2,10 @@ HHexen ChangeLog
 
 v1.5.x [2009-05-15]
  - fixed a rare menu related crash.
- - added --with-datapath a new configure option. if not used, HHEXEN_DATAPATH
+ - added --with-datapath a new configure option. if not used, SHARED_DATAPATH
    is defined as an empty string, otherwise as the directory path given on the
    configure command line. if it isn't an empty string and the HHEXEN_DATA
-   environment variable isn't found, the engine will export HHEXEN_DATAPATH as
+   environment variable isn't found, the engine will export SHARED_DATAPATH as
    HHEXEN_DATA.
  - made sure that the HHEXEN_DATA environment variable, if found, isn't an empty
    string.
