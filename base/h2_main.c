@@ -211,7 +211,7 @@ void H2_Main(void)
 	// WAD files BEFORE the zone memory initialization.
 	ST_Message("W_Init: Init WADfiles.\n");
 	W_InitMultipleFiles(wadfiles);
-	W_CheckForOldFiles();
+	W_CheckWADFiles();
 
 	ST_Message("Z_Init: Init zone memory allocation daemon.\n");
 	Z_Init();
@@ -224,10 +224,8 @@ void H2_Main(void)
 
 	InitMapMusicInfo();		// Init music fields in mapinfo
 
-//#ifdef __WATCOMC__
 	ST_Message("S_InitScript\n");
 	S_InitScript();
-//#endif
 
 	ST_Message("SN_InitSequenceScript: Registering sound sequences.\n");
 	SN_InitSequenceScript();

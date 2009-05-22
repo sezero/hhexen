@@ -10,7 +10,6 @@
 #include "SDL.h"
 #include "h2def.h"
 #include "r_local.h"
-#include "st_start.h"
 
 #define BASE_WINDOW_FLAGS	(SDL_SWSURFACE|SDL_HWPALETTE)
 #ifdef FULLSCREEN_DEFAULT
@@ -224,7 +223,7 @@ void I_InitGraphics(void)
 
 	if (M_CheckParm("-novideo"))	// if true, stay in text mode for debugging
 	{
-		ST_Message("I_InitGraphics: Video Disabled.\n");
+		printf("I_InitGraphics: Video Disabled.\n");
 		return;
 	}
 

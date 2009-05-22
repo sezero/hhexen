@@ -651,7 +651,7 @@ void *W_CacheLumpName(const char *name, int tag)
 	return W_CacheLumpNum(W_GetNumForName(name), tag);
 }
 
-void W_CheckForOldFiles (void)
+void W_CheckWADFiles (void)
 {
 	char	lumpmsg[10];
 	int		i;

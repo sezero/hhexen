@@ -15,7 +15,6 @@
 
 #include "h2def.h"
 #include "r_local.h"
-#include "st_start.h"
 
 // Macros
 
@@ -386,11 +385,11 @@ void I_InitGraphics(void)
 
 	if (M_CheckParm("-novideo"))	// if true, stay in text mode for debugging
 	{
-		ST_Message("I_InitGraphics: Video Disabled.\n");
+		printf("I_InitGraphics: Video Disabled.\n");
 		return;
 	}
 
-	ST_Message("I_InitGraphics:\n");
+	printf("I_InitGraphics:\n");
 
 	if (vga_init() != 0)
 		I_Error ("SVGALib failed to allocate a new VC");
@@ -400,7 +399,7 @@ void I_InitGraphics(void)
 	i = vga_runinbackground_version();
 	if (i > 0)
 	{
-		ST_Message ("SVGALIB background support %i detected\n", i);
+		printf ("SVGALIB background support %i detected\n", i);
 		vga_runinbackground (VGA_GOTOBACK, goto_background);
 		vga_runinbackground (VGA_COMEFROMBACK, comefrom_background);
 		vga_runinbackground (1);

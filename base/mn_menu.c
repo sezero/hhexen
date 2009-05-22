@@ -1596,7 +1596,7 @@ static void SCCDAudio(int option)
 	else
 	{
 		cdaudio = 1;
-		ST_Message("Attempting to initialize CD Music: ");
+		printf("Attempting to initialize CD Music: ");
 		if (!cdrom)
 		{
 			i_CDMusic = (I_CDMusInit() != -1);
@@ -1607,11 +1607,11 @@ static void SCCDAudio(int option)
 		}
 		if (i_CDMusic)
 		{
-			ST_Message("initialized.\n");
+			printf("initialized.\n");
 		}
 		else
 		{
-			ST_Message("failed.\n");
+			printf("failed.\n");
 		}
 	}
 }

@@ -1048,7 +1048,7 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
 #ifdef RENDER3D
 	// We need to carve out the floor/ceiling polygons of each subsector.
 	// Walk the tree to do this.
-	//ST_Message( "Floor/ceiling creation: begin at %d, ", ticcount);
+	//printf ( "Floor/ceiling creation: begin at %d, ", ticcount);
 	P_CreateFloorsAndCeilings(numnodes - 1, 0, 0);
 	// Also check if the sky needs a fix.
 	P_SkyFix();

@@ -817,7 +817,7 @@ void S_Init(void)
 	// Attempt to setup CD music
 	if (cdaudio)
 	{
-		ST_Message("  Attempting to initialize CD Music: ");
+		printf("  Attempting to initialize CD Music: ");
 		if (!cdrom)
 		{
 			i_CDMusic = (I_CDMusInit() != -1);
@@ -828,11 +828,11 @@ void S_Init(void)
 		}
 		if (i_CDMusic)
 		{
-			ST_Message("initialized.\n");
+			printf("initialized.\n");
 		}
 		else
 		{
-			ST_Message("failed.\n");
+			printf("failed.\n");
 		}
 	}
 }
@@ -1128,7 +1128,7 @@ void I_Init (void)
 {
 	I_StartupMouse();
 	I_StartupJoystick();
-	ST_Message("  S_Init... ");
+	printf("  S_Init... ");
 	S_Init();
 	S_Start();
 
@@ -1273,8 +1273,8 @@ byte *I_ZoneBase (int *size)
 	if (ptr == NULL)
 		I_Error ("I_ZoneBase: Insufficient memory!");
 
-	ST_Message ("0x%x allocated for zone, ", heap);
-	ST_Message ("ZoneBase: %p\n", ptr);
+	printf ("0x%x allocated for zone, ", heap);
+	printf ("ZoneBase: %p\n", ptr);
 
 	*size = heap;
 	return ptr;

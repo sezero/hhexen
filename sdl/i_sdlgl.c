@@ -13,7 +13,6 @@
 #include "h2def.h"
 #include "r_local.h"
 #include "ogl_def.h"
-#include "st_start.h"
 
 #define BASE_WINDOW_FLAGS	(SDL_OPENGL)
 #ifdef FULLSCREEN_DEFAULT
@@ -118,7 +117,7 @@ void I_InitGraphics(void)
 
 	if (M_CheckParm("-novideo"))	// if true, stay in text mode for debugging
 	{
-		ST_Message("I_InitGraphics: Video Disabled.\n");
+		printf("I_InitGraphics: Video Disabled.\n");
 		I_Error("FIXME: -novideo switch doesn't work correctly with opengl!");
 		return;
 	}
@@ -142,7 +141,7 @@ void I_InitGraphics(void)
 	{
 		screenWidth = atoi(myargv[p+1]);
 	}
-	ST_Message("Screen size:  %dx%d\n", screenWidth, screenHeight);
+	printf("Screen size: %dx%d\n",screenWidth, screenHeight);
 
 	if (SDL_SetVideoMode(screenWidth, screenHeight, 8, flags) == NULL)
 	{
@@ -157,25 +156,25 @@ void I_InitGraphics(void)
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Print some OpenGL information.
-	ST_Message ("I_InitGraphics: OpenGL information:\n");
-	ST_Message ("  Vendor: %s\n", glGetString(GL_VENDOR));
-	ST_Message ("  Renderer: %s\n", glGetString(GL_RENDERER));
-	ST_Message ("  Version: %s\n", glGetString(GL_VERSION));
-	ST_Message ("  GLU Version: %s\n", gluGetString((GLenum)GLU_VERSION));
+	printf ("I_InitGraphics: OpenGL information:\n");
+	printf ("  Vendor: %s\n", glGetString(GL_VENDOR));
+	printf ("  Renderer: %s\n", glGetString(GL_RENDERER));
+	printf ("  Version: %s\n", glGetString(GL_VERSION));
+	printf ("  GLU Version: %s\n", gluGetString((GLenum)GLU_VERSION));
 
 	// Check the maximum texture size.
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
-	ST_Message ("  Maximum texture size: %d\n", maxTexSize);
+	printf("  Maximum texture size: %d\n", maxTexSize);
 	if (maxTexSize == 256)
 	{
-	//	ST_Message("  Is this Voodoo? Using size ratio limit.\n");
+	//	printf("  Is this Voodoo? Using size ratio limit.\n");
 		ratioLimit = 8;
 	}
 
 	if (M_CheckParm("-3dfxtest"))
 	{
 		test3dfx = 1;
-		ST_Message ("  3dfx test mode.\n");
+		printf("  3dfx test mode.\n");
 	}
 
 	// Only grab if we want to
