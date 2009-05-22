@@ -101,7 +101,7 @@
 /* path to the user directory		*/
 extern	const char		*basePath;
 
-#define CONFIG_FILE_NAME	"hhexen.cfg"
+#define	CONFIG_FILE_NAME	"hhexen.cfg"
 
 
 #include "st_start.h"
@@ -858,7 +858,7 @@ extern	doomdata_t		*netbuffer;	/* points inside doomcom */
 
 #define	CMD_SEND		1
 #define	CMD_GET			2
-#define CMD_FRAG		3
+#define	CMD_FRAG		3
 
 #define	SBARHEIGHT		39		/* status bar height at bottom of screen */
 
@@ -895,8 +895,6 @@ extern	boolean		randomclass;	/* checkparm of -randclass */
 extern	boolean		debugmode;	/* checkparm of -debug */
 extern	boolean		usergame;	/* ok to save / end game */
 extern	boolean		ravpic;		/* checkparm of -ravpic */
-extern	boolean		altpal;		/* checkparm to use an alternate palette routine */
-extern	boolean		cdrom;		/* true if cd-rom mode active ("-cdrom") */
 extern	boolean		deathmatch;	/* only if started as net death */
 extern	boolean		netgame;	/* only true if >1 player */
 extern	boolean		cmdfrag;	/* true if a CMD_FRAG packet should be sent out every kill */
@@ -905,18 +903,17 @@ extern	boolean		playeringame[MAXPLAYERS];
 extern	pclass_t	PlayerClasses[MAXPLAYERS];
 extern	int		consoleplayer;	/* player taking events and displaying */
 extern	int		displayplayer;
+extern	int		viewangleoffset;/* ANG90 = left side, ANG270 = right */
 extern	player_t	players[MAXPLAYERS];
 
 extern	boolean		singletics;	/* debug flag to cancel adaptiveness */
 extern	boolean		DebugSound;	/* debug flag for displaying sound info */
 
-extern	int		viewangleoffset;/* ANG90 = left side, ANG270 = right */
-
 extern	boolean		demoplayback;
-extern	int		maxzone;	/* Maximum chunk allocated for zone heap */
-
 extern	int		Sky1Texture;
 extern	int		Sky2Texture;
+
+extern	int		maxzone;	/* Maximum chunk allocated for zone heap */
 
 extern	gamestate_t	gamestate;
 extern	skill_t		gameskill;
@@ -1473,7 +1470,7 @@ void M_ForceUppercase(char *text);
 int M_Random (void);
 /* returns a number from 0 to 255 */
 
-extern unsigned char P_Random(void);
+unsigned char P_Random(void);
 /* as M_Random, but used only by the play simulation */
 
 void M_ClearRandom (void);
@@ -1517,13 +1514,13 @@ int SC_MatchString(const char **strings);
 int SC_MustMatchString(const char **strings);
 void SC_ScriptError(const char *message) __attribute__((noreturn));
 
-extern char *sc_String;
-extern int sc_Number;
-extern int sc_Line;
-extern boolean sc_End;
-extern boolean sc_Crossed;
-extern boolean sc_FileScripts;
-extern const char *sc_ScriptsDir;
+extern	char	*sc_String;
+extern	int		sc_Number;
+extern	int		sc_Line;
+extern	boolean		sc_End;
+extern	boolean		sc_Crossed;
+extern	boolean		sc_FileScripts;
+extern	const char	*sc_ScriptsDir;
 
 
 /* ---- SN_sonix.c ---- */
