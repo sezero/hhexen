@@ -152,7 +152,7 @@ void CT_Stop(void)
 
 boolean CT_Responder(event_t *ev)
 {
-	char *macro;
+	const char *macro;
 	int sendto;
 
 	if (!netgame)
