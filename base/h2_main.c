@@ -862,20 +862,20 @@ static void CheckRecordFrom(void)
 
 static void AddWADFile(const char *file)
 {
-	int i;
+	int i = 0;
 	char *newwad;
 
 	ST_Message("Adding external file: %s\n", file);
-	i = 0;
 	while (wadfiles[i])
 	{
-		i++;
-		if (i == MAXWADFILES)
+		if (++i == MAXWADFILES)
 			I_Error ("MAXWADFILES reached for %s", file);
 	}
 	newwad = (char *) malloc(strlen(file) + 1);
 	strcpy(newwad, file);
 	wadfiles[i] = newwad;
+	if (++i < MAXWADFILES)
+		wadfiles[i] = NULL;
 }
 
 
