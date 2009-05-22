@@ -158,7 +158,8 @@ int prndindex = 0;
 
 unsigned char P_Random (void)
 {
-	return rndtable[(++prndindex) & 0xff];
+	prndindex = (prndindex + 1) & 0xff;
+	return rndtable[prndindex];
 }
 
 int M_Random (void)
