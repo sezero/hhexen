@@ -21,7 +21,7 @@
 #include <linux/cdrom.h>
 #endif
 #include "h2def.h"
-#include "i_sound.h"
+#include "i_cdmus.h"
 
 // MACROS ------------------------------------------------------------------
 
@@ -38,6 +38,14 @@
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
+
+int cdaudio;	/* boolean: enabled or disabled */
+
+boolean i_CDMusic;
+int i_CDTrack;
+int i_CDCurrentTrack;
+int i_CDMusicLength;
+int oldTic;
 
 int cd_Error;
 

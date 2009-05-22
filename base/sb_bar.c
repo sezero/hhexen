@@ -114,12 +114,6 @@ extern byte *screen;
 extern int ArmorIncrement[NUMCLASSES][NUMARMOR];
 extern int AutoArmorSave[NUMCLASSES];
 
-extern boolean i_CDMusic;
-extern int i_CDMusicLength;
-extern int i_CDTrack;
-extern int i_CDCurrentTrack;
-extern int oldTic;
-
 // PUBLIC DATA DECLARATIONS ------------------------------------------------
 
 boolean DebugSound;	/* Debug flag for displaying sound info */
@@ -1836,7 +1830,7 @@ static boolean HandleCheats(byte key)
 	else if (netgame)
 	{ // change CD track is the only cheat available in deathmatch
 		eat = false;
-		if (i_CDMusic)
+		if (i_CDMusic && cdaudio)
 		{
 			if (CheatAddKey(&Cheats[0], key, &eat))
 			{
@@ -2250,13 +2244,9 @@ static void CheatTrackFunc1(player_t *player, Cheat_t *cheat)
 {
 	char buffer[80];
 
-	if (!i_CDMusic)
+	if (!i_CDMusic || !cdaudio)
 	{
 		return;
-	}
-	if (I_CDMusInit() == -1)
-	{
-		P_SetMessage(player, "ERROR INITIALIZING CD", true);
 	}
 	snprintf(buffer, sizeof(buffer), "ENTER DESIRED CD TRACK (%.2d - %.2d):\n",
 					  I_CDMusFirstTrack(), I_CDMusLastTrack());
@@ -2274,7 +2264,7 @@ static void CheatTrackFunc2(player_t *player, Cheat_t *cheat)
 	char buffer[80];
 	int track;
 
-	if (!i_CDMusic)
+	if (!i_CDMusic || !cdaudio)
 	{
 		return;
 	}

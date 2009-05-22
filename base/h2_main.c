@@ -96,7 +96,6 @@ boolean respawnparm;		// checkparm of -respawn
 boolean randomclass;		// checkparm of -randclass
 boolean debugmode;			// checkparm of -debug
 boolean ravpic;				// checkparm of -ravpic
-boolean cdrom;				// true if cd-rom mode active
 boolean cmdfrag;			// true if a CMD_FRAG packet should be sent out
 boolean singletics;			// debug flag to cancel adaptiveness
 boolean artiskip;			// whether shift-enter skips an artifact
@@ -331,7 +330,6 @@ static void HandleArgs(void)
 	artiskip = M_ParmExists("-artiskip");
 	debugmode = M_ParmExists("-debug");
 	deathmatch = M_ParmExists("-deathmatch");
-	cdrom = M_ParmExists("-cdrom");
 	cmdfrag = M_ParmExists("-cmdfrag");
 
 	// Process command line options

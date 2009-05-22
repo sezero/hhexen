@@ -17,6 +17,7 @@
 #include "p_local.h"	/* for P_AproxDistance */
 #include "sounds.h"
 #include "i_sound.h"
+#include "i_cdmus.h"
 #include "soundst.h"
 #include "st_start.h"
 
@@ -31,17 +32,6 @@ extern void **lumpcache;
 
 extern void I_StartupMouse(void);
 extern void I_ShutdownGraphics(void);
-
-boolean i_CDMusic;
-int i_CDTrack;
-int i_CDCurrentTrack;
-int i_CDMusicLength;
-int oldTic;
-
-extern int cdaudio;
-
-extern void I_CDMusShutdown(void);
-extern void I_CDMusUpdate(void);
 
 /*
 ===============================================================================
@@ -111,7 +101,7 @@ void S_StartSong(int song, boolean loop)
 	char *songLump;
 	int track;
 
-	if (i_CDMusic)
+	if (i_CDMusic && cdaudio)
 	{ // Play a CD track, instead
 		if (i_CDTrack)
 		{ // Default to the player-chosen track
@@ -208,7 +198,7 @@ void S_StartSongName(const char *songLump, boolean loop)
 	{
 		return;
 	}
-	if (i_CDMusic)
+	if (i_CDMusic && cdaudio)
 	{
 		cdTrack = 0;
 
@@ -647,14 +637,8 @@ void S_SoundLink(mobj_t *oldactor, mobj_t *newactor)
 
 void S_PauseSound(void)
 {
-	if (i_CDMusic)
-	{
-		I_CDMusStop();
-	}
-	else
-	{
-		I_PauseSong(RegisteredSong);
-	}
+	I_CDMusStop();
+	I_PauseSong(RegisteredSong);
 }
 
 //==========================================================================
@@ -665,7 +649,7 @@ void S_PauseSound(void)
 
 void S_ResumeSound(void)
 {
-	if (i_CDMusic)
+	if (i_CDMusic && cdaudio)
 	{
 		I_CDMusResume();
 	}
@@ -815,25 +799,15 @@ void S_Init(void)
 	I_SetMusicVolume(snd_MusicVolume);
 
 	// Attempt to setup CD music
-	if (cdaudio)
+	printf("  Attempting to initialize CD Music: ");
+	i_CDMusic = (I_CDMusInit() != -1);
+	if (i_CDMusic)
 	{
-		printf("  Attempting to initialize CD Music: ");
-		if (!cdrom)
-		{
-			i_CDMusic = (I_CDMusInit() != -1);
-		}
-		else
-		{ // The user is trying to use the cdrom for both game and music
-			i_CDMusic = false;
-		}
-		if (i_CDMusic)
-		{
-			printf("initialized.\n");
-		}
-		else
-		{
-			printf("failed.\n");
-		}
+		printf("initialized.\n");
+	}
+	else
+	{
+		printf("failed.\n");
 	}
 }
 
@@ -894,24 +868,16 @@ boolean S_GetSoundPlayingInfo(mobj_t *mobj, int sound_id)
 void S_SetMusicVolume(void)
 {
 	if (i_CDMusic)
-	{
 		I_CDMusSetVolume(snd_MusicVolume*16);	// 0-255
-	}
-	else
-	{
-		I_SetMusicVolume(snd_MusicVolume);
-	}
+	I_SetMusicVolume(snd_MusicVolume);
 	if (snd_MusicVolume == 0)
 	{
-		if (!i_CDMusic)
-		{
-			I_PauseSong(RegisteredSong);
-		}
+		I_PauseSong(RegisteredSong);
 		MusicPaused = true;
 	}
 	else if (MusicPaused)
 	{
-		if (!i_CDMusic)
+		if (!i_CDMusic || !cdaudio)
 		{
 			I_ResumeSong(RegisteredSong);
 		}

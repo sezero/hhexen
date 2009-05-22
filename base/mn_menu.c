@@ -14,6 +14,7 @@
 #include "h2def.h"
 #include "p_local.h"
 #include "r_local.h"
+#include "i_cdmus.h"
 #include "soundst.h"
 
 #ifdef RENDER3D
@@ -93,9 +94,6 @@ typedef struct
 
 // EXTERNAL FUNCTION PROTOTYPES --------------------------------------------
 
-extern int I_CDMusInit(void);
-extern int I_CDMusStop(void);
-
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
@@ -147,8 +145,6 @@ extern boolean gamekeydown[MAXKEYS];
 extern int alwaysrun;
 extern int mouselook;
 
-extern boolean i_CDMusic;
-
 extern int key_right,key_left,key_up,key_down;
 extern int key_straferight,key_strafeleft,key_jump;
 extern int key_fire, key_use, key_strafe, key_speed;
@@ -162,8 +158,6 @@ boolean MenuActive;
 int InfoType;
 int messageson;	/* boolean */
 boolean mn_SuicideConsole;
-
-int cdaudio;	/* boolean */
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
@@ -1591,27 +1585,14 @@ static void SCCDAudio(int option)
 	{
 		cdaudio = 0;
 		I_CDMusStop();
-		i_CDMusic = false;
+	// FIXME: start ordinary music here
 	}
 	else
 	{
 		cdaudio = 1;
-		printf("Attempting to initialize CD Music: ");
-		if (!cdrom)
-		{
-			i_CDMusic = (I_CDMusInit() != -1);
-		}
-		else
-		{ // The user is trying to use the cdrom for both game and music
-			i_CDMusic = false;
-		}
 		if (i_CDMusic)
 		{
-			printf("initialized.\n");
-		}
-		else
-		{
-			printf("failed.\n");
+		// FIXME: start cdaudio here
 		}
 	}
 }

@@ -19,6 +19,14 @@
 #define CDERR_IOCTLBUFFMEM	22	/* Not enough low memory for IOCTL */
 #define CDERR_DEVREQBASE	100	/* DevReq errors */
 
+extern boolean i_CDMusic;	/* is cdaudio initialized */
+extern int cdaudio;		/* boolean: is cd audio enabled or disabled */
+
+extern int i_CDTrack;
+extern int i_CDCurrentTrack;
+extern int i_CDMusicLength;
+extern int oldTic;
+
 extern int cd_Error;
 
 int I_CDMusInit(void);
@@ -29,6 +37,8 @@ int I_CDMusSetVolume(int volume);
 int I_CDMusFirstTrack(void);
 int I_CDMusLastTrack(void);
 int I_CDMusTrackLength(int track);
+void I_CDMusUpdate(void);
+void I_CDMusShutdown(void);
 
 #endif	/* __ICDMUS__ */
 

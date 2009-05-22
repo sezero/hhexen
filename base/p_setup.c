@@ -14,6 +14,7 @@
 #include <math.h>
 #include "h2def.h"
 #include "p_local.h"
+#include "i_cdmus.h"
 #include "soundst.h"
 #ifdef RENDER3D
 #include "ogl_def.h"
@@ -80,8 +81,6 @@ static float AccurateDistance(fixed_t dx,fixed_t dy);
 
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
-
-extern boolean	i_CDMusic;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
@@ -1011,7 +1010,7 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
 	}
 	players[consoleplayer].viewz = 1;	// will be set by player think
 
-	if (i_CDMusic == false)
+	if (!i_CDMusic || !cdaudio)
 	{
 		S_StartSongName("chess", true);	// Waiting-for-level-load song
 	}

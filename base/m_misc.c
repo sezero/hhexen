@@ -17,6 +17,7 @@
 #include <ctype.h>
 #include "h2def.h"
 #include "p_local.h"
+#include "i_cdmus.h"
 #include "soundst.h"
 
 #ifdef RENDER3D
@@ -403,7 +404,6 @@ int	usejoystick;
 int	mouseSensitivity;
 
 extern int mouselook;
-extern int cdaudio;
 extern int alwaysrun;
 
 extern int key_right, key_left, key_up, key_down;
