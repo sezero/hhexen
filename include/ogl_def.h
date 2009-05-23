@@ -96,6 +96,7 @@ float NextPower2Ratio(int num);
 void OGL_TexInit(void);
 void OGL_TexReset(void);
 void OGL_ResetLumpTexData(void);
+void OGL_SetPaletteLump(const char *palname);
 void PalToRGB(byte *palidx, byte *rgb);
 void PalIdxToRGB(byte *pal, int idx, byte *rgb);
 unsigned int OGL_BindTexFlat(int lump);

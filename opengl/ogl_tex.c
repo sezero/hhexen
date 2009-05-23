@@ -140,6 +140,11 @@ void OGL_TexInit(void)
 	pallump = W_GetNumForName("PLAYPAL");
 }
 
+void OGL_SetPaletteLump(const char *palname)
+{
+	pallump = W_GetNumForName(palname);
+}
+
 void OGL_TexReset(void)
 {
 	glDeleteTextures(numflats, flattexnames);
