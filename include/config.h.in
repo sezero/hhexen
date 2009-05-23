@@ -87,9 +87,6 @@
 # define __builtin_expect(x,c) x
 #endif
 
-/* Define this to the shared game directory root */
-#undef SHARED_DATAPATH
-
 /* Define to not compile most parameter validation debugging code */
 #undef NORANGECHECKING
 
@@ -110,6 +107,9 @@
 
 /* Define if building with OpenGL support */
 #undef RENDER3D
+
+/* Define this to the shared game directory root */
+#undef SHARED_DATAPATH
 
 /* The size of `char', as computed by sizeof. */
 #undef SIZEOF_CHAR
