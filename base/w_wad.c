@@ -82,6 +82,35 @@ boolean AuxiliaryOpened = false;
 
 // CODE --------------------------------------------------------------------
 
+boolean W_IsWadPresent(const char *filename)
+{
+	char path[MAX_OSPATH], *waddir;
+	int handle = -1;
+
+	/* try the directory specified by the
+	 * shared data environment variable first.
+	 */
+	waddir = getenv(DATA_ENVVAR);
+	if (waddir && *waddir)
+	{
+		snprintf (path, sizeof(path), "%s/%s", waddir, filename);
+		handle = open(path, O_RDONLY|O_BINARY);
+	}
+	if (handle == -1)	/* Try UserDIR */
+	{
+		snprintf (path, sizeof(path), "%s%s", basePath, filename);
+		handle = open(path, O_RDONLY|O_BINARY);
+	}
+	if (handle == -1)	/* Now try CWD */
+	{
+		handle = open(filename, O_RDONLY|O_BINARY);
+	}
+	if (handle == -1)
+		return false;	/* Didn't find the file. */
+	close(handle);
+	return true;
+}
+
 //==========================================================================
 //
 // W_AddFile
