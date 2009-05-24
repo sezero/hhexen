@@ -528,13 +528,21 @@ int I_RegisterExternalSong(const char *name)
 
 	while (MusicFile[i].ext != NULL)
 	{
-		/* first try from <userdir>/music */
-		snprintf (path, sizeof(path), "%smusic/%s.%s",
-				basePath, fixedname, MusicFile[i].ext);
-		ret = access(path, R_OK);
-		if (ret == -1)
+		/* first, try from from the shared data path */
+		if (waddir && *waddir)
 		{
-			/* try from <CWD>/music */
+			snprintf (path, sizeof(path), "%s/music/%s.%s",
+				waddir, fixedname, MusicFile[i].ext);
+			ret = access(path, R_OK);
+		}
+		if (ret == -1)	/* then, try from <userdir>/music */
+		{
+			snprintf (path, sizeof(path), "%smusic/%s.%s",
+				basePath, fixedname, MusicFile[i].ext);
+			ret = access(path, R_OK);
+		}
+		if (ret == -1)	/* try from <CWD>/music */
+		{
 			snprintf (path, sizeof(path), "music/%s.%s",
 					fixedname, MusicFile[i].ext);
 			ret = access(path, R_OK);
