@@ -339,6 +339,9 @@ void I_UpdateSoundParams(int handle, int vol, int sep, int pitch)
  */
 
 // inits all sound stuff
+
+static void loop_song_hook(void);
+
 void I_StartupSound (void)
 {
 	int audio_rate;
@@ -381,6 +384,7 @@ void I_StartupSound (void)
 	if (snd_MusicVolume < 0 || snd_MusicVolume > 15)
 		snd_MusicVolume = 10;
 	Mix_VolumeMusic(snd_MusicVolume*8);
+	Mix_HookMusicFinished(loop_song_hook);
 }
 
 // shuts down all sound stuff
@@ -441,6 +445,18 @@ void I_SetChannels(int channels)
  */
 
 static Mix_Music *CurrentSong = NULL;
+static boolean loop_the_song = false;
+
+static void loop_song_hook(void)
+{
+	if (loop_the_song && CurrentSong)
+	{
+		if (Mix_PlayingMusic())
+			Mix_HaltMusic();
+		Mix_RewindMusic();
+		Mix_FadeInMusic(CurrentSong, 0, 0);
+	}
+}
 
 int I_RegisterSong(void *data)
 {
@@ -544,6 +560,7 @@ void I_UnRegisterSong(int handle)
 {
 	if (handle != 1)
 		return;
+	loop_the_song = false;
 	if (CurrentSong)
 	{
 		Mix_FreeMusic(CurrentSong);
@@ -585,6 +602,7 @@ void I_StopSong(int handle)
 {
 	if (handle != 1)
 		return;
+	loop_the_song = false;
 	if (CurrentSong)
 		Mix_HaltMusic();
 }
@@ -593,7 +611,8 @@ void I_PlaySong(int handle, boolean looping)
 {
 	if (handle != 1)
 		return;
+	loop_the_song = looping;
 	if (CurrentSong)
-		Mix_FadeInMusic(CurrentSong, looping ? -1 : 0, 500);
+		Mix_FadeInMusic(CurrentSong, 0, 500);
 }
 
