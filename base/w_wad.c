@@ -65,6 +65,7 @@ static void W_MergeLumps(const char *start, const char *end);
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
+const char *waddir;
 lumpinfo_t *lumpinfo;
 int numlumps;
 void **lumpcache;
@@ -84,13 +85,12 @@ boolean AuxiliaryOpened = false;
 
 boolean W_IsWadPresent(const char *filename)
 {
-	char path[MAX_OSPATH], *waddir;
+	char path[MAX_OSPATH];
 	int handle = -1;
 
-	/* try the directory specified by the
-	 * shared data environment variable first.
+	/* try the directory from the command line or
+	 *  from the shared data environment variable.
 	 */
-	waddir = getenv(DATA_ENVVAR);
 	if (waddir && *waddir)
 	{
 		snprintf (path, sizeof(path), "%s/%s", waddir, filename);
@@ -124,7 +124,7 @@ void W_AddFile(const char *filename)
 {
 	wadinfo_t header;
 	lumpinfo_t *lump_p;
-	char path[MAX_OSPATH], *waddir;
+	char path[MAX_OSPATH];
 	int handle, length, flength;
 	int startlump;
 	filelump_t *fileinfo, singleinfo;
@@ -133,10 +133,9 @@ void W_AddFile(const char *filename)
 	byte	*c;
 
 	handle = -1;
-	/* try the directory specified by the
-	 * shared data environment variable first.
+	/* try the directory from the command line or
+	 *  from the shared data environment variable.
 	 */
-	waddir = getenv(DATA_ENVVAR);
 	if (waddir && *waddir)
 	{
 		snprintf (path, sizeof(path), "%s/%s", waddir, filename);

@@ -1136,6 +1136,7 @@ COMPILE_TIME_ASSERT(lumpinfo_t, sizeof(lumpinfo_t) == 20);
 
 extern	lumpinfo_t	*lumpinfo;
 extern	int		numlumps;
+extern	const char	*waddir;
 
 boolean W_IsWadPresent(const char *filename);
 void W_InitMultipleFiles(const char **filenames);
