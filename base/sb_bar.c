@@ -858,47 +858,6 @@ static void DrSmallNumber(int val, int x, int y)
 	V_DrawPatch(x + 8, y, patch);
 }
 
-/*
-//==========================================================================
-//
-// ShadeLine
-//
-//==========================================================================
-
-// Whoa... this function won't work in GL - DDOI
-// Update - Good thing it's never called - DDOI
-static void ShadeLine(int x, int y, int height, int shade)
-{
-	byte *dest;
-	byte *shades;
-
-	shades = colormaps + 9*256 + shade*2*256;
-	dest = screen + y*SCREENWIDTH + x;
-	while (height--)
-	{
-		*(dest) = *(shades + *dest);
-		dest += SCREENWIDTH;
-	}
-}
-
-//==========================================================================
-//
-// ShadeChain
-//
-//==========================================================================
-
-static void ShadeChain(void)
-{
-	int i;
-
-	for (i = 0; i < 16; i++)
-	{
-		ShadeLine(277 + i, 190, 10, i/2);
-		ShadeLine(19 + i, 190, 10, 7 - (i/2));
-	}
-}
-*/
-
 //==========================================================================
 //
 // DrawSoundInfo
@@ -1282,7 +1241,6 @@ void DrawCommonBar(void)
 		V_DrawPatch( 7 + ((healthPos * 11) / 5), 193, PatchLIFEGEM);
 		V_DrawPatch(0, 193, PatchLFEDGE);
 		V_DrawPatch(277, 193, PatchRTEDGE);
-	//	ShadeChain();
 #ifndef RENDER3D
 		UpdateState |= I_STATBAR;
 	}
