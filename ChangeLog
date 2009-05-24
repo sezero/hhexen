@@ -1,7 +1,9 @@
 HHexen ChangeLog
 
-v1.5.x [2009-05-15]
+v1.5.x [2009-05-24]
  - fixed a rare menu related crash.
+ - worked around audio corruption with the SDL_mixer driver when SDL_mixer tried
+   looping the background music.
  - added --with-datapath a new configure option. if not used, SHARED_DATAPATH
    is defined as an empty string, otherwise as the directory path given on the
    configure command line. if it isn't an empty string and the HHEXEN_DATA
