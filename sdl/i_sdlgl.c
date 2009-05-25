@@ -41,6 +41,7 @@ extern int usemouse, usejoystick;
 // Private Data
 
 static boolean vid_initialized = false;
+static int grabMouse;
 
 
 //--------------------------------------------------------------------------
@@ -180,6 +181,7 @@ void I_InitGraphics(void)
 	// Only grab if we want to
 	if (!M_CheckParm ("--nograb") && !M_CheckParm ("-g"))
 	{
+		grabMouse = 1;
 		SDL_WM_GrabInput (SDL_GRAB_ON);
 	}
 
@@ -352,9 +354,15 @@ void I_GetEvent(SDL_Event *Event)
 			if (Event->key.keysym.sym == 'g')
 			{
 				if (SDL_WM_GrabInput (SDL_GRAB_QUERY) == SDL_GRAB_OFF)
+				{
+					grabMouse = 1;
 					SDL_WM_GrabInput (SDL_GRAB_ON);
+				}
 				else
+				{
+					grabMouse = 0;
 					SDL_WM_GrabInput (SDL_GRAB_OFF);
+				}
 				break;
 			}
 		}
@@ -394,6 +402,9 @@ void I_GetEvent(SDL_Event *Event)
 		    (Event->motion.y != SCREENHEIGHT/2) )
 		{
 		/* Warp the mouse back to the center */
+			if (grabMouse) {
+				SDL_WarpMouse(SCREENWIDTH/2, SCREENHEIGHT/2);
+			}
 			event.type = ev_mouse;
 			event.data1 = 0	| (Event->motion.state & SDL_BUTTON(1) ? 1 : 0)
 					| (Event->motion.state & SDL_BUTTON(2) ? 2 : 0)
