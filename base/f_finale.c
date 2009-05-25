@@ -15,24 +15,16 @@
 #include "h2def.h"
 #include "soundst.h"
 #include "p_local.h"
-#ifdef RENDER3D
-#include "ogl_def.h"
-#endif
+#include "v_compat.h"
 
 // MACROS ------------------------------------------------------------------
 
 #define	TEXTSPEED	3
 #define	TEXTWAIT	250
 
-#include "v_compat.h"
-
 #ifdef RENDER3D
-#define W_CacheLumpName(a,b)		W_GetNumForName((a))
-#define WR_CacheLumpNum(a,b)		(a)
 #define V_DrawPatch(x,y,p)		OGL_DrawPatch((x),(y),(p))
 #define V_DrawRawScreen(a)		OGL_DrawRawScreen((a))
-#else
-#define WR_CacheLumpNum(a,b)		W_CacheLumpNum((a),(b))
 #endif
 
 // TYPES -------------------------------------------------------------------
@@ -45,6 +37,7 @@
 
 static void TextWrite(void);
 static void DrawPic(void);
+
 #ifdef RENDER3D
 static void FadeIn (void);
 static void FadeOut(void);
@@ -193,7 +186,7 @@ static void TextWrite (void)
 	{ // Chess pic, draw the correct character graphic
 		if (netgame)
 		{
-			V_DrawPatch(20, 0, (PATCH_REF)W_CacheLumpName("chessall", PU_CACHE));
+			V_DrawPatch(20, 0, (PATCH_REF)WR_CacheLumpName("chessall", PU_CACHE));
 		}
 #ifdef ASSASSIN
 		else if (PlayerClasses[consoleplayer] == PCLASS_ASS)
@@ -375,7 +368,7 @@ static void DrawPic(void)
 	{ // Chess pic, draw the correct character graphic
 		if (netgame)
 		{
-			V_DrawPatch(20, 0, (PATCH_REF)W_CacheLumpName("chessall", PU_CACHE));
+			V_DrawPatch(20, 0, (PATCH_REF)WR_CacheLumpName("chessall", PU_CACHE));
 		}
 		else if (PlayerClasses[consoleplayer])
 		{

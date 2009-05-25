@@ -15,24 +15,16 @@
 #include "p_local.h"
 #include "soundst.h"
 #include "i_cdmus.h"	/* for CD track cheat */
-#ifdef RENDER3D
-#include "ogl_def.h"
-#endif
+
+#define PLAYPAL_NUM		PlayPalette
+#include "v_compat.h"
 
 // MACROS ------------------------------------------------------------------
 
-#define PLAYPAL_NUM		PlayPalette
-
-#include "v_compat.h"
-
 #if defined(RENDER3D)
-#define W_CacheLumpName(a,b)		W_GetNumForName((a))
-#define WR_CacheLumpNum(a,b)		(a)
 #define V_DrawPatch(x,y,p)		OGL_DrawPatch((x),(y),(p))
 #define V_DrawFuzzPatch(x,y,p)		OGL_DrawFuzzPatch((x),(y),(p))
 #define V_DrawAltFuzzPatch(x,y,p)	OGL_DrawAltFuzzPatch((x),(y),(p))
-#else
-#define WR_CacheLumpNum(a,b)		W_CacheLumpNum((a),(b))
 #endif	/* RENDER3D */
 
 #define CHEAT_ENCRYPT(a)		\
@@ -543,36 +535,36 @@ void SB_Init(void)
 	int i;
 	int startLump;
 
-	PatchH2BAR	= (PATCH_REF) W_CacheLumpName("H2BAR", PU_STATIC);
-	PatchH2TOP	= (PATCH_REF) W_CacheLumpName("H2TOP", PU_STATIC);
-	PatchINVBAR	= (PATCH_REF) W_CacheLumpName("INVBAR", PU_STATIC);
-	PatchLFEDGE	= (PATCH_REF) W_CacheLumpName("LFEDGE", PU_STATIC);
-	PatchRTEDGE	= (PATCH_REF) W_CacheLumpName("RTEDGE", PU_STATIC);
-	PatchSTATBAR	= (PATCH_REF) W_CacheLumpName("STATBAR", PU_STATIC);
-	PatchKEYBAR	= (PATCH_REF) W_CacheLumpName("KEYBAR", PU_STATIC);
-	PatchSELECTBOX	= (PATCH_REF) W_CacheLumpName("SELECTBOX", PU_STATIC);
-	PatchARTICLEAR	= (PATCH_REF) W_CacheLumpName("ARTICLS", PU_STATIC);
-	PatchARMCLEAR	= (PATCH_REF) W_CacheLumpName("ARMCLS", PU_STATIC);
-	PatchMANACLEAR	= (PATCH_REF) W_CacheLumpName("MANACLS", PU_STATIC);
-	PatchMANAVIAL1	= (PATCH_REF) W_CacheLumpName("MANAVL1", PU_STATIC);
-	PatchMANAVIAL2	= (PATCH_REF) W_CacheLumpName("MANAVL2", PU_STATIC);
-	PatchMANAVIALDIM1 = (PATCH_REF) W_CacheLumpName("MANAVL1D", PU_STATIC);
-	PatchMANAVIALDIM2 = (PATCH_REF) W_CacheLumpName("MANAVL2D", PU_STATIC);
-	PatchMANADIM1	= (PATCH_REF) W_CacheLumpName("MANADIM1", PU_STATIC);
-	PatchMANADIM2	= (PATCH_REF) W_CacheLumpName("MANADIM2", PU_STATIC);
-	PatchMANABRIGHT1 = (PATCH_REF) W_CacheLumpName("MANABRT1", PU_STATIC);
-	PatchMANABRIGHT2 = (PATCH_REF) W_CacheLumpName("MANABRT2", PU_STATIC);
-	PatchINVLFGEM1	= (PATCH_REF) W_CacheLumpName("invgeml1", PU_STATIC);
-	PatchINVLFGEM2	= (PATCH_REF) W_CacheLumpName("invgeml2", PU_STATIC);
-	PatchINVRTGEM1	= (PATCH_REF) W_CacheLumpName("invgemr1", PU_STATIC);
-	PatchINVRTGEM2	= (PATCH_REF) W_CacheLumpName("invgemr2", PU_STATIC);
+	PatchH2BAR	= (PATCH_REF) WR_CacheLumpName("H2BAR", PU_STATIC);
+	PatchH2TOP	= (PATCH_REF) WR_CacheLumpName("H2TOP", PU_STATIC);
+	PatchINVBAR	= (PATCH_REF) WR_CacheLumpName("INVBAR", PU_STATIC);
+	PatchLFEDGE	= (PATCH_REF) WR_CacheLumpName("LFEDGE", PU_STATIC);
+	PatchRTEDGE	= (PATCH_REF) WR_CacheLumpName("RTEDGE", PU_STATIC);
+	PatchSTATBAR	= (PATCH_REF) WR_CacheLumpName("STATBAR", PU_STATIC);
+	PatchKEYBAR	= (PATCH_REF) WR_CacheLumpName("KEYBAR", PU_STATIC);
+	PatchSELECTBOX	= (PATCH_REF) WR_CacheLumpName("SELECTBOX", PU_STATIC);
+	PatchARTICLEAR	= (PATCH_REF) WR_CacheLumpName("ARTICLS", PU_STATIC);
+	PatchARMCLEAR	= (PATCH_REF) WR_CacheLumpName("ARMCLS", PU_STATIC);
+	PatchMANACLEAR	= (PATCH_REF) WR_CacheLumpName("MANACLS", PU_STATIC);
+	PatchMANAVIAL1	= (PATCH_REF) WR_CacheLumpName("MANAVL1", PU_STATIC);
+	PatchMANAVIAL2	= (PATCH_REF) WR_CacheLumpName("MANAVL2", PU_STATIC);
+	PatchMANAVIALDIM1 = (PATCH_REF) WR_CacheLumpName("MANAVL1D", PU_STATIC);
+	PatchMANAVIALDIM2 = (PATCH_REF) WR_CacheLumpName("MANAVL2D", PU_STATIC);
+	PatchMANADIM1	= (PATCH_REF) WR_CacheLumpName("MANADIM1", PU_STATIC);
+	PatchMANADIM2	= (PATCH_REF) WR_CacheLumpName("MANADIM2", PU_STATIC);
+	PatchMANABRIGHT1 = (PATCH_REF) WR_CacheLumpName("MANABRT1", PU_STATIC);
+	PatchMANABRIGHT2 = (PATCH_REF) WR_CacheLumpName("MANABRT2", PU_STATIC);
+	PatchINVLFGEM1	= (PATCH_REF) WR_CacheLumpName("invgeml1", PU_STATIC);
+	PatchINVLFGEM2	= (PATCH_REF) WR_CacheLumpName("invgeml2", PU_STATIC);
+	PatchINVRTGEM1	= (PATCH_REF) WR_CacheLumpName("invgemr1", PU_STATIC);
+	PatchINVRTGEM2	= (PATCH_REF) WR_CacheLumpName("invgemr2", PU_STATIC);
 
 	startLump = W_GetNumForName("IN0");
 	for (i = 0; i < 10; i++)
 	{
 		PatchINumbers[i] = (PATCH_REF) WR_CacheLumpNum(startLump + i, PU_STATIC);
 	}
-	PatchNEGATIVE = (PATCH_REF) W_CacheLumpName("NEGNUM", PU_STATIC);
+	PatchNEGATIVE = (PATCH_REF) WR_CacheLumpName("NEGNUM", PU_STATIC);
 	FontBNumBase = W_GetNumForName("FONTB16");
 	startLump = W_GetNumForName("SMALLIN0");
 	for (i = 0; i < 10; i++)
@@ -592,7 +584,7 @@ void SB_Init(void)
 
 	if (deathmatch)
 	{
-		PatchKILLS = (PATCH_REF) W_CacheLumpName("KILLS", PU_STATIC);
+		PatchKILLS = (PATCH_REF) WR_CacheLumpName("KILLS", PU_STATIC);
 	}
 	SB_SetClassData();
 }
@@ -1278,7 +1270,7 @@ void DrawMainBar(void)
 #endif
 		if (CPlayer->readyArtifact > 0)
 		{
-			V_DrawPatch(143, 163, (PATCH_REF)W_CacheLumpName(patcharti[CPlayer->readyArtifact], PU_CACHE));
+			V_DrawPatch(143, 163, (PATCH_REF)WR_CacheLumpName(patcharti[CPlayer->readyArtifact], PU_CACHE));
 			if (CPlayer->inventory[inv_ptr].count > 1)
 			{
 				DrSmallNumber(CPlayer->inventory[inv_ptr].count, 162, 184);
@@ -1502,11 +1494,11 @@ void DrawInventoryBar(void)
 	V_DrawPatch(38, 162, PatchINVBAR);
 	for (i = 0; i < 7; i++)
 	{
-	//	V_DrawPatch(50 + i*31, 160, W_CacheLumpName("ARTIBOX", PU_CACHE));
+	//	V_DrawPatch(50 + i*31, 160, (PATCH_REF)WR_CacheLumpName("ARTIBOX", PU_CACHE));
 		if (CPlayer->inventorySlotNum > x + i
 			&& CPlayer->inventory[x + i].type != arti_none)
 		{
-			V_DrawPatch(50 + i*31, 163, (PATCH_REF)W_CacheLumpName(patcharti[CPlayer->inventory[x + i].type], PU_CACHE));
+			V_DrawPatch(50 + i*31, 163, (PATCH_REF)WR_CacheLumpName(patcharti[CPlayer->inventory[x + i].type], PU_CACHE));
 			if (CPlayer->inventory[x + i].count > 1)
 			{
 				DrSmallNumber(CPlayer->inventory[x + i].count, 68 + i*31, 185);
@@ -1663,8 +1655,8 @@ void DrawFullScreenStuff(void)
 	{
 		if (CPlayer->readyArtifact > 0)
 		{
-			V_DrawFuzzPatch(286, 170, (PATCH_REF)W_CacheLumpName("ARTIBOX", PU_CACHE));
-			V_DrawPatch(284, 169, (PATCH_REF)W_CacheLumpName(patcharti[CPlayer->readyArtifact], PU_CACHE));
+			V_DrawFuzzPatch(286, 170, (PATCH_REF)WR_CacheLumpName("ARTIBOX", PU_CACHE));
+			V_DrawPatch(284, 169, (PATCH_REF)WR_CacheLumpName(patcharti[CPlayer->readyArtifact], PU_CACHE));
 			if (CPlayer->inventory[inv_ptr].count > 1)
 			{
 				DrSmallNumber(CPlayer->inventory[inv_ptr].count, 302, 192);
@@ -1676,11 +1668,11 @@ void DrawFullScreenStuff(void)
 		x = inv_ptr - curpos;
 		for (i = 0; i < 7; i++)
 		{
-			V_DrawFuzzPatch(50 + i*31, 168, (PATCH_REF)W_CacheLumpName("ARTIBOX", PU_CACHE));
+			V_DrawFuzzPatch(50 + i*31, 168, (PATCH_REF)WR_CacheLumpName("ARTIBOX", PU_CACHE));
 			if (CPlayer->inventorySlotNum > x + i
 				&& CPlayer->inventory[x + i].type != arti_none)
 			{
-				V_DrawPatch(49 + i*31, 167, (PATCH_REF)W_CacheLumpName(patcharti[CPlayer->inventory[x + i].type], PU_CACHE));
+				V_DrawPatch(49 + i*31, 167, (PATCH_REF)WR_CacheLumpName(patcharti[CPlayer->inventory[x + i].type], PU_CACHE));
 				if (CPlayer->inventory[x + i].count > 1)
 				{
 					DrSmallNumber(CPlayer->inventory[x + i].count, 66 + i*31, 188);

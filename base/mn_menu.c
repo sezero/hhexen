@@ -16,10 +16,7 @@
 #include "r_local.h"
 #include "i_cdmus.h"
 #include "soundst.h"
-
-#ifdef RENDER3D
-#include "ogl_def.h"
-#endif
+#include "v_compat.h"
 
 // MACROS ------------------------------------------------------------------
 
@@ -34,15 +31,9 @@
 #define SLOTTEXTLEN		16
 #define ASCII_CURSOR		'['
 
-#include "v_compat.h"
-
 #ifdef RENDER3D
-#define W_CacheLumpName(a,b)		W_GetNumForName((a))
-#define WR_CacheLumpNum(a,b)		(a)
 #define V_DrawPatch(x,y,p)		OGL_DrawPatch((x),(y),(p))
 #define V_DrawRawScreen(a)		OGL_DrawRawScreen((a))
-#else
-#define WR_CacheLumpNum(a,b)		W_CacheLumpNum((a),(b))
 #endif
 
 // TYPES -------------------------------------------------------------------
@@ -2214,8 +2205,6 @@ void MN_DeactivateMenu(void)
 void MN_DrawInfo(void)
 {
 	V_SetPaletteBase();
-
-//	V_DrawPatch(0, 0, (patch_t *)W_CacheLumpNum(W_GetNumForName("TITLE")+InfoType, PU_CACHE));
 	V_DrawRawScreen((BYTE_REF) WR_CacheLumpNum(W_GetNumForName("TITLE")+InfoType, PU_CACHE));
 }
 

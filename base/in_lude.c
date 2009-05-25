@@ -11,24 +11,16 @@
 #include "h2stdinc.h"
 #include <ctype.h>
 #include "h2def.h"
-#ifdef RENDER3D
-#include "ogl_def.h"
-#endif
+#include "v_compat.h"
 
 // MACROS ------------------------------------------------------------------
 
 #define	TEXTSPEED	3
 #define	TEXTWAIT	140
 
-#include "v_compat.h"
-
 #ifdef RENDER3D
-#define W_CacheLumpName(a,b)		W_GetNumForName((a))
-#define WR_CacheLumpNum(a,b)		(a)
 #define V_DrawPatch(x,y,p)		OGL_DrawPatch((x),(y),(p))
 #define V_DrawRawScreen(a)		OGL_DrawRawScreen((a))
-#else
-#define WR_CacheLumpNum(a,b)		W_CacheLumpNum((a),(b))
 #endif
 
 // TYPES -------------------------------------------------------------------
@@ -41,6 +33,8 @@ typedef enum
 } gametype_t;
 
 // EXTERNAL FUNCTION PROTOTYPES --------------------------------------------
+
+extern void AM_Stop(void);
 
 // PUBLIC FUNCTION PROTOTYPES ----------------------------------------------
 
@@ -96,8 +90,6 @@ static const char *HubText;
 // IN_Start
 //
 //========================================================================
-
-extern void AM_Stop (void);
 
 void IN_Start(void)
 {
@@ -240,18 +232,18 @@ static void LoadPics(void)
 
 	if (HubCount || gametype == DEATHMATCH)
 	{
-		patchINTERPIC = (PATCH_REF) W_CacheLumpName("INTERPIC", PU_STATIC);
+		patchINTERPIC = (PATCH_REF) WR_CacheLumpName("INTERPIC", PU_STATIC);
 		FontBLumpBase = W_GetNumForName("FONTB16");
 		for (i = 0; i < 10; i++)
 		{
 			FontBNumbers[i] = (PATCH_REF) WR_CacheLumpNum(FontBLumpBase + i, PU_STATIC);
 		}
 		FontBLump = W_GetNumForName("FONTB_S") + 1;
-		FontBNegative = (PATCH_REF) W_CacheLumpName("FONTB13", PU_STATIC);
+		FontBNegative = (PATCH_REF) WR_CacheLumpName("FONTB13", PU_STATIC);
 		FontABaseLump = W_GetNumForName("FONTA_S") + 1;
 
-		FontBSlash = (PATCH_REF) W_CacheLumpName("FONTB15", PU_STATIC);
-		FontBPercent = (PATCH_REF) W_CacheLumpName("FONTB05", PU_STATIC);
+		FontBSlash = (PATCH_REF) WR_CacheLumpName("FONTB15", PU_STATIC);
+		FontBPercent = (PATCH_REF) WR_CacheLumpName("FONTB05", PU_STATIC);
 	}
 }
 
@@ -432,8 +424,8 @@ static void DrDeathTally(void)
 	boolean bold;
 	static boolean showTotals;
 
-	V_DrawPatch(TALLY_TOP_X, TALLY_TOP_Y, (PATCH_REF)W_CacheLumpName("tallytop", PU_CACHE));
-	V_DrawPatch(TALLY_LEFT_X, TALLY_LEFT_Y, (PATCH_REF)W_CacheLumpName("tallylft", PU_CACHE));
+	V_DrawPatch(TALLY_TOP_X, TALLY_TOP_Y, (PATCH_REF)WR_CacheLumpName("tallytop", PU_CACHE));
+	V_DrawPatch(TALLY_LEFT_X, TALLY_LEFT_Y, (PATCH_REF)WR_CacheLumpName("tallylft", PU_CACHE));
 	if (intertime < TALLY_EFFECT_TICKS)
 	{
 		showTotals = false;

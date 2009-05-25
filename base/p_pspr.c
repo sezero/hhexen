@@ -14,6 +14,7 @@
 #include "h2def.h"
 #include "p_local.h"
 #include "soundst.h"
+#include "v_compat.h"	/* V_SetPaletteXXX() macros */
 
 // MACROS ------------------------------------------------------------------
 
@@ -22,8 +23,6 @@
 
 #define WEAPONBOTTOM	128*FRACUNIT
 #define WEAPONTOP	32*FRACUNIT
-
-#include "v_compat.h"	/* V_SetPaletteXXX() macros */
 
 // TYPES -------------------------------------------------------------------
 

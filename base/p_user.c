@@ -12,12 +12,11 @@
 #include "h2def.h"
 #include "p_local.h"
 #include "soundst.h"
+#include "v_compat.h"	/* for the V_SetPaletteXXX() macros */
 
 // Macros
 
 #define MAXBOB		0x100000	/* 16 pixels of bob */
-
-#include "v_compat.h"	/* for the V_SetPaletteXXX() macros */
 
 // Extern Data
 
