@@ -71,10 +71,6 @@ static fixed_t scale_ftom;
 static player_t *plr; // the player represented by an arrow
 static vertex_t oldplr;
 
-//static patch_t *marknums[10]; // numbers used for marking by the automap
-//static mpoint_t markpoints[AM_NUMMARKPOINTS]; // where the points are
-//static int markpointnum = 0; // next point to be assigned
-
 static int followplayer = 1; // specifies whether to follow the player around
 
 static char cheat_kills[] = { 'k', 'i', 'l', 'l', 's' };
@@ -108,9 +104,6 @@ static byte *fb;	// pseudo-frame buffer
 static short mapystart = 0; // y-value for the start of the map bitmap...used in
 							//the parallax stuff.
 static short mapxstart = 0; //x-value for the bitmap.
-
-//byte screens[][SCREENWIDTH*SCREENHEIGHT];
-//void V_MarkRect (int x, int y, int width, int height);
 
 // Functions
 
@@ -187,15 +180,6 @@ static void AM_restoreScaleAndLoc(void)
 	scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
 }
 
-// adds a marker at the current location
-/*
-static void AM_addMark(void)
-{
-	markpoints[markpointnum].x = m_x + m_w/2;
-	markpoints[markpointnum].y = m_y + m_h/2;
-	markpointnum = (markpointnum + 1) % AM_NUMMARKPOINTS;
-}
-*/
 static void AM_findMinMaxBoundaries(void)
 {
 	int i;
@@ -325,17 +309,6 @@ static void AM_loadPics(void)
 #endif
 }
 
-
-/*
-static void AM_clearMarks(void)
-{
-	int i;
-	for (i = 0; i < AM_NUMMARKPOINTS; i++)
-		markpoints[i].x = -1; // means empty
-	markpointnum = 0;
-}
-*/
-
 // should be called at the start of every level
 // right now, i figure it out myself
 
@@ -348,8 +321,6 @@ static void AM_LevelInit(void)
 	f_h = finit_height;
 	mapxstart = mapystart = 0;
 
-//	AM_clearMarks();
-
 	AM_findMinMaxBoundaries();
 	scale_mtof = FixedDiv(min_scale_mtof, (int) (0.7*FRACUNIT));
 	if (scale_mtof > max_scale_mtof)
@@ -361,11 +332,7 @@ static boolean stopped = true;
 
 void AM_Stop (void)
 {
-//	static event_t st_notify = { 0, ev_keyup, AM_MSGEXITED };
-
-//	AM_unloadPics();
 	automapactive = false;
-//	ST_Responder(&st_notify);
 	stopped = true;
 	BorderNeedRefresh = true;
 }
@@ -533,6 +500,7 @@ boolean AM_Responder (event_t *ev)
 			break;
 		}
 	}
+
 	return rc;
 }
 
@@ -678,7 +646,6 @@ static void AM_clearFB(int color)
 
 #ifdef RENDER3D
 	OGL_SetColorAndAlpha(1, 1, 1, 1);
-
 	OGL_SetFlat(W_GetNumForName("F_022")-firstflat);
 	scaler = sbarscale/20.0;
 	OGL_DrawCutRectTiled(0, finit_height+4, 320, 200-finit_height-4, 64, 64,
@@ -1009,7 +976,7 @@ static boolean AM_clipMline(mline_t *ml, fline_t *fl)
 static void AM_drawFline(fline_t *fl, int color)
 {
 	register int x, y, dx, dy, sx, sy, ax, ay, d;
-//	static fuck = 0;
+//	static int fuck = 0;
 
 	switch (color)
 	{
@@ -1098,15 +1065,15 @@ static void AM_drawMline(mline_t *ml, int color)
 #ifdef RENDER3D
 static void AM_drawMline(mline_t *ml, int color)
 {
-	/*
+	/* bbm: disabled this. doing it more directly below.
 	byte	*palette = (byte *) W_CacheLumpName("PLAYPAL", PU_CACHE);
 	byte	r = palette[color*3],
 		g = palette[color*3 + 1],
 		b = palette[color*3 + 2];
 
 	OGL_DrawLine(FIX2FLT(CXMTOFX(ml->a.x)), FIX2FLT(CYMTOFX(ml->a.y))/1.2,
-		     FIX2FLT(CXMTOFX(ml->b.x)), FIX2FLT(CYMTOFX(ml->b.y))/1.2, 
-		     r/255.0, g/255.0, b/255.0, 1); 
+		     FIX2FLT(CXMTOFX(ml->b.x)), FIX2FLT(CYMTOFX(ml->b.y))/1.2,
+		     r/255.0, g/255.0, b/255.0, 1);
 	*/
 	OGL_SetColor(color);
 	// Draw the line. 1.2 is the to-square aspect corrector.
@@ -1159,6 +1126,11 @@ static void AM_drawWalls(void)
 	int i;
 
 #ifdef RENDER3D
+	/* bbm: disabled this to draw all lines at once, see AM_Drawer()
+	glDisable(GL_TEXTURE_2D);
+	glLineWidth(2.5);
+	glBegin(GL_LINES);	// We'll draw pretty much all of them.
+	*/
 	for (i = 0; i < numlines; i++)
 	{
 		if (cheating || (lines[i].flags & ML_MAPPED))
@@ -1222,6 +1194,11 @@ static void AM_drawWalls(void)
 		glVertex2f (FIX2FLT(CXMTOFX(lines[i].v2->x)),
 			    FIX2FLT(CYMTOFX(lines[i].v2->y))/1.2);
 	}
+	/* bbm .
+	glEnd();
+	glLineWidth(1.0);
+	glEnable(GL_TEXTURE_2D);
+	*/
 #else
 	static mline_t l;
 
@@ -1387,35 +1364,6 @@ static void AM_drawThings(int colors, int colorrange)
 	}
 }
 
-/*
-static void AM_drawMarks(void)
-{
-	int i, fx, fy, w, h;
-
-	for (i = 0; i < AM_NUMMARKPOINTS; i++)
-	{
-		if (markpoints[i].x != -1)
-		{
-			w = SHORT(marknums[i]->width);
-			h = SHORT(marknums[i]->height);
-			fx = CXMTOF(markpoints[i].x);
-			fy = CYMTOF(markpoints[i].y);
-			if (fx >= f_x && fx <= f_w - w && fy >= f_y && fy <= f_h - h)
-				V_DrawPatch(fx, fy, marknums[i]);
-		}
-	}
-}
-*/
-
-/*
-static void AM_drawCrosshair(int color)
-{
-#ifndef RENDER3D
-	fb[(f_w*(f_h+1))/2] = color; // single point for now
-#endif
-}
-*/
-
 
 #ifdef RENDER3D
 static void AM_OGL_SetupState(void)
@@ -1451,9 +1399,10 @@ void AM_Drawer (void)
 	AM_clearFB(BACKGROUND);
 
 #ifdef RENDER3D
+	/* bbm 3/9/2003: start drawing all lines at once */
 	glDisable(GL_TEXTURE_2D);
 	glLineWidth(1.0);
-	glBegin(GL_LINES);	/* bbm: start drawing all lines at once */
+	glBegin(GL_LINES);
 #endif
 
 	if (grid)
@@ -1464,13 +1413,12 @@ void AM_Drawer (void)
 	if (cheating == 2)
 		AM_drawThings(THINGCOLORS, THINGRANGE);
 
-//	AM_drawCrosshair(XHAIRCOLORS);
-//	AM_drawMarks();
-
 #ifdef RENDER3D
-	glEnd();		/* bbm 3/9/2003: 'draw all lines at once' end */
+	/* bbm: finish drawing all lines at once */
+	glEnd();
 	glLineWidth(1.0);
 	glEnable(GL_TEXTURE_2D);
+
 	AM_OGL_RestoreState();
 #endif
 
@@ -1480,8 +1428,6 @@ void AM_Drawer (void)
 	{
 		AM_DrawDeathmatchStats();
 	}
-//	I_Update();
-//	V_MarkRect(f_x, f_y, f_w, f_h);
 }
 
 //===========================================================================
