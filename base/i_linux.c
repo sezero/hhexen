@@ -1401,16 +1401,15 @@ static void PrintHelp (const char *name)
 	printf ("     [ -w | --windowed]       Run the game windowed\n");
 	printf ("     [ -s | --nosound]        Run the game without sound\n");
 	printf ("     [ -g | --nograb]         Disable mouse grabbing\n");
-	printf ("     [ -file <wadfile> ]      Load extra wad files\n");
 #ifdef RENDER3D
 	printf ("     [ -width  <width> ]      Set screen width \n");
 	printf ("     [ -height <height> ]     Set screen height\n");
 #endif
-	printf ("\n");
-	printf ("You can use the %s environment variable to force\n",
+	printf ("     [ -file <wadfile> ]      Load extra wad files\n");
+	printf ("     [ -waddir <path>  ]      Specify shared data path\n");
+	printf ("  You can use the %s environment variable or the\n",
 		DATA_ENVVAR);
-	printf ("the HHexen data directory.\n");
-	printf ("\n");
+	printf (" -waddir option to force the game's shared data directory.\n");
 }
 
 #define H2_LITTLE_ENDIAN	0	/* 1234 */
