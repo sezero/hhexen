@@ -126,7 +126,6 @@ int ArtifactFlash;
 
 static byte CheatLookup[256];
 static int HealthMarker;
-//static int ChainWiggle;
 static player_t *CPlayer;
 static int SpinFlylump;
 static int SpinMinotaurLump;
@@ -567,7 +566,6 @@ void SB_Init(void)
 	PatchINVLFGEM2	= (PATCH_REF) W_CacheLumpName("invgeml2", PU_STATIC);
 	PatchINVRTGEM1	= (PATCH_REF) W_CacheLumpName("invgemr1", PU_STATIC);
 	PatchINVRTGEM2	= (PATCH_REF) W_CacheLumpName("invgemr2", PU_STATIC);
-//	PatchCHAINBACK	= (PATCH_REF) W_CacheLumpName("CHAINBACK", PU_STATIC);
 
 	startLump = W_GetNumForName("IN0");
 	for (i = 0; i < 10; i++)
@@ -627,11 +625,11 @@ void SB_SetClassData(void)
 
 	if (!netgame)
 	{ // single player game uses red life gem (the second gem)
-		PatchLIFEGEM = (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("lifegem") + max_players*pClass + 1, PU_STATIC);
+	  PatchLIFEGEM = (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("lifegem") + max_players*pClass + 1, PU_STATIC);
 	}
 	else
 	{
-		PatchLIFEGEM = (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("lifegem") + max_players*pClass + consoleplayer, PU_STATIC);
+	  PatchLIFEGEM = (PATCH_REF) WR_CacheLumpNum(W_GetNumForName("lifegem") + max_players*pClass + consoleplayer, PU_STATIC);
 	}
 	SB_state = -1;
 	UpdateState |= I_FULLSCRN;
