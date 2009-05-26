@@ -12,6 +12,7 @@
 
 #include "h2stdinc.h"
 #include "h2def.h"
+#include "st_start.h"
 #include "p_local.h"
 
 #define NCMD_EXIT	0x80000000
@@ -66,16 +67,14 @@ static doomdata_t	reboundstore;
 void H2_ProcessEvents (void);
 void G_BuildTiccmd (ticcmd_t *cmd);
 void H2_DoAdvanceDemo (void);
-extern void ST_NetProgress(void);
-extern void ST_NetDone(void);
 
 
 //============================================================================
 
 
-static intptr_t NetbufferSize (void)
+static int NetbufferSize (void)
 {
-	return (intptr_t)&(((doomdata_t *)0)->cmds[netbuffer->numtics]);
+	return (int) ((ptrdiff_t)&(((doomdata_t *)0)->cmds[netbuffer->numtics]));
 }
 
 static unsigned int NetbufferChecksum (void)
@@ -89,7 +88,7 @@ static unsigned int NetbufferChecksum (void)
 	return 0;	/* byte order problems */
 #endif
 
-	l = (int) (NetbufferSize() - (intptr_t)&(((doomdata_t *)0)->retransmitfrom))/4;
+	l = NetbufferSize() - (int)((ptrdiff_t)&(((doomdata_t *)0)->retransmitfrom))/4;
 	for (i = 0; i < l; i++)
 		c += ((unsigned int *)&netbuffer->retransmitfrom)[i] * (i + 1);
 
@@ -103,7 +102,7 @@ static int ExpandTics (int low)
 	delta = low - (maketic & 0xff);
 
 	if (delta >= -64 && delta <= 64)
-		return (maketic&~0xff) + low;
+		return (maketic & ~0xff) + low;
 	if (delta > 64)
 		return (maketic & ~0xff) - 256 + low;
 	if (delta < -64)
@@ -144,7 +143,7 @@ static void HSendPacket (int node, int flags)
 
 	doomcom->command = CMD_SEND;
 	doomcom->remotenode = node;
-	doomcom->datalength = (int) NetbufferSize();
+	doomcom->datalength = NetbufferSize();
 
 	if (debugfile)
 	{
@@ -156,14 +155,14 @@ static void HSendPacket (int node, int flags)
 		else
 			realretrans = -1;
 
-		fprintf (debugfile,"send (%i + %i, R %i) [%i] ",
+		fprintf (debugfile, "send (%i + %i, R %i) [%i] ",
 			 ExpandTics(netbuffer->starttic), netbuffer->numtics,
 			 realretrans, doomcom->datalength);
 
 		for (i = 0; i < doomcom->datalength; i++)
 			fprintf (debugfile, "%i ", ((byte *)netbuffer)[i]);
 
-		fprintf (debugfile,"\n");
+		fprintf (debugfile, "\n");
 	}
 
 	I_NetCmd ();
@@ -198,7 +197,7 @@ void NET_SendFrags(player_t *player)
 	}
 	doomcom->command = CMD_FRAG;
 	doomcom->remotenode = frags;
-	doomcom->datalength = (int) NetbufferSize();
+	doomcom->datalength = NetbufferSize();
 
 	I_NetCmd ();
 }
@@ -233,7 +232,7 @@ static boolean HGetPacket (void)
 	if (doomcom->remotenode == -1)
 		return false;
 
-	if (doomcom->datalength != (int) NetbufferSize())
+	if (doomcom->datalength != NetbufferSize())
 	{
 		if (debugfile)
 			fprintf (debugfile, "bad packet length %i\n", doomcom->datalength);
@@ -337,7 +336,7 @@ static void GetPackets (void)
 		//
 		// check for retransmit request
 		//
-		if ( resendcount[netnode] <= 0 && (netbuffer->checksum & NCMD_RETRANSMIT))
+		if (resendcount[netnode] <= 0 && (netbuffer->checksum & NCMD_RETRANSMIT))
 		{
 			resendto[netnode] = ExpandTics(netbuffer->retransmitfrom);
 			if (debugfile)
@@ -822,7 +821,7 @@ void TryRunTics (void)
 //
 // decide how many tics to run
 //
-	if (realtics < availabletics-1)
+	if (realtics < availabletics - 1)
 		counts = realtics + 1;
 	else if (realtics < availabletics)
 		counts = realtics;
@@ -834,7 +833,7 @@ void TryRunTics (void)
 	frameon++;
 
 	if (debugfile)
-		fprintf (debugfile,"=======real: %i  avail: %i  game: %i\n", realtics, availabletics, counts);
+		fprintf (debugfile, "=======real: %i  avail: %i  game: %i\n", realtics, availabletics, counts);
 
 	if (!demoplayback)
 	{
@@ -880,11 +879,11 @@ void TryRunTics (void)
 				lowtic = nettics[i];
 		}
 
-		if (lowtic < gametic/ticdup)
+		if (lowtic < gametic / ticdup)
 			I_Error ("TryRunTics: lowtic < gametic");
 
 		// don't stay in here forever -- give the menu a chance to work
-		if (I_GetTime ()/ticdup - entertic >= 20)
+		if (I_GetTime() / ticdup - entertic >= 20)
 		{
 			MN_Ticker ();
 			return;
