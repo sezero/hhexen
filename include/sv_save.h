@@ -16,6 +16,11 @@
 	or compiler. If you don't care about those compatibilities,
 	just remove the size/alignment assertions here.
 
+	The size assertions are not enabled if we are compiling for
+	version 1.0 wad files: HHexen has always been recommended
+	for 1.1 versions, so are binaries we posted, therefore there
+	are no compatibility concerns with that.
+
 	On another note, by removing the size assertions and adding
 	__attribute__((packed)) to those two structures, the engine
 	will then be able to read saved files from Raven Software's
@@ -85,9 +90,11 @@ typedef struct
 	byte			special;
 	byte			args[5];
 } save_mobj_t;
+#if !defined(VERSION10_WAD)
 /* make sure the struct is of 176 bytes size, so that all our
    saved games are uniform. */
 COMPILE_TIME_ASSERT(save_mobj_t, sizeof(save_mobj_t) == 176);
+#endif
 
 typedef struct
 {
@@ -143,12 +150,14 @@ typedef struct
 	unsigned int	jumpTics;
 	unsigned int	worldTimer;
 } save_player_t;
+#if !defined(VERSION10_WAD)
 /* make sure the struct is of 648 bytes size, so that all our saved
    games are uniform: Raven's DOS versions seem to have this struct
    packed, with sizeof(player_t) == 646 and offsetof playerclass at
    18 instead of 20. */
 COMPILE_TIME_ASSERT(save_player_1, sizeof(save_player_t) == 648);
 COMPILE_TIME_ASSERT(save_player_2, offsetof(save_player_t,playerclass) == 20);
+#endif
 
 typedef struct
 {
@@ -170,10 +179,12 @@ typedef struct
 	short		resetDelayCount;
 	byte		textureChange;		/*  */
 } save_floormove_t;
+#if !defined(VERSION10_WAD)
 /* make sure the struct is of 72 bytes size, so that all our saved
    games are uniform. */
 COMPILE_TIME_ASSERT(save_floormove_1, sizeof(save_floormove_t) == 72);
 COMPILE_TIME_ASSERT(save_floormove_2, offsetof(save_floormove_t,floordestheight) == 36);
+#endif
 
 typedef struct
 {

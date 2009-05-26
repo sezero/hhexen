@@ -21,7 +21,11 @@
 #define __STRINGIFY(x) #x
 #define STRINGIFY(x) __STRINGIFY(x)
 
-/* 8-player support is added by hexen version 1.1 */
+/* 8-player support is added by hexen version 1.1:
+ * Hexen v1.0 supported 4 players, just like Doom.
+ * Changing the following MAXPLAYERS macros would
+ * break many things.
+ */
 #define MAXPLAYERS_10	4
 #define MAXPLAYERS_11	8
 #if defined(VERSION10_WAD)
