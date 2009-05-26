@@ -1679,7 +1679,7 @@ static int CmdSectorSound(void)
 	mobj = NULL;
 	if (ACScript->line)
 	{
-		mobj = (mobj_t *)&ACScript->line->frontsector->soundorg;
+		mobj = (mobj_t *)(void *)&ACScript->line->frontsector->soundorg;
 	}
 	volume = Pop();
 	S_StartSoundAtVolume(mobj, S_GetSoundID(ACStrings[Pop()]), volume);
@@ -1721,7 +1721,7 @@ static int CmdSoundSequence(void)
 	mobj = NULL;
 	if (ACScript->line)
 	{
-		mobj = (mobj_t *)&ACScript->line->frontsector->soundorg;
+		mobj = (mobj_t *)(void *)&ACScript->line->frontsector->soundorg;
 	}
 	SN_StartSequenceName(mobj, ACStrings[Pop()]);
 	return SCRIPT_CONTINUE;

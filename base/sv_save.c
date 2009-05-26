@@ -1422,7 +1422,7 @@ static void RestoreMobj(mobj_t *mobj, save_mobj_t *temp)
 	mobj->info = &mobjinfo[mobj->type];
 	mobj->floorz = mobj->subsector->sector->floorheight;
 	mobj->ceilingz = mobj->subsector->sector->ceilingheight;
-	mobj->target = GetMobjPtr(temp->target_idx, (intptr_t *)&mobj->target);
+	mobj->target = GetMobjPtr(temp->target_idx, (intptr_t *)(void *)&mobj->target);
 	switch (mobj->type)
 	{
 	// Just special1
@@ -1952,7 +1952,7 @@ static void RestoreScript(void *arg1, void *arg2)
 	{
 		script->line	= &lines[temp->line_idx];
 	}
-	script->activator	= GetMobjPtr(temp->activator_idx, (intptr_t *)&script->activator);
+	script->activator	= GetMobjPtr(temp->activator_idx, (intptr_t *)(void *)&script->activator);
 	script->side		= (int) LONG(temp->side);
 	script->number		= (int) LONG(temp->number);
 	script->infoIndex	= (int) LONG(temp->infoIndex);
@@ -2254,7 +2254,7 @@ static void UnarchiveSounds(void)
 		secNum = GET_LONG();
 		if (!polySnd)
 		{
-			sndMobj = (mobj_t *)&sectors[secNum].soundorg;
+			sndMobj = (mobj_t *)(void *)&sectors[secNum].soundorg;
 		}
 		else
 		{

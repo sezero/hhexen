@@ -33,14 +33,15 @@ void T_PlatRaise(plat_t *plat)
 		{
 			plat->count = plat->wait;
 			plat->status = PLAT_DOWN;
-			SN_StartSequence((mobj_t *)&plat->sector->soundorg, SEQ_PLATFORM + plat->sector->seqType);
+			SN_StartSequence((mobj_t *)(void *)&plat->sector->soundorg,
+					 SEQ_PLATFORM + plat->sector->seqType);
 		}
 		else
 		if (res == RES_PASTDEST)
 		{
 			plat->count = plat->wait;
 			plat->status = PLAT_WAITING;
-			SN_StopSequence((mobj_t *)&plat->sector->soundorg);
+			SN_StopSequence((mobj_t *)(void *)&plat->sector->soundorg);
 			switch (plat->type)
 			{
 			case PLAT_DOWNWAITUPSTAY:
@@ -68,7 +69,7 @@ void T_PlatRaise(plat_t *plat)
 			default:
 				break;
 			}
-			SN_StopSequence((mobj_t *)&plat->sector->soundorg);
+			SN_StopSequence((mobj_t *)(void *)&plat->sector->soundorg);
 		}
 		break;
 
@@ -79,7 +80,8 @@ void T_PlatRaise(plat_t *plat)
 				plat->status = PLAT_UP;
 			else
 				plat->status = PLAT_DOWN;
-			SN_StartSequence((mobj_t *)&plat->sector->soundorg, SEQ_PLATFORM + plat->sector->seqType);
+			SN_StartSequence((mobj_t *)(void *)&plat->sector->soundorg,
+					 SEQ_PLATFORM + plat->sector->seqType);
 		}
 
 //	case PLAT_IN_STASIS:
@@ -184,7 +186,7 @@ int EV_DoPlat(line_t *line, byte *args, plattype_e type, int amount)
 			break;
 		}
 		P_AddActivePlat(plat);
-		SN_StartSequence((mobj_t *)&sec->soundorg, SEQ_PLATFORM + sec->seqType);
+		SN_StartSequence((mobj_t *)(void *)&sec->soundorg, SEQ_PLATFORM + sec->seqType);
 	}
 	return rtn;
 }
@@ -235,7 +237,7 @@ void EV_StopPlat(line_t *line, byte *args)
 			(activeplats[j])->oldstatus = (activeplats[j])->status;
 			(activeplats[j])->status = PLAT_IN_STASIS;
 			(activeplats[j])->thinker.function = NULL;
-			SN_StopSequence((mobj_t *)&(activeplats[j])->sector->soundorg);
+			SN_StopSequence((mobj_t *)(void *)&(activeplats[j])->sector->soundorg);
 		}
 	}
 	*/

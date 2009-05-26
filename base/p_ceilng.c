@@ -41,7 +41,7 @@ void T_MoveCeiling (ceiling_t *ceiling)
 				  ceiling->topheight, false, 1, ceiling->direction);
 		if (res == RES_PASTDEST)
 		{
-			SN_StopSequence((mobj_t *)&ceiling->sector->soundorg);
+			SN_StopSequence((mobj_t *)(void *)&ceiling->sector->soundorg);
 			switch (ceiling->type)
 			{
 			case CLEV_CRUSHANDRAISE:
@@ -60,7 +60,7 @@ void T_MoveCeiling (ceiling_t *ceiling)
 				  ceiling->bottomheight, ceiling->crush, 1, ceiling->direction);
 		if (res == RES_PASTDEST)
 		{
-			SN_StopSequence((mobj_t *)&ceiling->sector->soundorg);
+			SN_StopSequence((mobj_t *)(void *)&ceiling->sector->soundorg);
 			switch (ceiling->type)
 			{
 			case CLEV_CRUSHANDRAISE:
@@ -198,7 +198,8 @@ int EV_DoCeiling (line_t *line, byte *arg, ceiling_e type)
 		P_AddActiveCeiling(ceiling);
 		if (rtn)
 		{
-			SN_StartSequence((mobj_t *)&ceiling->sector->soundorg, SEQ_PLATFORM + ceiling->sector->seqType);
+			SN_StartSequence((mobj_t *)(void *)&ceiling->sector->soundorg,
+					 SEQ_PLATFORM + ceiling->sector->seqType);
 		}
 	}
 	return rtn;
@@ -264,7 +265,7 @@ void P_ActivateInStasisCeiling(line_t *line)
 		{
 			activeceilings[i]->direction = activeceilings[i]->olddirection;
 			activeceilings[i]->thinker.function = T_MoveCeiling;
-			SN_StartSequence((mobj_t *)&activeceilings[i]->sector->soundorg,
+			SN_StartSequence((mobj_t *)(void *)&activeceilings[i]->sector->soundorg,
 					SEQ_PLATFORM + activeceilings[i]->sector->seqType);
 		}
 	}
@@ -289,7 +290,7 @@ int EV_CeilingCrushStop(line_t *line, byte *args)
 		if (activeceilings[i] && activeceilings[i]->tag == args[0])
 		{
 			rtn = 1;
-			SN_StopSequence((mobj_t*)&activeceilings[i]->sector->soundorg);
+			SN_StopSequence((mobj_t*)(void *)&activeceilings[i]->sector->soundorg);
 			activeceilings[i]->sector->specialdata = NULL;
 			P_RemoveThinker (&activeceilings[i]->thinker);
 			P_TagFinished(activeceilings[i]->sector->tag);
