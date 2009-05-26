@@ -1,4 +1,3 @@
-
 /*
 	sv_save.h: Heretic 2 (Hexen)
 	Structures used for saved games.
@@ -6,6 +5,25 @@
 	Games are always saved Little Endian, with 32 bit offsets.
 	The saved games then can be properly read on 64 bit and/or
 	Big Endian machines all the same.
+
+	The saved structures may have different sizes or alignment
+	depending on the compiler and/or platform, though:  see the
+	save_player_t and save_floormove_t.  At present, those two
+	structures are checked at compile time for 648 and 72 byte
+	size for compatibility with hhexen-1.3.x-1.5.x save files.
+	Size assertions are also added to save_mobj_t, although it
+	is pretty unlikely to change in size depending on platform
+	or compiler. If you don't care about those compatibilities,
+	just remove the size/alignment assertions here.
+
+	On another note, by removing the size assertions and adding
+	__attribute__((packed)) to those two structures, the engine
+	will then be able to read saved files from Raven Software's
+	DOS-Hexen 1.1 versions, and the files HHexen saved can also
+	be loaded by DOS-Hexen 1.1.  As for the original DOS-Hexen
+	version 1.0, I didn't figure that out, yet: some structures
+	should be shorter in 1.0, which ones in particular, maybe I
+	find some day.
 
 	$Revision$
 	$Date$
@@ -67,12 +85,16 @@ typedef struct
 	byte			special;
 	byte			args[5];
 } save_mobj_t;
+/* make sure the struct is of 176 bytes size, so that all our
+   saved games are uniform. */
+COMPILE_TIME_ASSERT(save_mobj_t, sizeof(save_mobj_t) == 176);
 
 typedef struct
 {
 	int32_t		mo_idx;				/* mobj_t	*mo; */
 	int		playerstate;			/* playerstate_t playerstate */
-	ticcmd_t	cmd;
+	ticcmd_t	cmd;	/* note: sizeof(ticcmd_t) is
+				   10, not 4 byte aligned. */
 
 	int		playerclass;			/* pclass_t	playerclass */
 
@@ -121,6 +143,12 @@ typedef struct
 	unsigned int	jumpTics;
 	unsigned int	worldTimer;
 } save_player_t;
+/* make sure the struct is of 648 bytes size, so that all our saved
+   games are uniform: Raven's DOS versions seem to have this struct
+   packed, with sizeof(player_t) == 646 and offsetof playerclass at
+   18 instead of 20. */
+COMPILE_TIME_ASSERT(save_player_1, sizeof(save_player_t) == 648);
+COMPILE_TIME_ASSERT(save_player_2, offsetof(save_player_t,playerclass) == 20);
 
 typedef struct
 {
@@ -130,7 +158,7 @@ typedef struct
 	int		crush;
 	int		direction;
 	int		newspecial;
-	short		texture;
+	short		texture;		/*  */
 	fixed_t		floordestheight;
 	fixed_t		speed;
 	int		delayCount;
@@ -140,8 +168,12 @@ typedef struct
 	fixed_t		resetHeight;
 	short		resetDelay;
 	short		resetDelayCount;
-	byte		textureChange;
+	byte		textureChange;		/*  */
 } save_floormove_t;
+/* make sure the struct is of 72 bytes size, so that all our saved
+   games are uniform. */
+COMPILE_TIME_ASSERT(save_floormove_1, sizeof(save_floormove_t) == 72);
+COMPILE_TIME_ASSERT(save_floormove_2, offsetof(save_floormove_t,floordestheight) == 36);
 
 typedef struct
 {
