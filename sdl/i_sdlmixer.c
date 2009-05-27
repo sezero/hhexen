@@ -535,12 +535,14 @@ int I_RegisterExternalSong(const char *name)
 				waddir, fixedname, MusicFile[i].ext);
 			ret = access(path, R_OK);
 		}
+#if !defined(_NO_USERDIRS)
 		if (ret == -1)	/* then, try from <userdir>/music */
 		{
 			snprintf (path, sizeof(path), "%smusic/%s.%s",
 				basePath, fixedname, MusicFile[i].ext);
 			ret = access(path, R_OK);
 		}
+#endif	/* !_NO_USERDIRS */
 		if (ret == -1)	/* try from <CWD>/music */
 		{
 			snprintf (path, sizeof(path), "music/%s.%s",

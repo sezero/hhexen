@@ -81,7 +81,7 @@ extern boolean askforquit;
 
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
-const char *basePath = "";
+const char *basePath = DUMMY_BASEPATH;
 boolean DevMaps;			// true = Map development mode
 const char *DevMapsDir = "";		// development maps directory
 boolean shareware;			// true if only episode 1 present

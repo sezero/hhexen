@@ -102,8 +102,14 @@
 #define	DATA_ENVVAR		"HHEXEN_DATA"
 #define	H_USERDIR		".hhexen"
 
-/* path to the user directory		*/
+/* path to the user directory with a trailing
+ * directory separator character. initialized
+ * to DUMMY_BASEPATH string, which is "./" or
+ * empty string "", so that it will have no
+ * effect when user directories are disabled.
+ */
 extern	const char		*basePath;
+#define	DUMMY_BASEPATH		""
 
 #define	CONFIG_FILE_NAME	"hhexen.cfg"
 

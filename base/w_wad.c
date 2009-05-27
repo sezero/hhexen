@@ -96,11 +96,13 @@ boolean W_IsWadPresent(const char *filename)
 		snprintf (path, sizeof(path), "%s/%s", waddir, filename);
 		handle = open(path, O_RDONLY|O_BINARY);
 	}
+#if !defined(_NO_USERDIRS)
 	if (handle == -1)	/* Try UserDIR */
 	{
 		snprintf (path, sizeof(path), "%s%s", basePath, filename);
 		handle = open(path, O_RDONLY|O_BINARY);
 	}
+#endif	/* !_NO_USERDIRS */
 	if (handle == -1)	/* Now try CWD */
 	{
 		handle = open(filename, O_RDONLY|O_BINARY);
@@ -141,11 +143,13 @@ void W_AddFile(const char *filename)
 		snprintf (path, sizeof(path), "%s/%s", waddir, filename);
 		handle = open(path, O_RDONLY|O_BINARY);
 	}
+#if !defined(_NO_USERDIRS)
 	if (handle == -1)	/* Try UserDIR */
 	{
 		snprintf (path, sizeof(path), "%s%s", basePath, filename);
 		handle = open(path, O_RDONLY|O_BINARY);
 	}
+#endif	/* !_NO_USERDIRS */
 	if (handle == -1)	/* Now try CWD */
 	{
 		handle = open(filename, O_RDONLY|O_BINARY);

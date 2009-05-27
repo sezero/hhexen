@@ -173,6 +173,9 @@
 /* Define if not want to use assembly language */
 #undef _DISABLE_ASM
 
+/* Define if want to disable user directories */
+#undef _NO_USERDIRS
+
 /* For pthread support in OSS audio code. */
 #ifndef _REENTRANT
 # undef _REENTRANT

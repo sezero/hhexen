@@ -30,6 +30,14 @@ if test x$enable_fullscreen = xyes; then
 	AC_DEFINE(FULLSCREEN_DEFAULT, 1, [Define if want to run fullscreen by default instead of windowed])
 fi
 
+AC_ARG_ENABLE(userdirs,
+AC_HELP_STRING([--disable-userdirs], [Disable user directories [[default=no]]]),
+							[], [enable_userdirs=yes])
+
+if test x$enable_userdirs != xyes; then
+	AC_DEFINE(_NO_USERDIRS, 1, [Define if want to disable user directories])
+fi
+
 AC_ARG_ENABLE(asm,
 AC_HELP_STRING([--disable-asm], [Disable assembly language [[default=no]]]),
 							[], [enable_asm=yes])

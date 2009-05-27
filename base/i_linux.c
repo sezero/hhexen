@@ -1346,26 +1346,30 @@ void I_CheckExternDriver (void)
 //
 //=========================================================================
 
-static char base[MAX_OSPATH];
-static const char datadir[] = SHARED_DATAPATH;	/* set by 'configure' */
-
 static void CreateBasePath (void)
 {
-	int rc;
+#if !defined(_NO_USERDIRS)
+	int rc, sz;
+	char *base;
 	char *homedir = getenv("HOME");
 	if (homedir == NULL)
 		I_Error ("Unable to determine user home directory");
 	/* make sure that basePath has a trailing slash */
-	snprintf(base, sizeof(base), "%s/%s/", homedir, H_USERDIR);
+	sz = strlen(homedir) + strlen(H_USERDIR) + 3;
+	base = (char *) malloc(sz * sizeof(char));
+	snprintf(base, sz, "%s/%s/", homedir, H_USERDIR);
 	basePath = base;
 	rc = mkdir(base, S_IRWXU|S_IRWXG|S_IRWXO);
 	if (rc != 0 && errno != EEXIST)
 		I_Error ("Unable to create hhexen user directory");
+#endif	/* !_NO_USERDIRS */
 }
 
 static void InitializeWaddir (void)
 {
 	int i;
+	static const char datadir[] = SHARED_DATAPATH;
+						/* defined in config.h */
 	const char *_waddir;
 
 	_waddir = NULL;
