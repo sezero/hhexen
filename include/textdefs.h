@@ -1,4 +1,3 @@
-
 //**************************************************************************
 //**
 //** textdefs.h : Heretic 2 : Raven Software, Corp.
@@ -13,34 +12,11 @@
 
 /* ---- MN_menu.c ---- */
 
-#define PRESSKEY	"press a key."
-#define PRESSYN		"press y or n."
-#define TXT_PAUSED	"PAUSED"
-#define QUITMSG		"are you sure you want to\nquit this great game?"
-#define LOADNET		"you can't do load while in a net game!\n\n" PRESSKEY
-#define QLOADNET	"you can't quickload during a netgame!\n\n" PRESSKEY
-#define QSAVESPOT	"you haven't picked a quicksave slot yet!\n\n" PRESSKEY
-#define SAVEDEAD	"you can't save if you aren't playing!\n\n" PRESSKEY
-#define QSPROMPT	"quicksave over your game named\n\n'%s'?\n\n" PRESSYN
-#define QLPROMPT	"do you want to quickload the game named"	\
-			"\n\n'%s'?\n\n" PRESSYN
-
-#define NEWGAME		"you can't start a new game\n"			\
-			"while in a network game.\n\n" PRESSKEY
-
-#define MSGOFF		"Messages OFF"
-#define MSGON		"Messages ON"
-#define NETEND		"you can't end a netgame!\n\n" PRESSKEY
-#define ENDGAME		"are you sure you want to end the game?\n\n" PRESSYN
-#define DOSY		"(press y to quit to dos.)"
-
 #define TXT_GAMMA_LEVEL_OFF	"GAMMA CORRECTION OFF"
 #define TXT_GAMMA_LEVEL_1	"GAMMA CORRECTION LEVEL 1"
 #define TXT_GAMMA_LEVEL_2	"GAMMA CORRECTION LEVEL 2"
 #define TXT_GAMMA_LEVEL_3	"GAMMA CORRECTION LEVEL 3"
 #define TXT_GAMMA_LEVEL_4	"GAMMA CORRECTION LEVEL 4"
-
-#define	EMPTYSTRING	"empty slot"
 
 
 /* ---- P_inter.c ---- */
@@ -53,16 +29,16 @@
 
 /* Keys */
 
-#define	TXT_KEY_STEEL		"STEEL KEY"
-#define	TXT_KEY_CAVE		"CAVE KEY"
-#define	TXT_KEY_AXE		"AXE KEY"
-#define	TXT_KEY_FIRE		"FIRE KEY"
-#define	TXT_KEY_EMERALD		"EMERALD KEY"
-#define	TXT_KEY_DUNGEON		"DUNGEON KEY"
-#define	TXT_KEY_SILVER		"SILVER KEY"
-#define	TXT_KEY_RUSTED		"RUSTED KEY"
-#define	TXT_KEY_HORN		"HORN KEY"
-#define	TXT_KEY_SWAMP		"SWAMP KEY"
+#define TXT_KEY_STEEL		"STEEL KEY"
+#define TXT_KEY_CAVE		"CAVE KEY"
+#define TXT_KEY_AXE		"AXE KEY"
+#define TXT_KEY_FIRE		"FIRE KEY"
+#define TXT_KEY_EMERALD		"EMERALD KEY"
+#define TXT_KEY_DUNGEON		"DUNGEON KEY"
+#define TXT_KEY_SILVER		"SILVER KEY"
+#define TXT_KEY_RUSTED		"RUSTED KEY"
+#define TXT_KEY_HORN		"HORN KEY"
+#define TXT_KEY_SWAMP		"SWAMP KEY"
 #define TXT_KEY_CASTLE		"CASTLE KEY"
 
 /* Artifacts */
@@ -159,6 +135,7 @@
 /* ---- G_game.c ---- */
 
 #define TXT_GAMESAVED		"GAME SAVED"
+
 
 /* ---- M_misc.c ---- */
 

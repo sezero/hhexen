@@ -419,7 +419,6 @@ static const char *stupidtable[] =
 	"Z"
 };
 
-//#ifdef __WATCOMC__
 static const char *GammaText[] =
 {
 	TXT_GAMMA_LEVEL_OFF,
@@ -428,7 +427,6 @@ static const char *GammaText[] =
 	TXT_GAMMA_LEVEL_3,
 	TXT_GAMMA_LEVEL_4
 };
-//#endif
 
 // CODE --------------------------------------------------------------------
 
