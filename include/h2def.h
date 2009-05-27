@@ -386,8 +386,8 @@ typedef struct
 	const char	*name;
 	int	*location;
 	int	defaultvalue;
-	int	scantranslate;		/* PC scan code hack */
-	int	untranslated;		/* lousy hack */
+	int	minvalue;
+	int	maxvalue;
 } default_t;
 
 typedef struct

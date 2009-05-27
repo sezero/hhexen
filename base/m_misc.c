@@ -446,55 +446,60 @@ default_t defaults[] =
 /* change of order here affects mn_menu.c :
  * see, for example, Options3Items there...
  */
-	{ "mouse_sensitivity", &mouseSensitivity, 5 },
-	{ "sfx_volume", &snd_MaxVolume, 10},
-	{ "music_volume", &snd_MusicVolume, 10},
+	{ "mouse_sensitivity",	&mouseSensitivity,	5,	0, 50 },
+	{ "sfx_volume",		&snd_MaxVolume,		10,	0, 15 },
+	{ "music_volume",	&snd_MusicVolume,	10,	0, 15 },
 
-	{ "key_right", &key_right, KEY_RIGHTARROW },
-	{ "key_left", &key_left, KEY_LEFTARROW },
-	{ "key_up", &key_up, KEY_UPARROW },
-	{ "key_down", &key_down, KEY_DOWNARROW },
-	{ "key_strafeleft", &key_strafeleft, ',' },
-	{ "key_straferight", &key_straferight, '.' },
-	{ "key_jump", &key_jump, '/'},
-	{ "key_flyup", &key_flyup, KEY_PGUP },
-	{ "key_flydown", &key_flydown, KEY_INS },
-	{ "key_flycenter", &key_flycenter, KEY_HOME },
-	{ "key_lookup", &key_lookup, KEY_PGDN },
-	{ "key_lookdown", &key_lookdown, KEY_DEL },
-	{ "key_lookcenter", &key_lookcenter, KEY_END },
-	{ "key_invleft", &key_invleft, '[' },
-	{ "key_invright", &key_invright, ']' },
-	{ "key_useartifact", &key_useartifact, KEY_ENTER },
-	{ "key_fire", &key_fire, KEY_RCTRL, 1 },
-	{ "key_use", &key_use, ' ', 1 },
-	{ "key_strafe", &key_strafe, KEY_RALT, 1 },
-	{ "key_speed", &key_speed, KEY_RSHIFT, 1 },
-	{ "use_mouse", &usemouse, 1 },
-	{ "mouseb_fire", &mousebfire, 0 },
-	{ "mouseb_strafe", &mousebstrafe, 1 },
-	{ "mouseb_forward", &mousebforward, 2 },
-	{ "mouseb_jump", &mousebjump, -1 },
-	{ "use_joystick", &usejoystick, 0 },
-	{ "joyb_fire", &joybfire, 0 },
-	{ "joyb_strafe", &joybstrafe, 1 },
-	{ "joyb_use", &joybuse, 3 },
-	{ "joyb_speed", &joybspeed, 2 },
-	{ "joyb_jump", &joybjump, -1 },
-	{ "screenblocks", &screenblocks, 10 },
-	{ "snd_channels", &snd_Channels, 3 },
-	{ "snd_musicdevice", &snd_DesiredMusicDevice, 0 },
-	{ "snd_sfxdevice", &snd_DesiredSfxDevice, 0 },
-	{ "snd_sbport", &snd_SBport, 544 },
-	{ "snd_sbirq", &snd_SBirq, -1 },
-	{ "snd_sbdma", &snd_SBdma, -1 },
-	{ "snd_mport", &snd_Mport, -1 },
+	{ "key_right",		&key_right,		KEY_RIGHTARROW,	0, 254 },
+	{ "key_left",		&key_left,		KEY_LEFTARROW,	0, 254 },
+	{ "key_up",		&key_up,		KEY_UPARROW,	0, 254 },
+	{ "key_down",		&key_down,		KEY_DOWNARROW,	0, 254 },
+	{ "key_strafeleft",	&key_strafeleft,	',',		0, 254 },
+	{ "key_straferight",	&key_straferight,	'.',		0, 254 },
+	{ "key_flyup",		&key_flyup,		KEY_PGUP,	0, 254 },
+	{ "key_flydown",	&key_flydown,		KEY_INS,	0, 254 },
+	{ "key_flycenter",	&key_flycenter,		KEY_HOME,	0, 254 },
+	{ "key_lookup",		&key_lookup,		KEY_PGDN,	0, 254 },
+	{ "key_lookdown",	&key_lookdown,		KEY_DEL,	0, 254 },
+	{ "key_lookcenter",	&key_lookcenter,	KEY_END,	0, 254 },
+	{ "key_invleft",	&key_invleft,		'[',		0, 254 },
+	{ "key_invright",	&key_invright,		']',		0, 254 },
+	{ "key_useartifact",	&key_useartifact,	KEY_ENTER,	0, 254 },
+	{ "key_fire",		&key_fire,		KEY_RCTRL,	0, 254 },
+	{ "key_use",		&key_use,		' ',		0, 254 },
+	{ "key_strafe",		&key_strafe,		KEY_RALT,	0, 254 },
+	{ "key_speed",		&key_speed,		KEY_RSHIFT,	0, 254 },
+	{ "key_jump",		&key_jump,		'/',		0, 254 },
 
-	{ "usegamma", &usegamma, 0 },
-	{ "messageson", &messageson, 1 },
-	{ "mouselook", &mouselook, 1 },
-	{ "cdaudio", &cdaudio, 0 },
-	{ "alwaysrun", &alwaysrun, 0 }
+	{ "use_mouse",		&usemouse,		1,	0, 1 },
+	{ "mouseb_fire",	&mousebfire,		0,	-1, 2 },
+	{ "mouseb_strafe",	&mousebstrafe,		1,	-1, 2 },
+	{ "mouseb_forward",	&mousebforward,		2,	-1, 2 },
+	{ "mouseb_jump",	&mousebjump,		-1,	-1, 2 },
+
+	{ "use_joystick",	&usejoystick,		0,	0, 1 },
+	{ "joyb_fire",		&joybfire,		0,	-1, 3 },
+	{ "joyb_strafe",	&joybstrafe,		1,	-1, 3 },
+	{ "joyb_use",		&joybuse,		3,	-1, 3 },
+	{ "joyb_speed",		&joybspeed,		2,	-1, 3 },
+	{ "joyb_jump",		&joybjump,		-1,	-1, 3 },
+
+	{ "screenblocks",	&screenblocks,		10,	3, 11 },
+	{ "usegamma",		&usegamma,		0,	0, 4 },
+	{ "messageson",		&messageson,		1,	0, 1 },
+	{ "mouselook",		&mouselook,		1,	0, 2 },
+	{ "cdaudio",		&cdaudio,		0,	0, 1 },
+	{ "alwaysrun",		&alwaysrun,		0,	0, 1 },
+
+	{ "snd_channels",	&snd_Channels,		3,	3, MAX_CHANNELS },
+	/* the min/max values I added here are pretty much meaningless.
+	the values used to be set by the DOS version's setup program. */
+	{ "snd_musicdevice",	&snd_DesiredMusicDevice,0,	0, 9 },
+	{ "snd_sfxdevice",	&snd_DesiredSfxDevice,	0,	0,10 },
+	{ "snd_sbport",		&snd_SBport,		544,	0, 544 },
+	{ "snd_sbirq",		&snd_SBirq,		-1,	-1, 7 },
+	{ "snd_sbdma",		&snd_SBdma,		-1,	-1, 7 },
+	{ "snd_mport",		&snd_Mport,		-1,	-1, 360 }
 };
 
 default_str_t default_strings[] =
@@ -633,7 +638,8 @@ void M_LoadDefaults(const char *fileName)
 				{
 					if (!strcmp(def, defaults[i].name))
 					{
-						*defaults[i].location = parm;
+						if (parm >= defaults[i].minvalue && parm <= defaults[i].maxvalue)
+							*defaults[i].location = parm;
 						break;
 					}
 				}

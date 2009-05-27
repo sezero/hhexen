@@ -357,20 +357,20 @@ static MenuItem_t Options3Items[] =
 	{ ITT_SETKEY, "MOVE BACK :" , SCSetKey, 3, MENU_NONE },
 	{ ITT_SETKEY, "STRAFE LEFT :", SCSetKey, 4, MENU_NONE },
 	{ ITT_SETKEY, "STRAFE RIGHT :", SCSetKey, 5, MENU_NONE },
-	{ ITT_SETKEY, "JUMP :", SCSetKey, 6, MENU_NONE },
-	{ ITT_SETKEY, "FLY UP :", SCSetKey, 7, MENU_NONE },
-	{ ITT_SETKEY, "FLY DOWN :", SCSetKey, 8, MENU_NONE },
-	{ ITT_SETKEY, "FLY CENTER :", SCSetKey, 9, MENU_NONE },
-	{ ITT_SETKEY, "LOOK UP :", SCSetKey, 10, MENU_NONE },
-	{ ITT_SETKEY, "LOOK DOWN :", SCSetKey, 11, MENU_NONE },
-	{ ITT_SETKEY, "LOOK CENTER :", SCSetKey, 12, MENU_NONE },
-	{ ITT_SETKEY, "INVENTORY LEFT :", SCSetKey, 13, MENU_NONE },
-	{ ITT_SETKEY, "INVENTORY RIGHT :", SCSetKey, 14, MENU_NONE },
-	{ ITT_SETKEY, "USE ARTIFACT :", SCSetKey, 15, MENU_NONE },
-	{ ITT_SETKEY, "FIRE :", SCSetKey, 16, MENU_NONE },
-	{ ITT_SETKEY, "USE :", SCSetKey, 17, MENU_NONE },
-	{ ITT_SETKEY, "STRAFE :", SCSetKey, 18, MENU_NONE },
-	{ ITT_SETKEY, "SPEED :", SCSetKey, 19, MENU_NONE }
+	{ ITT_SETKEY, "FLY UP :", SCSetKey, 6, MENU_NONE },
+	{ ITT_SETKEY, "FLY DOWN :", SCSetKey, 7, MENU_NONE },
+	{ ITT_SETKEY, "FLY CENTER :", SCSetKey, 8, MENU_NONE },
+	{ ITT_SETKEY, "LOOK UP :", SCSetKey, 9, MENU_NONE },
+	{ ITT_SETKEY, "LOOK DOWN :", SCSetKey, 10, MENU_NONE },
+	{ ITT_SETKEY, "LOOK CENTER :", SCSetKey, 11, MENU_NONE },
+	{ ITT_SETKEY, "INVENTORY LEFT :", SCSetKey, 12, MENU_NONE },
+	{ ITT_SETKEY, "INVENTORY RIGHT :", SCSetKey, 13, MENU_NONE },
+	{ ITT_SETKEY, "USE ARTIFACT :", SCSetKey, 14, MENU_NONE },
+	{ ITT_SETKEY, "FIRE :", SCSetKey, 15, MENU_NONE },
+	{ ITT_SETKEY, "USE :", SCSetKey, 16, MENU_NONE },
+	{ ITT_SETKEY, "STRAFE :", SCSetKey, 17, MENU_NONE },
+	{ ITT_SETKEY, "SPEED :", SCSetKey, 18, MENU_NONE },
+	{ ITT_SETKEY, "JUMP :", SCSetKey, 19, MENU_NONE }
 };
 
 /* Many items in Options3Items[], only 15 can be drawn on a page:
@@ -1121,8 +1121,6 @@ static void DrawOptionsMenu(void)
 		MN_DrTextB("OFF", 196, 50);
 	}
 
-	if (mouselook < 0 || mouselook > 2)
-		mouselook = 0;
 	MN_DrTextB(mlooktext[mouselook], 208, 110);
 
 	snprintf(num, sizeof(num), "%d", mouseSensitivity);
