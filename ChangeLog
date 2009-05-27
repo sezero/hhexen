@@ -1,6 +1,6 @@
 HHexen ChangeLog
 
-v1.5.x [2009-05-24]
+v1.5.x [2009-05-27]
  - fixed a rare menu related crash.
  - worked around audio corruption with the sdlmixer driver when SDL_mixer tried
    looping the background music.
@@ -22,9 +22,10 @@ v1.5.x [2009-05-24]
  - made the game's default behavior of running windowed or fullscreen changable
    by configure. the default is running windowed, the new --enable-fullscreen
    configure option makes fullscreen the default.
- - updated the readme file with basic information on how to play the game. also
-   documented the -file command line option. added the -file option to the help
-   display.
+ - added --disable-userdirs as a new option which adds the ability to build the
+   engine without user directories support, if desired.
+ - updated the readme file with basic information on how to play the game and
+   how to activate the mission pack and/or extra wad files.
  - some tweaks and re-organization in the build system.
 
 v1.5.3
