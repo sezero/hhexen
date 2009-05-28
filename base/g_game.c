@@ -170,6 +170,7 @@ static int	joyxmove, joyymove;		// joystick values are repeated
 static boolean	joyarray[5];
 static boolean	*joybuttons = &joyarray[1];	// allow [-1]
 
+static int	loadgameslot;
 static int	savegameslot;
 static char	savedescription[32];
 
@@ -1507,11 +1508,9 @@ static void G_DoSingleReborn(void)
 //
 //==========================================================================
 
-static int GameLoadSlot;
-
 void G_LoadGame(int slot)
 {
-	GameLoadSlot = slot;
+	loadgameslot = slot;
 	gameaction = ga_loadgame;
 }
 
@@ -1526,7 +1525,7 @@ void G_LoadGame(int slot)
 void G_DoLoadGame(void)
 {
 	gameaction = ga_nothing;
-	SV_LoadGame(GameLoadSlot);
+	SV_LoadGame(loadgameslot);
 	if (!netgame)
 	{ // Copy the base slot to the reborn slot
 		SV_UpdateRebornSlot();
