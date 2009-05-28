@@ -771,7 +771,8 @@ void SV_InitBaseSlot(void)
 static void ArchivePlayers(void)
 {
 	int i, j;
-	save_player_t tempPlayer;
+	save_player_t savp;
+	player_t *p;
 
 	StreamOutLong(ASEG_PLAYERS);
 	for (i = 0; i < MAXPLAYERS; i++)
@@ -786,95 +787,96 @@ static void ArchivePlayers(void)
 		}
 		StreamOutByte(PlayerClasses[i]);
 
-		tempPlayer.mo_idx = 0;
-		tempPlayer.poisoner_idx = 0;
-		tempPlayer.attacker_idx = 0;
-		tempPlayer.playerstate		= (int) LONG(players[i].playerstate);
-		tempPlayer.cmd.forwardmove	= players[i].cmd.forwardmove;
-		tempPlayer.cmd.sidemove		= players[i].cmd.sidemove;
-		tempPlayer.cmd.angleturn	= (short) SHORT(players[i].cmd.angleturn);
-		tempPlayer.cmd.consistancy	= (short) SHORT(players[i].cmd.consistancy);
-		tempPlayer.cmd.chatchar		= players[i].cmd.chatchar;
-		tempPlayer.cmd.buttons		= players[i].cmd.buttons;
-		tempPlayer.cmd.lookfly		= players[i].cmd.lookfly;
-		tempPlayer.cmd.arti		= players[i].cmd.arti;
-		tempPlayer.playerclass		= (int) LONG(players[i].playerclass);
-		tempPlayer.viewz		= (fixed_t) LONG(players[i].viewz);
-		tempPlayer.viewheight		= (fixed_t) LONG(players[i].viewheight);
-		tempPlayer.deltaviewheight	= (fixed_t) LONG(players[i].deltaviewheight);
-		tempPlayer.bob			= (fixed_t) LONG(players[i].bob);
-		tempPlayer.flyheight		= (int) LONG(players[i].flyheight);
-		tempPlayer.lookdir		= (int) LONG(players[i].lookdir);
-		tempPlayer.centering		= (int) LONG(players[i].centering);
-		tempPlayer.health		= (int) LONG(players[i].health);
+		p = &players[i];
+		savp.mo_idx = 0;
+		savp.poisoner_idx = 0;
+		savp.attacker_idx = 0;
+		savp.playerstate	= (int) LONG(p->playerstate);
+		savp.cmd.forwardmove	= p->cmd.forwardmove;
+		savp.cmd.sidemove	= p->cmd.sidemove;
+		savp.cmd.angleturn	= (short) SHORT(p->cmd.angleturn);
+		savp.cmd.consistancy	= (short) SHORT(p->cmd.consistancy);
+		savp.cmd.chatchar	= p->cmd.chatchar;
+		savp.cmd.buttons	= p->cmd.buttons;
+		savp.cmd.lookfly	= p->cmd.lookfly;
+		savp.cmd.arti		= p->cmd.arti;
+		savp.playerclass	= (int) LONG(p->playerclass);
+		savp.viewz		= (fixed_t) LONG(p->viewz);
+		savp.viewheight		= (fixed_t) LONG(p->viewheight);
+		savp.deltaviewheight	= (fixed_t) LONG(p->deltaviewheight);
+		savp.bob		= (fixed_t) LONG(p->bob);
+		savp.flyheight		= (int) LONG(p->flyheight);
+		savp.lookdir		= (int) LONG(p->lookdir);
+		savp.centering		= (int) LONG(p->centering);
+		savp.health		= (int) LONG(p->health);
 		for (j = 0; j < NUMARMOR; j++)
 		{
-			tempPlayer.armorpoints[j] = (int) LONG(players[i].armorpoints[j]);
+			savp.armorpoints[j] = (int) LONG(p->armorpoints[j]);
 		}
 		for (j = 0; j < NUMINVENTORYSLOTS; j++)
 		{
-			tempPlayer.inventory[j].type = (int) LONG(players[i].inventory[j].type);
-			tempPlayer.inventory[j].count = (int) LONG(players[i].inventory[j].count);
+			savp.inventory[j].type = (int) LONG(p->inventory[j].type);
+			savp.inventory[j].count = (int) LONG(p->inventory[j].count);
 		}
-		tempPlayer.readyArtifact	= (int) LONG(players[i].readyArtifact);
-		tempPlayer.inventorySlotNum	= (int) LONG(players[i].inventorySlotNum);
-		tempPlayer.artifactCount	= (int) LONG(players[i].artifactCount);
+		savp.readyArtifact	= (int) LONG(p->readyArtifact);
+		savp.inventorySlotNum	= (int) LONG(p->inventorySlotNum);
+		savp.artifactCount	= (int) LONG(p->artifactCount);
 		for (j = 0; j < NUMPOWERS; j++)
 		{
-			tempPlayer.powers[j]	= (int) LONG(players[i].powers[j]);
+			savp.powers[j]	= (int) LONG(p->powers[j]);
 		}
-		tempPlayer.keys			= (int) LONG(players[i].keys);
-		tempPlayer.pieces		= (int) LONG(players[i].pieces);
+		savp.keys		= (int) LONG(p->keys);
+		savp.pieces		= (int) LONG(p->pieces);
 		for (j = 0; j < MAXPLAYERS; j++)
 		{
-			tempPlayer.frags[j]	= (signed int) LONG(players[i].frags[j]);
+			savp.frags[j]	= (signed int) LONG(p->frags[j]);
 		}
-		tempPlayer.readyweapon		= (int) LONG(players[i].readyweapon);
-		tempPlayer.pendingweapon	= (int) LONG(players[i].pendingweapon);
+		savp.readyweapon	= (int) LONG(p->readyweapon);
+		savp.pendingweapon	= (int) LONG(p->pendingweapon);
 		for (j = 0; j < NUMWEAPONS; j++)
 		{
-			tempPlayer.weaponowned[j] = (int) LONG(players[i].weaponowned[j]);
+			savp.weaponowned[j] = (int) LONG(p->weaponowned[j]);
 		}
 		for (j = 0; j < NUMMANA; j++)
 		{
-			tempPlayer.mana[j]	= (int) LONG(players[i].mana[j]);
+			savp.mana[j]	= (int) LONG(p->mana[j]);
 		}
-		tempPlayer.attackdown		= (int) LONG(players[i].attackdown);
-		tempPlayer.usedown		= (int) LONG(players[i].usedown);
-		tempPlayer.cheats		= (int) LONG(players[i].cheats);
-		tempPlayer.refire		= (int) LONG(players[i].refire);
-		tempPlayer.killcount		= (int) LONG(players[i].killcount);
-		tempPlayer.itemcount		= (int) LONG(players[i].itemcount);
-		tempPlayer.secretcount		= (int) LONG(players[i].secretcount);
-		memcpy (tempPlayer.message, players[i].message, 80);
-		tempPlayer.messageTics		= (int) LONG(players[i].messageTics);
-		tempPlayer.ultimateMessage	= (short) SHORT(players[i].ultimateMessage);
-		tempPlayer.yellowMessage	= (short) SHORT(players[i].yellowMessage);
-		tempPlayer.damagecount		= (int) LONG(players[i].damagecount);
-		tempPlayer.bonuscount		= (int) LONG(players[i].bonuscount);
-		tempPlayer.poisoncount		= (int) LONG(players[i].poisoncount);
-		tempPlayer.extralight		= (int) LONG(players[i].extralight);
-		tempPlayer.fixedcolormap	= (int) LONG(players[i].fixedcolormap);
-		tempPlayer.colormap		= (int) LONG(players[i].colormap);
-		tempPlayer.morphTics		= (int) LONG(players[i].morphTics);
-		tempPlayer.jumpTics		= (unsigned int) LONG(players[i].jumpTics);
-		tempPlayer.worldTimer		= (unsigned int) LONG(players[i].worldTimer);
+		savp.attackdown		= (int) LONG(p->attackdown);
+		savp.usedown		= (int) LONG(p->usedown);
+		savp.cheats		= (int) LONG(p->cheats);
+		savp.refire		= (int) LONG(p->refire);
+		savp.killcount		= (int) LONG(p->killcount);
+		savp.itemcount		= (int) LONG(p->itemcount);
+		savp.secretcount	= (int) LONG(p->secretcount);
+		memcpy (savp.message, p->message, 80);
+		savp.messageTics	= (int) LONG(p->messageTics);
+		savp.ultimateMessage	= (short) SHORT(p->ultimateMessage);
+		savp.yellowMessage	= (short) SHORT(p->yellowMessage);
+		savp.damagecount	= (int) LONG(p->damagecount);
+		savp.bonuscount		= (int) LONG(p->bonuscount);
+		savp.poisoncount	= (int) LONG(p->poisoncount);
+		savp.extralight		= (int) LONG(p->extralight);
+		savp.fixedcolormap	= (int) LONG(p->fixedcolormap);
+		savp.colormap		= (int) LONG(p->colormap);
+		savp.morphTics		= (int) LONG(p->morphTics);
+		savp.jumpTics		= (unsigned int) LONG(p->jumpTics);
+		savp.worldTimer		= (unsigned int) LONG(p->worldTimer);
 		for (j = 0; j < NUMPSPRITES; j++)
 		{
-			tempPlayer.psprites[j].tics = (int) LONG(players[i].psprites[j].tics);
-			tempPlayer.psprites[j].sx = (fixed_t) LONG(players[i].psprites[j].sx);
-			tempPlayer.psprites[j].sy = (fixed_t) LONG(players[i].psprites[j].sy);
-			if (players[i].psprites[j].state)
+			savp.psprites[j].tics = (int) LONG(p->psprites[j].tics);
+			savp.psprites[j].sx = (fixed_t) LONG(p->psprites[j].sx);
+			savp.psprites[j].sy = (fixed_t) LONG(p->psprites[j].sy);
+			if (p->psprites[j].state)
 			{
-				tempPlayer.psprites[j].state_idx =
-					LONG((int32_t) (players[i].psprites[j].state - states));
+				savp.psprites[j].state_idx =
+					LONG((int32_t) (p->psprites[j].state - states));
 			}
 			else
 			{
-				tempPlayer.psprites[j].state_idx = 0;
+				savp.psprites[j].state_idx = 0;
 			}
 		}
-		StreamOutBuffer(&tempPlayer, sizeof(save_player_t));
+		StreamOutBuffer(&savp, sizeof(save_player_t));
 	}
 }
 
@@ -887,7 +889,8 @@ static void ArchivePlayers(void)
 static void UnarchivePlayers(void)
 {
 	int i, j;
-	save_player_t tempPlayer;
+	save_player_t savp;
+	player_t *p;
 
 	AssertSegment(ASEG_PLAYERS);
 	for (i = 0; i < MAXPLAYERS; i++)
@@ -901,98 +904,99 @@ static void UnarchivePlayers(void)
 			continue;
 		}
 		PlayerClasses[i] = GET_BYTE();
-		memcpy(&tempPlayer, SavePtr, sizeof(save_player_t));
+		memcpy(&savp, SavePtr, sizeof(save_player_t));
 		SavePtr += sizeof(save_player_t);
 
-		players[i].mo = NULL; // Will be set when unarc thinker
-		players[i].attacker = NULL;
-		players[i].poisoner = NULL;
-		players[i].playerstate		= (playerstate_t) LONG(tempPlayer.playerstate);
-		players[i].cmd.forwardmove	= tempPlayer.cmd.forwardmove;
-		players[i].cmd.sidemove		= tempPlayer.cmd.sidemove;
-		players[i].cmd.angleturn	= (short) SHORT(tempPlayer.cmd.angleturn);
-		players[i].cmd.consistancy	= (short) SHORT(tempPlayer.cmd.consistancy);
-		players[i].cmd.chatchar		= tempPlayer.cmd.chatchar;
-		players[i].cmd.buttons		= tempPlayer.cmd.buttons;
-		players[i].cmd.lookfly		= tempPlayer.cmd.lookfly;
-		players[i].cmd.arti		= tempPlayer.cmd.arti;
-		players[i].playerclass		= (pclass_t) LONG(tempPlayer.playerclass);
-		players[i].viewz		= (fixed_t) LONG(tempPlayer.viewz);
-		players[i].viewheight		= (fixed_t) LONG(tempPlayer.viewheight);
-		players[i].deltaviewheight	= (fixed_t) LONG(tempPlayer.deltaviewheight);
-		players[i].bob			= (fixed_t) LONG(tempPlayer.bob);
-		players[i].flyheight		= (int) LONG(tempPlayer.flyheight);
-		players[i].lookdir		= (int) LONG(tempPlayer.lookdir);
-		players[i].centering		= !!(LONG(tempPlayer.centering));
-		players[i].health		= (int) LONG(tempPlayer.health);
+		p = &players[i];
+		p->mo = NULL; // Will be set when unarc thinker
+		p->attacker = NULL;
+		p->poisoner = NULL;
+		p->playerstate		= (playerstate_t) LONG(savp.playerstate);
+		p->cmd.forwardmove	= savp.cmd.forwardmove;
+		p->cmd.sidemove		= savp.cmd.sidemove;
+		p->cmd.angleturn	= (short) SHORT(savp.cmd.angleturn);
+		p->cmd.consistancy	= (short) SHORT(savp.cmd.consistancy);
+		p->cmd.chatchar		= savp.cmd.chatchar;
+		p->cmd.buttons		= savp.cmd.buttons;
+		p->cmd.lookfly		= savp.cmd.lookfly;
+		p->cmd.arti		= savp.cmd.arti;
+		p->playerclass		= (pclass_t) LONG(savp.playerclass);
+		p->viewz		= (fixed_t) LONG(savp.viewz);
+		p->viewheight		= (fixed_t) LONG(savp.viewheight);
+		p->deltaviewheight	= (fixed_t) LONG(savp.deltaviewheight);
+		p->bob			= (fixed_t) LONG(savp.bob);
+		p->flyheight		= (int) LONG(savp.flyheight);
+		p->lookdir		= (int) LONG(savp.lookdir);
+		p->centering		= !!(LONG(savp.centering));
+		p->health		= (int) LONG(savp.health);
 		for (j = 0; j < NUMARMOR; j++)
 		{
-			players[i].armorpoints[j] = (int) LONG(tempPlayer.armorpoints[j]);
+			p->armorpoints[j] = (int) LONG(savp.armorpoints[j]);
 		}
 		for (j = 0; j < NUMINVENTORYSLOTS; j++)
 		{
-			players[i].inventory[j].type = (int) LONG(tempPlayer.inventory[j].type);
-			players[i].inventory[j].count = (int) LONG(tempPlayer.inventory[j].count);
+			p->inventory[j].type = (int) LONG(savp.inventory[j].type);
+			p->inventory[j].count = (int) LONG(savp.inventory[j].count);
 		}
-		players[i].readyArtifact	= (artitype_t) LONG(tempPlayer.readyArtifact);
-		players[i].artifactCount	= (int) LONG(tempPlayer.artifactCount);
-		players[i].inventorySlotNum	= (int) LONG(tempPlayer.inventorySlotNum);
+		p->readyArtifact	= (artitype_t) LONG(savp.readyArtifact);
+		p->artifactCount	= (int) LONG(savp.artifactCount);
+		p->inventorySlotNum	= (int) LONG(savp.inventorySlotNum);
 		for (j = 0; j < NUMPOWERS; j++)
 		{
-			players[i].powers[j]	= (int) LONG(tempPlayer.powers[j]);
+			p->powers[j]	= (int) LONG(savp.powers[j]);
 		}
-		players[i].keys			= (int) LONG(tempPlayer.keys);
-		players[i].pieces		= (int) LONG(tempPlayer.pieces);
+		p->keys			= (int) LONG(savp.keys);
+		p->pieces		= (int) LONG(savp.pieces);
 		for (j = 0; j < MAXPLAYERS; j++)
 		{
-			players[i].frags[j]	= (signed int) LONG(tempPlayer.frags[j]);
+			p->frags[j]	= (signed int) LONG(savp.frags[j]);
 		}
-		players[i].readyweapon		= (weapontype_t) LONG(tempPlayer.readyweapon);
-		players[i].pendingweapon	= (weapontype_t) LONG(tempPlayer.pendingweapon);
+		p->readyweapon		= (weapontype_t) LONG(savp.readyweapon);
+		p->pendingweapon	= (weapontype_t) LONG(savp.pendingweapon);
 		for (j = 0; j < NUMWEAPONS; j++)
 		{
-			players[i].weaponowned[j] = !!(LONG(tempPlayer.weaponowned[j]));
+			p->weaponowned[j] = !!(LONG(savp.weaponowned[j]));
 		}
 		for (j = 0; j < NUMMANA; j++)
 		{
-			players[i].mana[j]	= (int) LONG(tempPlayer.mana[j]);
+			p->mana[j]	= (int) LONG(savp.mana[j]);
 		}
-		players[i].attackdown		= (int) LONG(tempPlayer.attackdown);
-		players[i].usedown		= (int) LONG(tempPlayer.usedown);
-		players[i].cheats		= (int) LONG(tempPlayer.cheats);
-		players[i].refire		= (int) LONG(tempPlayer.refire);
-		players[i].killcount		= (int) LONG(tempPlayer.killcount);
-		players[i].itemcount		= (int) LONG(tempPlayer.itemcount);
-		players[i].secretcount		= (int) LONG(tempPlayer.secretcount);
-		memcpy (players[i].message, tempPlayer.message, 80);
-		players[i].messageTics		= (int) LONG(tempPlayer.messageTics);
-		players[i].ultimateMessage	= (short) SHORT(tempPlayer.ultimateMessage);
-		players[i].yellowMessage	= (short) SHORT(tempPlayer.yellowMessage);
-		players[i].damagecount		= (int) LONG(tempPlayer.damagecount);
-		players[i].bonuscount		= (int) LONG(tempPlayer.bonuscount);
-		players[i].poisoncount		= (int) LONG(tempPlayer.poisoncount);
-		players[i].extralight		= (int) LONG(tempPlayer.extralight);
-		players[i].fixedcolormap	= (int) LONG(tempPlayer.fixedcolormap);
-		players[i].colormap		= (int) LONG(tempPlayer.colormap);
-		players[i].morphTics		= (int) LONG(tempPlayer.morphTics);
-		players[i].jumpTics		= (unsigned int) LONG(tempPlayer.jumpTics);
-		players[i].worldTimer		= (unsigned int) LONG(tempPlayer.worldTimer);
-		P_ClearMessage(&players[i]);
+		p->attackdown		= (int) LONG(savp.attackdown);
+		p->usedown		= (int) LONG(savp.usedown);
+		p->cheats		= (int) LONG(savp.cheats);
+		p->refire		= (int) LONG(savp.refire);
+		p->killcount		= (int) LONG(savp.killcount);
+		p->itemcount		= (int) LONG(savp.itemcount);
+		p->secretcount		= (int) LONG(savp.secretcount);
+		memcpy (p->message, savp.message, 80);
+		p->messageTics		= (int) LONG(savp.messageTics);
+		p->ultimateMessage	= (short) SHORT(savp.ultimateMessage);
+		p->yellowMessage	= (short) SHORT(savp.yellowMessage);
+		p->damagecount		= (int) LONG(savp.damagecount);
+		p->bonuscount		= (int) LONG(savp.bonuscount);
+		p->poisoncount		= (int) LONG(savp.poisoncount);
+		p->extralight		= (int) LONG(savp.extralight);
+		p->fixedcolormap	= (int) LONG(savp.fixedcolormap);
+		p->colormap		= (int) LONG(savp.colormap);
+		p->morphTics		= (int) LONG(savp.morphTics);
+		p->jumpTics		= (unsigned int) LONG(savp.jumpTics);
+		p->worldTimer		= (unsigned int) LONG(savp.worldTimer);
+		P_ClearMessage(p);
 		for (j = 0; j < NUMPSPRITES; j++)
 		{
-			players[i].psprites[j].tics = (int) LONG(tempPlayer.psprites[j].tics);
-			players[i].psprites[j].sx = (fixed_t) LONG(tempPlayer.psprites[j].sx);
-			players[i].psprites[j].sy = (fixed_t) LONG(tempPlayer.psprites[j].sy);
-			if (tempPlayer.psprites[j].state_idx)
+			p->psprites[j].tics = (int) LONG(savp.psprites[j].tics);
+			p->psprites[j].sx = (fixed_t) LONG(savp.psprites[j].sx);
+			p->psprites[j].sy = (fixed_t) LONG(savp.psprites[j].sy);
+			if (savp.psprites[j].state_idx)
 			{
-				tempPlayer.psprites[j].state_idx =
-					LONG(tempPlayer.psprites[j].state_idx);
-				players[i].psprites[j].state =
-					&states[tempPlayer.psprites[j].state_idx];
+				savp.psprites[j].state_idx =
+					LONG(savp.psprites[j].state_idx);
+				p->psprites[j].state =
+					&states[savp.psprites[j].state_idx];
 			}
 			else
 			{
-				players[i].psprites[j].state = NULL;
+				p->psprites[j].state = NULL;
 			}
 		}
 	}
