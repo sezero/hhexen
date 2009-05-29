@@ -63,23 +63,23 @@ button_t	buttonlist[MAXBUTTONS];
 void P_InitSwitchList(void)
 {
 	int		i;
-	int		index;
+	int		idx;
 
 	if (alphSwitchList == NULL)
 	{
 		alphSwitchList = (shareware && oldwad_10) ? alphSwitchListDemo : alphSwitchListFull;
 	}
 
-	for (index = 0, i = 0; i < MAXSWITCHES; i++)
+	for (idx = 0, i = 0; i < MAXSWITCHES; i++)
 	{
 		if (!alphSwitchList[i].soundID)
 		{
-			numswitches = index/2;
-			switchlist[index] = -1;
+			numswitches = idx/2;
+			switchlist[idx] = -1;
 			break;
 		}
-		switchlist[index++] = R_TextureNumForName(alphSwitchList[i].name1);
-		switchlist[index++] = R_TextureNumForName(alphSwitchList[i].name2);
+		switchlist[idx++] = R_TextureNumForName(alphSwitchList[i].name1);
+		switchlist[idx++] = R_TextureNumForName(alphSwitchList[i].name2);
 	}
 }
 
@@ -89,7 +89,7 @@ void P_InitSwitchList(void)
 //
 //==================================================================
 
-void P_StartButton(line_t *line,bwhere_e w,int texture,int time)
+void P_StartButton(line_t *line, bwhere_e w, int texture, int timer)
 {
 	int		i;
 
@@ -100,7 +100,7 @@ void P_StartButton(line_t *line,bwhere_e w,int texture,int time)
 			buttonlist[i].line = line;
 			buttonlist[i].where = w;
 			buttonlist[i].btexture = texture;
-			buttonlist[i].btimer = time;
+			buttonlist[i].btimer = timer;
 			buttonlist[i].soundorg = (mobj_t *)(void *)&line->frontsector->soundorg;
 			return;
 		}

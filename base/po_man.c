@@ -41,7 +41,7 @@ static void LinkPolyobj(polyobj_t *po);
 static boolean CheckMobjBlocking(seg_t *seg, polyobj_t *po);
 static void InitBlockMap(void);
 static void IterFindPolySegs(int x, int y, seg_t **segList);
-static void SpawnPolyobj(int index, int tag, boolean crush);
+static void SpawnPolyobj(int idx, int tag, boolean crush);
 static void TranslateToStartSpot(int tag, int originX, int originY);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
@@ -898,17 +898,17 @@ static void UnLinkPolyobj(polyobj_t *po)
 {
 	polyblock_t *link;
 	int i, j;
-	int index;
+	int idx;
 
 	// remove the polyobj from each blockmap section
 	for (j = po->bbox[BOXBOTTOM]; j <= po->bbox[BOXTOP]; j++)
 	{
-		index = j*bmapwidth;
+		idx = j * bmapwidth;
 		for (i = po->bbox[BOXLEFT]; i <= po->bbox[BOXRIGHT]; i++)
 		{
 			if (i >= 0 && i < bmapwidth && j >= 0 && j < bmapheight)
 			{
-				link = PolyBlockMap[index + i];
+				link = PolyBlockMap[idx + i];
 				while (link != NULL && link->polyobj != po)
 				{
 					link = link->next;
@@ -1172,7 +1172,7 @@ static void IterFindPolySegs(int x, int y, seg_t **segList)
 //
 //==========================================================================
 
-static void SpawnPolyobj(int index, int tag, boolean crush)
+static void SpawnPolyobj(int idx, int tag, boolean crush)
 {
 	int i;
 	int j;
@@ -1185,7 +1185,7 @@ static void SpawnPolyobj(int index, int tag, boolean crush)
 		if (segs[i].linedef->special == PO_LINE_START &&
 			segs[i].linedef->arg1 == tag)
 		{
-			if (polyobjs[index].segs)
+			if (polyobjs[idx].segs)
 			{
 				I_Error("SpawnPolyobj:  Polyobj %d already spawned.\n", tag);
 			}
@@ -1196,25 +1196,25 @@ static void SpawnPolyobj(int index, int tag, boolean crush)
 			PolyStartY = segs[i].v1->y;
 			IterFindPolySegs(segs[i].v2->x, segs[i].v2->y, NULL);
 
-			polyobjs[index].numsegs = PolySegCount;
-			polyobjs[index].segs = (seg_t **) Z_Malloc(PolySegCount*sizeof(seg_t *), PU_LEVEL, NULL);
-			*(polyobjs[index].segs) = &segs[i]; // insert the first seg
-			IterFindPolySegs(segs[i].v2->x, segs[i].v2->y, polyobjs[index].segs + 1);
-			polyobjs[index].crush = crush;
-			polyobjs[index].tag = tag;
-			polyobjs[index].seqType = segs[i].linedef->arg3;
-			if (polyobjs[index].seqType < 0 
-				|| polyobjs[index].seqType >= SEQTYPE_NUMSEQ)
+			polyobjs[idx].numsegs = PolySegCount;
+			polyobjs[idx].segs = (seg_t **) Z_Malloc(PolySegCount*sizeof(seg_t *), PU_LEVEL, NULL);
+			*(polyobjs[idx].segs) = &segs[i]; // insert the first seg
+			IterFindPolySegs(segs[i].v2->x, segs[i].v2->y, polyobjs[idx].segs + 1);
+			polyobjs[idx].crush = crush;
+			polyobjs[idx].tag = tag;
+			polyobjs[idx].seqType = segs[i].linedef->arg3;
+			if (polyobjs[idx].seqType < 0 
+				|| polyobjs[idx].seqType >= SEQTYPE_NUMSEQ)
 			{
-				polyobjs[index].seqType = 0;
+				polyobjs[idx].seqType = 0;
 			}
 			break;
 		}
 	}
-	if (!polyobjs[index].segs)
+	if (!polyobjs[idx].segs)
 	{ // didn't find a polyobj through PO_LINE_START
 		psIndex = 0;
-		polyobjs[index].numsegs = 0;
+		polyobjs[idx].numsegs = 0;
 		for (j = 1; j < PO_MAXPOLYSEGS; j++)
 		{
 			psIndexOld = psIndex;
@@ -1231,7 +1231,7 @@ static void SpawnPolyobj(int index, int tag, boolean crush)
 					if (segs[i].linedef->arg2 == j)
 					{
 						polySegList[psIndex] = &segs[i];
-						polyobjs[index].numsegs++;
+						polyobjs[idx].numsegs++;
 						psIndex++;
 						if (psIndex > PO_MAXPOLYSEGS)
 						{
@@ -1267,21 +1267,21 @@ static void SpawnPolyobj(int index, int tag, boolean crush)
 				}
 			}
 		}
-		if (polyobjs[index].numsegs)
+		if (polyobjs[idx].numsegs)
 		{
-			PolySegCount = polyobjs[index].numsegs; // PolySegCount used globally
-			polyobjs[index].crush = crush;
-			polyobjs[index].tag = tag;
-			polyobjs[index].segs = (seg_t **) Z_Malloc(polyobjs[index].numsegs*sizeof(seg_t *), PU_LEVEL, NULL);
-			for (i = 0; i < polyobjs[index].numsegs; i++)
+			PolySegCount = polyobjs[idx].numsegs; // PolySegCount used globally
+			polyobjs[idx].crush = crush;
+			polyobjs[idx].tag = tag;
+			polyobjs[idx].segs = (seg_t **) Z_Malloc(polyobjs[idx].numsegs*sizeof(seg_t *), PU_LEVEL, NULL);
+			for (i = 0; i < polyobjs[idx].numsegs; i++)
 			{
-				polyobjs[index].segs[i] = polySegList[i];
+				polyobjs[idx].segs[i] = polySegList[i];
 			}
-			polyobjs[index].seqType = (*polyobjs[index].segs)->linedef->arg4;
+			polyobjs[idx].seqType = (*polyobjs[idx].segs)->linedef->arg4;
 		}
 		// Next, change the polyobjs first line to point to a mirror
 		//		if it exists
-		(*polyobjs[index].segs)->linedef->arg2 = (*polyobjs[index].segs)->linedef->arg3;
+		(*polyobjs[idx].segs)->linedef->arg2 = (*polyobjs[idx].segs)->linedef->arg3;
 	}
 }
 

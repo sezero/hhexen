@@ -338,11 +338,11 @@ static void oss_close(void)
 	rd_index = 0;
 }
 
-static void oss_flush(int time)
+static void oss_flush(int flushtime)
 {
 	if (!realtime)
 	{
-		flush = time;
+		flush = flushtime;
 		while (flush != -1)
 			usleep(10000);
 	}
@@ -352,8 +352,8 @@ static void oss_flush(int time)
 		close(audio_fd);
 		audio_fd = open(device_name, O_WRONLY);
 		oss_set_audio_params();
-		output_time_offset = time;
-		written = (time / 10) * (input_bps / 100);
+		output_time_offset = flushtime;
+		written = (flushtime / 10) * (input_bps / 100);
 		output_bytes = 0;
 	}
 }
@@ -537,7 +537,7 @@ static void scan_devices(const char* type)
 	char buf[256];
 	char* tmp2;
 	int found = 0;
-	int index = 0;
+	int idx = 0;
 
 	printf("%s\n", type);
 
@@ -552,7 +552,7 @@ static void scan_devices(const char* type)
 				buf[strlen(buf) - 1] = '\0';
 			if (found)
 			{
-				if (index == 0)
+				if (idx == 0)
 				{
 					tmp2 = strchr(buf, ':');
 					if (tmp2)

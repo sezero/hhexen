@@ -478,37 +478,37 @@ boolean P_StartACS(int number, int map, byte *args, mobj_t *activator,
 static boolean AddToACSStore(int map, int number, byte *args)
 {
 	int i;
-	int index;
+	int idx;
 
-	index = -1;
+	idx = -1;
 	for (i = 0; ACSStore[i].map != 0; i++)
 	{
 		if (ACSStore[i].script == number && ACSStore[i].map == map)
 		{ // Don't allow duplicates
 			return false;
 		}
-		if (index == -1 && ACSStore[i].map == -1)
+		if (idx == -1 && ACSStore[i].map == -1)
 		{ // Remember first empty slot
-			index = i;
+			idx = i;
 		}
 	}
-	if (index == -1)
+	if (idx == -1)
 	{ // Append required
 		if (i == MAX_ACS_STORE)
 		{
 			I_Error("AddToACSStore: MAX_ACS_STORE (%d) exceeded.",
 				MAX_ACS_STORE);
 		}
-		index = i;
-		ACSStore[index + 1].map = 0;
+		idx = i;
+		ACSStore[idx + 1].map = 0;
 	}
-	ACSStore[index].map = map;
-	ACSStore[index].script = number;
-//	*((int *)ACSStore[index].args) = *((int *)args);
-	ACSStore[index].args[0] = args[0];
-	ACSStore[index].args[1] = args[1];
-	ACSStore[index].args[2] = args[2];
-	ACSStore[index].args[3] = 0;	/* unused */
+	ACSStore[idx].map = map;
+	ACSStore[idx].script = number;
+//	*((int *)ACSStore[idx].args) = *((int *)args);
+	ACSStore[idx].args[0] = args[0];
+	ACSStore[idx].args[1] = args[1];
+	ACSStore[idx].args[2] = args[2];
+	ACSStore[idx].args[3] = 0;	/* unused */
 	return true;
 }
 

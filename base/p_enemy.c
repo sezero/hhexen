@@ -4195,14 +4195,14 @@ void A_SorcOffense2(mobj_t *actor)
 {
 	angle_t ang1;
 	mobj_t *mo;
-	int delta, index;
+	int delta, idx;
 	mobj_t *parent = actor->target;
 	mobj_t *dest = parent->target;
 	int dist;
 
-	index = actor->args[4] << 5;
+	idx = actor->args[4] << 5;
 	actor->args[4] += 15;
-	delta = (finesine[index])*SORCFX4_SPREAD_ANGLE;
+	delta = (finesine[idx])*SORCFX4_SPREAD_ANGLE;
 	delta = (delta>>FRACBITS)*ANGLE_1;
 	ang1 = actor->angle + delta;
 	mo = P_SpawnMissileAngle(parent, MT_SORCFX4, ang1, 0);

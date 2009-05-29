@@ -64,7 +64,7 @@ short		*maskedtexturecol;
 
 void R_RenderMaskedSegRange (drawseg_t *ds, int x1, int x2)
 {
-	unsigned	index;
+	unsigned	idx;
 	column_t	*col;
 	int		lightnum;
 	int		texnum;
@@ -126,10 +126,10 @@ void R_RenderMaskedSegRange (drawseg_t *ds, int x1, int x2)
 		{
 			if (!fixedcolormap)
 			{
-				index = spryscale>>LIGHTSCALESHIFT;
-				if (index >=  MAXLIGHTSCALE)
-					index = MAXLIGHTSCALE-1;
-				dc_colormap = walllights[index];
+				idx = spryscale>>LIGHTSCALESHIFT;
+				if (idx >=  MAXLIGHTSCALE)
+					idx = MAXLIGHTSCALE-1;
+				dc_colormap = walllights[idx];
 			}
 
 			sprtopscreen = centeryfrac - FixedMul(dc_texturemid, spryscale);
@@ -166,7 +166,7 @@ void R_RenderMaskedSegRange (drawseg_t *ds, int x1, int x2)
 void R_RenderSegLoop (void)
 {
 	angle_t		angle;
-	unsigned	index;
+	unsigned	idx;
 	int		yl, yh, mid;
 	fixed_t		texturecolumn;
 	int		top, bottom;
@@ -220,10 +220,10 @@ void R_RenderSegLoop (void)
 			texturecolumn = rw_offset - FixedMul(finetangent[angle], rw_distance);
 			texturecolumn >>= FRACBITS;
 		// calculate lighting
-			index = rw_scale>>LIGHTSCALESHIFT;
-			if (index >=  MAXLIGHTSCALE)
-				index = MAXLIGHTSCALE - 1;
-			dc_colormap = walllights[index];
+			idx = rw_scale>>LIGHTSCALESHIFT;
+			if (idx >=  MAXLIGHTSCALE)
+				idx = MAXLIGHTSCALE - 1;
+			dc_colormap = walllights[idx];
 			dc_x = rw_x;
 			dc_iscale = 0xffffffffu / (unsigned)rw_scale;
 		}

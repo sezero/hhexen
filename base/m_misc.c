@@ -304,9 +304,7 @@ void M_FindResponseFile(void)
 		if (myargv[i][0] == '@')
 		{
 			FILE *handle;
-			int size;
-			int k;
-			int index;
+			int size, k, idx;
 			int indexinfile;
 			char *infile;
 			char *file;
@@ -329,8 +327,8 @@ void M_FindResponseFile(void)
 			fclose (handle);
 
 			// KEEP ALL CMDLINE ARGS FOLLOWING @RESPONSEFILE ARG
-			for (index = 0, k = i + 1; k < myargc; k++)
-				moreargs[index++] = myargv[k];
+			for (idx = 0, k = i + 1; k < myargc; k++)
+				moreargs[idx++] = myargv[k];
 
 			firstargv = myargv[0];
 			myargv = (const char **) calloc(1, sizeof(char *) * MAXARGVS);
@@ -349,7 +347,7 @@ void M_FindResponseFile(void)
 					k++;
 			} while (k < size);
 
-			for (k = 0; k < index; k++)
+			for (k = 0; k < idx; k++)
 				myargv[indexinfile++] = moreargs[k];
 			myargc = indexinfile;
 			// DISPLAY ARGS

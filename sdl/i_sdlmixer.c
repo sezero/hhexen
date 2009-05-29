@@ -463,7 +463,7 @@ int I_RegisterSong(void *data)
 	MIDI *mididata;
 	byte *mid;
 	int midlen;
-	char tmpfile[MAX_OSPATH];
+	char tmpmidi[MAX_OSPATH];
 	int err;
 
 	if (!snd_initialized)
@@ -485,12 +485,12 @@ int I_RegisterSong(void *data)
 		free(mididata);
 		return 0;
 	}
-	snprintf(tmpfile, sizeof(tmpfile), "%stmpmusic.mid", basePath);
-	M_WriteFile(tmpfile, mid, midlen);
+	snprintf(tmpmidi, sizeof(tmpmidi), "%stmpmusic.mid", basePath);
+	M_WriteFile(tmpmidi, mid, midlen);
 	free(mid);
 	free_mididata(mididata);
 	free(mididata);
-	CurrentSong = Mix_LoadMUS(tmpfile);
+	CurrentSong = Mix_LoadMUS(tmpmidi);
 	if (!CurrentSong)
 	{
 		fprintf(stderr, "Mix_LoadMUS failed: %s\n", Mix_GetError());

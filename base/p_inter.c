@@ -208,11 +208,11 @@ boolean P_GiveMana(player_t *player, manatype_t mana, int count)
 static void TryPickupWeapon(player_t *player, pclass_t weaponClass,
 	weapontype_t weaponType, mobj_t *weapon, const char *message)
 {
-	boolean remove;
+	boolean removeit;
 	boolean gaveMana;
 	boolean gaveWeapon;
 
-	remove = true;
+	removeit = true;
 	if (player->playerclass != weaponClass
 #ifdef ASSASSIN
 		&& player->playerclass != PCLASS_ASS
@@ -254,7 +254,7 @@ static void TryPickupWeapon(player_t *player, pclass_t weaponClass,
 			P_GiveMana(player, MANA_2, 25);
 		}
 		player->pendingweapon = weaponType;
-		remove = false;
+		removeit = false;
 	}
 	else
 	{ // Deathmatch or single player game
@@ -293,7 +293,7 @@ static void TryPickupWeapon(player_t *player, pclass_t weaponClass,
 		weapon->special = 0;
 	}
 
-	if (remove)
+	if (removeit)
 	{
 		if (deathmatch && !(weapon->flags2 & MF2_DROPPED))
 		{
@@ -428,7 +428,7 @@ static boolean P_GiveWeaponPiece(player_t *player, pclass_t pClass, int piece)
 static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass,
 				 int pieceValue, mobj_t *pieceMobj)
 {
-	boolean remove;
+	boolean removeit;
 	boolean checkAssembled;
 	boolean gaveWeapon;
 	int gaveMana;
@@ -459,7 +459,7 @@ static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass,
 		WPIECE3				// WPIECE3 (4)
 	};
 
-	remove = true;
+	removeit = true;
 	checkAssembled = true;
 	gaveWeapon = false;
 	// Allow assassin to pick up any weapons
@@ -490,7 +490,7 @@ static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass,
 		pieceValue = pieceValueTrans[pieceValue];
 		P_GiveMana(player, MANA_1, 20);
 		P_GiveMana(player, MANA_2, 20);
-		remove = false;
+		removeit = false;
 	}
 	else
 	{ // Deathmatch or single player game
@@ -513,7 +513,7 @@ static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass,
 							NULL, 0, player->mo);
 		pieceMobj->special = 0;
 	}
-	if (remove)
+	if (removeit)
 	{
 		if (deathmatch && !(pieceMobj->flags2 & MF2_DROPPED))
 		{

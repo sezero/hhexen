@@ -1670,30 +1670,30 @@ void P_CreateTIDList(void)
 void P_InsertMobjIntoTIDList(mobj_t *mobj, int tid)
 {
 	int i;
-	int index;
+	int idx;
 
-	index = -1;
+	idx = -1;
 	for (i = 0; TIDList[i] != 0; i++)
 	{
 		if (TIDList[i] == -1)
 		{ // Found empty slot
-			index = i;
+			idx = i;
 			break;
 		}
 	}
-	if (index == -1)
+	if (idx == -1)
 	{ // Append required
 		if (i == MAX_TID_COUNT)
 		{
 			I_Error("P_InsertMobjIntoTIDList: MAX_TID_COUNT (%d)"
 				"exceeded.", MAX_TID_COUNT);
 		}
-		index = i;
-		TIDList[index + 1] = 0;
+		idx = i;
+		TIDList[idx + 1] = 0;
 	}
 	mobj->tid = tid;
-	TIDList[index] = tid;
-	TIDMobj[index] = mobj;
+	TIDList[idx] = tid;
+	TIDMobj[idx] = mobj;
 }
 
 //==========================================================================

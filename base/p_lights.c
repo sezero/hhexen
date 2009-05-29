@@ -242,20 +242,20 @@ void T_Phase(phase_t *phase)
 //
 //==========================================================================
 
-void P_SpawnPhasedLight(sector_t *sector, int base, int index)
+void P_SpawnPhasedLight(sector_t *sector, int base, int idx)
 {
 	phase_t	*phase;
 
 	phase = (phase_t *) Z_Malloc(sizeof(*phase), PU_LEVSPEC, NULL);
 	P_AddThinker(&phase->thinker);
 	phase->sector = sector;
-	if (index == -1)
+	if (idx == -1)
 	{ // sector->lightlevel as the index
 		phase->index = sector->lightlevel & 63;
 	}
 	else
 	{
-		phase->index = index & 63;
+		phase->index = idx & 63;
 	}
 	phase->base = base & 255;
 	sector->lightlevel = phase->base + PhaseTable[phase->index];
@@ -278,7 +278,7 @@ void P_SpawnLightSequence(sector_t *sector, int indexStep)
 	int seqSpecial;
 	int i;
 	int count;
-	fixed_t index;
+	fixed_t idx;
 	fixed_t indexDelta;
 	int base;
 
@@ -315,7 +315,7 @@ void P_SpawnLightSequence(sector_t *sector, int indexStep)
 
 	sec = sector;
 	count *= indexStep;
-	index = 0;
+	idx = 0;
 	indexDelta = FixedDiv(64*FRACUNIT, count*FRACUNIT);
 	base = sector->lightlevel;
 	do
@@ -325,8 +325,8 @@ void P_SpawnLightSequence(sector_t *sector, int indexStep)
 		{
 			base = sec->lightlevel;
 		}
-		P_SpawnPhasedLight(sec, base, index>>FRACBITS);
-		index += indexDelta;
+		P_SpawnPhasedLight(sec, base, idx>>FRACBITS);
+		idx += indexDelta;
 		for (i = 0; i < sec->linecount; i++)
 		{
 			tempSec = getNextSector(sec->lines[i], sec);

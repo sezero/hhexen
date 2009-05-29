@@ -119,7 +119,7 @@ typedef struct
 
 void T_Phase(phase_t *phase);
 void T_Light(light_t *light);
-void P_SpawnPhasedLight(sector_t *sector, int base, int index);
+void P_SpawnPhasedLight(sector_t *sector, int base, int idx);
 void P_SpawnLightSequence(sector_t *sector, int indexStep);
 boolean EV_SpawnLight(line_t *line, byte *arg, lighttype_t type);
 
@@ -170,7 +170,7 @@ void EV_LightTurnOn(line_t *line, int bright);
 void T_Glow(glow_t *g);
 void P_SpawnGlowingLight(sector_t *sector);
 void T_Phase(phase_t *phase);
-void P_SpawnPhasedLight(sector_t *sector, int base, int index);
+void P_SpawnPhasedLight(sector_t *sector, int base, int idx);
 void P_SpawnLightSequence(sector_t *sector, int indexStep);
 #endif
 

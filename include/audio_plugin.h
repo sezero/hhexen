@@ -46,7 +46,7 @@ typedef struct
 					/* The input plugin calls this to write data to the output buffer */
 
 	void (*close_audio) (void);	/* No comment... */
-	void (*flush) (int time);	/* Flush the buffer and set the plugins internal timers to time */
+	void (*flush) (int flushtime);	/* Flush the buffer and set the plugins internal timers to time */
 	void (*pause) (short paused);	/* Pause or unpause the output */
 	int (*buffer_free) (void);	/* Return the amount of data that can be written to the buffer,
 					   two calls to this without a call to write_audio should make

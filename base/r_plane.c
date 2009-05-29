@@ -136,7 +136,7 @@ void R_MapPlane(int y, int x1, int x2)
 {
 	angle_t angle;
 	fixed_t distance, length;
-	unsigned index;
+	unsigned idx;
 
 #ifdef RANGECHECK
 	if (x2 < x1 || x1 < 0 || x2 >= viewwidth || (unsigned)y > viewheight)
@@ -170,12 +170,12 @@ void R_MapPlane(int y, int x1, int x2)
 	}
 	else
 	{
-		index = distance >> LIGHTZSHIFT;
-		if (index >= MAXLIGHTZ)
+		idx = distance >> LIGHTZSHIFT;
+		if (idx >= MAXLIGHTZ)
 		{
-			index = MAXLIGHTZ-1;
+			idx = MAXLIGHTZ-1;
 		}
-		ds_colormap = planezlight[index];
+		ds_colormap = planezlight[idx];
 	}
 
 	ds_y = y;

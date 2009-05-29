@@ -379,15 +379,15 @@ void Z_ChangeTag2 (void *ptr, int tag)
 int Z_FreeMemory (void)
 {
 	memblock_t	*block;
-	int		free;
+	int		freemem;
 
-	free = 0;
+	freemem = 0;
 	for (block = mainzone->blocklist.next ; block != &mainzone->blocklist; block = block->next)
 	{
 		if (!block->user || block->tag >= PU_PURGELEVEL)
-			free += block->size;
+			freemem += block->size;
 	}
-	return free;
+	return freemem;
 }
 */
 

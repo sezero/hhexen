@@ -476,7 +476,7 @@ void R_ProjectSprite (mobj_t *thing)
 	unsigned int	rot;
 	boolean		flip;
 #ifndef RENDER3D
-	int		index;
+	int		idx;
 #endif
 	vissprite_t	*vis;
 	angle_t		ang;
@@ -662,10 +662,10 @@ void R_ProjectSprite (mobj_t *thing)
 		vis->colormap = colormaps;	// full bright
 	else
 	{	// diminished light
-		index = xscale>>(LIGHTSCALESHIFT - detailshift);
-		if (index >= MAXLIGHTSCALE)
-			index = MAXLIGHTSCALE-1;
-		vis->colormap = spritelights[index];
+		idx = xscale>>(LIGHTSCALESHIFT - detailshift);
+		if (idx >= MAXLIGHTSCALE)
+			idx = MAXLIGHTSCALE-1;
+		vis->colormap = spritelights[idx];
 	}
 #endif
 }

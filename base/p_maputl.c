@@ -15,7 +15,7 @@
 
 extern polyblock_t	**PolyBlockMap;
 
-static mobj_t *RoughBlockCheck(mobj_t *mo, int index);
+static mobj_t *RoughBlockCheck(mobj_t *mo, int idx);
 
 //===========================================================================
 
@@ -919,13 +919,13 @@ mobj_t *P_RoughMonsterSearch(mobj_t *mo, int distance)
 //
 //===========================================================================
 
-static mobj_t *RoughBlockCheck(mobj_t *mo, int index)
+static mobj_t *RoughBlockCheck(mobj_t *mo, int idx)
 {
 	mobj_t *link;
 	mobj_t *master;
 	angle_t angle;
 
-	link = blocklinks[index];
+	link = blocklinks[idx];
 	while (link)
 	{
 		if (mo->player)				// Minotaur looking around player
