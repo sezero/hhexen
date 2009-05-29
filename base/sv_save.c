@@ -1219,7 +1219,6 @@ static void UnarchiveMobjs(void)
 static void MangleMobj(mobj_t *mobj, save_mobj_t *temp)
 {
 	boolean corpse;
-	uint32_t swap;
 
 	temp->x			= (fixed_t) LONG(mobj->x);
 	temp->y			= (fixed_t) LONG(mobj->y);
@@ -1249,19 +1248,10 @@ static void MangleMobj(mobj_t *mobj, save_mobj_t *temp)
 	temp->archiveNum	= (int) LONG(mobj->archiveNum);
 	temp->tid		= (short) SHORT(mobj->tid);
 	temp->special		= mobj->special;
-	/*
 	temp->args[0]		= mobj->args[0];
 	temp->args[1]		= mobj->args[1];
 	temp->args[2]		= mobj->args[2];
 	temp->args[3]		= mobj->args[3];
-	*/
-	/* byte swap args 0 to 3:  this stupidity is here, because
-	 * of the way the summon time of minotaurs are kept/traced.
-	 * FIXME: should I do a if(mo->type == MT_MINOTAUR) check?
-	 */
-	memcpy(&swap, mobj->args, 4);
-	swap = (uint32_t) LONG(swap);
-	memcpy(temp->args, &swap, 4);
 	temp->args[4]		= mobj->args[4];
 
 	corpse = mobj->flags & MF_CORPSE;
@@ -1364,8 +1354,6 @@ static int32_t GetMobjNum(mobj_t *mobj)
 
 static void RestoreMobj(mobj_t *mobj, save_mobj_t *temp)
 {
-	uint32_t	swap;
-
 	mobj->x			= (fixed_t) LONG(temp->x);
 	mobj->y			= (fixed_t) LONG(temp->y);
 	mobj->z			= (fixed_t) LONG(temp->z);
@@ -1394,19 +1382,10 @@ static void RestoreMobj(mobj_t *mobj, save_mobj_t *temp)
 	mobj->archiveNum	= (int) LONG(temp->archiveNum);
 	mobj->tid		= (short) SHORT(temp->tid);
 	mobj->special		= temp->special;
-	/*
 	mobj->args[0]		= temp->args[0];
 	mobj->args[1]		= temp->args[1];
 	mobj->args[2]		= temp->args[2];
 	mobj->args[3]		= temp->args[3];
-	*/
-	/* byte swap args 0 to 3:  this stupidity is here, because
-	 * of the way the summon time of minotaurs are kept/traced.
-	 * FIXME: should I do a if(mo->type == MT_MINOTAUR) check?
-	 */
-	memcpy(&swap, temp->args, 4);
-	swap = (uint32_t) LONG(swap);
-	memcpy(mobj->args, &swap, 4);
 	mobj->args[4]		= temp->args[4];
 
 	temp->state_idx		= (int32_t) LONG(temp->state_idx);

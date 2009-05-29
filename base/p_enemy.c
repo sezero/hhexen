@@ -1087,12 +1087,12 @@ void A_MinotaurLook(mobj_t *actor);
 
 void A_MinotaurRoam(mobj_t *actor)
 {
-	unsigned int	summontime;
+	int	summontime;
 
 	actor->flags &= ~MF_SHADOW;	// In case pain caused him to 
 	actor->flags &= ~MF_ALTSHADOW;		// skip his fade in.
 
-	memcpy (&summontime, actor->args, 4);
+	summontime = READ_INT32(actor->args);
 	if ((leveltime - summontime) >= MAULATORTICS)
 	{
 		P_DamageMobj(actor, NULL, NULL, 10000);
@@ -1204,12 +1204,12 @@ void A_MinotaurLook(mobj_t *actor)
 
 void A_MinotaurChase(mobj_t *actor)
 {
-	unsigned int	summontime;
+	int	summontime;
 
 	actor->flags &= ~MF_SHADOW;	// In case pain caused him to 
 	actor->flags &= ~MF_ALTSHADOW;		// skip his fade in.
 
-	memcpy (&summontime, actor->args, 4);
+	summontime = READ_INT32(actor->args);
 	if ((leveltime - summontime) >= MAULATORTICS)
 	{
 		P_DamageMobj(actor, NULL, NULL, 10000);

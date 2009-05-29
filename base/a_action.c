@@ -605,6 +605,7 @@ void A_Summon(mobj_t *actor)
 {
 	mobj_t *mo;
 	mobj_t *master;
+	int summontime;
 
 	mo = P_SpawnMobj(actor->x, actor->y, actor->z, MT_MINOTAUR);
 	if (mo)
@@ -618,7 +619,9 @@ void A_Summon(mobj_t *actor)
 			return;
 		}
 
-		memcpy((void *)mo->args, &leveltime, sizeof(leveltime));
+		/* record the time in little endian format */
+		summontime = LONG(leveltime);
+		memcpy((void *)mo->args, &summontime, sizeof(leveltime));
 		master = (mobj_t *)actor->special1;
 		if (master->flags & MF_CORPSE)
 		{	// Master dead

@@ -1293,7 +1293,7 @@ static mobj_t *ActiveMinotaur(player_t *master)
 	mobj_t *mo;
 	player_t *plr;
 	thinker_t *think;
-	unsigned int summontime;
+	int summontime;
 
 	for (think = thinkercap.next; think != &thinkercap; think = think->next)
 	{
@@ -1308,7 +1308,7 @@ static mobj_t *ActiveMinotaur(player_t *master)
 			continue;		// for morphed minotaurs
 		if (mo->flags & MF_CORPSE)
 			continue;
-		memcpy (&summontime, mo->args, 4);
+		summontime = READ_INT32(mo->args);
 		if ((leveltime - summontime) >= MAULATORTICS)
 			continue;
 		plr = ((mobj_t *)mo->special1)->player;
