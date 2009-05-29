@@ -621,7 +621,7 @@ void A_Summon(mobj_t *actor)
 
 		/* record the time in little endian format */
 		summontime = LONG(leveltime);
-		memcpy((void *)mo->args, &summontime, sizeof(leveltime));
+		memcpy((void *)mo->args, &summontime, sizeof(int));
 		master = (mobj_t *)actor->special1;
 		if (master->flags & MF_CORPSE)
 		{	// Master dead
