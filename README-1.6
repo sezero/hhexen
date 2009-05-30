@@ -1,0 +1,199 @@
+
+				 HHexen 1.6.0
+
+--------------------------------------------------------------------------------
+
+				     About
+
+This is a new release of Dan Olson's excellent Hacked Hexen by the authors
+of Hammer of Thyrion (Hexen II).  We're applying fixes, adding a few features,
+and ensuring it runs on most *nix operating systems.
+
+Major changes in HHexen-1.6 since version 1.5:
+
+  * Fixed a rare menu related crash
+  * Worked around audio corruption with the sdlmixer driver when SDL_mixer
+    tried looping the background music
+  * Fixed interoperability of games saved on little and big endian machines:
+    the fix added in 1.6.0 might break game files saved using hhexen-1.5.x
+    on big endian machines. the saves from little endian machines are fully
+    compatible.
+  * Added -waddir as a new command line option
+  * Made sdlmixer driver to search the shared data path for external music
+    files. Music path search order now is the shared data path first, then
+    the user directory and then the current working directory.
+  * New configuration options providing more flexibility especially for
+    packagers
+  * Other usual bug-fixes.
+
+Major changes in HHexen-1.4/1.5 since Dan Olson's original 1.3:
+
+  * OpenGL intermission and finale screens fixed
+  * OpenGL screenshots (now bound to F12 and enabled by default)
+  * Transparent automap
+  * Support for big endian and 64 bit machines
+  * Fixed FreeBSD support
+  * Fixed ARM support
+  * Various hacks/fixes for the proper handling of different 1.0 and 1.1
+    wad file versions
+  * Added SDL audio driver: it is the default audio driver.
+  * Added SDL_mixer audio driver with midi playback support
+  * Added support for external music files (ogg, mp3, midi) using the
+    SDL_mixer audio driver.
+  * OpenGL is the default configuration now
+  * Game saves/loads work properly
+  * Controls-setup menu works properly with more complete support for
+    punctuation keys
+  * Many GCC/C/portability bug-fixes, support for newest gcc versions
+  * Incomplete assassin class is now disabled by default
+  * Other usual bug-fixes.
+
+--------------------------------------------------------------------------------
+
+				    Prereqs
+
+There exist several versions of the hexen.wad file:
+
+1.0 wads:
+  b2543a03521365261d0a0f74d5dd90f0  hexen.wad (20,128,392 bytes)
+  1077432e2690d390c256ac908b5f4efa  hexdd.wad ( 4,429,700 bytes)
+
+1.1 wads:
+  abb033caf81e26f12a2103e1fa25453f  hexen.wad (20,083,672 bytes)
+  78d5898e99e220e4de64edaa0e479593  hexdd.wad ( 4,440,584 bytes)
+
+Demo wad 1.0 (from PC shareware hexndemo.zip):
+  876a5a44c7b68f04b3bb9bc7a5bd69d6  hexen.wad (10,644,136 bytes)
+
+Demo wad 1.1 (from Macintosh shareware MacHexenDemo.hqx):
+  925f9f5000e17dc84b0a6a3bed3a6f31  hexen.wad (13,596,228 bytes)
+
+We've done our best to support the old 1.0 wad files, but strongly
+suggest that you patch your wads to version 1.1 to avoid possible issues.
+If for some reason patching is not an option and you run into problems,
+compile hhexen to specifically use version 1.0 hexen.wad:
+  ./configure --enable-oldwad
+
+Saved games and recorded demos from different wad versions are not
+compatible.
+
+Those without the full retail version of Hexen can still play the demo.
+The newest demo wad (a 4 level version from the MacHexen shareware) can be
+downloaded from http://hhexen.sourceforgef.net.  The PC shareware demo is
+older, and not recommended: if you specifically want to use it, we suggest
+recompiling hhexen with the --enable-oldwad option.
+
+--------------------------------------------------------------------------------
+
+				   Compiling
+
+You'll need SDL and SDL-devel packages installed.
+
+To compile the OpenGL version (hhexen-gl):
+	./autogen.sh
+	./configure
+	make
+
+To compile the software version (hhexen-sdl):
+	./configure --disable-gl
+	make
+
+To compile the software version (hhexen-svga, for the old-fashioned :))
+	./configure --enable-svga
+	make
+
+The configure script accepts a new --with-audio=<driver> option.  Valid
+values are oss, sdl, and sdlmixer.  sdl is the default option.  sdlmixer
+adds the ability of midi music playback.
+
+It's essential that you run make clean between different types of builds
+or different types of targets.
+
+--------------------------------------------------------------------------------
+
+				Playing the Game
+
+Put the file hexen.wad in the same directory where the hhexen binary is and
+simply run the binary, for example:
+
+	./hhexen-gl
+
+With the -h or --help option, you can see the basic command line switches.
+
+To play the Deathkings of the Dark Citadel expansion pack, put hexdd.wad in
+the same directory and run:
+
+	./hhexen-gl -file hexdd.wad
+
+The -file option can also be used to play any extra hexen wads that you may
+have. The option takes as many wad filename arguments as you give to it, at
+least one name, of course. Remember, though, that the -file option makes the
+engine to load extra wads: you always need hexen.wad as the base wad.
+
+--------------------------------------------------------------------------------
+
+			     Custom Music playback
+
+Playback of external ogg, mp3 and midi files is available when hhexen is
+configured with the "--with-audio=sdlmixer" option. This is done by placing
+custom music files in $HOME/.hhexen/music .
+
+A high quality OGG version of the original Hexen soundtrack is available for
+download from Sycraft.org :  http://sycraft.org/content/audio/hexen.shtml
+To install, download the normal quality archive (or high quality if preferred),
+and unzip it (probably twice).  Create the music directory:
+	mkdir -p $HOME/.hhexen/music
+ or:
+	mkdir -p <hhexen_dir>/music
+
+(replace <hhexen_dir> with the directory where hhexen is installed, such as
+/usr/local/games/hhexen )
+
+Place the ogg files in that new "music" directory you just created. Now, when
+the game is run, the new sound files should automatically be used.
+
+--------------------------------------------------------------------------------
+
+				     Hints
+
+You can switch between windowed and fullscreen modes by the ALT-Enter key
+combination.
+
+Double-clicking with Mouse2 or Mouse3 acts as the 'activate' (or 'use') key.
+
+There is still no way to assign mouse buttons to actions in the control-setup
+menu; it needs some work.  Currently, the mouse buttons can only be
+assigned to a few actions:
+
+  mouseb_fire    (fire)
+  mouseb_strafe  (strafe)
+  mouseb_forward (move forward)
+  mouseb_jump    (jump)
+
+which is done by editing $HOME/.hhexen/hhexen.cfg and changing these values.
+Button values are:
+
+  left   mouse button = 0
+  middle mouse button = 1
+  right  mouse button = 2
+  unused              =-1
+
+So, to make the right button jump, change the mouseb_jump line in hhexen.cfg,
+like so:
+
+  mouseb_jump 2
+
+The user created 4th class, Assassin, is not quite finished yet, and disabled by
+default.  It can be enabled with "configure --enable-assassin".  The precompiled
+binaries of HHexen do not have the assassin enabled.
+Warning:  There *will* be issues with the game saves made from assassin-enabled
+binaries and from those without, they are not compatible.
+
+--------------------------------------------------------------------------------
+
+				    Contact
+
+http://sourceforge.net/projects/hhexen
+sezero_at_users.sourceforge.net
+stevenaaus_at_yahoo_com
+
