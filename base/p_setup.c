@@ -767,7 +767,7 @@ static void P_ConvexCarver(subsector_t *ssec, int num, divline_t *list)
 
 	edgepoints[3].x = -32768;
 	edgepoints[3].y = -32768;
- 
+
 // We'll now clip the polygon with each of the divlines. The left side of
 // each divline is discarded.
 
@@ -788,7 +788,7 @@ static void P_ConvexCarver(subsector_t *ssec, int num, divline_t *list)
 		for (k = 0; k < numedgepoints; k++)
 		{
 			int startIdx = k, endIdx = k + 1;
- 
+
 			// Check the end index.
 			if (endIdx == numedgepoints)
 				endIdx = 0;	// Wrap-around.
@@ -969,6 +969,8 @@ static void P_SkyFix(void)
 		if (front->ceilingpic != skyflatnum || back->ceilingpic != skyflatnum)
 			continue;
 		// Operate on the lower sector.
+		OGL_DEBUG("Line %d (f:%d, b:%d).\n", i, front->ceilingheight >> FRACBITS,
+							 back->ceilingheight >> FRACBITS);
 		if (front->ceilingheight < back->ceilingheight)
 		{
 			fix = (back->ceilingheight - front->ceilingheight) >> FRACBITS;
@@ -1047,7 +1049,7 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
 #ifdef RENDER3D
 	// We need to carve out the floor/ceiling polygons of each subsector.
 	// Walk the tree to do this.
-	//printf ( "Floor/ceiling creation: begin at %d, ", ticcount);
+	//OGL_DEBUG("Floor/ceiling creation: begin at %d, ", ticcount);
 	P_CreateFloorsAndCeilings(numnodes - 1, 0, 0);
 	// Also check if the sky needs a fix.
 	P_SkyFix();
