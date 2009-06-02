@@ -1,25 +1,25 @@
 HHexen ChangeLog
 
-v1.6.0 [2009-05-29]
+v1.6.0
  - fixed a rare menu related crash.
  - worked around audio corruption with the sdlmixer driver when SDL_mixer tried
    looping the background music.
  - fixed interoperability of games saved on little and big endian machines: it
    was a nasty bug I have been forgetting since 1.5.0.  the fix added in 1.6.0
-   might break game files saved using hhexen-1.5.x on big endian machines.  the
+   might break game files saved on big endian machines using hhexen-1.5.x.  the
    saves from little endian machines are fully compatible.
  - added --with-datapath a new configure option. if not used, SHARED_DATAPATH
    is defined as an empty string, otherwise as the directory path given on the
    configure command line. if it isn't an empty string and the HHEXEN_DATA
-   environment variable isn't found, the engine will export SHARED_DATAPATH as
-   HHEXEN_DATA.
+   environment variable isn't found, the engine will use it as its shared data
+   path.
+ - made sure that the HHEXEN_DATA environment variable, if found, isn't an empty
+   string.
  - added -waddir as a new command line option. if the option is present and has
    an argument, it is set as the shared data path. if not, then the directory
    specified by the HHEXEN_DATA environment variable is used as the shared data
    path. if it isn't found either, the data path form the compile time options
    is used, if configured.
- - made sure that the HHEXEN_DATA environment variable, if found, isn't an empty
-   string.
  - made sdlmixer driver to search the shared data path for external music files.
    the music path search order now is: the shared data path first, then the user
    directory and then the current working directory.

@@ -1,4 +1,30 @@
 -------------------------------------------------------------------------------
+Release notes for version 1.6.0
+-------------------------------------------------------------------------------
+
+Bug Fixes:
+ - Fixed a rare menu related crash.
+ - Worked around audio corruption with the sdlmixer driver when SDL_mixer tried
+   looping the background music.
+ - Fixed interoperability of games saved on little and big endian machines.
+
+New Features:
+ - HHexen now uses a shared data path for its data files such as the wad files,
+   external music files, etc.  The shared data path is decided in the following
+   order:
+   * -waddir <DIR>,  new command line option added in hhexen-1.6.0,
+   * the HHEXEN_DATA environment variable,
+   * --with-datapath=<DIR>, new configure (compile time) option added in 1.6.0,
+   * the current working directory which has always been used as a last resort.
+ - More configure options for more flexibility especially for packagers:
+   * --enable-fullscreen: changes the game to run fullscreen by default.
+   * --disable-userdirs : builds the engine without user directories support.
+
+Notes:
+ - The game save fix may break game files saved on big endian machines using
+   hhexen-1.5.x.  The saves from little endian machines are fully compatible.
+
+-------------------------------------------------------------------------------
 Release notes for version 1.5.3
 -------------------------------------------------------------------------------
 
