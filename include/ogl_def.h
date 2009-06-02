@@ -61,6 +61,7 @@ void OGL_DrawFuzzPatch(int x, int y, int lumpnum);
 void OGL_DrawAltFuzzPatch(int x, int y, int lumpnum);
 void OGL_DrawShadowedPatch(int x, int y, int lumpnum);
 void OGL_DrawRawScreen(int lump);	/* Raw screens are 320 x 200. */
+void OGL_DrawRawScreenOfs(int lump, float offx, float offy);
 void OGL_DrawLine(float x1, float y1, float x2, float y2, float r, float g, float b, float a);
 void OGL_DrawRect(float x, float y, float w, float h, float r, float g, float b, float a);
 void OGL_DrawRectTiled(int x, int y, int w, int h, int tw, int th);

@@ -93,6 +93,60 @@ void OGL_DrawRawScreen(int lump)	// Raw screens are 320 x 200.
 	glPopMatrix();
 }
 
+void OGL_DrawRawScreenOfs(int lump, float offx, float offy)
+{
+/* This is just OGL_DrawRawScreen() with glTranslatef() for
+ * the offsets. Performs no scaling. Used for F_DemonScroll()
+ * of Heretic.
+ */
+	float tcbottom;
+	int pixelBorder;
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	glTranslatef(offx * screenWidth / 320.0f, offy * screenHeight / 200.0f, 0);
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	gluOrtho2D(0, screenWidth, screenHeight, 0);
+
+	OGL_SetRawImage(lump, 1);
+	tcbottom = lumptexsizes[lump].h / (float)FindNextPower2(lumptexsizes[lump].h);
+	pixelBorder = lumptexsizes[lump].w * screenWidth / 320;
+
+	glColor3f(1, 1, 1);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0);
+	glVertex2f(0, 0);
+	glTexCoord2f(1, 0);
+	glVertex2f(pixelBorder, 0);
+	glTexCoord2f(1, tcbottom);
+	glVertex2f(pixelBorder, screenHeight);
+	glTexCoord2f(0, tcbottom);
+	glVertex2f(0, screenHeight);
+	glEnd();
+
+	// And the other part.
+	OGL_SetRawImage(lump, 2);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0);
+	glVertex2f(pixelBorder - 1, 0);
+	glTexCoord2f(1, 0);
+	glVertex2f(screenWidth, 0);
+	glTexCoord2f(1, tcbottom);
+	glVertex2f(screenWidth, screenHeight);
+	glTexCoord2f(0, tcbottom);
+	glVertex2f(pixelBorder - 1, screenHeight);
+	glEnd();
+
+	// Restore the old projection matrix.
+	glPopMatrix();
+
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+}
+
 // Drawing with the current state.
 void OGL_DrawPatch_CS(int x, int y, int lumpnum)
 {
