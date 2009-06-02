@@ -11,19 +11,16 @@ and ensuring it runs on most *nix operating systems.
 
 Major changes in HHexen-1.6 since version 1.5:
 
-  * Fixed a rare menu related crash
+  * Fixed a rare menu related crash.
   * Worked around audio corruption with the sdlmixer driver when SDL_mixer
-    tried looping the background music
+    tried looping the background music.
   * Fixed interoperability of games saved on little and big endian machines:
-    the fix added in 1.6.0 might break game files saved using hhexen-1.5.x
-    on big endian machines. the saves from little endian machines are fully
-    compatible.
-  * Added -waddir as a new command line option
-  * Made sdlmixer driver to search the shared data path for external music
-    files. Music path search order now is the shared data path first, then
-    the user directory and then the current working directory.
-  * New configuration options providing more flexibility especially for
-    packagers
+    the fix may break games saved on big endian machines using hhexen-1.5.x,
+    the saves from little endian machines are fully compatible.
+  * Added -waddir as a new command line option.
+  * Made sdlmixer driver to search the game's shared data path for external
+    music files.
+  * New configuration options for more flexibility especially for packagers.
   * Other usual bug-fixes.
 
 Major changes in HHexen-1.4/1.5 since Dan Olson's original 1.3:
