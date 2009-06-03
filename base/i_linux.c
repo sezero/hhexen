@@ -41,14 +41,6 @@ extern void I_ShutdownGraphics(void);
 ===============================================================================
 */
 
-//static channel_t channel[MAX_CHANNELS];
-
-//static int rs; //the current registered song.
-//int mus_song = -1;
-//int mus_lumpnum;
-//void *mus_sndptr;
-//byte *soundCurve;
-
 extern sfxinfo_t S_sfx[];
 extern musicinfo_t S_music[];
 
@@ -74,9 +66,8 @@ extern int snd_Channels;
 extern int startepisode;
 extern int startmap;
 
-//int AmbChan;
-
 boolean S_StopSoundID(int sound_id, int priority);
+
 
 //==========================================================================
 //
@@ -332,22 +323,23 @@ void S_StartSound(mobj_t *origin, int sound_id)
 
 void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 {
-	int dist, vol;
-	int i;
-	int priority;
-	int sep;
-	int angle;
-	int absx;
-	int absy;
-
 	static int sndcount = 0;
-	int chan;
+
+	int i;
+	int dist, vol, chan;
+	int priority;
+	int angle, sep;
+	int absx, absy;
 
 	if (sound_id == 0 || snd_MaxVolume == 0)
 		return;
 #if 0
 	if (origin == NULL)
-		origin = players[displayplayer].mo;	// bug -- can be uninitialized
+	{
+		origin = players[displayplayer].mo;
+	// this can be uninitialized when we are newly
+	// started before the demos start playing !...
+	}
 #endif
 	if (volume == 0)
 	{
@@ -358,8 +350,8 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 	// sounds that are beyond the hearing range.
 	if (origin)
 	{
-		absx = abs(origin->x-players[displayplayer].mo->x);
-		absy = abs(origin->y-players[displayplayer].mo->y);
+		absx = abs(origin->x - players[displayplayer].mo->x);
+		absy = abs(origin->y - players[displayplayer].mo->y);
 	}
 	else
 	{
@@ -450,10 +442,14 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 		{
 			char name[MAX_OSPATH];
 			int len;
-			snprintf(name, sizeof(name), "%s%s.lmp", ArchivePath, S_sfx[sound_id].lumpname);
+			snprintf(name, sizeof(name), "%s%s.lmp",
+				 ArchivePath, S_sfx[sound_id].lumpname);
 			len = M_ReadFile(name, &S_sfx[sound_id].snd_ptr);
 			if (len <= 8)
-				I_Error("broken sound lump #%d (%s)\n", S_sfx[sound_id].lumpnum, name);
+			{
+				I_Error("broken sound lump #%d (%s)\n",
+					S_sfx[sound_id].lumpnum, name);
+			}
 		}
 		else
 		{
@@ -465,11 +461,12 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 						S_sfx[sound_id].lumpname);
 				return;
 			}
-			S_sfx[sound_id].snd_ptr = W_CacheLumpNum(S_sfx[sound_id].lumpnum, PU_SOUND);
+			S_sfx[sound_id].snd_ptr =
+				W_CacheLumpNum(S_sfx[sound_id].lumpnum, PU_SOUND);
 		}
 	}
 
-	vol = (SoundCurve[dist]*(snd_MaxVolume*8)*volume)>>14;
+	vol = (SoundCurve[dist] * (snd_MaxVolume * 8) * volume)>>14;
 	if (!origin || origin == players[displayplayer].mo)
 	{
 		sep = 128;
@@ -478,9 +475,9 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 	else
 	{
 		angle = R_PointToAngle2(players[displayplayer].mo->x,
-				players[displayplayer].mo->y, origin->x, origin->y);
-				/* bug:  *NOT*  Channel[i].mo->x, Channel[i].mo->y); */
-		angle = (angle-viewangle)>>24;
+					players[displayplayer].mo->y,
+					origin->x, origin->y);
+		angle = (angle - viewangle)>>24;
 		sep = angle*2 - 128;
 		if (sep < 64)
 			sep = -sep;
@@ -668,11 +665,9 @@ void S_ResumeSound(void)
 void S_UpdateSounds(mobj_t *listener)
 {
 	int i, dist, vol;
-	int angle;
-	int sep;
+	int angle, sep;
 	int priority;
-	int absx;
-	int absy;
+	int absx, absy;
 
 	if (i_CDMusic)
 	{
@@ -706,7 +701,8 @@ void S_UpdateSounds(mobj_t *listener)
 				{
 					if (lumpcache[S_sfx[i].lumpnum])
 					{
-						if (((memblock_t *)((byte*)(lumpcache[S_sfx[i].lumpnum]) - sizeof(memblock_t)))->id == ZONEID)
+						if (((memblock_t *) ((byte*)(lumpcache[S_sfx[i].lumpnum]) -
+									sizeof(memblock_t)))->id == ZONEID)
 						{ // taken directly from the Z_ChangeTag macro
 							Z_ChangeTag2(lumpcache[S_sfx[i].lumpnum], PU_CACHE);
 						}
@@ -741,8 +737,8 @@ void S_UpdateSounds(mobj_t *listener)
 		}
 		else
 		{
-			absx = abs(Channel[i].mo->x-listener->x);
-			absy = abs(Channel[i].mo->y-listener->y);
+			absx = abs(Channel[i].mo->x - listener->x);
+			absy = abs(Channel[i].mo->y - listener->y);
 			dist = absx+absy-(absx > absy ? absy>>1 : absx>>1);
 			dist >>= FRACBITS;
 
@@ -756,7 +752,7 @@ void S_UpdateSounds(mobj_t *listener)
 				dist = 0;
 			}
 			//vol = SoundCurve[dist];
-			vol = (SoundCurve[dist]*(snd_MaxVolume*8)*Channel[i].volume)>>14;
+			vol = (SoundCurve[dist] * (snd_MaxVolume * 8) * Channel[i].volume)>>14;
 			if (Channel[i].mo == listener)
 			{
 				sep = 128;
@@ -764,7 +760,7 @@ void S_UpdateSounds(mobj_t *listener)
 			else
 			{
 				angle = R_PointToAngle2(listener->x, listener->y,
-								Channel[i].mo->x, Channel[i].mo->y);
+							Channel[i].mo->x, Channel[i].mo->y);
 				angle = (angle-viewangle)>>24;
 				sep = angle*2-128;
 				if (sep < 64)
@@ -774,7 +770,7 @@ void S_UpdateSounds(mobj_t *listener)
 			}
 			I_UpdateSoundParams(Channel[i].handle, vol, sep, Channel[i].pitch);
 			priority = S_sfx[Channel[i].sound_id].priority;
-			priority *= PRIORITY_MAX_ADJUST- (dist / DIST_ADJUST);
+			priority *= PRIORITY_MAX_ADJUST - (dist / DIST_ADJUST);
 			Channel[i].priority = priority;
 		}
 	}
@@ -789,7 +785,7 @@ void S_UpdateSounds(mobj_t *listener)
 void S_Init(void)
 {
 	SoundCurve = (byte *) W_CacheLumpName("SNDCURVE", PU_STATIC);
-//	SoundCurve = Z_Malloc(MAX_SND_DIST, PU_STATIC, NULL);
+//	SoundCurve = (byte *) Z_Malloc(MAX_SND_DIST, PU_STATIC, NULL);
 	I_StartupSound();
 	if (snd_Channels > 8)
 	{
@@ -1062,7 +1058,6 @@ void I_JoystickEvents (void)
 {
 }
 
-
 /*
 ===============
 =
@@ -1149,76 +1144,20 @@ void I_Error (const char *error, ...)
 //
 //--------------------------------------------------------------------------
 
-#if 0 /* Can be used if someone writes a WAD lump as Hexen's ENDTEXT */
-static void put_dos2ansi (byte attrib)
-{
-	byte	fore, back, blink = 0, intens = 0;
-	int	table[] = { 30, 34, 32, 36, 31, 35, 33, 37 };
-
-	fore  = attrib & 15;	// bits 0-3
-	back  = attrib & 112;	// bits 4-6
-	blink = attrib & 128;	// bit 7
-
-	// Fix background, blink is either on or off.
-	back = back >> 4;
-
-	// Fix foreground
-	if (fore > 7)
-	{
-		intens = 1;
-		fore -= 8;
-	}
-
-	// Convert fore/back
-	fore = table[fore];
-	back = table[back] + 10;
-
-	// 'Render'
-	if (blink)
-		printf ("\033[%d;5;%dm\033[%dm", intens, fore, back);
-	else
-		printf ("\033[%d;25;%dm\033[%dm", intens, fore, back);
-}
-
 static void I_ENDTEXT (void)
 {
-	int i, c, nl;
-	byte *scr = (byte *)W_CacheLumpName("ENDTEXT", PU_CACHE);
-	char *col = getenv("COLUMNS");
-
-	if (col == NULL)
-	{
-		nl = 1;
-		c = 80;
-	}
-	else
-	{
-		c = atoi(col);
-		if (c > 80)
-			nl = 1;
-		else	nl = 0;
-	}
-	for (i = 1; i <= 80*25; scr += 2, i++)
-	{
-		put_dos2ansi (scr[1]);
-		putchar (scr[0]);
-		if (nl && !(i % 80))
-			puts("\033[0m");
-	}
-	printf ("\033[m");	/* Cleanup */
+// Hexen doesn't have an ENDTEXT
+// lump for ANSI output
+	printf("\nHexen: Beyond Heretic\n");
 }
-#endif	/* ENDTEXT printing */
 
 void I_Quit (void)
 {
 	D_QuitNetGame();
 	M_SaveDefaults();
 	I_Shutdown();
-#if 0
 	I_ENDTEXT ();
-#else
-	printf("\nHexen: Beyond Heretic\n");
-#endif
+
 	exit(0);
 }
 
