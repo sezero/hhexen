@@ -142,10 +142,10 @@ OBJ_BASE = \
 	base/r_things.o \
 	base/sb_bar.o \
 	base/sc_man.o \
+	base/s_sound.o \
 	base/sn_sonix.o \
 	base/st_start.o \
 	base/sv_save.o \
-	base/sounds.o \
 	base/tables.o \
 	base/v_video.o \
 	base/w_wad.o \

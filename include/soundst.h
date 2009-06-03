@@ -1,4 +1,3 @@
-
 //**************************************************************************
 //**
 //** soundst.h : Heretic 2 : Raven Software, Corp.
@@ -60,6 +59,8 @@ typedef struct
 extern	int		snd_MaxVolume;
 extern	int		snd_MusicVolume;
 
+void S_Init(void);
+void S_ShutDown(void);
 void S_Start(void);
 void S_StartSound(mobj_t *origin, int sound_id);
 int S_GetSoundID(const char *name);
@@ -71,7 +72,6 @@ void S_ResumeSound(void);
 void S_UpdateSounds(mobj_t *listener);
 void S_StartSong(int song, boolean loop);
 void S_StartSongName(const char *songLump, boolean loop);
-void S_Init(void);
 void S_GetChannelInfo(SoundInfo_t *s);
 void S_SetMusicVolume(void);
 boolean S_GetSoundPlayingInfo(mobj_t *mobj, int sound_id);
