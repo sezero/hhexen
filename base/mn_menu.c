@@ -1753,7 +1753,6 @@ boolean MN_Responder(event_t *event)
 			typeofask = 5; // suicide
 			return true;
 #endif
-#ifndef __NeXT__
 		case KEY_F1: // help screen
 			SCInfo(0); // start up info screens
 			MenuActive = true;
@@ -1931,7 +1930,6 @@ boolean MN_Responder(event_t *event)
 		case KEY_F12: // S.A.: made F12 Screenshot
 			G_ScreenShot();
 			return true;
-#endif
 		}
 	}
 
