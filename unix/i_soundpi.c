@@ -101,70 +101,70 @@ static void *audio_loop (void *arg)
 	end = (SAMPLE_TYPE *) (buf + BUF_LEN);
 	cend = channel + CHAN_COUNT;
 
-	while (! audio_exit_thread)
+    while (! audio_exit_thread) {
+
+	begin = (SAMPLE_TYPE *) buf;
+	while (begin < end)
 	{
-		begin = (SAMPLE_TYPE *) buf;
-		while (begin < end)
+	// Mix all the channels together.
+		dl = SAMPLE_ZERO;
+		dr = SAMPLE_ZERO;
+
+		chan = channel;
+		for ( ; chan < cend; chan++)
 		{
-		// Mix all the channels together.
-			dl = SAMPLE_ZERO;
-			dr = SAMPLE_ZERO;
-
-			chan = channel;
-			for ( ; chan < cend; chan++)
+			// Check channel, if active.
+			if (chan->begin)
 			{
-				// Check channel, if active.
-				if (chan->begin)
+				// Get the sample from the channel.
+				sample = *chan->begin;
+
+				// Adjust volume accordingly.
+				dl += chan->lvol_table[sample];
+				dr += chan->rvol_table[sample];
+
+				// Increment sample pointer with pitch adjustment.
+				chan->step_remainder += chan->pitch_step;
+				chan->begin += chan->step_remainder >> 16;
+				chan->step_remainder &= 65535;
+
+				// Check whether we are done.
+				if (chan->begin >= chan->end)
 				{
-					// Get the sample from the channel.
-					sample = *chan->begin;
-
-					// Adjust volume accordingly.
-					dl += chan->lvol_table[sample];
-					dr += chan->rvol_table[sample];
-
-					// Increment sample pointer with pitch adjustment.
-					chan->step_remainder += chan->pitch_step;
-					chan->begin += chan->step_remainder >> 16;
-					chan->step_remainder &= 65535;
-
-					// Check whether we are done.
-					if (chan->begin >= chan->end)
-					{
-						chan->begin = NULL;
-					//	printf ("  channel done %d\n", chan);
-					}
+					chan->begin = NULL;
+				//	printf ("  channel done %d\n", chan);
 				}
 			}
-#if 0	/* SAMPLE_FORMAT */
-			if (dl > 127)
-				dl = 127;
-			else if (dl < -128)
-				dl = -128;
-
-			if (dr > 127)
-				dr = 127;
-			else if (dr < -128)
-				dr = -128;
-#else
-			if (dl > 0x7fff)
-				dl = 0x7fff;
-			else if (dl < -0x8000)
-				dl = -0x8000;
-
-			if (dr > 0x7fff)
-				dr = 0x7fff;
-			else if (dr < -0x8000)
-				dr = -0x8000;
-#endif
-
-			*begin++ = dl;
-			*begin++ = dr;
 		}
 
-		// This write is expected to block.
-		audioPI->write_audio(buf, BUF_LEN);
+#if 0	/* SAMPLE_FORMAT */
+		if (dl > 127)
+			dl = 127;
+		else if (dl < -128)
+			dl = -128;
+		if (dr > 127)
+			dr = 127;
+		else if (dr < -128)
+			dr = -128;
+#else
+		if (dl > 0x7fff)
+			dl = 0x7fff;
+		else if (dl < -0x8000)
+			dl = -0x8000;
+		if (dr > 0x7fff)
+			dr = 0x7fff;
+		else if (dr < -0x8000)
+			dr = -0x8000;
+#endif
+
+		*begin++ = dl;
+		*begin++ = dr;
 	}
+
+	// This write is expected to block.
+	audioPI->write_audio(buf, BUF_LEN);
+
+    } /* end of the while(!audio_exit_thread) loop. */
 
 	pthread_exit(NULL);
 }

@@ -121,66 +121,65 @@ static void audio_loop (void *unused, Uint8 *stream, int len)
 	end = (SAMPLE_TYPE *) (stream + len);
 	cend = channel + CHAN_COUNT;
 
-		begin = (SAMPLE_TYPE *) stream;
-		while (begin < end)
+	begin = (SAMPLE_TYPE *) stream;
+	while (begin < end)
+	{
+	// Mix all the channels together.
+		// Do not zero: SDL_mixer writes the
+		// music before sending the stream!!
+		dl = begin[0];	//	dl = SAMPLE_ZERO;
+		dr = begin[1];	//	dr = SAMPLE_ZERO;
+
+		chan = channel;
+		for ( ; chan < cend; chan++)
 		{
-		// Mix all the channels together.
-			// Do not zero: SDL_mixer writes the
-			// music before sending the stream!!
-			dl = begin[0];	//	dl = SAMPLE_ZERO;
-			dr = begin[1];	//	dr = SAMPLE_ZERO;
-
-			chan = channel;
-			for ( ; chan < cend; chan++)
+			// Check channel, if active.
+			if (chan->begin)
 			{
-				// Check channel, if active.
-				if (chan->begin)
+				// Get the sample from the channel.
+				sample = *chan->begin;
+
+				// Adjust volume accordingly.
+				dl += chan->lvol_table[sample];
+				dr += chan->rvol_table[sample];
+
+				// Increment sample pointer with pitch adjustment.
+				chan->step_remainder += chan->pitch_step;
+				chan->begin += chan->step_remainder >> 16;
+				chan->step_remainder &= 65535;
+
+				// Check whether we are done.
+				if (chan->begin >= chan->end)
 				{
-					// Get the sample from the channel.
-					sample = *chan->begin;
-
-					// Adjust volume accordingly.
-					dl += chan->lvol_table[sample];
-					dr += chan->rvol_table[sample];
-
-					// Increment sample pointer with pitch adjustment.
-					chan->step_remainder += chan->pitch_step;
-					chan->begin += chan->step_remainder >> 16;
-					chan->step_remainder &= 65535;
-
-					// Check whether we are done.
-					if (chan->begin >= chan->end)
-					{
-						chan->begin = NULL;
-					//	printf ("  channel done %d\n", chan);
-					}
+					chan->begin = NULL;
+				//	printf ("  channel done %d\n", chan);
 				}
 			}
+		}
+
 #if 0	/* SAMPLE_FORMAT */
-			if (dl > 127)
-				dl = 127;
-			else if (dl < -128)
-				dl = -128;
-
-			if (dr > 127)
-				dr = 127;
-			else if (dr < -128)
-				dr = -128;
+		if (dl > 127)
+			dl = 127;
+		else if (dl < -128)
+			dl = -128;
+		if (dr > 127)
+			dr = 127;
+		else if (dr < -128)
+			dr = -128;
 #else
-			if (dl > 0x7fff)
-				dl = 0x7fff;
-			else if (dl < -0x8000)
-				dl = -0x8000;
-
-			if (dr > 0x7fff)
-				dr = 0x7fff;
-			else if (dr < -0x8000)
-				dr = -0x8000;
+		if (dl > 0x7fff)
+			dl = 0x7fff;
+		else if (dl < -0x8000)
+			dl = -0x8000;
+		if (dr > 0x7fff)
+			dr = 0x7fff;
+		else if (dr < -0x8000)
+			dr = -0x8000;
 #endif
 
-			*begin++ = dl;
-			*begin++ = dr;
-		}
+		*begin++ = dl;
+		*begin++ = dr;
+	}
 }
 
 
