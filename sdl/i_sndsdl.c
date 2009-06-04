@@ -55,18 +55,9 @@
  *	SOUND HEADER & DATA
  */
 
-int tsm_ID = -1;
-
 int snd_Channels;
-int snd_DesiredMusicDevice, snd_DesiredSfxDevice;
-int snd_MusicDevice,		/* current music card # (index to dmxCodes) */
-	snd_SfxDevice,		/* current sfx card # (index to dmxCodes) */
-	snd_MaxVolume,		/* maximum volume for sound */
+int snd_MaxVolume,		/* maximum volume for sound */
 	snd_MusicVolume;	/* maximum volume for music */
-
-int snd_SBport, snd_SBirq, snd_SBdma;	/* sound blaster variables */
-int snd_Mport;				/* midi variables */
-
 boolean snd_MusicAvail,		/* whether music is available */
 	snd_SfxAvail;		/* whether sfx are available */
 
@@ -351,7 +342,6 @@ void I_StartupSound (void)
 
 	/* Initialize variables */
 	snd_SfxAvail = snd_MusicAvail = false;
-	snd_MusicDevice = snd_SfxDevice = 0;
 	desired.freq = snd_samplerate;
 	desired.format = SAMPLE_FORMAT;
 	desired.channels = SAMPLE_CHANNELS;

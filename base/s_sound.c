@@ -35,13 +35,13 @@ static boolean S_StopSoundID(int sound_id, int priority);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
-extern int	snd_MusicDevice;
-extern int	snd_SfxDevice;
 extern int	snd_MaxVolume;
 extern int	snd_MusicVolume;
 extern int	snd_Channels;
 
 #ifdef __WATCOMC__
+extern int	snd_SfxDevice;
+extern int	snd_MusicDevice;
 extern int	snd_DesiredSfxDevice;
 extern int	snd_DesiredMusicDevice;
 extern int	tsm_ID;
