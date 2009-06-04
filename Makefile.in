@@ -151,7 +151,6 @@ OBJ_BASE = \
 	base/w_wad.o \
 	base/z_zone.o
 
-
 %.o: %.c
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
 
@@ -172,5 +171,5 @@ endif
 endif
 
 clean:
-	$(RM) base/*.o opengl/*.o sdl/*.o svgalib/*.o
+	$(RM) base/*.o opengl/*.o dos/*.o unix/*.o sdl/*.o svgalib/*.o
 
