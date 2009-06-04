@@ -495,8 +495,8 @@ default_t defaults[] =
 #ifdef __WATCOMC__
 	/* the min/max values I added here are pretty much meaningless.
 	the values used to be set by the DOS version's setup program. */
-	{ "snd_musicdevice",	&snd_DesiredMusicDevice,0,	0, NUM_SCARDS },
-	{ "snd_sfxdevice",	&snd_DesiredSfxDevice,	0,	0, NUM_SCARDS },
+	{ "snd_musicdevice",	&snd_DesiredMusicDevice,0,	0, NUM_SCARDS-1 },
+	{ "snd_sfxdevice",	&snd_DesiredSfxDevice,	0,	0, NUM_SCARDS-1 },
 	{ "snd_sbport",		&snd_SBport,		544,	0, 544 },
 	{ "snd_sbirq",		&snd_SBirq,		-1,	-1, 7 },
 	{ "snd_sbdma",		&snd_SBdma,		-1,	-1, 7 },
