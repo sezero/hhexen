@@ -1,6 +1,6 @@
 //**************************************************************************
 //**
-//** i_sound.c
+//** i_soundpi.c: unix sound driver using a plugin interface
 //**
 //** $Revision$
 //** $Date$

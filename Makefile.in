@@ -67,14 +67,14 @@ endif
 
 # Objects to build
 
-OBJ_SYS  = base/i_linux.o
+OBJ_SYS  = unix/i_linux.o
 OBJ_SVGA = svgalib/i_svgalib.o
 OBJ_SWSDL = sdl/i_sdl.o
 OBJ_GLSDL = sdl/i_sdlgl.o
-OBJ_OSS = base/oss.o base/i_sound.o
+OBJ_OSS = unix/oss.o unix/i_soundpi.o
 OBJ_SDLAUDIO = sdl/i_sndsdl.o
 OBJ_SDLMIXER = base/mmus2mid.o sdl/i_sdlmixer.o
-OBJ_CDA = base/i_cdmus.o
+OBJ_CDA = unix/i_cdmus.o
 
 ifeq ($(SND_MODULE),oss)
 OBJ_SND:= $(OBJ_OSS)
@@ -150,10 +150,6 @@ OBJ_BASE = \
 	base/v_video.o \
 	base/w_wad.o \
 	base/z_zone.o
-# these ones aren't ready for action, yet.
-#	base/c_console.o
-#	base/c_cvar.o
-#	base/i_action.o
 
 
 %.o: %.c
