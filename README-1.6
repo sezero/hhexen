@@ -9,7 +9,7 @@ This is a new release of Dan Olson's excellent Hacked Hexen by the authors
 of Hammer of Thyrion (Hexen II).  We're applying fixes, adding a few features,
 and ensuring it runs on most *nix operating systems.
 
-Major changes in HHexen-1.6 since version 1.5:
+Major changes in HHexen-1.6 since previous version HHexen-1.5:
 
   * Fixed a rare menu related crash.
   * Worked around audio corruption with the sdlmixer driver when SDL_mixer
@@ -23,7 +23,7 @@ Major changes in HHexen-1.6 since version 1.5:
   * New configuration options for more flexibility especially for packagers.
   * Other usual bug-fixes.
 
-Major changes in HHexen-1.4/1.5 since Dan Olson's original 1.3:
+Major changes in HHexen-1.4/1.5 since Dan Olson's original HHexen-1.3:
 
   * OpenGL intermission and finale screens fixed
   * OpenGL screenshots (now bound to F12 and enabled by default)
@@ -136,14 +136,13 @@ custom music files in $HOME/.hhexen/music .
 
 A high quality OGG version of the original Hexen soundtrack is available for
 download from Sycraft.org :  http://sycraft.org/content/audio/hexen.shtml
-To install, download the normal quality archive (or high quality if preferred),
-and unzip it (probably twice).  Create the music directory:
-	mkdir -p $HOME/.hhexen/music
+To install, download the normal or high quality archive and unzip it.  Create
+the music directory:
+	mkdir -p $HOME/.hhexen/music		(for most end users)
  or:
-	mkdir -p <hhexen_dir>/music
-
-(replace <hhexen_dir> with the directory where hhexen is installed, such as
-/usr/local/games/hhexen )
+	mkdir -p <install_dir>/music		(if you prefer that way..)
+ or:
+	mkdir -p <shared_datapath>/music	(mostly for packagers)
 
 Place the ogg files in that new "music" directory you just created. Now, when
 the game is run, the new sound files should automatically be used.
