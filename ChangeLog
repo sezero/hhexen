@@ -31,6 +31,9 @@ v1.6.0
  - updated the readme file with basic information on how to play the game and
    how to activate the mission pack and/or extra wad files.
  - some tweaks and re-organization in the build system.
+ - added experimental configure option --enable-dossaves, disabled by default
+   with the details documented in sv_save.h.
+ - added --enable-rangecheck option to configure, disabled by default.
 
 v1.5.3
  - Ensured that the new gcc-4.4 series compilers are properly supported.
