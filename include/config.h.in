@@ -173,6 +173,9 @@
 /* Define if not want to use assembly language */
 #undef _DISABLE_ASM
 
+/* Define for saved game compatibility with DOS-Hexen (experimental) */
+#undef _DOSSAVE_COMPAT
+
 /* Define if want to disable user directories */
 #undef _NO_USERDIRS
 

@@ -91,6 +91,13 @@ if test x$enable_assassin = xyes; then
 	AC_DEFINE(ASSASSIN, 1, [Define if including the assassin in compile])
 fi
 
+AC_ARG_ENABLE(dossaves,
+AC_HELP_STRING([--enable-dossaves], [DOS-Hexen saved game compatibility [[experimental]] [[default=no]]]),
+						[], [enable_dossaves=no])
+if test x$enable_dossaves = xyes; then
+	AC_DEFINE(_DOSSAVE_COMPAT, 1, [Define for saved game compatibility with DOS-Hexen (experimental)])
+fi
+
 AC_ARG_ENABLE(rangecheck,
 AC_HELP_STRING([--enable-rangecheck], [Enable parameter validation debugging code [[default=no]]]),
 						[], [enable_rangecheck=no])
@@ -394,6 +401,13 @@ else
 fi
 echo "Default window mode  : $report"
 echo
+
+if test x$enable_dossaves = xyes; then
+   if test x$enable_oldwad = xyes; then
+	echo "WARNING: DOS-Hexen 1.0 saves are not compatible with HHexen, yet."
+	echo
+   fi
+fi
 
 echo "Type 'make' to compile."
 echo

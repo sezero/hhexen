@@ -21,14 +21,24 @@
 	for 1.1 versions, so are binaries we posted, therefore there
 	are no compatibility concerns with that.
 
-	On another note, by removing the size assertions and adding
-	__attribute__((packed)) to those two structures, the engine
-	will then be able to read saved files from Raven Software's
-	DOS-Hexen 1.1 versions, and the files HHexen saved can also
-	be loaded by DOS-Hexen 1.1.  As for the original DOS-Hexen
-	version 1.0, I didn't figure that out, yet: some structures
-	should be shorter in 1.0, which ones in particular, maybe I
-	find some day.
+	On another note, if HHexen is configured for DOS-Hexen game
+	save compatibility with _DOSSAVE_COMPAT defined, HHexen then
+	will be able to read saved files from Raven Software's DOS
+	Hexen v1.1 versions, and the files HHexen saved can also be
+	loaded by DOS-Hexen v1.1.
+
+	As for the saved games from original DOS-Hexen 1.0, a subtle
+	incompatibility is in the way:  the save_player_t structure
+	is 8 bytes longer in a way I am not sure about.  Configured
+	for DOS save compatibility and for version 1.0 wads, HHexen
+	outputs an hex0.hxs file with 1197 bytes for a single player
+	game, but the one from dos-hexen v1.0 is 1205 bytes.  Adding
+	an int dummy1 before the extralight and an int dummy2 before
+	the morphTics members passes the checks in sv_save.c (dummy1
+	does get some value read into it), but the engine segfaults:
+	If range checking is enabled, R_ProjectSprite will error out
+	due to an invalid sprite frame error.  Maybe I figure it out
+	some day...
 
 	$Revision$
 	$Date$
@@ -36,6 +46,12 @@
 
 #ifndef __SAVE_DEFS
 #define __SAVE_DEFS
+
+#ifndef _DOSSAVE_COMPAT
+#define __compat_doshexen
+#else
+#define __compat_doshexen	__attribute__((packed))
+#endif
 
 typedef struct
 {
@@ -89,7 +105,7 @@ typedef struct
 	short			tid;
 	byte			special;
 	byte			args[5];
-} save_mobj_t;
+} __compat_doshexen save_mobj_t;
 #if !defined(VERSION10_WAD)
 /* make sure the struct is of 176 bytes size, so that all our
    saved games are uniform. */
@@ -149,7 +165,7 @@ typedef struct
 	int		morphTics;
 	unsigned int	jumpTics;
 	unsigned int	worldTimer;
-} save_player_t;
+} __compat_doshexen save_player_t;
 #if !defined(VERSION10_WAD)
 /* make sure the struct is of 648 bytes size, so that all our saved
    games are uniform: Raven's DOS versions seem to have this struct
@@ -178,7 +194,7 @@ typedef struct
 	short		resetDelay;
 	short		resetDelayCount;
 	byte		textureChange;		/*  */
-} save_floormove_t;
+} __compat_doshexen save_floormove_t;
 #if !defined(VERSION10_WAD)
 /* make sure the struct is of 72 bytes size, so that all our saved
    games are uniform. */
