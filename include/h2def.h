@@ -15,7 +15,7 @@
  * validation debugging code will not be compiled
  */
 #ifndef NORANGECHECKING
-/* #define RANGECHECK */
+#define RANGECHECK	1
 #endif
 
 #define __STRINGIFY(x) #x

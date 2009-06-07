@@ -67,6 +67,9 @@ else
 	SDL_VERSION="1.1.0"
 fi
 
+AC_SUBST(GLHEXEN)
+AC_SUBST(SVGAHEXEN)
+
 AC_ARG_ENABLE(demowad,
 AC_HELP_STRING([--enable-demowad], [Build for the demo version wad only [[default=no]]]),
 								[], [enable_demowad=no])
@@ -88,8 +91,12 @@ if test x$enable_assassin = xyes; then
 	AC_DEFINE(ASSASSIN, 1, [Define if including the assassin in compile])
 fi
 
-AC_SUBST(GLHEXEN)
-AC_SUBST(SVGAHEXEN)
+AC_ARG_ENABLE(rangecheck,
+AC_HELP_STRING([--enable-rangecheck], [Enable parameter validation debugging code [[default=no]]]),
+						[], [enable_rangecheck=no])
+if test x$enable_rangecheck = xno; then
+	AC_DEFINE(NORANGECHECKING, 1, [Define to not compile most parameter validation debugging code])
+fi
 
 AC_ARG_WITH(datapath,
 [  --with-datapath=<DIR>   Use DIR for shared game data. Not defined by default.],
@@ -330,14 +337,6 @@ AC_SUBST(SVGALIBS)
 
 
 dnl ==================================================================
-dnl Miscellaneous things
-dnl ==================================================================
-
-dnl === do not compile most parameter validation debugging code ======
-AC_DEFINE(NORANGECHECKING, 1, [Define to not compile most parameter validation debugging code])
-
-
-dnl ==================================================================
 dnl Generate output files
 dnl ==================================================================
 
@@ -369,6 +368,13 @@ else
     report="disabled"
 fi
 echo "Assassin player class: $report"
+
+if test x$enable_rangecheck = xno; then
+    report="disabled"
+else
+    report="enabled"
+fi
+echo "Range checks (debug) : $report"
 
 if test x$datapath = x; then
     report="(not set)"
