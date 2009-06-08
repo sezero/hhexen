@@ -1,0 +1,42 @@
+
+- Games are always saved Little Endian, with 32 bit offsets. The saved games
+  then can be properly read on 64 bit and/or Big Endian machines all the same.
+  The structures used for game save/load procedures are in sv_save.h .
+
+- The saved structures may have different sizes or alignment depending on the
+  compiler and/or platform: see the save_player_t and save_floormove_t.
+  At present, those two structures are checked at compile time for 648 and 72
+  byte size for compatibility with hhexen-1.3.x-1.5.x game save files.  Size
+  assertions are also added to save_mobj_t, although it is pretty unlikely to
+  change in size depending on platform or compiler.  If you don't care about
+  those compatibilities, just remove the size/alignment assertions here.
+
+- The size assertions are not enabled if we are compiling for version 1.0 wad
+  files:  HHexen has always been recommended for 1.1 versions, so are binaries
+  we posted, therefore no compatibility concerns with that.
+
+- As it is, HHexen cannot read game saves from DOS Hexen, because Raven seems
+  to have liked the "zp1" switch of Watcom which alinged structures on bytes.
+
+- Using the --enable-dossaves option, HHexen can be configured for DOS-Hexen
+  game save compatibility which adds _DOSSAVE_COMPAT definition to config.h.
+  When _DOSSAVE_COMPAT is defined, sv_save.h adds the gcc's packed attribute
+  to save_player_t, save_mobj_t and save_floormove_t.  HHexen then can read
+  the saved files from Raven Software's DOS Hexen v1.1, and the files HHexen
+  saved can also be loaded by DOS-Hexen v1.1.
+
+- As for the saved games from original DOS-Hexen 1.0, a subtle incompatibility
+  is in the way:  the player_t structure in Hexen v1.0 is 8 bytes longer in a
+  way I am not sure about.  If you configure HHexen for DOS save compatibility
+  and for v1.0 wads (--enable-dossaves --enable-oldwad), HHexen will output an
+  hex0.hxs file with 1197 bytes for a single player game, but with dos-hexen
+  v1.0 hex0.hxs is 1205 bytes.  In sv_save.h, adding an int dummy1 before the
+  extralight and an int dummy2 before the morphTics members passes the checks
+  in sv_save.c (the dummy1 does get some value read into it), but the result is
+  surely broken:
+  * for the demo wad, the engine segfaults, or, with range checking enabled,
+    R_ProjectSprite() will error out due to an invalid sprite frame error.
+  * for the retail 1.0 wad, the monsters appear with the combined mana model.
+    Ugh...
+  Maybe I figure it out some day...
+

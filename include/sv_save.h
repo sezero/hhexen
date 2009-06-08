@@ -2,48 +2,10 @@
 	sv_save.h: Heretic 2 (Hexen)
 	Structures used for saved games.
 
-	Games are always saved Little Endian, with 32 bit offsets.
-	The saved games then can be properly read on 64 bit and/or
-	Big Endian machines all the same.
-
-	The saved structures may have different sizes or alignment
-	depending on the compiler and/or platform, though:  see the
-	save_player_t and save_floormove_t.  At present, those two
-	structures are checked at compile time for 648 and 72 byte
-	size for compatibility with hhexen-1.3.x-1.5.x save files.
-	Size assertions are also added to save_mobj_t, although it
-	is pretty unlikely to change in size depending on platform
-	or compiler. If you don't care about those compatibilities,
-	just remove the size/alignment assertions here.
-
-	The size assertions are not enabled if we are compiling for
-	version 1.0 wad files: HHexen has always been recommended
-	for 1.1 versions, so are binaries we posted, therefore there
-	are no compatibility concerns with that.
-
-	On another note, if HHexen is configured for DOS-Hexen game
-	save compatibility with _DOSSAVE_COMPAT defined, HHexen then
-	will be able to read saved files from Raven Software's DOS
-	Hexen v1.1 versions, and the files HHexen saved can also be
-	loaded by DOS-Hexen v1.1.
-
-	As for the saved games from original DOS-Hexen 1.0, a subtle
-	incompatibility is in the way:  the save_player_t structure
-	is 8 bytes longer in a way I am not sure about.  Configured
-	for DOS save compatibility and for version 1.0 wads, HHexen
-	outputs an hex0.hxs file with 1197 bytes for a single player
-	game, but the one from dos-hexen v1.0 is 1205 bytes.  Adding
-	an int dummy1 before the extralight and an int dummy2 before
-	the morphTics members passes the checks in sv_save.c (dummy1
-	does get some value read into it), but the result is broken:
-	(a) for the demo wad, the engine segfaults, or, with range
-	checking enabled, R_ProjectSprite will error out due to an
-	invalid sprite frame error.  (b) for the retail 1.0 wad, the
-	monsters appear with the combined mana model. Ugh...  Maybe I
-	figure it out some day...
-
 	$Revision$
 	$Date$
+
+	See the file SAVEGAME for notes and/or issues.
 */
 
 #ifndef __SAVE_DEFS

@@ -9,6 +9,7 @@
 //** Games are always saved Little Endian, with 32 bit offsets.
 //** The saved games then can be properly read on 64 bit and/or
 //** Big Endian machines all the same.
+//** See the file SAVEGAME for notes and/or issues.
 //**
 //**************************************************************************
 
