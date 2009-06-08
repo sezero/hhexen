@@ -35,10 +35,12 @@
 	game, but the one from dos-hexen v1.0 is 1205 bytes.  Adding
 	an int dummy1 before the extralight and an int dummy2 before
 	the morphTics members passes the checks in sv_save.c (dummy1
-	does get some value read into it), but the engine segfaults:
-	If range checking is enabled, R_ProjectSprite will error out
-	due to an invalid sprite frame error.  Maybe I figure it out
-	some day...
+	does get some value read into it), but the result is broken:
+	(a) for the demo wad, the engine segfaults, or, with range
+	checking enabled, R_ProjectSprite will error out due to an
+	invalid sprite frame error.  (b) for the retail 1.0 wad, the
+	monsters appear with the combined mana model. Ugh...  Maybe I
+	figure it out some day...
 
 	$Revision$
 	$Date$
@@ -106,7 +108,7 @@ typedef struct
 	byte			special;
 	byte			args[5];
 } __compat_doshexen save_mobj_t;
-#if !defined(VERSION10_WAD)
+#if !(defined(VERSION10_WAD) || defined(_DOSSAVE_COMPAT))
 /* make sure the struct is of 176 bytes size, so that all our
    saved games are uniform. */
 COMPILE_TIME_ASSERT(save_mobj_t, sizeof(save_mobj_t) == 176);
@@ -166,7 +168,7 @@ typedef struct
 	unsigned int	jumpTics;
 	unsigned int	worldTimer;
 } __compat_doshexen save_player_t;
-#if !defined(VERSION10_WAD)
+#if !(defined(VERSION10_WAD) || defined(_DOSSAVE_COMPAT))
 /* make sure the struct is of 648 bytes size, so that all our saved
    games are uniform: Raven's DOS versions seem to have this struct
    packed, with sizeof(player_t) == 646 and offsetof playerclass at
@@ -195,7 +197,7 @@ typedef struct
 	short		resetDelayCount;
 	byte		textureChange;		/*  */
 } __compat_doshexen save_floormove_t;
-#if !defined(VERSION10_WAD)
+#if !(defined(VERSION10_WAD) || defined(_DOSSAVE_COMPAT))
 /* make sure the struct is of 72 bytes size, so that all our saved
    games are uniform. */
 COMPILE_TIME_ASSERT(save_floormove_1, sizeof(save_floormove_t) == 72);
