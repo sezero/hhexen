@@ -76,7 +76,7 @@ void P_SpawnMapThing(mapthing_t *mthing);
 
 static int QualifyMap(int map);
 #ifdef RENDER3D
-static float AccurateDistance(fixed_t dx,fixed_t dy);
+static float P_AccurateDistance(fixed_t dx, fixed_t dy);
 #endif
 
 
@@ -240,7 +240,7 @@ static void P_LoadSegs (int lump)
 #ifdef RENDER3D
 	// Calculate the length of the segment. We need this for
 	// the texture coordinates. -jk
-		li->len = AccurateDistance(li->v2->x - li->v1->x, li->v2->y - li->v1->y);
+		li->len = P_AccurateDistance(li->v2->x - li->v1->x, li->v2->y - li->v1->y);
 #endif
 	}
 
@@ -673,13 +673,13 @@ static void P_GroupLines (void)
 
 #define MAX_CC_SIDES	64
 
-static float AccurateDistance(fixed_t dx,fixed_t dy)
+static float P_AccurateDistance(fixed_t dx, fixed_t dy)
 {
 	float fx = FIX2FLT(dx), fy = FIX2FLT(dy);
 	return (float)sqrt(fx*fx + fy*fy);
 }
 
-static int detSideFloat(fvertex_t *pnt, fdivline_t *dline)
+static int __no_optimize detSideFloat(fvertex_t *pnt, fdivline_t *dline)
 {
 	/*
 	    (AY-CY)(BX-AX)-(AX-CX)(BY-AY)
@@ -699,8 +699,8 @@ static int detSideFloat(fvertex_t *pnt, fdivline_t *dline)
 }
 
 // Lines start-end and fdiv must intersect.
-static float findIntersectionVertex(fvertex_t *start, fvertex_t *end,
-				    fdivline_t *fdiv, fvertex_t *inter)
+static float __no_optimize findIntersectionVertex(fvertex_t *start, fvertex_t *end,
+						  fdivline_t *fdiv, fvertex_t *inter)
 {
 	float ax = start->x, ay = start->y, bx = end->x, by = end->y;
 	float cx = fdiv->x, cy = fdiv->y, dx = cx + fdiv->dx, dy = cy + fdiv->dy;
