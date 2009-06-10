@@ -153,7 +153,7 @@ void CT_Stop(void)
 boolean CT_Responder(event_t *ev)
 {
 	const char *macro;
-	int sendto;
+	int sendtarget;
 
 	if (!netgame)
 	{
@@ -175,51 +175,51 @@ boolean CT_Responder(event_t *ev)
 	}
 	if (!chatmodeon)
 	{
-		sendto = 0;
+		sendtarget = 0;
 		if (ev->data1 == CT_KEY_ALL)
 		{
-			sendto = CT_PLR_ALL;
+			sendtarget = CT_PLR_ALL;
 		}
 		else if (ev->data1 == CT_KEY_GREEN)
 		{
-			sendto = CT_PLR_GREEN;
+			sendtarget = CT_PLR_GREEN;
 		}
 		else if (ev->data1 == CT_KEY_YELLOW)
 		{
-			sendto = CT_PLR_YELLOW;
+			sendtarget = CT_PLR_YELLOW;
 		}
 		else if (ev->data1 == CT_KEY_RED)
 		{
-			sendto = CT_PLR_RED;
+			sendtarget = CT_PLR_RED;
 		}
 		else if (ev->data1 == CT_KEY_BLUE)
 		{
-			sendto = CT_PLR_BLUE;
+			sendtarget = CT_PLR_BLUE;
 		}
 #if (MAXPLAYERS == MAXPLAYERS_11)
 		else if (ev->data1 == CT_KEY_PLAYER5)
 		{
-			sendto = CT_PLR_PLAYER5;
+			sendtarget = CT_PLR_PLAYER5;
 		}
 		else if (ev->data1 == CT_KEY_PLAYER6)
 		{
-			sendto = CT_PLR_PLAYER6;
+			sendtarget = CT_PLR_PLAYER6;
 		}
 		else if (ev->data1 == CT_KEY_PLAYER7)
 		{
-			sendto = CT_PLR_PLAYER7;
+			sendtarget = CT_PLR_PLAYER7;
 		}
 		else if (ev->data1 == CT_KEY_PLAYER8)
 		{
-			sendto = CT_PLR_PLAYER8;
+			sendtarget = CT_PLR_PLAYER8;
 		}
 #endif	/* 8-players */
-		if (sendto == 0 || (sendto != CT_PLR_ALL && !playeringame[sendto - 1])
-			|| sendto == consoleplayer + 1)
+		if (sendtarget == 0 || (sendtarget != CT_PLR_ALL && !playeringame[sendtarget - 1])
+			|| sendtarget == consoleplayer + 1)
 		{
 			return false;
 		}
-		CT_queueChatChar(sendto);
+		CT_queueChatChar(sendtarget);
 		chatmodeon = true;
 		return true;
 	}
