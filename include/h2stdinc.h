@@ -143,6 +143,15 @@ typedef int	fixed_t;
 #define	__fp_attribute__(x)
 #endif
 
+/* function optimize attribute is added
+ * starting with gcc 4.4.0
+ */
+#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 3))
+#define	__no_optimize		__attribute__((optimize("0")))
+#else
+#define	__no_optimize
+#endif
+
 /*==========================================================================*/
 
 /* Some compilers, such as OpenWatcom, and possibly other compilers
