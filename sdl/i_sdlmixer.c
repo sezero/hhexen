@@ -127,8 +127,16 @@ static void audio_loop (void *unused, Uint8 *stream, int len)
 	// Mix all the channels together.
 		// Do not zero: SDL_mixer writes the
 		// music before sending the stream!!
-		dl = begin[0];	//	dl = SAMPLE_ZERO;
-		dr = begin[1];	//	dr = SAMPLE_ZERO;
+		if (snd_MusicAvail)
+		{
+			dl = begin[0];
+			dr = begin[1];
+		}
+		else
+		{
+			dl = SAMPLE_ZERO;
+			dr = SAMPLE_ZERO;
+		}
 
 		chan = channel;
 		for ( ; chan < cend; chan++)
@@ -367,13 +375,17 @@ void I_StartupSound (void)
 	SAMPLECOUNT = audio_buffers;
 	Mix_SetPostMix(audio_loop, NULL);
 	fprintf(stdout, "Configured audio device with %d samples/slice\n", SAMPLECOUNT);
-	snd_SfxAvail = snd_MusicAvail = true;
+	snd_SfxAvail = true;
 //	SDL_PauseAudio(0);
 
 	if (snd_MusicVolume < 0 || snd_MusicVolume > 15)
 		snd_MusicVolume = 10;
-	Mix_VolumeMusic(snd_MusicVolume*8);
-	Mix_HookMusicFinished(loop_song_hook);
+	if (!M_CheckParm("-nomidi") && !M_CheckParm("--nomidi"))
+	{
+		Mix_VolumeMusic(snd_MusicVolume*8);
+		Mix_HookMusicFinished(loop_song_hook);
+		snd_MusicAvail = true;
+	}
 }
 
 // shuts down all sound stuff
@@ -455,7 +467,7 @@ int I_RegisterSong(void *data)
 	char tmpmidi[MAX_OSPATH];
 	int err;
 
-	if (!snd_initialized)
+	if (!snd_initialized || !snd_MusicAvail)
 		return 0;
 	if (memcmp(data, "MUS", 3) != 0)
 		return 0;
@@ -506,7 +518,7 @@ int I_RegisterExternalSong(const char *name)
 	int i = 0, ret = -1;
 	char path[MAX_OSPATH], fixedname[16];
 
-	if (!snd_initialized)
+	if (!snd_initialized || !snd_MusicAvail)
 		return 0;
 	if (!name || ! *name)
 		return 0;
@@ -585,13 +597,13 @@ void I_ResumeSong(int handle)
 
 void I_SetMusicVolume(int volume)
 {
-	if (snd_initialized)
+	if (snd_initialized && snd_MusicAvail)
 		Mix_VolumeMusic(volume*8);
 }
 
 int I_QrySongPlaying(int handle)
 {
-	if (snd_initialized)
+	if (snd_initialized && snd_MusicAvail)
 		return Mix_PlayingMusic();
 	return 0;
 }
