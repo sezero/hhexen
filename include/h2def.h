@@ -48,7 +48,7 @@
 #define HHEXEN_VERSION	"v" STRINGIFY(VERSION_MAJ) "." STRINGIFY(VERSION_MIN) "." STRINGIFY(VERSION_PATCH)
 
 #if 0
-/* Past distributions */
+/* Version texts of old releases */
 #define VERSIONTEXT	"ID V1.2"
 #define VERSIONTEXT	"RETAIL STORE BETA"	/* 9/26/95 */
 #define VERSIONTEXT	"DVL BETA 10 05 95"	/* Used for GT for testing */
@@ -314,8 +314,8 @@ typedef struct
 
 typedef struct
 {
-	char		forwardmove;	/* *2048 for move */
-	char		sidemove;	/* *2048 for move */
+	signed char	forwardmove;	/* *2048 for move */
+	signed char	sidemove;	/* *2048 for move */
 	short		angleturn;	/* <<16 for angle delta */
 	short		consistancy;	/* checks for net game */
 	byte		chatchar;

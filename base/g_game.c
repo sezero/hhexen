@@ -1700,8 +1700,8 @@ static void G_WriteDemoTiccmd (ticcmd_t *cmd)
 {
 	if (gamekeydown['q'])		// press q to end demo recording
 		G_CheckDemoStatus ();
-	*demo_p++ = cmd->forwardmove;
-	*demo_p++ = cmd->sidemove;
+	*demo_p++ = (byte) cmd->forwardmove;
+	*demo_p++ = (byte) cmd->sidemove;
 	*demo_p++ = cmd->angleturn>>8;
 	*demo_p++ = cmd->buttons;
 	*demo_p++ = cmd->lookfly;
