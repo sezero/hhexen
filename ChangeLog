@@ -1,5 +1,13 @@
 HHexen ChangeLog
 
+v1.6.1
+ - fixed player movement for environments where the char type is unsigned by
+   default.
+ - made detSideFloat() and findIntersectionVertex() to compile without
+   optimizations, at least for gcc >= 4.4, providing some partial solution to
+   to opengl clipping problems.
+ - added -nomidi as a new command line option.
+
 v1.6.0
  - fixed a rare menu related crash.
  - worked around audio corruption with the sdlmixer driver when SDL_mixer tried
