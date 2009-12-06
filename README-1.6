@@ -9,42 +9,6 @@ This is a new release of Dan Olson's excellent Hacked Hexen by the authors
 of Hammer of Thyrion (Hexen II).  We're applying fixes, adding a few features,
 and ensuring it runs on most *nix operating systems.
 
-Major changes in HHexen-1.6 since previous version HHexen-1.5:
-
-  * Fixed a rare menu related crash.
-  * Worked around audio corruption with the sdlmixer driver when SDL_mixer
-    tried looping the background music.
-  * Fixed interoperability of games saved on little and big endian machines:
-    the fix may break games saved on big endian machines using hhexen-1.5.x,
-    the saves from little endian machines are fully compatible.
-  * Added -waddir as a new command line option.
-  * Made sdlmixer driver to search the game's shared data path for external
-    music files.
-  * New configuration options for more flexibility especially for packagers.
-  * Other usual bug-fixes.
-
-Major changes in HHexen-1.4/1.5 since Dan Olson's original HHexen-1.3:
-
-  * OpenGL intermission and finale screens fixed
-  * OpenGL screenshots (now bound to F12 and enabled by default)
-  * Transparent automap
-  * Support for big endian and 64 bit machines
-  * Fixed FreeBSD support
-  * Fixed ARM support
-  * Various hacks/fixes for the proper handling of different 1.0 and 1.1
-    wad file versions
-  * Added SDL audio driver: it is the default audio driver.
-  * Added SDL_mixer audio driver with midi playback support
-  * Added support for external music files (ogg, mp3, midi) using the
-    SDL_mixer audio driver.
-  * OpenGL is the default configuration now
-  * Game saves/loads work properly
-  * Controls-setup menu works properly with more complete support for
-    punctuation keys
-  * Many GCC/C/portability bug-fixes, support for newest gcc versions
-  * Incomplete assassin class is now disabled by default
-  * Other usual bug-fixes.
-
 --------------------------------------------------------------------------------
 
 				    Prereqs
@@ -94,13 +58,17 @@ To compile the software version (hhexen-sdl):
 	./configure --disable-gl
 	make
 
+The configure script accepts a new --with-audio=<driver> option.  Valid
+values are oss, sdl, and sdlmixer.  sdl is the default option.  sdlmixer
+adds the ability of midi music playback, therefore, to compile with midi
+playback:
+
+	./configure --with-audio=sdlmixer
+	make
+
 To compile the software version (hhexen-svga, for the old-fashioned :))
 	./configure --enable-svga
 	make
-
-The configure script accepts a new --with-audio=<driver> option.  Valid
-values are oss, sdl, and sdlmixer.  sdl is the default option.  sdlmixer
-adds the ability of midi music playback.
 
 It's essential that you run make clean between different types of builds
 or different types of targets.
@@ -183,6 +151,46 @@ default.  It can be enabled with "configure --enable-assassin".  The precompiled
 binaries of HHexen do not have the assassin enabled.
 Warning:  There *will* be issues with the game saves made from assassin-enabled
 binaries and from those without, they are not compatible.
+
+--------------------------------------------------------------------------------
+
+				Short Changelog
+
+Major changes in HHexen-1.6 since previous version HHexen-1.5:
+
+  * Fixed a rare menu related crash.
+  * Worked around audio corruption with the sdlmixer driver when SDL_mixer
+    tried looping the background music.
+  * Fixed interoperability of games saved on little and big endian machines:
+    the fix may break games saved on big endian machines using hhexen-1.5.x,
+    the saves from little endian machines are fully compatible.
+  * Added -waddir as a new command line option.
+  * Made sdlmixer driver to search the game's shared data path for external
+    music files.
+  * New configuration options for more flexibility especially for packagers.
+  * Other usual bug-fixes.
+
+Major changes in HHexen-1.4/1.5 since Dan Olson's original HHexen-1.3:
+
+  * OpenGL intermission and finale screens fixed
+  * OpenGL screenshots (now bound to F12 and enabled by default)
+  * Transparent automap
+  * Support for big endian and 64 bit machines
+  * Fixed FreeBSD support
+  * Fixed ARM support
+  * Various hacks/fixes for the proper handling of different 1.0 and 1.1
+    wad file versions
+  * Added SDL audio driver: it is the default audio driver.
+  * Added SDL_mixer audio driver with midi playback support
+  * Added support for external music files (ogg, mp3, midi) using the
+    SDL_mixer audio driver.
+  * OpenGL is the default configuration now
+  * Game saves/loads work properly
+  * Controls-setup menu works properly with more complete support for
+    punctuation keys
+  * Many GCC/C/portability bug-fixes, support for newest gcc versions
+  * Incomplete assassin class is now disabled by default
+  * Other usual bug-fixes.
 
 --------------------------------------------------------------------------------
 
