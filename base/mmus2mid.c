@@ -87,7 +87,7 @@ typedef struct
   uint16_t       channels;         // count of primary channels
   uint16_t       SecChannels;      // count of secondary channels
   uint16_t       InstrCnt;         // number of instruments
-} __attribute__((packed)) MUSheader;
+} __attribute__((__packed__)) MUSheader;
 
 // to keep track of information in a MIDI track
 

@@ -22,8 +22,8 @@ extern void ST_NetDone(void);
 #define	MAX_ST_MSG		256
 
 /* These two doesn't add a '\n' to the message, the caller must add it by himself */
-extern void ST_Message(const char *message, ...) __attribute__((format(printf,1,2)));
-extern void ST_RealMessage(const char *message, ...) __attribute__((format(printf,1,2)));
+extern void ST_Message(const char *message, ...) __attribute__((__format__(__printf__,1,2)));
+extern void ST_RealMessage(const char *message, ...) __attribute__((__format__(__printf__,1,2)));
 
 #endif	/* __ST_START__ */
 

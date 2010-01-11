@@ -45,7 +45,7 @@ typedef struct
 	char		bottomtexture[8];
 	char		midtexture[8];
 	short		sector;	/* on viewer's side */
-} __attribute__((packed)) mapsidedef_t;
+} __attribute__((__packed__)) mapsidedef_t;
 COMPILE_TIME_ASSERT(mapsidedef_t, sizeof(mapsidedef_t) == 30);
 
 typedef struct
@@ -94,7 +94,7 @@ typedef	struct
 	short		lightlevel;
 	short		special;
 	short		tag;
-} __attribute__((packed)) mapsector_t;
+} __attribute__((__packed__)) mapsector_t;
 COMPILE_TIME_ASSERT(mapsector_t, sizeof(mapsector_t) == 26);
 
 typedef struct
@@ -173,7 +173,7 @@ typedef struct
 	short		patch;
 	short		stepdir;
 	short		colormap;
-} __attribute__((packed)) mappatch_t;
+} __attribute__((__packed__)) mappatch_t;
 COMPILE_TIME_ASSERT(mappatch_t, sizeof(mappatch_t) == 10);
 
 typedef struct
@@ -185,7 +185,7 @@ typedef struct
 	int32_t		columndirectory;	/* OBSOLETE */
 	short		patchcount;
 	mappatch_t	patches[1];
-} __attribute__((packed)) maptexture_t;
+} __attribute__((__packed__)) maptexture_t;
 COMPILE_TIME_ASSERT(maptexture_t, sizeof(maptexture_t) == 32);
 
 
@@ -197,7 +197,7 @@ typedef struct
 	byte		topdelta;	/* -1 is the last post in a column */
 	byte		length;
 	/* length data bytes follows */
-} __attribute__((packed)) post_t;
+} __attribute__((__packed__)) post_t;
 COMPILE_TIME_ASSERT(post_t, sizeof(post_t) == 2);
 
 /* column_t is a list of 0 or more post_t, (byte)-1 terminated */

@@ -14,7 +14,7 @@
 #ifndef _DOSSAVE_COMPAT
 #define __compat_doshexen
 #else
-#define __compat_doshexen	__attribute__((packed))
+#define __compat_doshexen	__attribute__((__packed__))
 #endif
 
 typedef struct
