@@ -348,7 +348,7 @@ void I_StartupSound (void)
 	desired.samples = SAMPLECOUNT*snd_samplerate/11025;
 	desired.callback = audio_loop;
 
-	if (SDL_OpenAudio(&desired, &obtained) < 0)
+	if (SDL_OpenAudio(&desired, &obtained) == -1)
 	{
 		fprintf(stderr, "Couldn't open audio with desired format\n");
 		return;
