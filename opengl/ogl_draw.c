@@ -55,7 +55,7 @@ void OGL_DrawRawScreen(int lump)	// Raw screens are 320 x 200.
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	gluOrtho2D(0, screenWidth, screenHeight, 0);
+	glOrtho(0, screenWidth, screenHeight, 0, -1, 1);
 
 	OGL_SetRawImage(lump, 1);
 	tcbottom = lumptexsizes[lump].h / (float)FindNextPower2(lumptexsizes[lump].h);
@@ -109,7 +109,7 @@ void OGL_DrawRawScreenOfs(int lump, float offx, float offy)
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	gluOrtho2D(0, screenWidth, screenHeight, 0);
+	glOrtho(0, screenWidth, screenHeight, 0, -1, 1);
 
 	OGL_SetRawImage(lump, 1);
 	tcbottom = lumptexsizes[lump].h / (float)FindNextPower2(lumptexsizes[lump].h);

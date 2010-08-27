@@ -316,7 +316,7 @@ fi
 AC_CHECK_LIB(GL, glBindTexture, [GLLIBS="$GLLIBS -lGL";HAVEGL="yes";], [HAVEGL="no";])
 if test "$HAVEGL" = "yes"; then
    LIBS="$LIBS $GLLIBS"
-   AC_CHECK_LIB(GLU, gluOrtho2D, [GLLIBS="$GLLIBS -lGLU";HAVEGLU="yes";], [HAVEGLU="no";])
+   AC_CHECK_LIB(GLU, gluBuild2DMipmaps, [GLLIBS="$GLLIBS -lGLU";HAVEGLU="yes";], [HAVEGLU="no";])
 fi
 LIBS="$saved_libs"
 

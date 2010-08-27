@@ -141,7 +141,7 @@ void OGL_InitRenderer(void)	// Initializes the renderer to 2D state.
 	// The projection matrix.
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(0, 320, 200, 0);
+	glOrtho(0, 320, 200, 0, -1, 1);
 
 	// Initialize the modelview matrix.
 	glMatrixMode(GL_MODELVIEW);
@@ -229,7 +229,7 @@ void OGL_Restore2DState(int step)
 		extern int screenblocks;
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluOrtho2D(0, 320, (screenblocks < 11) ? 161 : 200, 0);
+		glOrtho(0, 320, (screenblocks < 11) ? 161 : 200, 0, -1, 1);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 	}
