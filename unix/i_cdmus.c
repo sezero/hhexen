@@ -11,8 +11,8 @@
 // HEADER FILES ------------------------------------------------------------
 
 #include "h2stdinc.h"
-#if 0 /* nothing is here yet */
 #include <unistd.h>
+#if 0 /* nothing is here yet */
 #include <sys/ioctl.h>
 #include <sys/file.h>
 #include <fcntl.h>
