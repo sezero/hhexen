@@ -11,6 +11,10 @@
 
 #include "config.h"
 
+#if defined(_WIN32) && !defined(WIN32_LEAN_AND_MEAN)
+#define WIN32_LEAN_AND_MEAN
+#endif	/* WIN32_LEAN_AND_MEAN */
+
 #include <sys/types.h>
 #include <stddef.h>
 #include <limits.h>
