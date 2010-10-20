@@ -34,7 +34,7 @@ BASELIBS = @LIBS@
 THREAD_LIBS = @THREAD_LIBS@
 X11_INC = @X11_INC@
 X11_LIB = @X11_LIB@
-GLLIBS = @GLLIBS@
+GL_LIBS = @GL_LIBS@
 SVGALIBS = @SVGALIBS@
 SDL_LIBS = @SDL_LIBS@
 SDL_CFLAGS = @SDL_CFLAGS@
@@ -51,9 +51,7 @@ SRCDIR    = @srcdir@
 VPATH     = @srcdir@
 MODULE    = none
 
-INCSUBDIR = ./include
-
-CPPFLAGS += -I$(INCSUBDIR)
+CPPFLAGS += -I. -I$(SRCDIR)/include
 ifneq ($(SVGAHEXEN),true)
 ifneq ($(X11_INC),)
 CPPFLAGS += -I$(X11_INC)
@@ -62,7 +60,7 @@ CPPFLAGS += $(SDL_CFLAGS)
 endif
 
 ifneq ($(X11_LIB),)
-GLLIBS := -L$(X11_LIB) $(GLLIBS)
+GL_LIBS := -L$(X11_LIB) $(GL_LIBS)
 endif
 
 # Objects to build
@@ -162,7 +160,7 @@ else
 
 ifeq ($(GLHEXEN),true)
 opengl: $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE)
-	$(CC) $(LDFLAGS) $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE) -o hhexen-gl $(BASELIBS) $(GLLIBS) $(SDL_LIBS)
+	$(CC) $(LDFLAGS) $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE) -o hhexen-gl $(BASELIBS) $(GL_LIBS) $(SDL_LIBS)
 else
 sdl: $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_SWSDL) $(OBJ_BASE)
 	$(CC) $(LDFLAGS) $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_SWSDL) $(OBJ_BASE) -o hhexen-sdl $(BASELIBS) $(SDL_LIBS)
