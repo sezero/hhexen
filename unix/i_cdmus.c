@@ -11,6 +11,7 @@
 // HEADER FILES ------------------------------------------------------------
 
 #include "h2stdinc.h"
+#if 0 /* nothing is here yet */
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <sys/file.h>
@@ -20,6 +21,7 @@
 #ifdef HAVE_LINUX_CDROM_H
 #include <linux/cdrom.h>
 #endif
+#endif /* #if 0 */
 #include "h2def.h"
 #include "i_cdmus.h"
 
@@ -51,7 +53,7 @@ int cd_Error;
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
-#if 0
+#if 0 /* nothing is here yet */
 static int cd_FirstTrack;
 static int cd_LastTrack;
 static char cd_dev[64] = "/dev/cdrom";
