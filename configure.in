@@ -61,10 +61,8 @@ if test x$enable_gl = xyes; then
 	    AC_MSG_ERROR([*** --enable-gl and --enable-svga can not be used together])
 	fi
 	AC_DEFINE(RENDER3D, 1, [Define if building with OpenGL support])
-	SDL_VERSION="1.1.2"
 else
 	GLHEXEN="false"
-	SDL_VERSION="1.1.0"
 fi
 
 AC_SUBST(GLHEXEN)
@@ -280,6 +278,7 @@ AC_SUBST(X11_INC)
 AC_SUBST(X11_LIB)
 
 dnl === Check for SDL ================================================
+SDL_VERSION="1.2.4"
 AM_PATH_SDL($SDL_VERSION,
 	[HAVESDL="yes"],
 	[HAVESDL="no"]
