@@ -92,7 +92,7 @@ typedef struct
 static const char *Key2String(int key);
 static void ClearControls(int key);
 static void InitFonts(void);
-static void SetMenu(MenuType_t menu);
+static void SetTheMenu(MenuType_t menu);
 static void SCQuitGame(int option);
 static void SCClass(int option);
 static void SCSkill(int option);
@@ -252,7 +252,7 @@ static MenuItem_t LoadItems[] =
 	{ ITT_EFUNC, NULL, SCLoadGame, 5, MENU_NONE }
 };
 
-static Menu_t LoadMenu =
+static Menu_t LoadgameMenu =
 {
 	70, 30,
 	DrawLoadMenu,
@@ -272,7 +272,7 @@ static MenuItem_t SaveItems[] =
 	{ ITT_EFUNC, NULL, SCSaveGame, 5, MENU_NONE }
 };
 
-static Menu_t SaveMenu =
+static Menu_t SavegameMenu =
 {
 	70, 30,
 	DrawSaveMenu,
@@ -398,8 +398,8 @@ static Menu_t *Menus[] =
 	&Options2Menu,
 	&Options3Menu,
 	&FilesMenu,
-	&LoadMenu,
-	&SaveMenu
+	&LoadgameMenu,
+	&SavegameMenu
 };
 
 static const char *mlooktext[] =
@@ -1008,7 +1008,7 @@ static void DrawLoadMenu(void)
 	{
 		MN_LoadSlotText();
 	}
-	DrawFileSlots(&LoadMenu);
+	DrawFileSlots(&LoadgameMenu);
 }
 
 //---------------------------------------------------------------------------
@@ -1024,7 +1024,7 @@ static void DrawSaveMenu(void)
 	{
 		MN_LoadSlotText();
 	}
-	DrawFileSlots(&SaveMenu);
+	DrawFileSlots(&SavegameMenu);
 }
 
 //===========================================================================
@@ -1403,7 +1403,7 @@ static void SCClass(int option)
 		break;
 #endif
 	}
-	SetMenu(MENU_SKILL);
+	SetTheMenu(MENU_SKILL);
 }
 
 //---------------------------------------------------------------------------
@@ -1763,7 +1763,7 @@ boolean MN_Responder(event_t *event)
 				MenuActive = true;
 				FileMenuKeySteal = false;
 				MenuTime = 0;
-				CurrentMenu = &SaveMenu;
+				CurrentMenu = &SavegameMenu;
 				CurrentItPos = CurrentMenu->oldItPos;
 				if (!netgame && !demoplayback)
 				{
@@ -1779,7 +1779,7 @@ boolean MN_Responder(event_t *event)
 				MenuActive = true;
 				FileMenuKeySteal = false;
 				MenuTime = 0;
-				CurrentMenu = &LoadMenu;
+				CurrentMenu = &LoadgameMenu;
 				CurrentItPos = CurrentMenu->oldItPos;
 				if (!netgame && !demoplayback)
 				{
@@ -1823,7 +1823,7 @@ boolean MN_Responder(event_t *event)
 					MenuActive = true;
 					FileMenuKeySteal = false;
 					MenuTime = 0;
-					CurrentMenu = &SaveMenu;
+					CurrentMenu = &SavegameMenu;
 					CurrentItPos = CurrentMenu->oldItPos;
 					if (!netgame && !demoplayback)
 					{
@@ -1868,7 +1868,7 @@ boolean MN_Responder(event_t *event)
 					MenuActive = true;
 					FileMenuKeySteal = false;
 					MenuTime = 0;
-					CurrentMenu = &LoadMenu;
+					CurrentMenu = &LoadgameMenu;
 					CurrentItPos = CurrentMenu->oldItPos;
 					if (!netgame && !demoplayback)
 					{
@@ -2024,7 +2024,7 @@ boolean MN_Responder(event_t *event)
 				{
 					item->func(item->option);
 				}
-				SetMenu(item->menu);
+				SetTheMenu(item->menu);
 			}
 			else if (item->func != NULL)
 			{
@@ -2055,7 +2055,7 @@ boolean MN_Responder(event_t *event)
 			}
 			else
 			{
-				SetMenu(CurrentMenu->prevMenu);
+				SetTheMenu(CurrentMenu->prevMenu);
 			}
 			return true;
 		default:
@@ -2106,7 +2106,7 @@ boolean MN_Responder(event_t *event)
 				item->func(item->option);
 				if (item->menu != MENU_NONE)
 				{
-					SetMenu(item->menu);
+					SetTheMenu(item->menu);
 				}
 			}
 			return true;
@@ -2209,7 +2209,7 @@ void MN_DrawInfo(void)
 //
 //---------------------------------------------------------------------------
 
-static void SetMenu(MenuType_t menu)
+static void SetTheMenu(MenuType_t menu)
 {
 	CurrentMenu->oldItPos = CurrentItPos;
 	CurrentMenu = Menus[menu];

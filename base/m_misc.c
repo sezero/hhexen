@@ -39,7 +39,7 @@
 
 // PRIVATE FUNCTION PROTOTYPES ---------------------------------------------
 
-static int ReadFile(char const *name, void **buffer, int mallocType);
+static int __ReadFile(char const *name, void **buffer, int mallocType);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
@@ -228,7 +228,7 @@ boolean M_WriteFile (char const *name, const void *source, int length)
 
 int M_ReadFile(char const *name, void **buffer)
 {
-	return ReadFile(name, buffer, MALLOC_ZONE);
+	return __ReadFile(name, buffer, MALLOC_ZONE);
 }
 
 //==========================================================================
@@ -241,7 +241,7 @@ int M_ReadFile(char const *name, void **buffer)
 
 int M_ReadFileCLib(char const *name, void **buffer)
 {
-	return ReadFile(name, buffer, MALLOC_CLIB);
+	return __ReadFile(name, buffer, MALLOC_CLIB);
 }
 
 //==========================================================================
@@ -250,7 +250,7 @@ int M_ReadFileCLib(char const *name, void **buffer)
 //
 //==========================================================================
 
-static int ReadFile(char const *name, void **buffer, int mallocType)
+static int __ReadFile(char const *name, void **buffer, int mallocType)
 {
 	int handle, count, length;
 	struct stat fileinfo;
