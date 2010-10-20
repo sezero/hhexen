@@ -110,6 +110,8 @@ void I_Update (void)
 //
 //--------------------------------------------------------------------------
 
+static char mesa_env[32];
+
 void I_InitGraphics(void)
 {
 	int p;
@@ -128,9 +130,10 @@ void I_InitGraphics(void)
 	if (M_CheckParm("-w") || M_CheckParm("--windowed"))
 		flags &= ~SDL_FULLSCREEN;
 	if (flags & SDL_FULLSCREEN)
-		setenv ("MESA_GLX_FX", "fullscreen", 1);
+		strcpy (mesa_env, "MESA_GLX_FX=fullscreen");
 	else
-		setenv ("MESA_GLX_FX", "disable", 1);
+		strcpy (mesa_env, "MESA_GLX_FX=disable");
+	SDL_putenv (mesa_env);
 
 	p = M_CheckParm ("-height");
 	if (p && p < myargc - 1)
