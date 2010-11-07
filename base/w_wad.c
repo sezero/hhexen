@@ -18,7 +18,10 @@
 
 // MACROS ------------------------------------------------------------------
 
-/* PC Shareware : */
+/* Old (beta) PC demo from hexen.zip, "Released October 2nd, 1995" */
+#define	OLDDEMO_LUMPS	2762
+#define	OLDDEMO_WADSIZE	10615976
+/* PC Shareware from hexndemo.zip, "Re-released October 18th, 1995" */
 #define	PCDEMO_LUMPS	2856
 #define	PCDEMO_WADSIZE	10644136
 /* Mac Shareware: */
@@ -192,6 +195,15 @@ void W_AddFile(const char *filename)
 		{
 			shareware = true;
 			ST_Message("Shareware WAD detected (4 level 1.1 Mac version).\n");
+		}
+		else if (strncmp(header.identification, "IWAD", 4) == 0 &&
+			 header.numlumps == OLDDEMO_LUMPS && flength == OLDDEMO_WADSIZE)
+		{
+			shareware = true;
+			/* This old beta version is not supported: it is missing
+			 * at least the FONTAY_S, chess and orb lumps. Its demos
+			 * do not play correctly, either. Just reject it. */
+			I_Error("Beta Shareware WAD from 2 Oct. 1995 not supported.");
 		}
 		fileinfo = (filelump_t *) malloc(length);
 		if (!fileinfo)
