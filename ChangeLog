@@ -1,5 +1,9 @@
 HHexen ChangeLog
 
+v1.6.2
+ - reject the old (beta) PC demo (from hexen.zip, "Released October 2nd, 1995").
+ - configury updates.
+
 v1.6.1
  - fixed player movement for environments where the char type is unsigned by
    default.
