@@ -133,7 +133,7 @@ void I_InitGraphics(void)
 		strcpy (mesa_env, "MESA_GLX_FX=fullscreen");
 	else
 		strcpy (mesa_env, "MESA_GLX_FX=disable");
-	SDL_putenv (mesa_env);
+	putenv (mesa_env);	/* SDL_putenv is problematic in versions <= 1.2.9 */
 
 	p = M_CheckParm ("-height");
 	if (p && p < myargc - 1)
