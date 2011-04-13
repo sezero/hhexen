@@ -206,14 +206,14 @@ void PalIdxToRGB(byte *pal, int idx, byte *rgb)
 unsigned int OGL_BindTexFlat(int lump)
 {
 	GLuint name;
-	int	p, i;
+	int	i;
 	byte *flatptr = (byte *) W_CacheLumpNum(lump, PU_STATIC);
 	byte *palette = (byte *) W_CacheLumpNum(pallump = W_GetNumForName("PLAYPAL"), PU_CACHE);
 	byte *rgbflat = (byte *) malloc (3 * lumpinfo[lump].size);
 
 	OGL_DEBUG("OGL_SetFlat: Loading flat %d.\n", idx);
 	// Convert the data to RGB.
-	for (i = 0, p = 0; i < lumpinfo[lump].size; i++)
+	for (i = 0; i < lumpinfo[lump].size; i++)
 		PalIdxToRGB(palette, flatptr[i], rgbflat + i*3);
 
 	// Generate and bind the texture.

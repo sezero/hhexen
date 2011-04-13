@@ -1086,7 +1086,7 @@ static void InitBlockMap(void)
 	int i;
 	int j;
 	seg_t **segList;
-	int area;
+//	int area;
 	int leftX, rightX;
 	int topY, bottomY;
 
@@ -1121,8 +1121,7 @@ static void InitBlockMap(void)
 				topY = (*segList)->v1->y;
 			}
 		}
-		area = ((rightX>>FRACBITS) - (leftX>>FRACBITS)) * ((topY>>FRACBITS) - (bottomY>>FRACBITS));
-
+//		area = ((rightX>>FRACBITS) - (leftX>>FRACBITS)) * ((topY>>FRACBITS) - (bottomY>>FRACBITS));
 //		fprintf(stdaux, "Area of Polyobj[%d]: %d\n", polyobjs[i].tag, area);
 //		fprintf(stdaux, "\t[%d]\n[%d]\t\t[%d]\n\t[%d]\n",
 //				 topY>>FRACBITS, leftX>>FRACBITS,

@@ -1715,7 +1715,8 @@ void A_CFlamePuff(mobj_t *actor)
 void A_CFlameMissile(mobj_t *actor)
 {
 	int i;
-	int an, an90;
+	int an;
+//	int an90;
 	fixed_t dist;
 	mobj_t *mo;
 
@@ -1727,7 +1728,7 @@ void A_CFlameMissile(mobj_t *actor)
 		for (i = 0; i < 4; i++)
 		{
 			an = (i*ANG45)>>ANGLETOFINESHIFT;
-			an90 = (i*ANG45 + ANG90)>>ANGLETOFINESHIFT;
+		//	an90 = (i*ANG45 + ANG90)>>ANGLETOFINESHIFT;
 			mo = P_SpawnMobj(BlockingMobj->x + FixedMul(dist, finecosine[an]),
 					 BlockingMobj->y + FixedMul(dist, finesine[an]),
 					 BlockingMobj->z + 5*FRACUNIT, MT_CIRCLEFLAME);
@@ -1762,7 +1763,8 @@ void A_CFlameAttack(player_t *player, pspdef_t *psp)
 	angle_t angle;
 	int damage;
 	int i;
-	int an, an90;
+	int an;
+//	int an90;
 	fixed_t dist;
 	mobj_t *mo;
 
@@ -1804,7 +1806,7 @@ void A_CFlameAttack(player_t *player, pspdef_t *psp)
 		for (i = 0; i < 4; i++)
 		{
 			an = (i*ANG45)>>ANGLETOFINESHIFT;
-			an90 = (i*ANG45 + ANG90)>>ANGLETOFINESHIFT;
+		//	an90 = (i*ANG45 + ANG90)>>ANGLETOFINESHIFT;
 			mo = P_SpawnMobj(linetarget->x + FixedMul(dist, finecosine[an]),
 					 linetarget->y + FixedMul(dist, finesine[an]),
 					 linetarget->z + 5*FRACUNIT, MT_CIRCLEFLAME);
@@ -1943,11 +1945,9 @@ void A_CHolyAttack2(mobj_t *actor)
 
 void A_CHolyAttack(player_t *player, pspdef_t *psp)
 {
-	mobj_t *mo;
-
 	player->mana[MANA_1] -= WeaponManaUse[player->playerclass][player->readyweapon];
 	player->mana[MANA_2] -= WeaponManaUse[player->playerclass][player->readyweapon];
-	mo = P_SpawnPlayerMissile(player->mo, MT_HOLY_MISSILE);
+	P_SpawnPlayerMissile(player->mo, MT_HOLY_MISSILE);
 	if (player == &players[consoleplayer])
 	{
 		player->damagecount = 0;
@@ -2283,6 +2283,7 @@ void A_FireConePL1(player_t *player, pspdef_t *psp)
 	{
 		angle = pmo->angle + i*(ANG45/16);
 		slope = P_AimLineAttack(pmo, angle, MELEERANGE);
+		(void) slope; /* variable set but not used */
 		if (linetarget)
 		{
 			pmo->flags2 |= MF2_ICEDAMAGE;

@@ -379,7 +379,6 @@ static void AM_maxOutWindowScale(void)
 boolean AM_Responder (event_t *ev)
 {
 	int rc;
-	static int cheatstate = 0;
 	static int bigstate = 0;
 
 	rc = false;
@@ -453,7 +452,6 @@ boolean AM_Responder (event_t *ev)
 				followplayer ? AMSTR_FOLLOWON : AMSTR_FOLLOWOFF, true);
 			break;
 		default:
-			cheatstate = 0;
 			rc = false;
 		}
 

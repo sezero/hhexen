@@ -666,15 +666,13 @@ void W_ReadLump(int lump, void *dest)
 
 void *W_CacheLumpNum(int lump, int tag)
 {
-	byte *ptr;
-
 	if ((unsigned)lump >= numlumps)
 	{
 		I_Error("W_CacheLumpNum: %i >= numlumps", lump);
 	}
 	if (!lumpcache[lump])
 	{ // Need to read the lump in
-		ptr = (byte *) Z_Malloc(W_LumpLength(lump), tag, &lumpcache[lump]);
+		Z_Malloc(W_LumpLength(lump), tag, &lumpcache[lump]);
 		W_ReadLump(lump, lumpcache[lump]);
 	}
 	else

@@ -1526,9 +1526,9 @@ void DrawKeyBar(void)
 {
 	int i;
 	int xPosition;
+#ifdef RENDER3D
 	int temp;
 
-#ifdef RENDER3D
 	if (oldkeys != CPlayer->keys)
 	{
 #endif
@@ -1545,11 +1545,9 @@ void DrawKeyBar(void)
 		oldkeys = CPlayer->keys;
 		UpdateState |= I_STATBAR;
 	}
-#endif
 	temp = AutoArmorSave[CPlayer->playerclass]
 		+ CPlayer->armorpoints[ARMOR_ARMOR] + CPlayer->armorpoints[ARMOR_SHIELD]
 		+ CPlayer->armorpoints[ARMOR_HELMET]+ CPlayer->armorpoints[ARMOR_AMULET];
-#ifdef RENDER3D
 	if (oldarmor != temp)
 	{
 #endif

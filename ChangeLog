@@ -1,5 +1,8 @@
 HHexen ChangeLog
 
+v1.6.3
+ - verified successful compilation using gcc-4.6.
+
 v1.6.2
  - reject the old (beta) PC demo (from hexen.zip, "Released October 2nd, 1995").
  - configury updates.
