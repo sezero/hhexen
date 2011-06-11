@@ -27,6 +27,7 @@
    sizeof (long)	== 4 / 8
    sizeof (pointer *)	== 4 / 8
    For this, we need stdint.h (or inttypes.h)
+   FIXME: On some platforms, only inttypes.h is available.
    FIXME: Properly replace certain short and int usage
 	  with int16_t and int32_t.
  */
@@ -43,7 +44,7 @@
 #include <string.h>
 
 #ifdef HAVE_STRINGS_H
-# include <strings.h>	/* strcasecmp and strncasecmp	*/
+#include <strings.h>	/* strcasecmp and strncasecmp	*/
 #endif
 
 /*==========================================================================*/
@@ -89,17 +90,21 @@ typedef unsigned char		byte;
 #undef true
 #undef false
 #if defined(__cplusplus)
-/* do NOT use the bool of C++ because some structures have boolean and they
- * expect it to be 4 bytes long. as a hack, typedef it as int. */
-/* DO HOPE that the compiler built-ins for true and false are 1 and 0 ... */
+/* some structures have boolean members and the x86 asm code expect
+ * those members to be 4 bytes long. therefore, boolean must be 32
+ * bits and it can NOT be binary compatible with the 8 bit C++ bool.  */
 typedef int	boolean;
+COMPILE_TIME_ASSERT(falsehood, (0 == false));
+COMPILE_TIME_ASSERT(truth, (1  == true));
 #else
 typedef enum {
 	false = 0,
 	true  = 1
 } boolean;
+COMPILE_TIME_ASSERT(falsehood, ((1 != 1) == false));
+COMPILE_TIME_ASSERT(truth, ((1 == 1) == true));
 #endif
-
+COMPILE_TIME_ASSERT(boolean, sizeof(boolean) == 4);
 
 /*==========================================================================*/
 
@@ -112,7 +117,7 @@ typedef int	fixed_t;
 
 /*==========================================================================*/
 
-/* compatibility with DOS stuff */
+/* compatibility with DOS/Windows */
 #ifndef O_BINARY
 # if defined(_O_BINARY)
 #  define O_BINARY	_O_BINARY
@@ -122,12 +127,10 @@ typedef int	fixed_t;
 #endif
 
 /* compatibility with M$ types */
-#if !(defined(_WIN32) || defined(_WIN64))
-
+#if !defined(_WIN32)
 #define	PASCAL
 #define	FAR
 #define	APIENTRY
-
 #endif	/* ! WINDOWS */
 
 /*==========================================================================*/
