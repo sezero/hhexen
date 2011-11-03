@@ -698,15 +698,18 @@ void W_CheckWADFiles (void)
 	char	lumpmsg[10];
 	int		i;
 
+	strcpy (lumpmsg, "CLUS1MSG");
 	for (i = 1; i <= 4 && oldwad_10 != true; i++)
 	{
-		sprintf (lumpmsg, "CLUS%iMSG", i);
+		lumpmsg[4] = '0' + i;
 		if (W_CheckNumForName(lumpmsg) == -1)
 			oldwad_10 = true;
 	}
+
+	strcpy (lumpmsg, "WIN1MSG");
 	for (i = 1; i <= 3 && oldwad_10 != true; i++)
 	{
-		sprintf (lumpmsg, "WIN%iMSG", i);
+		lumpmsg[3] = '0' + i;
 		if (W_CheckNumForName(lumpmsg) == -1)
 			oldwad_10 = true;
 	}
