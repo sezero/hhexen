@@ -318,8 +318,8 @@ static void DL_ProcessWall(rendquad_t *quad, float v1[2], float v2[2])
 		// Make a copy of the original.
 		memcpy(&dlq, quad, sizeof(dlq));
 		// Copy the given end points.
-		memcpy(dlq.v1, v1, sizeof(v1));
-		memcpy(dlq.v2, v2, sizeof(v2));
+		memcpy(dlq.v1, v1, 2*sizeof(float) /*sizeof(v1)*/);
+		memcpy(dlq.v2, v2, 2*sizeof(float) /*sizeof(v2)*/);
 		dlq.flags |= RQF_LIGHT; // This is a light texture.
 		dlq.texw = dlq.texh = dlMaxRad*2;
 		// The wall vector.
@@ -851,8 +851,8 @@ void R_RenderSubsector(int ssecidx)
 				if ((hdiff = fabs(triangle.top - z)) > dlMaxRad)
 					continue;
 				triangle.light = 1.5f - 1.5f*hdiff/dlMaxRad;
-				// We can add the light quads. // FIXME: pointer to integer cast !!!
-				RL_AddFlatQuads(&triangle, (int)lum, ssec->numedgeverts, ssec->origedgeverts, 0);
+				// We can add the light quads.
+				RL_AddFlatQuads(&triangle, (uintptr_t)lum, ssec->numedgeverts, ssec->origedgeverts, 0);
 			}
 		}
 	}
@@ -898,8 +898,8 @@ void R_RenderSubsector(int ssecidx)
 				if ((hdiff = fabs(triangle.top - z)) > dlMaxRad)
 					continue;
 				triangle.light = 1.5f - 1.5f*hdiff/dlMaxRad;
-				// We can add the light quads. // FIXME: pointer to integer cast !!!
-				RL_AddFlatQuads(&triangle, (int)lum, ssec->numedgeverts, ssec->origedgeverts, 1);
+				// We can add the light quads.
+				RL_AddFlatQuads(&triangle, (uintptr_t)lum, ssec->numedgeverts, ssec->origedgeverts, 1);
 			}
 		}
 	}

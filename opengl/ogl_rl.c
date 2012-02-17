@@ -188,8 +188,8 @@ void RL_AddQuad(rendquad_t *quad, GLuint quadtex)
 }
 
 // Adds a series of flat quads (triangles) as a fan.
-void RL_AddFlatQuads(rendquad_t *base, GLuint quadtex, int numvrts,
-					fvertex_t *origvrts, int dir)
+void RL_AddFlatQuads(rendquad_t *base, /* GLuint */ uintptr_t quadtex,
+				int numvrts, fvertex_t *origvrts, int dir)
 {
 	fvertex_t	*vtx;
 	rendlist_t	*dest;
@@ -207,7 +207,7 @@ void RL_AddFlatQuads(rendquad_t *base, GLuint quadtex, int numvrts,
 		dest = &dlflat_rlist;
 	else
 		// First find the right list.
-		dest = RL_FindList(quadtex);
+		dest = RL_FindList((GLuint)quadtex);
 
 	// Check that there's enough room.
 	firstquad = dest->numquads;
@@ -266,7 +266,7 @@ void RL_AddFlatQuads(rendquad_t *base, GLuint quadtex, int numvrts,
 			qi->dist[2] = distances[i];
 
 			if (base->flags & RQF_LIGHT)
-				RL_DynLightQuad(qi, (lumobj_t*)quadtex); // FIXME: integer to pointer cast!!!
+				RL_DynLightQuad(qi, (lumobj_t*)quadtex);
 		}
 	}
 	else	// Reverse direction?
@@ -292,7 +292,7 @@ void RL_AddFlatQuads(rendquad_t *base, GLuint quadtex, int numvrts,
 			qi->dist[2] = distances[i];
 
 			if (base->flags & RQF_LIGHT)
-				RL_DynLightQuad(qi, (lumobj_t*)quadtex); // FIXME: integer to pointer cast!!!
+				RL_DynLightQuad(qi, (lumobj_t*)quadtex);
 		}
 	}
 	free (vrts);

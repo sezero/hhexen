@@ -54,7 +54,8 @@ void RL_Init(void);
 void RL_ClearLists(void);
 void RL_DeleteLists(void);
 void RL_AddQuad(rendquad_t *quad, GLuint quadtex);
-void RL_AddFlatQuads(rendquad_t *base, GLuint quadtex, int numvrts, fvertex_t *vrts, int dir);
+void RL_AddFlatQuads(rendquad_t *base, /* GLuint */ uintptr_t quadtex,
+				int numvrts, fvertex_t *vrts, int dir);
 void RL_RenderAllLists(void);
 void SetVertexColor(float light, float dist, float alpha);
 

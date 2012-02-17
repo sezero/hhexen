@@ -1,6 +1,7 @@
 HHexen ChangeLog
 
 v1.6.3
+ - verified successful compilation using clang-3.0.
  - verified successful compilation using gcc-4.6.
 
 v1.6.2
