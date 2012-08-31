@@ -86,6 +86,7 @@ boolean DevMaps;			// true = Map development mode
 const char *DevMapsDir = "";		// development maps directory
 boolean shareware;			// true if only episode 1 present
 boolean oldwad_10;			// true if version 1.0 wad files
+boolean mac_hexen;			// true if Macintosh version wad
 boolean nomonsters;			// checkparm of -nomonsters
 boolean respawnparm;		// checkparm of -respawn
 boolean randomclass;		// checkparm of -randclass
@@ -804,7 +805,8 @@ void H2_DoAdvanceDemo(void)
 	case 5:
 		pagetic = 200;
 		gamestate = GS_DEMOSCREEN;
-		pagename = "CREDIT";	// Mac demo draws "PRSGCRED" here
+		pagename = (mac_hexen == true)	? "PRSGCRED"	/* credits for Mac port by Presage */
+						: "CREDIT";	/* original Raven/iD credits page . */
 		break;
 	case 6:
 		BorderNeedRefresh = true;

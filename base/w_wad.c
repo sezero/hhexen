@@ -33,6 +33,9 @@
 /* PC Retail, patched : */
 #define	RETAIL11_LUMPS	4270
 #define	RETAIL11_SIZE	20083672
+/* Macintosh, retail : */
+#define	MACRETAIL_LUMPS	4567
+#define	MACRETAIL_SIZE	21078584
 /* DeathKings, original: */
 #define	DKINGS10_LUMPS	325
 #define	DKINGS10_SIZE	4429700
@@ -697,6 +700,9 @@ void W_CheckWADFiles (void)
 {
 	char	lumpmsg[10];
 	int		i;
+
+	if (W_CheckNumForName("PRSGCRED") != -1)
+		mac_hexen = true;	/* credits page lump for Mac port by Presage is present. */
 
 	strcpy (lumpmsg, "CLUS1MSG");
 	for (i = 1; i <= 4 && oldwad_10 != true; i++)

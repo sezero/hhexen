@@ -897,6 +897,7 @@ extern	gameaction_t	gameaction;
 extern	boolean		paused;
 extern	boolean		shareware;	/* true if other episodes not present */
 extern	boolean		oldwad_10;	/* true if version 1.0 wad files (shareware or full) */
+extern	boolean		mac_hexen;	/* true if Macintosh version wad (shareware or full) */
 extern	boolean		DevMaps;	/* true = map development mode */
 extern	const char	*DevMapsDir;	/* development maps directory */
 extern	boolean		nomonsters;	/* checkparm of -nomonsters */
