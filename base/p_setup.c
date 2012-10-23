@@ -1365,7 +1365,7 @@ int P_GetMapSky2Texture(int map)
 //
 //==========================================================================
 
-char *P_GetMapName(int map)
+const char *P_GetMapName(int map)
 {
 	return MapInfo[QualifyMap(map)].name;
 }
@@ -1431,7 +1431,7 @@ boolean P_GetMapFadeTable(int map)
 //
 //==========================================================================
 
-char *P_GetMapSongLump(int map)
+const char *P_GetMapSongLump(int map)
 {
 	if (!strcasecmp(MapInfo[QualifyMap(map)].songLump, DEFAULT_SONG_LUMP))
 	{
@@ -1449,7 +1449,7 @@ char *P_GetMapSongLump(int map)
 //
 //==========================================================================
 
-void P_PutMapSongLump(int map, char *lumpName)
+void P_PutMapSongLump(int map, const char *lumpName)
 {
 	if (map < 1 || map > MapCount)
 	{

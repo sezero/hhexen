@@ -477,7 +477,7 @@ void S_Start(void)
 
 void S_StartSong(int song, boolean loop)
 {
-	char *songLump;
+	const char *songLump;
 	int track;
 
 	if (i_CDMusic && cdaudio)
