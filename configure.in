@@ -11,6 +11,10 @@ dnl ==================================================================
 dnl Default values
 dnl ==================================================================
 
+CFLAGS_ALL="-Wall"
+CFLAGS_DBG="-g"
+CFLAGS_OPT="-O2 -ffast-math -fomit-frame-pointer"
+
 GLHEXEN="true"
 SVGAHEXEN="false"
 no_svga="yes"
@@ -18,6 +22,20 @@ no_svga="yes"
 THREAD_LIBS=""
 GLLIBS=""
 SVGALIBS=""
+
+dnl ==================================================================
+dnl Optimization
+dnl ==================================================================
+
+AC_ARG_ENABLE(debug,
+AC_HELP_STRING([--enable-debug], [debug build (no optimizations) [[default=no]]]),
+							[], [enable_debug=no])
+if test x$enable_debug = xyes; then
+	CFLAGS="$CFLAGS $CFLAGS_ALL $CFLAGS_DBG"
+else
+	CFLAGS="$CFLAGS $CFLAGS_ALL $CFLAGS_OPT"
+fi
+
 
 dnl ==================================================================
 dnl Command-line args. Check for mutually-exclusive options.
@@ -220,7 +238,6 @@ AC_TRY_COMPILE(
 
 dnl === Check for gcc strength-reduce bug ============================
 if test "x${GCC}" = "xyes"; then
-  CFLAGS="$CFLAGS -Wall"
   AC_CACHE_CHECK( [for gcc strength-reduce bug], ac_cv_c_gcc_strength_bug,
                   AC_TRY_RUN([
 int main(void) {
@@ -237,7 +254,6 @@ int main(void) {
     CFLAGS="$CFLAGS -fno-strength-reduce"
   fi
 fi
-
 
 dnl ==================================================================
 dnl Checks for library functions.
