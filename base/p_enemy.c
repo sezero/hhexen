@@ -3777,7 +3777,7 @@ void A_IceGuyMissileExplode(mobj_t *actor)
 
 	for (i = 0; i < 8; i++)
 	{
-		mo = P_SpawnMissileAngle(actor, MT_ICEGUY_FX2, i*ANG45,	-0.3*FRACUNIT);
+		mo = P_SpawnMissileAngle(actor, MT_ICEGUY_FX2, (i&3)*ANG45, -0.3*FRACUNIT);
 		if (mo)
 		{
 			mo->target = actor->target;
