@@ -417,7 +417,7 @@ void I_SetChannels(int channels)
  *	SONG API
  */
 
-int I_RegisterSong(void *data)
+int I_RegisterSong(void *data, int siz)
 {
 	return 0;
 }

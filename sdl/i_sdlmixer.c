@@ -39,7 +39,7 @@
 #include "h2def.h"
 #include "sounds.h"
 #include "i_sound.h"
-#include "mmus2mid.h"
+#include "mus.h"
 
 
 #define SAMPLE_FORMAT	AUDIO_S16SYS
@@ -459,38 +459,21 @@ static void loop_song_hook(void)
 	}
 }
 
-int I_RegisterSong(void *data)
+int I_RegisterSong(void *data, int siz)
 {
-	MIDI *mididata;
 	byte *mid;
-	int midlen;
+	uint32_t midlen;
 	char tmpmidi[MAX_OSPATH];
 	int err;
 
 	if (!snd_initialized || !snd_MusicAvail)
 		return 0;
-	if (memcmp(data, "MUS", 3) != 0)
-		return 0;
-	mididata = (MIDI *)malloc(sizeof(MIDI));
-	if (!mididata)
-		return 0;
-	err = mmus2mid(data, mididata, 89, 0);
+	err = mus2midi(data, siz, &mid, &midlen, 140);
 	if (err)
-	{
-		free(mididata);
 		return 0;
-	}
-	err = MIDIToMidi(mididata, &mid, &midlen);
-	if (err)
-	{
-		free(mididata);
-		return 0;
-	}
 	snprintf(tmpmidi, sizeof(tmpmidi), "%stmpmusic.mid", basePath);
 	M_WriteFile(tmpmidi, mid, midlen);
 	free(mid);
-	free_mididata(mididata);
-	free(mididata);
 	CurrentSong = Mix_LoadMUS(tmpmidi);
 	if (!CurrentSong)
 	{

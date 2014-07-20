@@ -512,6 +512,7 @@ void S_StartSong(int song, boolean loop)
 	}
 	else
 	{
+		int length;
 		if (song == Mus_Song)
 		{ // don't replay an old song
 			return;
@@ -553,17 +554,18 @@ void S_StartSong(int song, boolean loop)
 		{
 			char name[MAX_OSPATH];
 			snprintf(name, sizeof(name), "%s%s.lmp", ArchivePath, songLump);
-			M_ReadFile(name, &Mus_SndPtr);
+			length = M_ReadFile(name, &Mus_SndPtr);
 		}
 		else
 		{
 			Mus_LumpNum = W_GetNumForName(songLump);
+			length = W_LumpLength(Mus_LumpNum);
 			Mus_SndPtr = W_CacheLumpNum(Mus_LumpNum, PU_MUSIC);
 		}
 #ifdef __WATCOMC__
 		_dpmi_lockregion(Mus_SndPtr, lumpinfo[Mus_LumpNum].size);
 #endif
-		RegisteredSong = I_RegisterSong(Mus_SndPtr);
+		RegisteredSong = I_RegisterSong(Mus_SndPtr, length);
 		I_PlaySong(RegisteredSong, loop);	// 'true' denotes endless looping.
 		Mus_Song = song;
 	}
@@ -636,6 +638,7 @@ void S_StartSongName(const char *songLump, boolean loop)
 	}
 	else
 	{
+		int length;
 		if (RegisteredSong)
 		{
 			I_StopSong(RegisteredSong);
@@ -668,17 +671,18 @@ void S_StartSongName(const char *songLump, boolean loop)
 		{
 			char name[MAX_OSPATH];
 			snprintf(name, sizeof(name), "%s%s.lmp", ArchivePath, songLump);
-			M_ReadFile(name, &Mus_SndPtr);
+			length = M_ReadFile(name, &Mus_SndPtr);
 		}
 		else
 		{
 			Mus_LumpNum = W_GetNumForName(songLump);
+			length = W_LumpLength(Mus_LumpNum);
 			Mus_SndPtr = W_CacheLumpNum(Mus_LumpNum, PU_MUSIC);
 		}
 #ifdef __WATCOMC__
 		_dpmi_lockregion(Mus_SndPtr, lumpinfo[Mus_LumpNum].size);
 #endif
-		RegisteredSong = I_RegisterSong(Mus_SndPtr);
+		RegisteredSong = I_RegisterSong(Mus_SndPtr, length);
 		I_PlaySong(RegisteredSong, loop);	// 'true' denotes endless looping.
 		Mus_Song = -1;
 	}

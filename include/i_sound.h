@@ -34,7 +34,7 @@ void I_PauseSong(int handle);
 void I_ResumeSong(int handle);
 void I_SetMusicVolume(int volume);
 void I_SetSfxVolume(int volume);
-int I_RegisterSong(void *data);
+int I_RegisterSong(void *data, int siz);
 int I_RegisterExternalSong(const char *name);	/* External music file support */
 void I_UnRegisterSong(int handle);
 int I_QrySongPlaying(int handle);

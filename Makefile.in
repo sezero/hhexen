@@ -71,7 +71,7 @@ OBJ_SWSDL = sdl/i_sdl.o
 OBJ_GLSDL = sdl/i_sdlgl.o
 OBJ_OSS = unix/oss.o unix/i_soundpi.o
 OBJ_SDLAUDIO = sdl/i_sndsdl.o
-OBJ_SDLMIXER = base/mmus2mid.o sdl/i_sdlmixer.o
+OBJ_SDLMIXER = base/mus.o sdl/i_sdlmixer.o
 OBJ_CDA = unix/i_cdmus.o
 
 ifeq ($(SND_MODULE),oss)
