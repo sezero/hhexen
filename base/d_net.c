@@ -88,7 +88,7 @@ static unsigned int NetbufferChecksum (void)
 	return 0;	/* byte order problems */
 #endif
 
-	l = NetbufferSize() - (int)((ptrdiff_t)&(((doomdata_t *)0)->retransmitfrom))/4;
+	l = (NetbufferSize() - (int)((ptrdiff_t) &(((doomdata_t *)0)->retransmitfrom))) / 4;
 	for (i = 0; i < l; i++)
 		c += ((unsigned int *)&netbuffer->retransmitfrom)[i] * (i + 1);
 
