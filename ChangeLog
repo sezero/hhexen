@@ -1,5 +1,9 @@
 HHexen ChangeLog
 
+v1.6.4
+ - fixed a heap buffer overrun which was introduced back in v1.6.0.
+ - new mus2midi converter code by Bret Curtis.
+
 v1.6.3
  - verified successful compilation using gcc-4.6 to 4.8 and clang-3.x. fixed
    some undefined behaviors in the C code.
