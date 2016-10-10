@@ -51,8 +51,7 @@ static void UnloadPics(void);
 static void CheckForSkip(void);
 static void InitStats(void);
 static void DrDeathTally(void);
-static void DrNumber(int val, int x, int y, int wrapThresh);
-static void DrNumberBold(int val, int x, int y, int wrapThresh);
+static void DrNumber(int val, int x, int y, int digits, boolean _bold);
 static void DrawHubText(void);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
@@ -457,14 +456,7 @@ static void DrDeathTally(void)
 			bold = (i == consoleplayer || j == consoleplayer);
 			if (playeringame[i] && playeringame[j])
 			{
-				if (bold)
-				{
-					DrNumberBold(players[i].frags[j], x, y, 100);
-				}
-				else
-				{
-					DrNumber(players[i].frags[j], x, y, 100);
-				}
+				DrNumber(players[i].frags[j], x, y, 2, bold);
 			}
 			else
 			{
@@ -482,7 +474,7 @@ static void DrDeathTally(void)
 		if (showTotals && playeringame[i]
 			&& !((slaughterboy & (1<<i)) && !(intertime & 16)))
 		{
-			DrNumber(totalFrags[i], TALLY_TOTALS_X, y, 1000);
+			DrNumber(totalFrags[i], TALLY_TOTALS_X, y, 3, false);
 		}
 		yPos += yDelta;
 		y = yPos>>FRACBITS;
@@ -495,32 +487,25 @@ static void DrDeathTally(void)
 //
 //==========================================================================
 
-static void DrNumber(int val, int x, int y, int wrapThresh)
+static void DrNumber(int val, int x, int y, int digits, boolean bold)
 {
 	char buff[8] = "XX";
 
-	if (!(val < -9 && wrapThresh < 1000))
-	{
-		snprintf(buff, sizeof(buff), "%d", val >= wrapThresh ? val % wrapThresh : val);
+	switch (digits) {
+	case 2:
+		if (val >= 100) val = 99;
+		if (val > -10)
+			snprintf(buff, sizeof(buff), "%d", val);
+		break;
+	case 3:
+		if (val >= 1000) val = 999;
+		else if (val <= -1000) val = -999;
+		snprintf(buff, sizeof(buff), "%d", val);
+		break;
 	}
-	MN_DrTextA(buff, x - MN_TextAWidth(buff)/2, y);
-}
-
-//==========================================================================
-//
-// DrNumberBold
-//
-//==========================================================================
-
-static void DrNumberBold(int val, int x, int y, int wrapThresh)
-{
-	char buff[8] = "XX";
-
-	if (!(val < -9 && wrapThresh < 1000))
-	{
-		snprintf(buff, sizeof(buff), "%d", val >= wrapThresh ? val % wrapThresh : val);
-	}
-	MN_DrTextAYellow(buff, x - MN_TextAWidth(buff)/2, y);
+	val = MN_TextAWidth(buff) / 2;
+	if (bold) MN_DrTextAYellow(buff, x - val, y);
+	else MN_DrTextA(buff, x - val, y);
 }
 
 //===========================================================================
