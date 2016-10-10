@@ -1520,12 +1520,12 @@ static void AM_DrawDeathmatchStats(void)
 
 static void DrawWorldTimer(void)
 {
-	int days;
-	int hours;
-	int minutes;
-	int seconds;
-	int worldTimer;
-	char timeBuffer[15];
+	unsigned int days;
+	unsigned int hours;
+	unsigned int minutes;
+	unsigned int seconds;
+	unsigned int worldTimer;
+	char timeBuffer[20];
 	char dayBuffer[20];
 
 	worldTimer = players[consoleplayer].worldTimer;
@@ -1539,18 +1539,18 @@ static void DrawWorldTimer(void)
 	worldTimer -= minutes*60;
 	seconds = worldTimer;
 
-	snprintf(timeBuffer, sizeof(timeBuffer), "%.2d : %.2d : %.2d", hours, minutes,seconds);
+	snprintf(timeBuffer, sizeof(timeBuffer), "%.2u : %.2u : %.2u", hours, minutes,seconds);
 	MN_DrTextA(timeBuffer, 240, 8);
 
 	if (days)
 	{
 		if (days == 1)
 		{
-			snprintf(dayBuffer, sizeof(dayBuffer), "%.2d DAY", days);
+			snprintf(dayBuffer, sizeof(dayBuffer), "%.2u DAY", days);
 		}
 		else
 		{
-			snprintf(dayBuffer, sizeof(dayBuffer), "%.2d DAYS", days);
+			snprintf(dayBuffer, sizeof(dayBuffer), "%.2u DAYS", days);
 		}
 		MN_DrTextA(dayBuffer, 240, 20);
 		if (days >= 5)
