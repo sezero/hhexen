@@ -249,7 +249,7 @@ int main(void) {
 }],
     ac_cv_c_gcc_strength_bug="no",
     ac_cv_c_gcc_strength_bug="yes",
-    ac_cv_c_gcc_strength_bug="yes") )
+    ac_cv_c_gcc_strength_bug="no") )
   if test "$ac_cv_c_gcc_strength_bug" = "yes"; then
     CFLAGS="$CFLAGS -fno-strength-reduce"
   fi
