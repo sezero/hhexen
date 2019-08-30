@@ -31,6 +31,15 @@
 #define MALLOC_CLIB	1
 #define MALLOC_ZONE	2
 
+/* compatibility with DOS/Windows */
+#ifndef O_BINARY
+# if defined(_O_BINARY)
+#  define O_BINARY	_O_BINARY
+# else
+#  define O_BINARY		0
+# endif
+#endif
+
 // TYPES -------------------------------------------------------------------
 
 // EXTERNAL FUNCTION PROTOTYPES --------------------------------------------

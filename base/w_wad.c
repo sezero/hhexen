@@ -43,6 +43,15 @@
 #define	DKINGS11_LUMPS	326
 #define	DKINGS11_SIZE	4440584
 
+/* compatibility with DOS/Windows */
+#ifndef O_BINARY
+# if defined(_O_BINARY)
+#  define O_BINARY	_O_BINARY
+# else
+#  define O_BINARY		0
+# endif
+#endif
+
 // TYPES -------------------------------------------------------------------
 
 typedef struct
