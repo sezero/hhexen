@@ -5,8 +5,6 @@
 //**************************************************************************
 
 #include "h2stdinc.h"
-#include <unistd.h>
-#include <sys/time.h>
 #include "SDL.h"
 #include <GL/gl.h>
 #include <GL/glu.h>

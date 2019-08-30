@@ -6,7 +6,6 @@
 
 
 #include "h2stdinc.h"
-#include <sys/time.h>
 #include "SDL.h"
 #include "h2def.h"
 #include "r_local.h"
