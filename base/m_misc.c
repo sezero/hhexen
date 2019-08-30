@@ -19,7 +19,7 @@
 #include "p_local.h"
 #include "i_cdmus.h"
 #include "soundst.h"
-#ifdef __WATCOMC__
+#if defined(__WATCOMC__) && defined(_DOS)
 #include "i_sound.h"
 #endif
 #ifdef RENDER3D
@@ -432,7 +432,7 @@ extern int viewwidth, viewheight;
 extern int screenblocks;
 
 extern int snd_Channels;
-#ifdef __WATCOMC__
+#if defined(__WATCOMC__) && defined(_DOS)
 extern int snd_DesiredMusicDevice, snd_DesiredSfxDevice;
 extern int snd_MusicDevice,	// current music card # (index to dmxCodes)
 	   snd_SfxDevice;	// current sfx card # (index to dmxCodes)
@@ -492,9 +492,9 @@ default_t defaults[] =
 	{ "alwaysrun",		&alwaysrun,		0,	0, 1 },
 
 	{ "snd_channels",	&snd_Channels,		3,	3, MAX_CHANNELS },
-#ifdef __WATCOMC__
+#if defined(__WATCOMC__) && defined(_DOS)
 	/* the min/max values I added here are pretty much meaningless.
-	the values used to be set by the DOS version's setup program. */
+	  the values used to be set by the DOS version's setup program. */
 	{ "snd_musicdevice",	&snd_DesiredMusicDevice,0,	0, NUM_SCARDS-1 },
 	{ "snd_sfxdevice",	&snd_DesiredSfxDevice,	0,	0, NUM_SCARDS-1 },
 	{ "snd_sbport",		&snd_SBport,		544,	0, 544 },

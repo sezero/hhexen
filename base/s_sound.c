@@ -39,7 +39,7 @@ extern int	snd_MaxVolume;
 extern int	snd_MusicVolume;
 extern int	snd_Channels;
 
-#ifdef __WATCOMC__
+#if defined(__WATCOMC__) && defined(_DOS)
 extern int	snd_SfxDevice;
 extern int	snd_MusicDevice;
 extern int	snd_DesiredSfxDevice;
@@ -445,7 +445,7 @@ void S_ShutDown(void)
 		I_CDMusStop();
 	}
 	I_CDMusShutdown();
-#ifdef __WATCOMC__
+#if defined(__WATCOMC__) && defined(_DOS)
 	if (tsm_ID == -1)
 		return;
 #endif
@@ -531,7 +531,7 @@ void S_StartSong(int song, boolean loop)
 				{
 					Z_ChangeTag(lumpcache[Mus_LumpNum], PU_CACHE);
 				}
-#ifdef __WATCOMC__
+#if defined(__WATCOMC__) && defined(_DOS)
 				_dpmi_unlockregion(Mus_SndPtr, lumpinfo[Mus_LumpNum].size);
 #endif
 			}
@@ -562,7 +562,7 @@ void S_StartSong(int song, boolean loop)
 			length = W_LumpLength(Mus_LumpNum);
 			Mus_SndPtr = W_CacheLumpNum(Mus_LumpNum, PU_MUSIC);
 		}
-#ifdef __WATCOMC__
+#if defined(__WATCOMC__) && defined(_DOS)
 		_dpmi_lockregion(Mus_SndPtr, lumpinfo[Mus_LumpNum].size);
 #endif
 		RegisteredSong = I_RegisterSong(Mus_SndPtr, length);
@@ -654,7 +654,7 @@ void S_StartSongName(const char *songLump, boolean loop)
 					Z_ChangeTag(lumpcache[Mus_LumpNum], PU_CACHE);
 				}
 			}
-#ifdef __WATCOMC__
+#if defined(__WATCOMC__) && defined(_DOS)
 			_dpmi_unlockregion(Mus_SndPtr, lumpinfo[Mus_LumpNum].size);
 #endif
 			RegisteredSong = 0;
@@ -679,7 +679,7 @@ void S_StartSongName(const char *songLump, boolean loop)
 			length = W_LumpLength(Mus_LumpNum);
 			Mus_SndPtr = W_CacheLumpNum(Mus_LumpNum, PU_MUSIC);
 		}
-#ifdef __WATCOMC__
+#if defined(__WATCOMC__) && defined(_DOS)
 		_dpmi_lockregion(Mus_SndPtr, lumpinfo[Mus_LumpNum].size);
 #endif
 		RegisteredSong = I_RegisterSong(Mus_SndPtr, length);
@@ -868,7 +868,7 @@ void S_StartSoundAtVolume(mobj_t *origin, int sound_id, int volume)
 			S_sfx[sound_id].snd_ptr =
 				W_CacheLumpNum(S_sfx[sound_id].lumpnum, PU_SOUND);
 		}
-#ifdef __WATCOMC__
+#if defined(__WATCOMC__) && defined(_DOS)
 		_dpmi_lockregion(S_sfx[sound_id].snd_ptr,
 				 lumpinfo[S_sfx[sound_id].lumpnum].size);
 #endif
@@ -1113,7 +1113,7 @@ void S_UpdateSounds(mobj_t *listener)
 									sizeof(memblock_t)))->id == ZONEID)
 						{ // taken directly from the Z_ChangeTag macro
 							Z_ChangeTag2(lumpcache[S_sfx[i].lumpnum], PU_CACHE);
-#ifdef __WATCOMC__
+#if defined(__WATCOMC__) && defined(_DOS)
 							_dpmi_unlockregion(S_sfx[i].snd_ptr,
 									   lumpinfo[S_sfx[i].lumpnum].size);
 #endif

@@ -41,7 +41,7 @@
 
 // EXTERNAL FUNCTION PROTOTYPES --------------------------------------------
 
-#if defined(__WATCOMC__) || defined(__DJGPP__) || defined(__DOS__)
+#if defined(__WATCOMC__) && defined(_DOS)
 extern void SetVideoModeHR(void);
 extern void ClearScreenHR(void);
 extern void SlamHR(char *buffer);
@@ -68,7 +68,7 @@ void ST_UpdateNetNotches(int notchPosition);
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
-#if defined(__WATCOMC__) || defined(__DJGPP__) || defined(__DOS__)
+#if defined(__WATCOMC__) && defined(_DOS)
 static char *bitmap = NULL;
 
 static char notchTable[] =
@@ -136,7 +136,7 @@ static char netnotchTable[] =
 
 void ST_Init(void)
 {
-#if defined(__WATCOMC__) || defined(__DJGPP__) || defined(__DOS__)
+#if defined(__WATCOMC__) && defined(_DOS)
 	char *pal;
 	char *buffer;
 
@@ -163,7 +163,7 @@ void ST_Init(void)
 
 void ST_Done(void)
 {
-#if defined(__WATCOMC__) || defined(__DJGPP__) || defined(__DOS__)
+#if defined(__WATCOMC__) && defined(_DOS)
 	ClearScreenHR();
 #endif	/* DOS :  I_IBM.C */
 }
@@ -177,7 +177,7 @@ void ST_Done(void)
 
 void ST_UpdateNotches(int notchPosition)
 {
-#if defined(__WATCOMC__) || defined(__DJGPP__) || defined(__DOS__)
+#if defined(__WATCOMC__) && defined(_DOS)
 	int x = ST_PROGRESS_X + notchPosition*ST_NOTCH_WIDTH;
 	int y = ST_PROGRESS_Y;
 	SlamBlockHR(x,y, ST_NOTCH_WIDTH,ST_NOTCH_HEIGHT, notchTable);
@@ -193,7 +193,7 @@ void ST_UpdateNotches(int notchPosition)
 
 void ST_UpdateNetNotches(int notchPosition)
 {
-#if defined(__WATCOMC__) || defined(__DJGPP__) || defined(__DOS__)
+#if defined(__WATCOMC__) && defined(_DOS)
 	int x = ST_NETPROGRESS_X + notchPosition*ST_NETNOTCH_WIDTH;
 	int y = ST_NETPROGRESS_Y;
 	SlamBlockHR(x,y, ST_NETNOTCH_WIDTH, ST_NETNOTCH_HEIGHT, netnotchTable);
@@ -209,7 +209,7 @@ void ST_UpdateNetNotches(int notchPosition)
 
 void ST_Progress(void)
 {
-#if defined(__WATCOMC__) || defined(__DJGPP__) || defined(__DOS__)
+#if defined(__WATCOMC__) && defined(_DOS)
 	static int notchPosition = 0;
 
 	/* Check for ESC press -- during startup all events eaten here */
@@ -242,7 +242,7 @@ void ST_Progress(void)
 
 void ST_NetProgress(void)
 {
-#if defined(__WATCOMC__) || defined(__DJGPP__) || defined(__DOS__)
+#if defined(__WATCOMC__) && defined(_DOS)
 	static int netnotchPosition = 0;
 	if (debugmode)
 	{

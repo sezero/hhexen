@@ -1280,7 +1280,7 @@ byte *I_AllocLow (int length);
 
 extern	boolean		useexterndriver;
 
-#if defined(__WATCOMC__) || defined(__DJGPP__) || defined(__DOS__)
+#if defined(__WATCOMC__) && defined(_DOS)
 #define EBT_FIRE		1
 #define EBT_OPENDOOR		2
 #define EBT_SPEED		4
