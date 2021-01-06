@@ -1,5 +1,4 @@
 # HHexen Makefile
-# $Revision$
 #
 # svga			build Software (SVGALib) version
 # sdl			build Software (SDL) version
@@ -25,9 +24,8 @@ mandir = $(prefix)/man/man1
 includedir = $(prefix)/include
 
 CC = @CC@
-DEFS = @DEFS@
 CFLAGS = @CFLAGS@
-CPPFLAGS = @CPPFLAGS@
+CPPFLAGS = @DEFS@ @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 BASELIBS = @LIBS@
@@ -40,11 +38,9 @@ SDL_LIBS = @SDL_LIBS@
 SDL_CFLAGS = @SDL_CFLAGS@
 GLHEXEN = @GLHEXEN@
 SVGAHEXEN = @SVGAHEXEN@
-SHARED_DATAPATH = @SHARED_DATAPATH@
 SND_MODULE= @SND_MODULE@
 
 # Directories
-
 TOPSRCDIR = @top_srcdir@
 TOPOBJDIR = .
 SRCDIR    = @srcdir@
@@ -64,7 +60,6 @@ GL_LIBS := -L$(X11_LIB) $(GL_LIBS)
 endif
 
 # Objects to build
-
 OBJ_SYS  = unix/i_linux.o
 OBJ_SVGA = svgalib/i_svgalib.o
 OBJ_SWSDL = sdl/i_sdl.o
@@ -72,7 +67,7 @@ OBJ_GLSDL = sdl/i_sdlgl.o
 OBJ_OSS = unix/oss.o unix/i_soundpi.o
 OBJ_SDLAUDIO = sdl/i_sndsdl.o
 OBJ_SDLMIXER = base/mus.o sdl/i_sdlmixer.o
-OBJ_CDA = unix/i_cdmus.o
+OBJ_CDAUDIO = unix/i_cdmus.o
 
 ifeq ($(SND_MODULE),oss)
 OBJ_SND:= $(OBJ_OSS)
@@ -154,20 +149,19 @@ OBJ_BASE = \
 
 
 ifeq ($(SVGAHEXEN),true)
-svga: $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_SVGA) $(OBJ_BASE)
-	$(CC) $(LDFLAGS) $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_SVGA) $(OBJ_BASE) -o hhexen-svga $(BASELIBS) $(SVGALIBS)
+svga: $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDAUDIO) $(OBJ_SVGA) $(OBJ_BASE)
+	$(CC) $(LDFLAGS) $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDAUDIO) $(OBJ_SVGA) $(OBJ_BASE) -o hhexen-svga $(BASELIBS) $(SVGALIBS)
 else
 
 ifeq ($(GLHEXEN),true)
-opengl: $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE)
-	$(CC) $(LDFLAGS) $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE) -o hhexen-gl $(BASELIBS) $(GL_LIBS) $(SDL_LIBS)
+opengl: $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDAUDIO) $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE)
+	$(CC) $(LDFLAGS) $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDAUDIO) $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE) -o hhexen-gl $(BASELIBS) $(GL_LIBS) $(SDL_LIBS)
 else
-sdl: $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_SWSDL) $(OBJ_BASE)
-	$(CC) $(LDFLAGS) $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDA) $(OBJ_SWSDL) $(OBJ_BASE) -o hhexen-sdl $(BASELIBS) $(SDL_LIBS)
+sdl: $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDAUDIO) $(OBJ_SWSDL) $(OBJ_BASE)
+	$(CC) $(LDFLAGS) $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDAUDIO) $(OBJ_SWSDL) $(OBJ_BASE) -o hhexen-sdl $(BASELIBS) $(SDL_LIBS)
 endif
 
 endif
 
 clean:
 	$(RM) base/*.o opengl/*.o dos/*.o unix/*.o sdl/*.o svgalib/*.o
-

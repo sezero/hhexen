@@ -1,16 +1,13 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.53)
-AC_INIT([hhexen], [1.6.4])
-AC_REVISION($Revision$)
+AC_PREREQ([2.53])
+AC_INIT([hhexen],[1.6.4])
 AC_CONFIG_AUX_DIR([autotools])
-AC_CONFIG_SRCDIR(base/a_action.c)
-AC_CONFIG_HEADER(config.h)
+AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_HEADER([config.h])
+AC_CONFIG_SRCDIR([base/a_action.c])
 
-dnl ==================================================================
-dnl Default values
-dnl ==================================================================
-
+dnl == Default values
 CFLAGS_ALL="-Wall"
 CFLAGS_DBG="-g"
 CFLAGS_OPT="-O2 -ffast-math -fomit-frame-pointer"
@@ -23,57 +20,49 @@ THREAD_LIBS=""
 GLLIBS=""
 SVGALIBS=""
 
-dnl ==================================================================
-dnl Optimization
-dnl ==================================================================
-
+dnl == Optimization
 AC_ARG_ENABLE(debug,
-AC_HELP_STRING([--enable-debug], [debug build (no optimizations) [[default=no]]]),
-							[], [enable_debug=no])
+AS_HELP_STRING([--enable-debug], [debug build (no optimizations) [[default=no]]]),
+  [], [enable_debug=no])
 if test x$enable_debug = xyes; then
 	CFLAGS="$CFLAGS $CFLAGS_ALL $CFLAGS_DBG"
 else
 	CFLAGS="$CFLAGS $CFLAGS_ALL $CFLAGS_OPT"
 fi
 
-
-dnl ==================================================================
-dnl Command-line args. Check for mutually-exclusive options.
-dnl ==================================================================
-
+dnl == Command-line args. Check for mutually-exclusive options.
 AC_ARG_ENABLE(fullscreen,
-AC_HELP_STRING([--enable-fullscreen], [Run fullscreen by default [[default=no]]]),
-							[], [enable_fullscreen=no])
+AS_HELP_STRING([--enable-fullscreen], [Run fullscreen by default [[default=no]]]),
+  [], [enable_fullscreen=no])
 if test x$enable_fullscreen = xyes; then
 	AC_DEFINE(FULLSCREEN_DEFAULT, 1, [Define if want to run fullscreen by default instead of windowed])
 fi
 
 AC_ARG_ENABLE(userdirs,
-AC_HELP_STRING([--disable-userdirs], [Disable user directories [[default=no]]]),
-							[], [enable_userdirs=yes])
-
+AS_HELP_STRING([--disable-userdirs], [Disable user directories [[default=no]]]),
+  [], [enable_userdirs=yes])
 if test x$enable_userdirs != xyes; then
 	AC_DEFINE(_NO_USERDIRS, 1, [Define if want to disable user directories])
 fi
 
 AC_ARG_ENABLE(asm,
-AC_HELP_STRING([--disable-asm], [Disable assembly language [[default=no]]]),
-							[], [enable_asm=yes])
+AS_HELP_STRING([--disable-asm], [Disable assembly language [[default=no]]]),
+  [], [enable_asm=yes])
 if test x$enable_asm != xyes; then
 	AC_DEFINE(_DISABLE_ASM, 1, [Define if not want to use assembly language])
 fi
 
 AC_ARG_ENABLE(svga,
-AC_HELP_STRING([--enable-svga], [Enable SVGALib version [[default=no]]]),
-						[], [enable_svga=no])
+AS_HELP_STRING([--enable-svga], [Enable SVGALib version [[default=no]]]),
+  [], [enable_svga=no])
 if test x$enable_svga = xyes; then
 	no_svga="no"
 	SVGAHEXEN="true"
 fi
 
 AC_ARG_ENABLE(gl,
-AC_HELP_STRING([--disable-gl], [Disable OpenGL version [[default=no]]]),
-						[], [enable_gl=$no_svga])
+AS_HELP_STRING([--disable-gl], [Disable OpenGL version [[default=no]]]),
+  [], [enable_gl=$no_svga])
 if test x$enable_gl = xyes; then
 	if test x$no_svga = xno; then
 	    AC_MSG_ERROR([*** --enable-gl and --enable-svga can not be used together])
@@ -87,46 +76,45 @@ AC_SUBST(GLHEXEN)
 AC_SUBST(SVGAHEXEN)
 
 AC_ARG_ENABLE(demowad,
-AC_HELP_STRING([--enable-demowad], [Build for the demo version wad only [[default=no]]]),
-								[], [enable_demowad=no])
+AS_HELP_STRING([--enable-demowad], [Build for the demo version wad only [[default=no]]]),
+  [], [enable_demowad=no])
 if test x$enable_demowad = xyes; then
 	AC_DEFINE(DEMO_VERSION, 1, [Define if building for the 4 level shareware wad files only])
 fi
 
 AC_ARG_ENABLE(oldwad,
-AC_HELP_STRING([--enable-oldwad], [Build for the version 1.0 wad only [[default=no]]]),
-								[], [enable_oldwad=no])
+AS_HELP_STRING([--enable-oldwad], [Build for the version 1.0 wad only [[default=no]]]),
+  [], [enable_oldwad=no])
 if test x$enable_oldwad = xyes; then
 	AC_DEFINE(VERSION10_WAD, 1, [Define if building for version 1.0 (4-player) wadfiles only])
 fi
 
 AC_ARG_ENABLE(assassin,
-AC_HELP_STRING([--enable-assassin], [Build with support for the Assassin [[default=no]]]),
-								[], [enable_assassin=no])
+AS_HELP_STRING([--enable-assassin], [Build with support for the Assassin [[default=no]]]),
+  [], [enable_assassin=no])
 if test x$enable_assassin = xyes; then
 	AC_DEFINE(ASSASSIN, 1, [Define if including the assassin in compile])
 fi
 
 AC_ARG_ENABLE(dossaves,
-AC_HELP_STRING([--enable-dossaves], [DOS-Hexen saved game compatibility [[experimental]] [[default=no]]]),
-						[], [enable_dossaves=no])
+AS_HELP_STRING([--enable-dossaves], [DOS-Hexen saved game compatibility [[experimental]] [[default=no]]]),
+  [], [enable_dossaves=no])
 if test x$enable_dossaves = xyes; then
 	AC_DEFINE(_DOSSAVE_COMPAT, 1, [Define for saved game compatibility with DOS-Hexen (experimental)])
 fi
 
 AC_ARG_ENABLE(rangecheck,
-AC_HELP_STRING([--enable-rangecheck], [Enable parameter validation debugging code [[default=no]]]),
-						[], [enable_rangecheck=no])
+AS_HELP_STRING([--enable-rangecheck], [Enable parameter validation debugging code [[default=no]]]),
+  [], [enable_rangecheck=no])
 if test x$enable_rangecheck = xno; then
 	AC_DEFINE(NORANGECHECKING, 1, [Define to not compile most parameter validation debugging code])
 fi
 
 AC_ARG_WITH(datapath,
-[  --with-datapath=<DIR>   Use DIR for shared game data. Not defined by default.],
-datapath="$withval", datapath="")
+AS_HELP_STRING([--with-datapath=<DIR>],[Use DIR for shared game data. Not defined by default.]),
+  [datapath="$withval"], [datapath=""])
 AC_DEFINE_UNQUOTED(SHARED_DATAPATH, "$datapath", [Define this to the shared game directory root])
 SHARED_DATAPATH="$datapath"
-AC_SUBST(SHARED_DATAPATH)
 
 if test "$SVGAHEXEN" = "true";then
   default_audio="oss"
@@ -134,11 +122,11 @@ else
   default_audio="sdl"
 fi
 
-AC_ARG_WITH(audio,
-[  --with-audio=<driver>   If set, will change the audio driver. Valid values
-                          are oss, sdl and sdlmixer.  sdl is the default.
-                          sdlmixer adds the ability of midi music playback.],
-audio_drv="$withval", audio_drv="$default_audio")
+AC_ARG_WITH([audio],
+AS_HELP_STRING([--with-audio=<driver>], [If set, will change the audio driver.
+Valid values are oss, sdl and sdlmixer.  sdl is the default.
+sdlmixer adds the ability of midi music playback.]),
+  [audio_drv="$withval"], [audio_drv="$default_audio"])
 
 if test "$SVGAHEXEN" = "true";then
 	if test "$audio_drv" != "$default_audio";then
@@ -158,107 +146,42 @@ fi
 
 AC_SUBST(SND_MODULE)
 
-
-dnl ==================================================================
-dnl Checks for programs.
-dnl ==================================================================
-
+dnl == Checks for programs.
 AC_PROG_CC
 AC_PROG_CPP
 
+dnl == Checks for header files.
+AC_CHECK_HEADERS(linux/cdrom.h sys/cdio.h sys/soundcard.h stdint.h inttypes.h strings.h)
 
-dnl ==================================================================
-dnl Checks for header files.
-dnl ==================================================================
-
-AC_CHECK_HEADERS(\
-	dlfcn.h \
-	linux/cdrom.h \
-	sys/cdio.h \
-	sys/soundcard.h \
-	linux/soundcard.h \
-	machine/soundcard.h \
-	soundcard.h \
-	stdint.h \
-	inttypes.h \
-	strings.h
-)
-AC_HEADER_STAT()
-
-
-dnl ==================================================================
-dnl Checks for typedefs, structures, and compiler characteristics
-dnl ==================================================================
-
-AC_C_CONST()
-AC_C_INLINE()
-AC_C_CHAR_UNSIGNED()
-AC_TYPE_SIZE_T()
-
-AC_CHECK_SIZEOF(char,0)
-AC_CHECK_SIZEOF(short,0)
-AC_CHECK_SIZEOF(int,0)
-AC_CHECK_SIZEOF(long,0)
-AC_CHECK_SIZEOF(long long,0)
-AC_CHECK_SIZEOF(size_t,0)
-AC_CHECK_SIZEOF(void *,0)
-AC_CHECK_SIZEOF(float,0)
-AC_CHECK_SIZEOF(double,0)
-AC_CHECK_SIZEOF(long double,0)
-
-AC_FUNC_ALLOCA
-AC_FUNC_MEMCMP
+dnl == Checks for typedefs, structures, and compiler characteristics
+AC_C_CONST
+AC_C_VOLATILE
+AC_C_INLINE
+AC_C_CHAR_UNSIGNED
+AC_TYPE_SIZE_T
 
 AC_C_BIGENDIAN
 
-dnl === Check for underscore on external symbols =====================
-AC_MSG_CHECKING(whether external symbols need an underscore prefix)
-AC_TRY_LINK(
-	[asm(".long _bar");
-	int bar;],
-	[],
-	AC_DEFINE(HAVE_SYM_PREFIX_UNDERSCORE, 1, [Define this if C symbols are prefixed with an underscore]) AC_MSG_RESULT(yes),
-	AC_MSG_RESULT(no)
-)
-
-dnl === Check if the GCC __builtin_expect keyword is available =======
-AH_VERBATIM([HAVE___BUILTIN_EXPECT],
-[/* Define this if the GCC __builtin_expect keyword is available */
-#undef HAVE___BUILTIN_EXPECT
-#ifndef HAVE___BUILTIN_EXPECT
-# define __builtin_expect(x,c) x
-#endif])
-AC_MSG_CHECKING(for __builtin_expect)
-AC_TRY_COMPILE(
-	[long (*foo) (long, long) = __builtin_expect;],
-	[],
-	AC_DEFINE(HAVE___BUILTIN_EXPECT) AC_MSG_RESULT(yes),
-	AC_MSG_RESULT(no)
-)
-
-dnl === Check for gcc strength-reduce bug ============================
+dnl == Check for gcc strength-reduce bug
 if test "x${GCC}" = "xyes"; then
   AC_CACHE_CHECK( [for gcc strength-reduce bug], ac_cv_c_gcc_strength_bug,
-                  AC_TRY_RUN([
+                  AC_RUN_IFELSE([AC_LANG_SOURCE([[
 int main(void) {
   static int Array[[3]];
   unsigned int B = 3;
   int i;
   for(i=0; i<B; i++) Array[[i]] = i - 3;
   exit( Array[[1]] != -2 );
-}],
-    ac_cv_c_gcc_strength_bug="no",
-    ac_cv_c_gcc_strength_bug="yes",
-    ac_cv_c_gcc_strength_bug="no") )
+}]])],
+    [ac_cv_c_gcc_strength_bug="no"],
+    [ac_cv_c_gcc_strength_bug="yes"],
+    [ac_cv_c_gcc_strength_bug="no"]) )
   if test "$ac_cv_c_gcc_strength_bug" = "yes"; then
     CFLAGS="$CFLAGS -fno-strength-reduce"
   fi
 fi
 
-dnl ==================================================================
-dnl Checks for library functions.
-dnl ==================================================================
-
+dnl == Checks for library functions.
 AC_PATH_X
 X11_INC="$ac_x_includes"
 X11_LIB="$ac_x_libraries"
@@ -293,22 +216,17 @@ AC_SUBST(THREAD_LIBS)
 AC_SUBST(X11_INC)
 AC_SUBST(X11_LIB)
 
-dnl === Check for SDL ================================================
+dnl == Check for SDL
 SDL_VERSION="1.2.4"
-AM_PATH_SDL($SDL_VERSION,
-	[HAVESDL="yes"],
-	[HAVESDL="no"]
-)
-
+AM_PATH_SDL($SDL_VERSION,[HAVESDL="yes"],[HAVESDL="no"])
 if test "$SVGAHEXEN" = "false";then
-  if test "$HAVESDL" = "no"; then
+    if test "$HAVESDL" = "no"; then
 	AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
-  fi
+    fi
 fi
 
 saved_libs="$LIBS"
 AC_CHECK_LIB(SDL_mixer, Mix_LoadMUS, [HAVE_SDLMIXER="yes"], [HAVE_SDLMIXER="no"], [$SDL_LIBS])
-
 LIBS="$saved_libs"
 if test "$SND_MODULE" = "sdlmixer";then
   if test $HAVE_SDLMIXER = "no";then
@@ -321,7 +239,7 @@ fi
 AC_SUBST(SDL_CFLAGS)
 AC_SUBST(SDL_LIBS)
 
-dnl === Check for GL libraries =======================================
+dnl == Check for GL libraries
 case "$host" in
     *-*-cygwin* | *-*-mingw32*)
         GL_LIBS="-lopengl32 -lglu32"
@@ -343,46 +261,34 @@ else
 fi
 
 AC_MSG_CHECKING(for OpenGL support)
-AC_TRY_LINK([
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <GL/gl.h>
 #include <GL/glu.h>
- ],
- [],
- [HAVEGL="yes"; AC_MSG_RESULT(yes)],
- [HAVEGL="no"; AC_MSG_RESULT(no)])
-
+]],[])],[HAVEGL="yes"],[HAVEGL="no"])
+AC_MSG_RESULT($HAVEGL)
 LIBS="$saved_libs"
-
 if test "$GLHEXEN" = "true"; then
   if test "$HAVEGL" = "no"; then
 	AC_MSG_ERROR([*** OpenGL not found!])
   fi
 fi
-
 AC_SUBST(GL_LIBS)
 
-dnl === Check for SVGALib ============================================
+dnl == Check for SVGALib
 AC_CHECK_LIB(vga, vga_setmode, [SVGALIBS="-lvga"; HAVESVGA="yes"], [HAVESVGA="no"])
-
 if test "$SVGAHEXEN" = "true";then
   if test "$HAVESVGA" = "no"; then
 	AC_MSG_ERROR([*** SVGALib not found!])
   fi
 fi
-
 AC_SUBST(SVGALIBS)
 
 
-dnl ==================================================================
-dnl Generate output files
-dnl ==================================================================
+dnl == Generate output files
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
 
-AC_OUTPUT(Makefile)
-
-
-dnl ==================================================================
-dnl Make a short report :
-dnl ==================================================================
+dnl == Make a short report
 echo
 echo "HHexen configuration finished."
 
