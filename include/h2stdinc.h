@@ -2,8 +2,6 @@
 	h2stdinc.h
 	includes the minimum necessary stdc headers,
 	defines common and / or missing types.
-
-	$Id$
 */
 
 #ifndef __H2STDINC_H

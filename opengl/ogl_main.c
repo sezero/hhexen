@@ -1,10 +1,6 @@
-
 //**************************************************************************
 //**
 //** r_main.c : Heretic 2 : Raven Software, Corp.
-//**
-//** $Revision$
-//** $Date$
 //**
 //** (ogl_main.c is r_main.c with necessary clean-ups for ogl)
 //**

@@ -1,10 +1,6 @@
-
 //**************************************************************************
 //**
 //** r_segs.c : Heretic 2 : Raven Software, Corp.
-//**
-//** $Revision$
-//** $Date$
 //**
 //** This version has the tall-sector-crossing-precision-bug fixed.
 //**

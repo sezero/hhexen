@@ -2,9 +2,6 @@
 //**
 //** soundst.h : Heretic 2 : Raven Software, Corp.
 //**
-//** $Revision$
-//** $Date$
-//**
 //**************************************************************************
 
 #ifndef __SOUNDSTH__

@@ -2,11 +2,7 @@
 //**
 //** i_soundpi.c: unix sound driver using a plugin interface
 //**
-//** $Revision$
-//** $Date$
-//**
 //**************************************************************************
-
 
 #include "h2stdinc.h"
 #include <math.h>	/* pow() */

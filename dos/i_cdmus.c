@@ -1,9 +1,6 @@
-
 //**************************************************************************
 //**
 //** i_cdmus.c
-//** $Revision$
-//** $Date$
 //**
 //**************************************************************************
 
@@ -814,7 +811,6 @@ void I_CDMusUpdate(void)
 
 int I_CDMusSetVolume(int volume)
 {
-
 	if(!OkInit)
 	{
 		cd_Error = CDERR_NOTINSTALLED;

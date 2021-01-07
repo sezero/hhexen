@@ -1,10 +1,6 @@
-
 //**************************************************************************
 //**
 //** r_data.c : Heretic 2 : Raven Software, Corp.
-//**
-//** $Revision$
-//** $Date$
 //**
 //**************************************************************************
 
@@ -569,7 +565,6 @@ int R_TextureNumForName (const char *name)
 = Preloads all relevent graphics for the level
 =================
 */
-
 static int	flatmemory, texturememory, spritememory;
 
 void R_PrecacheLevel (void)

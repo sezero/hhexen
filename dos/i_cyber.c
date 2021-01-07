@@ -1,6 +1,4 @@
 // I_cyber.c
-// $Revision$
-// $Date$
 
 #include <dos.h>
 #include <stdlib.h>

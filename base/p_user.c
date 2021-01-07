@@ -1,10 +1,6 @@
-
 //**************************************************************************
 //**
 //** p_user.c : Heretic 2 : Raven Software, Corp.
-//**
-//** $Revision$
-//** $Date$
 //**
 //**************************************************************************
 
@@ -1663,12 +1659,8 @@ boolean P_UseArtifact(player_t *player, artitype_t arti)
 		{
 			return true;
 		}
-		else
-		{
-			P_SetYellowMessage(player, TXT_USEPUZZLEFAILED, false);
-			return false;
-		}
-		break;
+		P_SetYellowMessage(player, TXT_USEPUZZLEFAILED, false);
+		return false;
 	default:
 		return false;
 	}

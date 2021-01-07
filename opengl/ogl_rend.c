@@ -3,9 +3,6 @@
 //** OGL_DRAW.C
 //** Author:		jk
 //**
-//** $Revision$
-//** $Date$
-//**
 //** Rendering lists and other rendering.
 //**
 //**************************************************************************

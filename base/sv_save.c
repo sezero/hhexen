@@ -1,10 +1,6 @@
-
 //**************************************************************************
 //**
 //** sv_save.c : Heretic 2 : Raven Software, Corp.
-//**
-//** $Revision$
-//** $Date$
 //**
 //** Games are always saved Little Endian, with 32 bit offsets.
 //** The saved games then can be properly read on 64 bit and/or

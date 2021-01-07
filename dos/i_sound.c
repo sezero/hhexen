@@ -1,7 +1,4 @@
-
 // I_SOUND.C
-// $Revision$
-// $Date$
 
 #include <stdio.h>
 #include "h2def.h"
@@ -42,10 +39,7 @@ void I_ShutdownTimer (void)
 }
 
 /*
- *
- *                           SOUND HEADER & DATA
- *
- *
+ * SOUND HEADER & DATA
  */
 
 // sound information
@@ -100,9 +94,7 @@ void I_SetSfxVolume(int volume)
 }
 
 /*
- *
- *                              SONG API
- *
+ * SONG API
  */
 
 int I_RegisterSong(void *data)
@@ -165,9 +157,7 @@ void I_PlaySong(int handle, boolean looping)
 }
 
 /*
- *
- *                                 SOUND FX API
- *
+ * SOUND FX API
  */
 
 // Gets lump nums of the named sound.  Returns pointer which will be
@@ -207,10 +197,7 @@ void I_UpdateSoundParams(int handle, int vol, int sep, int pitch)
 }
 
 /*
- *
- *                                                      SOUND STARTUP STUFF
- *
- *
+ * SOUND STARTUP STUFF
  */
 
 //

@@ -2,9 +2,6 @@
 	sv_save.h: Heretic 2 (Hexen)
 	Structures used for saved games.
 
-	$Revision$
-	$Date$
-
 	See the file SAVEGAME for notes and/or issues.
 */
 

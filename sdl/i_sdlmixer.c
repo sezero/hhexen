@@ -1,6 +1,4 @@
-/* $Id$
- *
- *  Ripped && Adapted from the PrBoom project:
+/*  Ripped && Adapted from the PrBoom project:
  *  PrBoom: a Doom port merged with LxDoom and LSDLDoom
  *  based on BOOM, a modified and improved DOOM engine
  *  Copyright (C) 1999 by
@@ -27,7 +25,6 @@
  *
  * DESCRIPTION:
  *  System interface for sound, using SDL_mixer.
- *
  */
 
 

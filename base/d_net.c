@@ -1,10 +1,6 @@
-
 //**************************************************************************
 //**
 //** d_net.c : Heretic 2 : Raven Software, Corp.
-//**
-//** $Revision$
-//** $Date$
 //**
 //** This version has the fixed ticdup code.
 //**

@@ -1,10 +1,6 @@
-
 //**************************************************************************
 //**
 //** OGL_SKY.C
-//**
-//** $Revision$
-//** $Date$
 //**
 //**************************************************************************
 
@@ -289,10 +285,10 @@ void R_RenderSkyHemispheres(int hemis)
 }
 
 
-// THESE COPIED OVER FROM R_PLANES.C ---------------------------------------
+/* THESE COPIED OVER FROM R_PLANES.C ---------------------------------*/
 
 // R_InitSky -  Called at level load.
-void R_InitSky(int map)
+void R_InitSky (int map)
 {
 	Sky1Texture = P_GetMapSky1Texture(map);
 	Sky2Texture = P_GetMapSky2Texture(map);
@@ -304,7 +300,7 @@ void R_InitSky(int map)
 }
 
 // R_InitSkyMap - Called whenever the view size changes.
-void R_InitSkyMap(void)
+void R_InitSkyMap (void)
 {
 	skyflatnum = R_FlatNumForName("F_SKY");
 	skytexturemid = 200*FRACUNIT;
