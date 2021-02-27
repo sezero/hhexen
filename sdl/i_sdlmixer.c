@@ -606,4 +606,3 @@ void I_PlaySong(int handle, boolean looping)
 	if (CurrentSong)
 		Mix_FadeInMusic(CurrentSong, 0, 500);
 }
-

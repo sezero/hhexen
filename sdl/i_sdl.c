@@ -220,6 +220,10 @@ void I_InitGraphics(void)
 		return;
 	}
 
+	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
+		I_Error("Couldn't init video: %s", SDL_GetError());
+	}
+
 	if (M_CheckParm("-f") || M_CheckParm("--fullscreen"))
 		flags |= SDL_FULLSCREEN;
 	if (M_CheckParm("-w") || M_CheckParm("--windowed"))
@@ -515,4 +519,3 @@ void I_StartupMouse (void)
 {
 	mousepresent = 1;
 }
-

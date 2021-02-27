@@ -72,11 +72,17 @@
 /* Define if building with OpenGL support */
 #undef RENDER3D
 
+/* Define if HHexen depends on SDL */
+#undef SDLHEXEN
+
 /* Define this to the shared game directory root */
 #undef SHARED_DATAPATH
 
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
+
+/* Define if HHexen depends on SVGALib */
+#undef SVGAHEXEN
 
 /* Define if building for version 1.0 (4-player) wadfiles only */
 #undef VERSION10_WAD

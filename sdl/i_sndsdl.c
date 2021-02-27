@@ -335,6 +335,10 @@ void I_StartupSound (void)
 	}
 
 	fprintf(stdout, "I_StartupSound (SDL):\n");
+	if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
+		fprintf(stderr, "Couldn't init SDL audio: %s\n", SDL_GetError());
+		return;
+	}
 
 	/* Initialize variables */
 	snd_SfxAvail = snd_MusicAvail = false;
@@ -453,4 +457,3 @@ void I_StopSong(int handle)
 void I_PlaySong(int handle, boolean looping)
 {
 }
-

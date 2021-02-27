@@ -5,7 +5,9 @@
 #include "h2def.h"
 #include "soundst.h"
 #include "st_start.h"
-
+#ifdef SDLHEXEN
+#include "SDL.h"
+#endif
 
 extern void I_StartupMouse(void);
 extern void I_ShutdownGraphics(void);
@@ -21,7 +23,6 @@ extern int startmap;
 
 ============================================================================
 */
-
 
 int		ticcount;
 static long	_startSec;
@@ -119,6 +120,10 @@ void I_StartFrame (void)
 
 void I_Init (void)
 {
+#ifdef SDLHEXEN
+	if (SDL_Init(0) < 0)
+		I_Error("SDL failed to initialize.");
+#endif
 	I_StartupMouse();
 	I_StartupJoystick();
 	printf("  S_Init... ");
@@ -466,4 +471,3 @@ int main (int argc, char **argv)
 
 	return 0;
 }
-
