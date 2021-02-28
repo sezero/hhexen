@@ -75,7 +75,7 @@ boolean joystickpresent;
 
 void I_StartupJoystick (void)
 {
-// NOTHING HERE YET: TOBE IMPLEMENTED IN i_sdl.c
+// NOTHING HERE YET: TO BE IMPLEMENTED IN i_sdl.c
 	joystickpresent = false;
 }
 
@@ -183,8 +183,7 @@ void I_Error (const char *error, ...)
 
 static void I_ENDTEXT (void)
 {
-// Hexen doesn't have an ENDTEXT
-// lump for ANSI output
+// no ENDTEXT lump in Hexen for ANSI output.
 	printf("\nHexen: Beyond Heretic\n");
 }
 
@@ -264,8 +263,7 @@ void I_InitNetwork (void)
 	int		i;
 
 	i = M_CheckParm ("-net");
-	if (!i)
-	{
+	if (!i) {
 	//
 	// single player game
 	//
@@ -343,10 +341,10 @@ static void CreateBasePath (void)
 
 static void InitializeWaddir (void)
 {
-	int i;
-	static const char datadir[] = SHARED_DATAPATH;
-						/* defined in config.h */
+	static const char datadir[] = SHARED_DATAPATH; /* defined in config.h */
+
 	const char *_waddir;
+	int i;
 
 	_waddir = NULL;
 	i = M_CheckParm("-waddir");
@@ -354,8 +352,7 @@ static void InitializeWaddir (void)
 		_waddir = myargv[i + 1];
 	if (_waddir == NULL)
 		_waddir = getenv(DATA_ENVVAR);
-	if (_waddir == NULL)
-	{
+	if (_waddir == NULL) {
 		if (datadir[0])
 			_waddir = datadir;
 	}
@@ -394,7 +391,6 @@ static void PrintHelp (const char *name)
 
 #define H2_LITTLE_ENDIAN	0	/* 1234 */
 #define H2_BIG_ENDIAN		1	/* 4321 */
-#define H2_PDP_ENDIAN		2	/* 3412 */
 
 #if defined(WORDS_BIGENDIAN)
 #define COMPILED_BYTEORDER	H2_BIG_ENDIAN
@@ -413,34 +409,25 @@ static int DetectByteorder (void)
 
 	LE_ORDER:  78 56 34 12
 		   X  I  N  U
-
-	PDP_ORDER: 34 12 78 56
-		   N  U  X  I
 	*/
-
-	if ( *(char *)&i == 0x12 )
+	if (*(char *)&i == 0x12)
 		return H2_BIG_ENDIAN;
-	else if ( *(char *)&i == 0x78 )
+	if (*(char *)&i == 0x78)
 		return H2_LITTLE_ENDIAN;
-	else if ( *(char *)&i == 0x34 )
-		return H2_PDP_ENDIAN;
 
 	return -1;
 }
 
 static void ValidateByteorder (void)
 {
-	const char	*endianism[] = { "LE", "BE", "PDP" };
-	int		host_byteorder;
+	const char *endianism[] = { "LE", "BE" };
+	int host_byteorder = DetectByteorder ();
 
-	host_byteorder = DetectByteorder ();
-	if (host_byteorder < 0)
-	{
+	if (host_byteorder < 0) {
 		fprintf (stderr, "Unsupported byte order.\n");
 		exit (1);
 	}
-	if (host_byteorder != COMPILED_BYTEORDER)
-	{
+	if (host_byteorder != COMPILED_BYTEORDER) {
 		fprintf (stderr, "Detected byte order %s doesn't match compiled %s order!\n",
 				 endianism[host_byteorder], endianism[COMPILED_BYTEORDER]);
 		exit (1);
@@ -457,8 +444,7 @@ int main (int argc, char **argv)
 
 	if (M_CheckParm("--version") || M_CheckParm("-v"))
 		return 0;
-	if (M_CheckParm("--help") || M_CheckParm("-h") || M_CheckParm("-?"))
-	{
+	if (M_CheckParm("--help") || M_CheckParm("-h") || M_CheckParm("-?")) {
 		PrintHelp (argv[0]);
 		return 0;
 	}
