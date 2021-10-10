@@ -150,15 +150,6 @@ typedef int	fixed_t;
 
 /*==========================================================================*/
 
-/* Some compilers, such as OpenWatcom, and possibly other compilers
- * from the DOS universe, define __386__ instead of __i386__
- */
-#if defined(__386__) && !defined(__i386__)
-#define __i386__	1
-#endif
-
-/*==========================================================================*/
-
 /* Provide a substitute for offsetof() if we don't have one.
  * This variant works on most (but not *all*) systems...
  */
