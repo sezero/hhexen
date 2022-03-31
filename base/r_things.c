@@ -1179,8 +1179,8 @@ void R_DrawMasked (void)
 // draw the psprites on top of everything
 //
 // Added for the sideviewing with an external device
-	if (viewangleoffset <= 1024<<ANGLETOFINESHIFT ||
-		viewangleoffset >= -1024<<ANGLETOFINESHIFT)
+	if (viewangleoffset <=  1024<<ANGLETOFINESHIFT ||
+	    viewangleoffset >= -(1024<<ANGLETOFINESHIFT))
 	{
 	// don't draw on side views
 		R_DrawPlayerSprites ();
