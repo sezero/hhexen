@@ -696,10 +696,10 @@ static void PUTDOT(short xx,short yy,byte *cc, byte *cm)
 		cc += 7-((finit_width-xx) >> 2);
 //	if (cc == oldcc) //make sure that we don't double fade the corners.
 //	{
-		if (yy < 32)
-			cc += 7-(yy>>2);
-		else if (yy > (finit_height - 32))
-			cc += 7-((finit_height-yy) >> 2);
+	    if (yy < 32)
+		cc += 7-(yy>>2);
+	    else if (yy > (finit_height - 32))
+		cc += 7-((finit_height-yy) >> 2);
 //	}
 	if (cc > cm && cm != NULL)
 	{
@@ -1044,6 +1044,7 @@ static void AM_drawFline(fline_t *fl, int color)
 				d += ax;
 			}
 		}
+		#undef DOT
 	}
 }
 
