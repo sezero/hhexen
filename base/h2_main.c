@@ -131,7 +131,7 @@ static execOpt_t ExecOptions[] =
 
 // CODE --------------------------------------------------------------------
 
-#if !(defined(__DOS__) || defined(__WATCOMC__) || defined(__DJGPP__) || defined(_WIN32) || defined(_WIN64))
+#if !(defined(__WATCOMC__) || defined(__DJGPP__) || defined(_WIN32))
 char *strlwr (char *str)
 {
 	char	*c;

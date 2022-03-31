@@ -1189,8 +1189,7 @@ void D_QuitNetGame (void);
 
 void TryRunTics (void);
 
-#if !(defined(__WATCOMC__) || defined(__DJGPP__) || defined(__DOS__) || \
-      defined(_WIN32) || defined(_WIN64))
+#if !(defined(__WATCOMC__) || defined(__DJGPP__) || defined(_WIN32))
 char *strupr (char *str);
 char *strlwr (char *str);
 int filelength(int handle);
