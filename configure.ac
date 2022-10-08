@@ -4,7 +4,7 @@ AC_PREREQ([2.59])
 AC_INIT([hhexen],[1.6.4])
 AC_CONFIG_AUX_DIR([autotools])
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([base/a_action.c])
 
 dnl == Default values
@@ -284,7 +284,6 @@ if test "$SVGAHEXEN" = "true";then
   fi
 fi
 AC_SUBST(SVGALIBS)
-
 
 dnl == Generate output files
 AC_CONFIG_FILES([Makefile])
