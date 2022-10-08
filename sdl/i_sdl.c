@@ -3,9 +3,9 @@
 #include "h2def.h"
 #include "r_local.h"
 
-#define BASE_WINDOW_FLAGS	(SDL_SWSURFACE|SDL_HWPALETTE)
+#define BASE_WINDOW_FLAGS	0
 #ifdef FULLSCREEN_DEFAULT
-#define DEFAULT_FLAGS		(BASE_WINDOW_FLAGS|SDL_FULLSCREEN)
+#define DEFAULT_FLAGS		(BASE_WINDOW_FLAGS|SDL_WINDOW_FULLSCREEN_DESKTOP)
 #else
 #define DEFAULT_FLAGS		(BASE_WINDOW_FLAGS)
 #endif
@@ -24,9 +24,14 @@ extern int usemouse, usejoystick;
 
 // Private Data
 
-static boolean vid_initialized = false;
+static SDL_Window* sdl_window = NULL;
+static SDL_Renderer* sdl_renderer = NULL;
+static SDL_Surface* surface = NULL;
+static SDL_Surface* screen_surface = NULL;
+static SDL_Texture* render_texture = NULL;
 
-static SDL_Surface* sdl_screen;
+static Uint32 sdl_pixel_format;
+static boolean vid_initialized = false;
 static int grabMouse;
 
 
@@ -66,24 +71,19 @@ void I_WaitVBL(int vbls)
 
 void I_SetPalette(byte *palette)
 {
-	SDL_Color* c;
-	SDL_Color* cend;
-	SDL_Color cmap[256];
-
-	if (!vid_initialized)
+	if ( !vid_initialized )
 		return;
 
-	I_WaitVBL(1);
-
-	c = cmap;
-	cend = c + 256;
-	for ( ; c != cend; c++)
+	SDL_Color colormap[256];
+	
+	for ( int i = 0; i < 256; i++ )
 	{
-		c->r = gammatable[usegamma][*palette++];
-		c->g = gammatable[usegamma][*palette++];
-		c->b = gammatable[usegamma][*palette++];
+		colormap[i].r = gammatable[usegamma][*palette++];
+		colormap[i].g = gammatable[usegamma][*palette++];
+		colormap[i].b = gammatable[usegamma][*palette++];
 	}
-	SDL_SetColors (sdl_screen, cmap, 0, 256);
+	
+	SDL_SetPaletteColors(surface->format->palette, colormap, 0, 256);
 }
 
 /*
@@ -107,12 +107,15 @@ byte *pcscreen, *destscreen, *destview;
 int UpdateState;
 extern int screenblocks;
 
+
 void I_Update (void)
 {
+
 	int i;
 	byte *dest;
 	int tics;
 	static int lasttic;
+	SDL_Rect rect;
 
 	if (!vid_initialized)
 		return;
@@ -159,7 +162,8 @@ void I_Update (void)
 		memcpy(pcscreen, screen, SCREENWIDTH*SCREENHEIGHT);
 		UpdateState = I_NOUPDATE; // clear out all draw types
 
-		SDL_UpdateRect(sdl_screen, 0, 0, SCREENWIDTH, SCREENHEIGHT);
+		rect = (SDL_Rect) { .x = 0, .y = 0, .w = SCREENWIDTH, .h = SCREENHEIGHT };
+		SDL_LowerBlit (surface, &rect, screen_surface, &rect);
 	}
 	if (UpdateState & I_FULLVIEW)
 	{
@@ -169,9 +173,11 @@ void I_Update (void)
 			{
 				memcpy(pcscreen + i, screen + i, SCREENWIDTH);
 			}
+			
 			UpdateState &= ~(I_FULLVIEW|I_MESSAGES);
 
-			SDL_UpdateRect (sdl_screen, 0, 0, SCREENWIDTH, viewwindowy + viewheight);
+			rect = (SDL_Rect) { .x = 0, .y = 0, .w = SCREENWIDTH, .h = viewwindowy + viewheight };
+			SDL_LowerBlit (surface, &rect, screen_surface, &rect);
 		}
 		else
 		{
@@ -182,7 +188,8 @@ void I_Update (void)
 			}
 			UpdateState &= ~I_FULLVIEW;
 
-			SDL_UpdateRect (sdl_screen, viewwindowx, viewwindowy, viewwidth, viewheight);
+			rect = (SDL_Rect) { .x = viewwindowx, .y = viewwindowy, .w = viewwidth, .h = viewheight };
+			SDL_LowerBlit (surface, &rect, screen_surface, &rect);
 		}
 	}
 	if (UpdateState & I_STATBAR)
@@ -192,15 +199,24 @@ void I_Update (void)
 			SCREENWIDTH*SBARHEIGHT);
 		UpdateState &= ~I_STATBAR;
 
-		SDL_UpdateRect (sdl_screen, 0, SCREENHEIGHT-SBARHEIGHT, SCREENWIDTH, SBARHEIGHT);
+		rect = (SDL_Rect) { .x = 0, .y = SCREENHEIGHT-SBARHEIGHT, .w = SCREENWIDTH, .h = SBARHEIGHT };
+		SDL_LowerBlit (surface, &rect, screen_surface, &rect);
 	}
 	if (UpdateState & I_MESSAGES)
 	{
 		memcpy(pcscreen, screen, SCREENWIDTH*28);
 		UpdateState &= ~I_MESSAGES;
 
-		SDL_UpdateRect (sdl_screen, 0, 0, SCREENWIDTH, 28);
+		rect = (SDL_Rect) { .x = 0, .y = 0, .w = SCREENWIDTH, .h = 28 };
+		SDL_LowerBlit (surface, &rect, screen_surface, &rect);
 	}
+
+	SDL_UpdateTexture (render_texture, NULL, screen_surface->pixels,
+		screen_surface->pitch);
+
+	SDL_RenderClear (sdl_renderer);
+	SDL_RenderCopy (sdl_renderer, render_texture, NULL, NULL);
+	SDL_RenderPresent (sdl_renderer);
 }
 
 //--------------------------------------------------------------------------
@@ -212,7 +228,12 @@ void I_Update (void)
 void I_InitGraphics(void)
 {
 	char text[20];
+	int bpp;
 	Uint32 flags = DEFAULT_FLAGS;
+	Uint32 rmask, gmask, bmask, amask;
+
+	snprintf (text, sizeof(text), "HHexen v%d.%d.%d",
+		  VERSION_MAJ, VERSION_MIN, VERSION_PATCH);
 
 	if (M_CheckParm("-novideo"))	// if true, stay in text mode for debugging
 	{
@@ -225,21 +246,47 @@ void I_InitGraphics(void)
 	}
 
 	if (M_CheckParm("-f") || M_CheckParm("--fullscreen"))
-		flags |= SDL_FULLSCREEN;
+		flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 	if (M_CheckParm("-w") || M_CheckParm("--windowed"))
-		flags &= ~SDL_FULLSCREEN;
+		flags &= ~SDL_WINDOW_FULLSCREEN_DESKTOP;
 
 	// Needs some work to get screenHeight and screenWidth working - S.A.
-
-	// SDL_DOUBLEBUF does not work in full screen mode.  Does not seem to
-	// be necessary anyway.
-	sdl_screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, 8, flags);
-
-	if (sdl_screen == NULL)
+	sdl_window = SDL_CreateWindow(text, SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED, SCREENWIDTH, SCREENHEIGHT, flags);
+		
+	if ( sdl_window == NULL )
 	{
-		I_Error("Couldn't set video mode %dx%d: %s\n",
-			SCREENWIDTH, SCREENHEIGHT, SDL_GetError());
+		SDL_Quit ();
+		I_Error ("Couldn't initialize SDL2: %s\n", SDL_GetError());
 	}
+	
+	sdl_renderer = SDL_CreateRenderer (sdl_window, -1,
+		SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+	
+	if ( sdl_renderer == NULL )
+	{
+		SDL_DestroyWindow (sdl_window);
+		SDL_Quit ();
+		I_Error ("Couldn't create SDL2 renderer: %s\n", SDL_GetError());
+	}
+
+	sdl_pixel_format = SDL_GetWindowPixelFormat (sdl_window);
+
+	surface = SDL_CreateRGBSurface (0, SCREENWIDTH, SCREENHEIGHT, 8,
+		0, 0, 0, 0);
+
+	SDL_FillRect (surface, NULL, 0);
+
+	SDL_PixelFormatEnumToMasks (sdl_pixel_format, &bpp, &rmask, &gmask, 
+		&bmask, &amask);
+
+	screen_surface = SDL_CreateRGBSurface (0, SCREENWIDTH, SCREENHEIGHT,
+		bpp, rmask, gmask, bmask, amask);
+
+	SDL_FillRect (screen_surface, NULL, 0);
+
+	render_texture = SDL_CreateTexture (sdl_renderer, sdl_pixel_format,
+		SDL_TEXTUREACCESS_STREAMING, SCREENWIDTH, SCREENHEIGHT);
 
 	vid_initialized = true;
 
@@ -247,15 +294,12 @@ void I_InitGraphics(void)
 	if (!M_CheckParm ("--nograb") && !M_CheckParm ("-g"))
 	{
 		grabMouse = 1;
-		SDL_WM_GrabInput (SDL_GRAB_ON);
+		SDL_SetRelativeMouseMode (SDL_TRUE);
 	}
 
-	SDL_ShowCursor (0);
-	snprintf (text, sizeof(text), "HHexen v%d.%d.%d",
-		  VERSION_MAJ, VERSION_MIN, VERSION_PATCH);
-	SDL_WM_SetCaption (text, "HHEXEN");
+	SDL_ShowCursor (SDL_DISABLE);
 
-	pcscreen = destscreen = (byte *) sdl_screen->pixels;
+	pcscreen = destscreen = (byte *) surface->pixels;
 
 	I_SetPalette ((byte *)W_CacheLumpName("PLAYPAL", PU_CACHE));
 }
@@ -270,6 +314,22 @@ void I_ShutdownGraphics(void)
 {
 	if (!vid_initialized)
 		return;
+
+	if (surface != NULL)
+		SDL_FreeSurface (surface);
+
+	if (screen_surface != NULL)
+		SDL_FreeSurface (screen_surface);
+
+	if (render_texture != NULL)
+		SDL_DestroyTexture (render_texture);
+
+	if (sdl_renderer != NULL)
+		SDL_DestroyRenderer (sdl_renderer);
+
+	if (sdl_window != NULL)
+		SDL_DestroyWindow (sdl_window);
+
 	vid_initialized = false;
 	SDL_Quit ();
 }
@@ -279,7 +339,7 @@ void I_ShutdownGraphics(void)
 //
 //  Translates the key
 //
-static int xlatekey (SDL_keysym *key)
+static int xlatekey (SDL_Keysym *key)
 {
 	switch (key->sym)
 	{
@@ -335,54 +395,52 @@ static int xlatekey (SDL_keysym *key)
 		return KEY_RCTRL;
 
 	case SDLK_LALT:
-	case SDLK_LMETA:
 	case SDLK_RALT:
-	case SDLK_RMETA:
 		return KEY_RALT;
 
-	case SDLK_KP0:
+	case SDLK_KP_0:
 		if (key->mod & KMOD_NUM)
 			return SDLK_0;
 		else
 			return KEY_INS;
-	case SDLK_KP1:
+	case SDLK_KP_1:
 		if (key->mod & KMOD_NUM)
 			return SDLK_1;
 		else
 			return KEY_END;
-	case SDLK_KP2:
+	case SDLK_KP_2:
 		if (key->mod & KMOD_NUM)
 			return SDLK_2;
 		else
 			return KEY_DOWNARROW;
-	case SDLK_KP3:
+	case SDLK_KP_3:
 		if (key->mod & KMOD_NUM)
 			return SDLK_3;
 		else
 			return KEY_PGDN;
-	case SDLK_KP4:
+	case SDLK_KP_4:
 		if (key->mod & KMOD_NUM)
 			return SDLK_4;
 		else
 			return KEY_LEFTARROW;
-	case SDLK_KP5:
+	case SDLK_KP_5:
 		return SDLK_5;
-	case SDLK_KP6:
+	case SDLK_KP_6:
 		if (key->mod & KMOD_NUM)
 			return SDLK_6;
 		else
 			return KEY_RIGHTARROW;
-	case SDLK_KP7:
+	case SDLK_KP_7:
 		if (key->mod & KMOD_NUM)
 			return SDLK_7;
 		else
 			return KEY_HOME;
-	case SDLK_KP8:
+	case SDLK_KP_8:
 		if (key->mod & KMOD_NUM)
 			return SDLK_8;
 		else
 			return KEY_UPARROW;
-	case SDLK_KP9:
+	case SDLK_KP_9:
 		if (key->mod & KMOD_NUM)
 			return SDLK_9;
 		else
@@ -405,12 +463,21 @@ static int xlatekey (SDL_keysym *key)
 	}
 }
 
+
+/* Shamelessly stolen from PrBoom+ */
+static int I_SDLtoHexenMouseState(Uint8 buttonstate)
+{
+	return 0
+		| ((buttonstate & SDL_BUTTON(1)) ? 1 : 0)
+		| ((buttonstate & SDL_BUTTON(2)) ? 2 : 0)
+		| ((buttonstate & SDL_BUTTON(3)) ? 4 : 0);
+}
+
 /* This processes SDL events */
 void I_GetEvent(SDL_Event *Event)
 {
-	Uint8 buttonstate;
 	event_t event;
-	SDLMod mod;
+	SDL_Keymod mod;
 
 	switch (Event->type)
 	{
@@ -420,15 +487,15 @@ void I_GetEvent(SDL_Event *Event)
 		{
 			if (Event->key.keysym.sym == 'g')
 			{
-				if (SDL_WM_GrabInput (SDL_GRAB_QUERY) == SDL_GRAB_OFF)
+				if (SDL_GetRelativeMouseMode () == SDL_FALSE)
 				{
 					grabMouse = 1;
-					SDL_WM_GrabInput (SDL_GRAB_ON);
+					SDL_SetRelativeMouseMode (SDL_TRUE);
 				}
 				else
 				{
 					grabMouse = 0;
-					SDL_WM_GrabInput (SDL_GRAB_OFF);
+					SDL_SetRelativeMouseMode (SDL_FALSE);
 				}
 				break;
 			}
@@ -437,7 +504,8 @@ void I_GetEvent(SDL_Event *Event)
 		{
 			if (Event->key.keysym.sym == SDLK_RETURN)
 			{
-				SDL_WM_ToggleFullScreen(SDL_GetVideoSurface());
+				SDL_SetWindowFullscreen(sdl_window, 
+					SDL_WINDOW_FULLSCREEN_DESKTOP);
 				break;
 			}
 		}
@@ -454,28 +522,25 @@ void I_GetEvent(SDL_Event *Event)
 
 	case SDL_MOUSEBUTTONDOWN:
 	case SDL_MOUSEBUTTONUP:
-		buttonstate = SDL_GetMouseState(NULL, NULL);
 		event.type = ev_mouse;
-		event.data1 = 0	| (buttonstate & SDL_BUTTON(1) ? 1 : 0)
-				| (buttonstate & SDL_BUTTON(2) ? 2 : 0)
-				| (buttonstate & SDL_BUTTON(3) ? 4 : 0);
+		event.data1 = I_SDLtoHexenMouseState(SDL_GetMouseState(NULL,NULL));
 		event.data2 = event.data3 = 0;
 		H2_PostEvent(&event);
 		break;
 
 	case SDL_MOUSEMOTION:
 		/* Ignore mouse warp events */
-		if ( (Event->motion.x != sdl_screen->w/2) ||
-		     (Event->motion.y != sdl_screen->h/2) )
+		if ((Event->motion.x != SCREENWIDTH/2) ||
+		    (Event->motion.y != SCREENHEIGHT/2) )
 		{
-		/* Warp the mouse back to the center */
+			/* Warp the mouse back to the center */
+			/*
 			if (grabMouse) {
-				SDL_WarpMouse(sdl_screen->w/2, sdl_screen->h/2);
+				SDL_WarpMouse(SCREENWIDTH/2, SCREENHEIGHT/2);
 			}
+			*/
 			event.type = ev_mouse;
-			event.data1 = 0	| (Event->motion.state & SDL_BUTTON(1) ? 1 : 0)
-					| (Event->motion.state & SDL_BUTTON(2) ? 2 : 0)
-					| (Event->motion.state & SDL_BUTTON(3) ? 4 : 0);
+			event.data1 = I_SDLtoHexenMouseState(Event->motion.state);
 			event.data2 = Event->motion.xrel << 3;
 			event.data3 = -Event->motion.yrel << 3;
 			H2_PostEvent(&event);
@@ -484,6 +549,10 @@ void I_GetEvent(SDL_Event *Event)
 
 	case SDL_QUIT:
 		I_Quit();
+		break;
+
+	default:
+		break;
 	}
 }
 
