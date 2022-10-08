@@ -285,7 +285,6 @@ if test "$SVGAHEXEN" = "true";then
 fi
 AC_SUBST(SVGALIBS)
 
-
 dnl == Generate output files
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
