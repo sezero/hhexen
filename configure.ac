@@ -4,7 +4,7 @@ AC_PREREQ([2.59])
 AC_INIT([hhexen],[1.6.4])
 AC_CONFIG_AUX_DIR([autotools])
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([base/a_action.c])
 
 dnl == Default values
@@ -218,8 +218,8 @@ AC_SUBST(X11_INC)
 AC_SUBST(X11_LIB)
 
 dnl == Check for SDL
-SDL_VERSION="1.2.4"
-AM_PATH_SDL($SDL_VERSION,[HAVESDL="yes"],[HAVESDL="no"])
+SDL_VERSION="2.0.2"
+AM_PATH_SDL2($SDL_VERSION,[HAVESDL="yes"],[HAVESDL="no"])
 if test "$SVGAHEXEN" = "false";then
     AC_DEFINE(SDLHEXEN, 1, [Define if HHexen depends on SDL])
     if test "$HAVESDL" = "no"; then
@@ -228,13 +228,13 @@ if test "$SVGAHEXEN" = "false";then
 fi
 
 saved_libs="$LIBS"
-AC_CHECK_LIB(SDL_mixer, Mix_LoadMUS, [HAVE_SDLMIXER="yes"], [HAVE_SDLMIXER="no"], [$SDL_LIBS])
+AC_CHECK_LIB(SDL2_mixer, Mix_LoadMUS, [HAVE_SDLMIXER="yes"], [HAVE_SDLMIXER="no"], [$SDL_LIBS])
 LIBS="$saved_libs"
 if test "$SND_MODULE" = "sdlmixer";then
   if test $HAVE_SDLMIXER = "no";then
 	AC_MSG_ERROR([*** SDL_mixer not found!])
   else
-	SDL_LIBS="$SDL_LIBS -lSDL_mixer"
+	SDL_LIBS="$SDL_LIBS -lSDL2_mixer"
   fi
 fi
 
