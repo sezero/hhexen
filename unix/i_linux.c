@@ -378,10 +378,8 @@ static void PrintHelp (const char *name)
 	printf ("     [ -w | --windowed]       Run the game windowed\n");
 	printf ("     [ -s | --nosound]        Run the game without sound\n");
 	printf ("     [ -g | --nograb]         Disable mouse grabbing\n");
-#ifdef RENDER3D
 	printf ("     [ -width  <width> ]      Set screen width \n");
 	printf ("     [ -height <height> ]     Set screen height\n");
-#endif
 	printf ("     [ -file <wadfile> ]      Load extra wad files\n");
 	printf ("     [ -waddir <path>  ]      Specify shared data path\n");
 	printf ("  You can use the %s environment variable or the\n",

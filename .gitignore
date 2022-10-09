@@ -1,3 +1,4 @@
+*~
 *.obj
 *.o
 *.lo
@@ -9,6 +10,7 @@ config.cache
 config.log
 config.status
 configure
+config.h
 include/config.h
 autom4te.cache
 hhexen.cfg
