@@ -155,7 +155,6 @@ void I_InitGraphics(void)
 	if (sdl_window == NULL)
 	{
 		I_Error("Couldn't create SDL2 window: %s\n", SDL_GetError());
-		SDL_Quit();
 	}
 
 	sdl_gl_context = SDL_GL_CreateContext(sdl_window);
@@ -163,7 +162,6 @@ void I_InitGraphics(void)
 	if (sdl_gl_context == NULL)
 	{
 		SDL_DestroyWindow(sdl_window);
-		SDL_Quit();
 		I_Error("Couldn't create OpenGL context: %s\n", SDL_GetError());
 	}
 
@@ -220,7 +218,6 @@ void I_ShutdownGraphics(void)
 	OGL_ResetLumpTexData ();
 	SDL_GL_DeleteContext (sdl_gl_context);
 	SDL_DestroyWindow (sdl_window);
-	SDL_Quit ();
 }
 
 //===========================================================================
@@ -284,6 +281,7 @@ static int xlatekey (SDL_Keysym *key)
 		return KEY_RCTRL;
 
 	case SDLK_LALT:
+		return KEY_LALT;
 	case SDLK_RALT:
 		return KEY_RALT;
 

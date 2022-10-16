@@ -148,6 +148,9 @@ void I_Shutdown (void)
 {
 	S_ShutDown ();
 	I_ShutdownGraphics ();
+#ifdef SDLHEXEN
+	SDL_Quit ();
+#endif
 }
 
 
