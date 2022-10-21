@@ -137,4 +137,4 @@ sdl: $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDAUDIO) $(OBJ_SWSDL) $(OBJ_BASE)
 endif
 
 clean:
-	$(RM) base/*.o opengl/*.o dos/*.o unix/*.o sdl/*.o
+	$(RM) base/*.o opengl/*.o unix/*.o sdl/*.o
