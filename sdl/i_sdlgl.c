@@ -34,7 +34,7 @@ boolean mousepresent;
 extern int usemouse, usejoystick;
 
 // Private Data
-
+static boolean fullscreen_mode = false;
 static boolean vid_initialized = false;
 static int grabMouse;
 
@@ -107,15 +107,54 @@ void I_Update (void)
 //
 //--------------------------------------------------------------------------
 
+/*
+ * At the moment there's no simple solution
+ * to resize the OpenGL window, so we should 
+ * perform a full graphics system restart.
+*/
+
+static void I_UpdateVideoMode(void)
+{
+	I_ShutdownGraphics ();
+
+	Uint32 flags = DEFAULT_FLAGS;
+
+	char text[20];
+	snprintf (text, sizeof(text), "HHexen v%d.%d.%d",
+		  VERSION_MAJ, VERSION_MIN, VERSION_PATCH);
+
+	if (fullscreen_mode)
+		  flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+	else
+		  flags &= ~SDL_WINDOW_FULLSCREEN_DESKTOP;
+
+	sdl_window = SDL_CreateWindow(text, SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, flags);
+		
+	if (sdl_window == NULL)
+	{
+		I_Error("Couldn't create SDL2 window: %s\n", SDL_GetError());
+	}
+	
+	SDL_GL_GetDrawableSize(sdl_window, &screenWidth, &screenHeight);
+
+	sdl_gl_context = SDL_GL_CreateContext(sdl_window);
+
+	if (sdl_gl_context == NULL)
+	{
+		SDL_DestroyWindow(sdl_window);
+		I_Error("Couldn't create OpenGL context: %s\n", SDL_GetError());
+	}
+
+	vid_initialized = true;
+
+	OGL_InitRenderer ();
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
 
 void I_InitGraphics(void)
 {
 	int p;
-	char text[20];
-	Uint32 flags = DEFAULT_FLAGS;
-
-	snprintf (text, sizeof(text), "HHexen v%d.%d.%d",
-		  VERSION_MAJ, VERSION_MIN, VERSION_PATCH);
 
 	if (M_CheckParm("-novideo"))	// if true, stay in text mode for debugging
 	{
@@ -129,9 +168,9 @@ void I_InitGraphics(void)
 	}
 
 	if (M_CheckParm("-f") || M_CheckParm("--fullscreen"))
-		flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+		fullscreen_mode = true;
 	if (M_CheckParm("-w") || M_CheckParm("--windowed"))
-		flags &= ~SDL_WINDOW_FULLSCREEN_DESKTOP;
+		fullscreen_mode = false;
 
 	p = M_CheckParm ("-height");
 	if (p && p < myargc - 1)
@@ -148,29 +187,9 @@ void I_InitGraphics(void)
 	/* Switch to compatibility profile */
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
 		SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+		
+	I_UpdateVideoMode ();
 	
-	sdl_window = SDL_CreateWindow(text, SDL_WINDOWPOS_CENTERED,
-		SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, flags);
-
-	if (sdl_window == NULL)
-	{
-		I_Error("Couldn't create SDL2 window: %s\n", SDL_GetError());
-	}
-
-	sdl_gl_context = SDL_GL_CreateContext(sdl_window);
-
-	if (sdl_gl_context == NULL)
-	{
-		SDL_DestroyWindow(sdl_window);
-		I_Error("Couldn't create OpenGL context: %s\n", SDL_GetError());
-	}
-
-	vid_initialized = true;
-
-	OGL_InitRenderer ();
-
-	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	// Print some OpenGL information.
 	printf ("I_InitGraphics: OpenGL information:\n");
 	printf ("  Vendor: %s\n", glGetString(GL_VENDOR));
@@ -216,8 +235,12 @@ void I_ShutdownGraphics(void)
 	vid_initialized = false;
 	OGL_ResetData ();
 	OGL_ResetLumpTexData ();
-	SDL_GL_DeleteContext (sdl_gl_context);
-	SDL_DestroyWindow (sdl_window);
+
+	if (sdl_gl_context != NULL)
+		SDL_GL_DeleteContext (sdl_gl_context);
+
+	if (sdl_window != NULL)
+		SDL_DestroyWindow (sdl_window);
 }
 
 //===========================================================================
@@ -390,8 +413,8 @@ void I_GetEvent(SDL_Event *Event)
 		{
 			if (Event->key.keysym.sym == SDLK_RETURN)
 			{
-				SDL_SetWindowFullscreen(sdl_window, 
-					SDL_WINDOW_FULLSCREEN_DESKTOP);
+				fullscreen_mode = true;
+				I_UpdateVideoMode ();
 				break;
 			}
 		}
@@ -420,11 +443,9 @@ void I_GetEvent(SDL_Event *Event)
 		    (Event->motion.y != SCREENHEIGHT/2) )
 		{
 			/* Warp the mouse back to the center */
-			/*
 			if (grabMouse) {
-				SDL_WarpMouse(SCREENWIDTH/2, SCREENHEIGHT/2);
+				SDL_WarpMouseInWindow(sdl_window, screenWidth/2, screenHeight/2);
 			}
-			*/
 			event.type = ev_mouse;
 			event.data1 = I_SDLtoHexenMouseState(Event->motion.state);
 			event.data2 = Event->motion.xrel << 3;
