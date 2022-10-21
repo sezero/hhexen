@@ -29,11 +29,7 @@ CPPFLAGS = @DEFS@ @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 BASELIBS = @LIBS@
-THREAD_LIBS = @THREAD_LIBS@
-X11_INC = @X11_INC@
-X11_LIB = @X11_LIB@
 GL_LIBS = @GL_LIBS@
-SVGALIBS = @SVGALIBS@
 SDL_LIBS = @SDL_LIBS@
 SDL_CFLAGS = @SDL_CFLAGS@
 GLHEXEN = @GLHEXEN@
@@ -48,31 +44,16 @@ VPATH     = @srcdir@
 MODULE    = none
 
 CPPFLAGS += -I. -I$(SRCDIR)/include
-ifneq ($(SVGAHEXEN),true)
-ifneq ($(X11_INC),)
-CPPFLAGS += -I$(X11_INC)
-endif
 CPPFLAGS += $(SDL_CFLAGS)
-endif
-
-ifneq ($(X11_LIB),)
-GL_LIBS := -L$(X11_LIB) $(GL_LIBS)
-endif
 
 # Objects to build
 OBJ_SYS  = unix/i_linux.o
-OBJ_SVGA = svgalib/i_svgalib.o
 OBJ_SWSDL = sdl/i_sdl.o
 OBJ_GLSDL = sdl/i_sdlgl.o
-OBJ_OSS = unix/oss.o unix/i_soundpi.o
 OBJ_SDLAUDIO = sdl/i_sndsdl.o
 OBJ_SDLMIXER = base/mus.o sdl/i_sdlmixer.o
 OBJ_CDAUDIO = unix/i_cdmus.o
 
-ifeq ($(SND_MODULE),oss)
-OBJ_SND:= $(OBJ_OSS)
-BASELIBS:=$(BASELIBS) $(THREAD_LIBS)
-endif
 ifeq ($(SND_MODULE),sdl)
 OBJ_SND:= $(OBJ_SDLAUDIO)
 endif
@@ -147,12 +128,6 @@ OBJ_BASE = \
 %.o: %.c
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
 
-
-ifeq ($(SVGAHEXEN),true)
-svga: $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDAUDIO) $(OBJ_SVGA) $(OBJ_BASE)
-	$(CC) $(LDFLAGS) $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDAUDIO) $(OBJ_SVGA) $(OBJ_BASE) -o hhexen-svga $(BASELIBS) $(SVGALIBS)
-else
-
 ifeq ($(GLHEXEN),true)
 opengl: $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDAUDIO) $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE)
 	$(CC) $(LDFLAGS) $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDAUDIO) $(OBJ_GLSDL) $(OBJ_OPENGL) $(OBJ_BASE) -o hhexen-gl $(BASELIBS) $(GL_LIBS) $(SDL_LIBS)
@@ -161,7 +136,5 @@ sdl: $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDAUDIO) $(OBJ_SWSDL) $(OBJ_BASE)
 	$(CC) $(LDFLAGS) $(OBJ_SYS) $(OBJ_SND) $(OBJ_CDAUDIO) $(OBJ_SWSDL) $(OBJ_BASE) -o hhexen-sdl $(BASELIBS) $(SDL_LIBS)
 endif
 
-endif
-
 clean:
-	$(RM) base/*.o opengl/*.o dos/*.o unix/*.o sdl/*.o svgalib/*.o
+	$(RM) base/*.o opengl/*.o dos/*.o unix/*.o sdl/*.o
