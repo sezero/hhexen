@@ -67,17 +67,7 @@ weaponinfo_t WeaponInfo[NUMWEAPONS][NUMCLASSES] =
 			S_MWANDATK_1,
 			S_NULL
 		},
-#ifdef ASSASSIN
-		{ // Assassin - Katar
-			MANA_NONE,
-			S_KATARUP,
-			S_KATARDOWN,
-			S_KATARREADY,
-			S_KATARATK1_1,
-			S_KATARATK1_1,
-			S_NULL
-		},
-#endif
+
 		{ // Pig - Snout
 			MANA_NONE,		// mana
 			S_SNOUTUP,		// upstate
@@ -117,17 +107,7 @@ weaponinfo_t WeaponInfo[NUMWEAPONS][NUMCLASSES] =
 			S_CONEATK1_3,		// holdatkstate
 			S_NULL			// flashstate
 		},
-#ifdef ASSASSIN
-		{ // Assassin - Hand Crossbow
-			MANA_1,
-			S_ACROSSUP,
-			S_ACROSSDOWN,
-			S_ACROSSREADY,
-			S_ACROSSATK_1,
-			S_ACROSSATK_3,
-			S_NULL
-		},
-#endif
+
 		{ // Pig - Snout
 			MANA_NONE,		// mana
 			S_SNOUTUP,		// upstate
@@ -167,17 +147,7 @@ weaponinfo_t WeaponInfo[NUMWEAPONS][NUMCLASSES] =
 			S_MLIGHTNINGATK_1,	// holdatkstate
 			S_NULL			// flashstate
 		},
-#ifdef ASSASSIN
-		{ // Assassin - Grenades
-			MANA_2,
-			S_AGRENUP,
-			S_AGRENDOWN,
-			S_AGRENREADY,
-			S_AGRENATK_1,
-			S_AGRENATK_1,
-			S_NULL
-		},
-#endif
+
 		{ // Pig - Snout
 			MANA_NONE,		// mana
 			S_SNOUTUP,		// upstate
@@ -217,17 +187,7 @@ weaponinfo_t WeaponInfo[NUMWEAPONS][NUMCLASSES] =
 			S_MSTAFFATK_1,		// holdatkstate
 			S_NULL			// flashstate
 		},
-#ifdef ASSASSIN
-		{ // Assassin - Staff of Set
-			MANA_BOTH,
-			S_ASTAFFUP,
-			S_ASTAFFDOWN,
-			S_ASTAFFREADY,
-			S_ASTAFFATK_1,
-			S_ASTAFFATK_1,
-			S_NULL
-		},
-#endif
+
 		{ // Pig - Snout
 			MANA_NONE,		// mana
 			S_SNOUTUP,		// upstate
@@ -249,9 +209,6 @@ static int WeaponManaUse[NUMCLASSES][NUMWEAPONS] =
 	{ 0, 2, 3, 14 },
 	{ 0, 1, 4, 18 },
 	{ 0, 3, 5, 15 },
-#ifdef ASSASSIN
-	{ 0, 3, 3, 1 },		// True to Hexen II
-#endif
 	{ 0, 0, 0, 0 }
 };
 
@@ -2479,221 +2436,3 @@ void P_MovePsprites(player_t *player)
 	player->psprites[ps_flash].sx = player->psprites[ps_weapon].sx;
 	player->psprites[ps_flash].sy = player->psprites[ps_weapon].sy;
 }
-
-
-//============================================================================
-//
-// ASSASSIN WEAPONS / ATTACKS (ADD-ON CLASS FROM HEXEN II)
-//
-//============================================================================
-
-#if defined(ASSASSIN)
-
-//============================================================================
-//
-// A_AKnifeAttack
-//
-// Jim Cameron did most of this one
-//============================================================================
-
-void A_AKnifeAttack(player_t *player, pspdef_t *psp)
-{
-	angle_t angle;
-	int damage;
-	int slope;
-	mobj_t *pmo = player->mo;
-	fixed_t power;
-	int i;
-	boolean oof = false;
-
-	/* jim - the Katar should be a bit feebler */
-	damage = 20 + (P_Random() & 15);
-	power = 2*FRACUNIT;
-	PuffType = MT_PUNCHPUFF;
-
-	for (i = 0; i < 16; i++)
-	{
-		angle = pmo->angle + i*(ANG45/16);
-		slope = P_AimLineAttack(pmo, angle, 2*MELEERANGE);
-		if (linetarget)
-		{
-			player->mo->special1++;
-		/*
-		 * jim - this is the Mighty Blow for the fighter and is
-		 *  not useful here
-		 */
-#if 0
-			if (pmo->special1 == 3)
-			{
-				damage <<= 1;
-				power = 6*FRACUNIT;
-				PuffType = MT_HAMMERPUFF;
-			}
-#endif
-		/*
-		 * jim - instead of that we make the Katar deal more
-		 *  damage to a monster if struck from behind. Assume
-		 *  so if the angle of striking is within 45 degrees
-		 *  of the angle the target is facing in
-		 * OOOPS! but only if it IS a monster! Striking trees from
-		 *  behind might be amusing but doesn't do much for realism 8-)
-		 */
-			if (linetarget->flags & MF_COUNTKILL || linetarget->player)
-			{
-				if ((angle - linetarget->angle < ANG45) ||
-					(linetarget->angle - angle < ANG45))
-				{
-					damage *= 15;
-					power = 6 * FRACUNIT;
-					PuffType = MT_HAMMERPUFF;
-					oof = true;
-				}
-			}
-			P_LineAttack(pmo, angle, 2*MELEERANGE, slope, damage);
-			if (linetarget->flags & MF_COUNTKILL || linetarget->player)
-			{
-				P_ThrustMobj(linetarget, angle, power);
-			}
-			AdjustPlayerAngle(pmo);
-			goto knifedone;
-		}
-
-		angle = pmo->angle - i*(ANG45/16);
-		slope = P_AimLineAttack(pmo, angle, 2*MELEERANGE);
-		if (linetarget)
-		{
-			player->mo->special1++;
-		/*
-		 * jim - this is the Mighty Blow for the fighter and is
-		 *  not useful here
-		 */
-#if 0
-			if (pmo->special1 == 3)
-			{
-				damage <<= 1;
-				power = 6*FRACUNIT;
-				PuffType = MT_HAMMERPUFF;
-			}
-#endif
-		/*
-		 * jim - instead of that we make the Katar deal more
-		 *  damage to a monster if struck from behind. Assume
-		 *  so if the angle of striking is within 45 degrees
-		 *  of the angle the target is facing in
-		 * OOOPS! but only if it IS a monster! Striking trees from
-		 *  behind might be amusing but doesn't do much for realism 8-)
-		 */
-			if (linetarget->flags & MF_COUNTKILL || linetarget->player)
-			{
-				if ((angle - linetarget->angle < ANG45) ||
-					(linetarget->angle - angle < ANG45))
-				{
-					damage *= 15;
-					power = 6 * FRACUNIT;
-					PuffType = MT_HAMMERPUFF;
-					oof = true;
-				}
-			}
-
-			P_LineAttack(pmo, angle, 2*MELEERANGE, slope, damage);
-			if (linetarget->flags & MF_COUNTKILL || linetarget->player)
-			{
-				P_ThrustMobj(linetarget, angle, power);
-			}
-			AdjustPlayerAngle(pmo);
-			goto knifedone;
-		}
-	}
-
-	/* didn't find any creatures, so try to strike any walls*/
-	pmo->special1 = 0;
-
-	angle = pmo->angle;
-	slope = P_AimLineAttack(pmo, angle, MELEERANGE);
-	P_LineAttack(pmo, angle, MELEERANGE, slope, damage);
-
-knifedone:
-	if (oof)
-	{
-		pmo->special1 = 0;
-		P_SetPsprite(player, ps_weapon, S_KATARATK2_1);
-		/* jim - come on, she's a girl! */
-		S_StartSound(pmo, SFX_PLAYER_MAGE_GRUNT);
-	}
-}
-
-
-void A_ACrossAttack(player_t *player, pspdef_t *psp)
-{
-	mobj_t *mo;
-	mobj_t *pmo = player->mo;
-
-	player->mana[MANA_1] -=	WeaponManaUse[player->playerclass][player->readyweapon];
-//	pmo = player->mo;
-//	P_SpawnPlayerMissile(pmo, MT_CSTAFF_MISSILE);
-
-	/*
-	 * jim - special2 is used to control the serpent staff projectiles'
-	 *  `slither' and is not used here
-	 * We do however want to give crossbow missiles BlasterMobjThinker()s
-	 *  instead of the ordinary ones because they are FAST.
-	 */
-	mo = P_SPMAngle(pmo, MT_ACROSS_MISSILE, pmo->angle);
-	if (mo)
-	{
-	/*	mo->special2 = 16; */
-		mo->thinker.function = P_BlasterMobjThinker;
-	}
-	mo = P_SPMAngle(pmo, MT_ACROSS_MISSILE, pmo->angle - (ANG45/10));
-	if (mo)
-	{
-	/*	mo->special2 = 32; */
-		mo->thinker.function = P_BlasterMobjThinker;
-	}
-	mo = P_SPMAngle(pmo, MT_ACROSS_MISSILE, pmo->angle + (ANG45/10));
-	if (mo)
-	{
-	/*	mo->special2 = 0; */
-		mo->thinker.function = P_BlasterMobjThinker;
-	}
-	S_StartSound(player->mo, SFX_CLERIC_CSTAFF_FIRE);
-}
-
-
-void A_AGrenAttack(player_t *player, pspdef_t *psp)
-{
-	mobj_t *mo;
-
-	mo = P_SpawnMobj(player->mo->x, player->mo->y,
-			 player->mo->z - player->mo->floorclip + 35*FRACUNIT,
-			 MT_THROWINGBOMB);
-	if (mo)
-	{
-		mo->angle = player->mo->angle + (((P_Random() & 7) - 4)<<24);
-		mo->momz = 4*FRACUNIT + ((player->lookdir)<<(FRACBITS - 4));
-		mo->z += player->lookdir<<(FRACBITS - 4);
-		P_ThrustMobj(mo, mo->angle, mo->info->speed);
-		mo->momx += player->mo->momx>>1;
-		mo->momy += player->mo->momy>>1;
-		mo->target = player->mo;
-		mo->tics -= P_Random() & 3;
-		P_CheckMissileSpawn(mo);
-	}
-}
-
-void A_AStaffAttack(player_t *player, pspdef_t *psp)
-{
-	angle_t angle;
-	mobj_t *pmo;
-
-/* THIS ISN'T FINISHED YET!! */
-
-	player->mana[MANA_1] -= WeaponManaUse[player->playerclass][player->readyweapon];
-	player->mana[MANA_2] -= WeaponManaUse[player->playerclass][player->readyweapon];
-
-	pmo = player->mo;
-	angle = pmo->angle;
-
-}
-#endif	/* ASSASSIN */
-

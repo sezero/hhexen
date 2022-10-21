@@ -18,9 +18,6 @@ int ArmorIncrement[NUMCLASSES][NUMARMOR] =
 	{ 25*FRACUNIT, 20*FRACUNIT, 15*FRACUNIT, 5*FRACUNIT },
 	{ 10*FRACUNIT, 25*FRACUNIT, 5*FRACUNIT, 20*FRACUNIT },
 	{ 5*FRACUNIT, 15*FRACUNIT, 10*FRACUNIT, 25*FRACUNIT },
-#ifdef ASSASSIN
-	{ 20*FRACUNIT, 10*FRACUNIT, 25*FRACUNIT, 5*FRACUNIT },
-#endif
 	{ 0, 0, 0, 0 }
 };
 
@@ -29,9 +26,6 @@ int AutoArmorSave[NUMCLASSES] =
 	15*FRACUNIT,
 	10*FRACUNIT,
 	5*FRACUNIT,
-#ifdef ASSASSIN
-	10*FRACUNIT,
-#endif
 	0
 };
 
@@ -209,11 +203,7 @@ static void TryPickupWeapon(player_t *player, pclass_t weaponClass,
 	boolean gaveWeapon;
 
 	removeit = true;
-	if (player->playerclass != weaponClass
-#ifdef ASSASSIN
-		&& player->playerclass != PCLASS_ASS
-#endif
-		)
+	if (player->playerclass != weaponClass)
 	{ // Wrong class, but try to pick up for mana
 		if (netgame && !deathmatch)
 		{ // Can't pick up weapons for other classes in coop netplay
@@ -433,18 +423,12 @@ static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass,
 		TXT_WEAPON_F4,
 		TXT_WEAPON_C4,
 		TXT_WEAPON_M4,
-#ifdef ASSASSIN
-		TXT_WEAPON_A4
-#endif
 	};
 	static const char *weaponPieceText[] =
 	{
 		TXT_QUIETUS_PIECE,
 		TXT_WRAITHVERGE_PIECE,
 		TXT_BLOODSCOURGE_PIECE,
-#ifdef ASSASSIN
-		TXT_STAFFOFSET_PIECE
-#endif
 	};
 	static int pieceValueTrans[] =
 	{
@@ -458,12 +442,7 @@ static void TryPickupWeaponPiece(player_t *player, pclass_t matchClass,
 	removeit = true;
 	checkAssembled = true;
 	gaveWeapon = false;
-	// Allow assassin to pick up any weapons
-	if (player->playerclass != matchClass
-#ifdef ASSASSIN
-		&& player->playerclass != PCLASS_ASS
-#endif
-		)
+	if (player->playerclass != matchClass)
 	{ // Wrong class, but try to pick up for mana
 		if (netgame && !deathmatch)
 		{ // Can't pick up wrong-class weapons in coop netplay
@@ -1244,20 +1223,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
 	case SPR_WMS3:
 		TryPickupWeaponPiece(player, PCLASS_MAGE, WPIECE3, special);
 		return;
-#ifdef ASSASSIN
-	/*
-	// Don't forget to fix this
-	case SPR_WAS1:
-		TryPickupWeaponPiece(player, PCLASS_ASS, WPIECE1, special);
-		return;
-	case SPR_WAS2:
-		TryPickupWeaponPiece(player, PCLASS_ASS, WPIECE2, special);
-		return;
-	case SPR_WAS3:
-		TryPickupWeaponPiece(player,PCLASS_ASS, WPIECE3, special);
-		return;
-	*/
-#endif
 	default:
 		I_Error("P_SpecialThing: Unknown gettable thing");
 	}

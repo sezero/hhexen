@@ -184,12 +184,7 @@ static void TextWrite (void)
 		{
 			V_DrawPatch(20, 0, (PATCH_REF)WR_CacheLumpName("chessall", PU_CACHE));
 		}
-#ifdef ASSASSIN
-		else if (PlayerClasses[consoleplayer] == PCLASS_ASS)
-		{
-			V_DrawPatch(60, 0, (PATCH_REF)WR_CacheLumpNum(W_GetNumForName("chessa"), PU_CACHE));
-		}
-#endif
+
 		else if (PlayerClasses[consoleplayer])
 		{
 			V_DrawPatch(60, 0, (PATCH_REF)WR_CacheLumpNum(W_GetNumForName("chessc")

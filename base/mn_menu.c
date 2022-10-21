@@ -206,10 +206,7 @@ static MenuItem_t ClassItems[] =
 {
 	{ ITT_EFUNC, "FIGHTER", SCClass, 0, MENU_NONE },
 	{ ITT_EFUNC, "CLERIC", SCClass, 1, MENU_NONE },
-	{ ITT_EFUNC, "MAGE", SCClass, 2, MENU_NONE },
-#ifdef ASSASSIN
-	{ ITT_EFUNC, "ASSASSIN", SCClass, 3, MENU_NONE }
-#endif
+	{ ITT_EFUNC, "MAGE", SCClass, 2, MENU_NONE }
 };
 
 static Menu_t ClassMenu =
@@ -1389,16 +1386,6 @@ static void SCClass(int option)
 		SkillItems[3].text = "WARLOCK";
 		SkillItems[4].text = "ARCHIMAGE";
 		break;
-#ifdef ASSASSIN
-	case PCLASS_ASS:
-		SkillMenu.x = 116;
-		SkillItems[0].text = "KNAVE";
-		SkillItems[1].text = "ROUGE";
-		SkillItems[2].text = "CUTTHROAT";
-		SkillItems[3].text = "EXECUTIONER";
-		SkillItems[4].text = "WIDOW MAKER";
-		break;
-#endif
 	}
 	SetTheMenu(MENU_SKILL);
 }

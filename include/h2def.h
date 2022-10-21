@@ -562,9 +562,7 @@ typedef enum
 	PCLASS_FIGHTER,
 	PCLASS_CLERIC,
 	PCLASS_MAGE,
-#ifdef ASSASSIN
-	PCLASS_ASS,
-#endif
+
 	/* end of the actual classes */
 	NUMCLASSES_HUMAN,
 

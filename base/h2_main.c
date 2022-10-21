@@ -112,9 +112,6 @@ static const char *pagename;
 static const char *wadfiles[MAXWADFILES + 1] =
 {
 	"hexen.wad",
-#ifdef ASSASSIN
-	"assassin.wad",
-#endif
 	NULL	/* the last entry MUST be NULL */
 };
 static execOpt_t ExecOptions[] =

@@ -597,10 +597,6 @@ void SB_SetClassData(void)
 	int max_players;
 
 	pClass = PlayerClasses[consoleplayer];	// original player class (not pig)
-#ifdef ASSASSIN
-	if (pClass == PCLASS_ASS)
-		pClass = PCLASS_FIGHTER;	// Use FIghter chain and gem for now
-#endif
 
 	max_players = ((MAXPLAYERS > MAXPLAYERS_10) && oldwad_10) ? MAXPLAYERS_10 : MAXPLAYERS;
 
@@ -1584,9 +1580,6 @@ static int PieceX[NUMCLASSES][3] =
 	{ 190, 225, 234 },
 	{ 190, 212, 225 },
 	{ 190, 205, 224 },
-#ifdef ASSASSIN
-	{ 190, 205, 224 },	/* Use mage xpositions for now */
-#endif
 	{ 0, 0, 0 }		/* Pig is never used */
 };
 
@@ -2085,11 +2078,7 @@ static void CheatQuickenFunc3(player_t *player, Cheat_t *cheat)
 static void CheatClassFunc1(player_t *player, Cheat_t *cheat)
 {
 /* P_SetMessage isn't variably arg'ed: set the messages by hand: */
-#ifdef ASSASSIN
-	P_SetMessage(player, "ENTER NEW PLAYER CLASS (0 - 3)", true);
-#else
 	P_SetMessage(player, "ENTER NEW PLAYER CLASS (0 - 2)", true);
-#endif
 }
 
 static void CheatClassFunc2(player_t *player, Cheat_t *cheat)

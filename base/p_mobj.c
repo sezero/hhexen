@@ -1333,11 +1333,6 @@ void P_SpawnPlayer(mapthing_t *mthing)
 	case PCLASS_MAGE:
 		mobj = P_SpawnMobj(x, y, z, MT_PLAYER_MAGE);
 		break;
-#ifdef ASSASSIN
-	case PCLASS_ASS:
-		mobj = P_SpawnMobj(x, y, z, MT_PLAYER_ASS);
-		break;
-#endif
 	default:
 		I_Error("P_SpawnPlayer: Unknown class type");
 		mobj = NULL;	/* avoid compiler warning */
@@ -1394,15 +1389,12 @@ void P_SpawnMapThing(mapthing_t *mthing)
 	unsigned int spawnMask;
 	mobj_t *mobj;
 	fixed_t x, y, z;
-	// Put in Cleric twice, since we can't have an assassin flag.
+
 	static unsigned int classFlags[] =
 	{
 		MTF_FIGHTER,
 		MTF_CLERIC,
-		MTF_MAGE,
-#ifdef ASSASSIN
-		MTF_CLERIC
-#endif
+		MTF_MAGE
 	};
 
 	// Count deathmatch start positions

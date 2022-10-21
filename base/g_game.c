@@ -120,9 +120,6 @@ static fixed_t MaxPlayerMove[NUMCLASSES] =
 		0x3C,
 		0x32,
 		0x2D,
-#ifdef ASSASSIN
-		0x3D,
-#endif
 		0x31
 };
 
@@ -131,9 +128,6 @@ static fixed_t forwardmove[NUMCLASSES][2] =
 	{ 0x1D, 0x3C },
 	{ 0x19, 0x32 },
 	{ 0x16, 0x2E },
-#ifdef ASSASSIN
-	{ 0x17, 0x3D },
-#endif
 	{ 0x18, 0x31 }
 };
 
@@ -142,9 +136,6 @@ static fixed_t sidemove[NUMCLASSES][2] =
 	{ 0x1B, 0x3B },
 	{ 0x18, 0x28 },
 	{ 0x15, 0x25 },
-#ifdef ASSASSIN
-	{ 0x16, 0x3C },
-#endif
 	{ 0x17, 0x27 }
 };
 

@@ -71,13 +71,6 @@ if test x$enable_oldwad = xyes; then
 	AC_DEFINE(VERSION10_WAD, 1, [Define if building for version 1.0 (4-player) wadfiles only])
 fi
 
-AC_ARG_ENABLE(assassin,
-[AS_HELP_STRING([--enable-assassin], [Build with support for the Assassin [default=no]])],
-  [], [enable_assassin=no])
-if test x$enable_assassin = xyes; then
-	AC_DEFINE(ASSASSIN, 1, [Define if including the assassin in compile])
-fi
-
 AC_ARG_ENABLE(dossaves,
 [AS_HELP_STRING([--enable-dossaves], [DOS-Hexen saved game compatibility (experimental) [default=no]])],
   [], [enable_dossaves=no])
@@ -159,34 +152,6 @@ X11_LIB="$ac_x_libraries"
 
 AC_CHECK_LIB(m, pow,, AC_MSG_ERROR([*** math library (-lm) appears broken]))
 
-AH_VERBATIM([_REENTRANT],
-[/* For pthread support in OSS audio code. */
-#ifndef _REENTRANT
-# undef _REENTRANT
-#endif])
-
-AH_VERBATIM([_THREAD_SAFE],
-[/* For pthread support in OSS audio code. */
-#ifndef _THREAD_SAFE
-# undef _THREAD_SAFE
-#endif])
-
-dnl == pthreads check: This is linux-centric (see the configure.in of SDL
-dnl == for other systems' pthreads support), but we need this for linux only
-AC_CHECK_LIB(pthread, pthread_join,
-	[HAVE_PTHREADS="yes";THREAD_LIBS="-lpthread";], [HAVE_PTHREADS="no";])
-if test "$SND_MODULE" = "oss";then
-	if test "$HAVE_PTHREADS" = "no"; then
-	   AC_MSG_ERROR([*** libpthread not found! (required by sound code.)])
-	fi
-	AC_DEFINE(_REENTRANT)
-	AC_DEFINE(_THREAD_SAFE)
-fi
-
-AC_SUBST(THREAD_LIBS)
-AC_SUBST(X11_INC)
-AC_SUBST(X11_LIB)
-
 dnl == Check for SDL
 SDL_VERSION="2.0.2"
 AM_PATH_SDL2($SDL_VERSION,[HAVESDL="yes"],[HAVESDL="no"])
@@ -261,13 +226,6 @@ echo "Enabled target       : $report"
 
 echo "Audio driver         : $SND_MODULE"
 
-if test x$enable_assassin = xyes; then
-    report="enabled"
-else
-    report="disabled"
-fi
-echo "Assassin player class: $report"
-
 if test x$enable_rangecheck = xno; then
     report="disabled"
 else
@@ -300,3 +258,4 @@ fi
 
 echo "Type 'make' to compile."
 echo
+
