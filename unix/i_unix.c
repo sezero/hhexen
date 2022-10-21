@@ -1,13 +1,10 @@
 #include "h2stdinc.h"
-#include <sys/time.h>
 #include <sys/stat.h>
 #include <errno.h>
 #include "h2def.h"
 #include "soundst.h"
 #include "st_start.h"
-#ifdef SDLHEXEN
 #include "SDL.h"
-#endif
 
 extern void I_StartupMouse(void);
 extern void I_ShutdownGraphics(void);
@@ -24,16 +21,6 @@ extern int startmap;
 ============================================================================
 */
 
-int		ticcount;
-static long	_startSec;
-
-static void I_StartupTimer(void)
-{
-	struct timeval tv;
-	gettimeofday (&tv, NULL);
-	_startSec = tv.tv_sec;
-}
-
 //--------------------------------------------------------------------------
 //
 // FUNC I_GetTime
@@ -42,17 +29,22 @@ static void I_StartupTimer(void)
 //
 //--------------------------------------------------------------------------
 
+/* Stolen from Chocolate Doom */
+static Uint32 basetime = 0;
+
 int I_GetTime (void)
 {
-	struct timeval tv;
-	gettimeofday (&tv, NULL);
+	Uint32 ticks;
 
-//	printf ("GT: %lx %lx\n", tv.tv_sec, tv.tv_usec);
-//	ticcount = ((tv.tv_sec * 1000000) + tv.tv_usec) / 28571;
-	ticcount = ((tv.tv_sec - _startSec) * 35) + (tv.tv_usec / 28571);
-	return ticcount;
+	ticks = SDL_GetTicks();
+
+	if (basetime == 0)
+		basetime = ticks;
+
+	ticks -= basetime;
+
+	return (ticks * 35) / 1000;  
 }
-
 
 /*
 ============================================================================
@@ -120,17 +112,16 @@ void I_StartFrame (void)
 
 void I_Init (void)
 {
-#ifdef SDLHEXEN
 	if (SDL_Init(0) < 0)
+	{
 		I_Error("SDL failed to initialize.");
-#endif
+	}
+
 	I_StartupMouse();
 	I_StartupJoystick();
 	printf("  S_Init... ");
 	S_Init();
 	S_Start();
-
-	I_StartupTimer();
 }
 
 
@@ -148,9 +139,7 @@ void I_Shutdown (void)
 {
 	S_ShutDown ();
 	I_ShutdownGraphics ();
-#ifdef SDLHEXEN
 	SDL_Quit ();
-#endif
 }
 
 
@@ -326,19 +315,14 @@ void I_CheckExternDriver (void)
 static void CreateBasePath (void)
 {
 #if !defined(_NO_USERDIRS)
-	int rc, sz;
-	char *base;
-	char *homedir = getenv("HOME");
-	if (homedir == NULL)
-		I_Error ("Unable to determine user home directory");
-	/* make sure that basePath has a trailing slash */
-	sz = strlen(homedir) + strlen(H_USERDIR) + 3;
-	base = (char *) malloc(sz * sizeof(char));
-	snprintf(base, sz, "%s/%s/", homedir, H_USERDIR);
-	basePath = base;
-	rc = mkdir(base, S_IRWXU|S_IRWXG|S_IRWXO);
-	if (rc != 0 && errno != EEXIST)
-		I_Error ("Unable to create hhexen user directory");
+	char* pref_dir = SDL_GetPrefPath (H_USERDIR, H_USERDIR);
+	
+	if (pref_dir == NULL)
+	{
+		I_Error("Unable to determine user pref directory: %s\n", SDL_GetError());
+	}
+
+	basePath = pref_dir;
 #endif	/* !_NO_USERDIRS */
 }
 

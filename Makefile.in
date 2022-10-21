@@ -1,6 +1,5 @@
 # HHexen Makefile
 #
-# svga			build Software (SVGALib) version
 # sdl			build Software (SDL) version
 # opengl		build OpenGL (SDL) version
 # clean:		remove all intermediate files
@@ -47,7 +46,7 @@ CPPFLAGS += -I. -I$(SRCDIR)/include
 CPPFLAGS += $(SDL_CFLAGS)
 
 # Objects to build
-OBJ_SYS  = unix/i_linux.o
+OBJ_SYS  = unix/i_unix.o
 OBJ_SWSDL = sdl/i_sdl.o
 OBJ_GLSDL = sdl/i_sdlgl.o
 OBJ_SDLAUDIO = sdl/i_sndsdl.o

@@ -96,7 +96,7 @@
 #define	MAX_OSPATH		256
 
 #define	DATA_ENVVAR		"HHEXEN_DATA"
-#define	H_USERDIR		".hhexen"
+#define	H_USERDIR		"hhexen"
 
 /* path to the user directory with a trailing
  * directory separator character. initialized

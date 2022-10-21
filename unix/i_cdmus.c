@@ -7,17 +7,6 @@
 // HEADER FILES ------------------------------------------------------------
 
 #include "h2stdinc.h"
-#include <unistd.h>
-#if 0 /* nothing is here yet */
-#include <sys/ioctl.h>
-#include <sys/file.h>
-#include <fcntl.h>
-#include <time.h>
-#include <errno.h>
-#ifdef HAVE_LINUX_CDROM_H
-#include <linux/cdrom.h>
-#endif
-#endif /* #if 0 */
 #include "h2def.h"
 #include "i_cdmus.h"
 
@@ -49,19 +38,7 @@ int cd_Error;
 
 // PRIVATE DATA DEFINITIONS ------------------------------------------------
 
-#if 0 /* nothing is here yet */
-static int cd_FirstTrack;
-static int cd_LastTrack;
-static char cd_dev[64] = "/dev/cdrom";
-#endif
-static int cdfile = -1;
-
 // CODE --------------------------------------------------------------------
-
-static int I_CDGetDiskInfo(void)
-{
-	return 0;
-}
 
 //==========================================================================
 //
@@ -76,8 +53,6 @@ static int I_CDGetDiskInfo(void)
 
 int I_CDMusInit(void)
 {
-	//open CD device
-	I_CDGetDiskInfo ();
 	return -1;	// not implemented yet
 }
 
@@ -175,9 +150,6 @@ int I_CDMusLastTrack(void)
 
 void I_CDMusShutdown(void)
 {
-	if (cdfile != -1)
-		close(cdfile);
-	cdfile = -1;
 }
 
 //==========================================================================
