@@ -790,7 +790,7 @@ void A_FaceTarget(mobj_t *actor)
 	actor->angle = R_PointToAngle2(actor->x, actor->y, actor->target->x, actor->target->y);
 	if (actor->target->flags & MF_SHADOW)
 	{ // Target is a ghost
-		actor->angle += (P_Random() - P_Random()) << 21;
+		actor->angle += P_SubRandom() << 21;
 	}
 }
 
@@ -1444,8 +1444,8 @@ void A_MntrFloorFire(mobj_t *actor)
 	mobj_t *mo;
 
 	actor->z = actor->floorz;
-	mo = P_SpawnMobj(actor->x + ((P_Random() - P_Random()) << 10),
-			 actor->y + ((P_Random() - P_Random()) << 10), ONFLOORZ, MT_MNTRFX3);
+	mo = P_SpawnMobj(actor->x + (P_SubRandom() << 10),
+			 actor->y + (P_SubRandom() << 10), ONFLOORZ, MT_MNTRFX3);
 	mo->target = actor->target;
 	mo->momx = 1; // Force block checking
 	P_CheckMissileSpawn(mo);
@@ -1556,8 +1556,8 @@ void P_DropItem(mobj_t *source, mobjtype_t type, int special, int chance)
 		return;
 	}
 	mo = P_SpawnMobj(source->x, source->y, source->z + (source->height>>1), type);
-	mo->momx = (P_Random() - P_Random()) << 8;
-	mo->momy = (P_Random() - P_Random()) << 8;
+	mo->momx = P_SubRandom() << 8;
+	mo->momy = P_SubRandom() << 8;
 	mo->momz = FRACUNIT*5 + (P_Random() << 10);
 	mo->flags2 |= MF2_DROPPED;
 	mo->health = special;
@@ -1731,8 +1731,8 @@ void A_SkullPop(mobj_t *actor)
 	actor->flags &= ~MF_SOLID;
 	mo = P_SpawnMobj(actor->x, actor->y, actor->z + 48*FRACUNIT, MT_BLOODYSKULL);
 	//mo->target = actor;
-	mo->momx = (P_Random() - P_Random()) << 9;
-	mo->momy = (P_Random() - P_Random()) << 9;
+	mo->momx = P_SubRandom() << 9;
+	mo->momy = P_SubRandom() << 9;
 	mo->momz = FRACUNIT*2 + (P_Random() << 6);
 	// Attach player mobj to bloody skull
 	player = actor->player;
@@ -2736,9 +2736,9 @@ void A_BishopPainBlur(mobj_t *actor)
 		P_SetMobjState(actor, S_BISHOP_BLUR1);
 		return;
 	}
-	mo = P_SpawnMobj(actor->x + ((P_Random() - P_Random()) << 12),
-			 actor->y + ((P_Random() - P_Random()) << 12),
-			 actor->z + ((P_Random() - P_Random()) << 11),
+	mo = P_SpawnMobj(actor->x + (P_SubRandom() << 12),
+			 actor->y + (P_SubRandom() << 12),
+			 actor->z + (P_SubRandom() << 11),
 			 MT_BISHOPPAINBLUR);
 	if (mo)
 	{
@@ -4723,8 +4723,8 @@ void A_FreezeDeathChunks(mobj_t *actor)
 		if (mo)
 		{
 			mo->momz = FixedDiv(mo->z - actor->z, actor->height)<<2;
-			mo->momx = (P_Random() - P_Random()) << (FRACBITS - 7);
-			mo->momy = (P_Random() - P_Random()) << (FRACBITS - 7);
+			mo->momx = P_SubRandom() << (FRACBITS - 7);
+			mo->momy = P_SubRandom() << (FRACBITS - 7);
 			A_IceSetTics(mo);	// set a random tic wait
 		}
 	}
@@ -4737,8 +4737,8 @@ void A_FreezeDeathChunks(mobj_t *actor)
 		if (mo)
 		{
 			mo->momz = FixedDiv(mo->z - actor->z, actor->height)<<2;
-			mo->momx = (P_Random() - P_Random()) << (FRACBITS - 7);
-			mo->momy = (P_Random() - P_Random()) << (FRACBITS - 7);
+			mo->momx = P_SubRandom() << (FRACBITS - 7);
+			mo->momy = P_SubRandom() << (FRACBITS - 7);
 			A_IceSetTics(mo);	// set a random tic wait
 		}
 	}
@@ -4747,8 +4747,8 @@ void A_FreezeDeathChunks(mobj_t *actor)
 		mo = P_SpawnMobj(actor->x, actor->y, actor->z + VIEWHEIGHT, MT_ICECHUNK);
 		P_SetMobjState(mo, S_ICECHUNK_HEAD);
 		mo->momz = FixedDiv(mo->z - actor->z, actor->height)<<2;
-		mo->momx = (P_Random() - P_Random()) << (FRACBITS - 7);
-		mo->momy = (P_Random() - P_Random()) << (FRACBITS - 7);
+		mo->momx = P_SubRandom() << (FRACBITS - 7);
+		mo->momy = P_SubRandom() << (FRACBITS - 7);
 		mo->flags2 |= MF2_ICEDAMAGE; // used to force blue palette
 		mo->flags2 &= ~MF2_FLOORCLIP;
 		mo->player = actor->player;

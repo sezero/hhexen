@@ -1471,8 +1471,11 @@ void M_ForceUppercase(char *text);
 int M_Random (void);
 /* returns a number from 0 to 255 */
 
-unsigned char P_Random(void);
+int P_Random(void);
 /* as M_Random, but used only by the play simulation */
+
+int P_SubRandom(void);
+/* same as P_Random() - P_Random() */
 
 void M_ClearRandom (void);
 /* fix randoms for demos */

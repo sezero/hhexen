@@ -1727,7 +1727,7 @@ void A_CFlameAttack(player_t *player, pspdef_t *psp)
 	angle = pmo->angle;
 	if (player->refire)
 	{
-		angle += (P_Random() - P_Random()) << 17;
+		angle += P_SubRandom() << 17;
 	}
 	P_AimLineAttack(pmo, angle, CFLAMERANGE); // Correctly set linetarget
 	if (!linetarget)

@@ -165,10 +165,18 @@ unsigned char rndtable[256] =
 int rndindex = 0;
 int prndindex = 0;
 
-unsigned char P_Random (void)
+int P_Random (void)
 {
 	prndindex = (prndindex + 1) & 0xff;
 	return rndtable[prndindex];
+}
+
+int P_SubRandom (void)
+{
+	int rand1 = P_Random();
+	int rand2 = P_Random();
+
+	return rand1 - rand2;
 }
 
 int M_Random (void)
