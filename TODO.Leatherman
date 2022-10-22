@@ -1,0 +1,5 @@
+My future plans:
+
+ - Replace Autotools with CMake
+ - Get rid of cppcheck warnings (i.e. clean up the code from dirty hacks and unsafe stuff)
+ - In-game resolution changing / fullscreen toggle

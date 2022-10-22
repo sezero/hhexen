@@ -1,0 +1,8 @@
+ Changes by Gachimuchi Leatherman:
+ 
+ - Codebase cleared of useless stuff (ancient DOS-specific code, x86_32 ASM inlines, etc)
+ - Removed SVGAlib software render
+ - Removed OSS audio driver - SDL/SDL_mixer has wider platform support and performs better
+ - Removed uncompleted Assassin class
+ - Porting codebase to SDL2
+ - Various minor optimizations
