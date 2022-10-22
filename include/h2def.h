@@ -982,68 +982,6 @@ fixed_t	FixedMul (fixed_t a, fixed_t b);
 fixed_t	FixedDiv (fixed_t a, fixed_t b);
 fixed_t	FixedDiv2 (fixed_t a, fixed_t b);
 
-#undef	_HAVE_FIXED_ASM
-
-#if !defined(_DISABLE_ASM)
-#if defined(__i386__) || defined(__386__) || defined(_M_IX86)
-#if defined(__WATCOMC__)
-
-#define	_HAVE_FIXED_ASM			1
-
-#pragma aux FixedMul =			\
-	"imul ebx",			\
-	"shrd eax,edx,16"		\
-	parm	[eax] [ebx]		\
-	value	[eax]			\
-	modify exact [eax edx]
-
-#pragma aux FixedDiv2 =			\
-	"cdq",				\
-	"shld edx,eax,16",		\
-	"sal eax,16",			\
-	"idiv ebx"			\
-	parm	[eax] [ebx]		\
-	value	[eax]			\
-	modify exact [eax edx]
-
-#elif defined(__GNUC__)
-
-#define	_HAVE_FIXED_ASM			1
-
-# if defined(_INLINE_FIXED_ASM)
-# if (__GNUC__ == 2) && (__GNUC_MINOR__ <= 91)
-# define FixedMul(fa,fb) ({ int __value, __fb = (fb);	\
-	__asm__("imul %%ebx; shrd $16,%%edx,%%eax"	\
-		: "=a" (__value)			\
-		: "0" (fa), "b" (__fb)			\
-		: "eax", "edx" ); __value; })
-
-# define FixedDiv2(fa,fb) ({ int __value;		\
-	__asm__("cdq; shld $16,%%eax,%%edx; sall $16,%%eax; idiv %%ebx"	\
-		: "=a" (__value)			\
-		: "0" (fa), "b" (fb)			\
-		: "eax", "edx" ); __value; })
-
-# else	/* GCC > 2.91.x */
-# define FixedMul(fa,fb) ({ int __value, __fb = (fb);	\
-	__asm__("imul %%ebx; shrd $16,%%edx,%%eax"	\
-		: "=a" (__value)			\
-		: "0" (fa), "b" (__fb)			\
-		: "edx" ); __value; })
-
-# define FixedDiv2(fa,fb) ({ int __value;		\
-	__asm__("cdq; shld $16,%%eax,%%edx; sall $16,%%eax; idiv %%ebx"	\
-		: "=a" (__value)			\
-		: "0" (fa), "b" (fb)			\
-		: "edx" ); __value; })
-
-# endif	/* GCC/EGCS versions */
-
-# endif	/* _INLINE_FIXED_ASM */
-#endif
-#endif	/* X86 */
-#endif	/* !_DISABLE_ASM */
-
 #define FIX2FLT(x)	((float)((x)>>FRACBITS) + (float)((x)&(FRACUNIT-1)) / (float)(FRACUNIT))
 #define Q_FIX2FLT(x)	((float)((x)>>FRACBITS))
 

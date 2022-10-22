@@ -7,7 +7,7 @@
 #ifndef __H2STDINC_H
 #define __H2STDINC_H
 
-#ifndef _MSC_VER
+#ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
@@ -31,7 +31,7 @@
    FIXME: Properly replace certain short and int usage
 	  with int16_t and int32_t.
  */
-#ifndef _MSC_VER 
+#ifndef _MSC_VER
 #if defined(HAVE_STDINT_H)
 # include <stdint.h>
 #endif

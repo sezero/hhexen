@@ -39,13 +39,6 @@ if test x$enable_userdirs != xyes; then
 	AC_DEFINE(_NO_USERDIRS, 1, [Define if want to disable user directories])
 fi
 
-AC_ARG_ENABLE(asm,
-[AS_HELP_STRING([--disable-asm], [Disable assembly language [default=no]])],
-  [], [enable_asm=yes])
-if test x$enable_asm != xyes; then
-	AC_DEFINE(_DISABLE_ASM, 1, [Define if not want to use assembly language])
-fi
-
 AC_ARG_ENABLE(gl,
 [AS_HELP_STRING([--disable-gl], [Disable OpenGL version [default=no]])],
   [], [enable_gl=yes])

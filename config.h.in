@@ -15,9 +15,6 @@
 /* Define to 1 if you have the `m' library (-lm). */
 #undef HAVE_LIBM
 
-/* Define to 1 if you have the <linux/cdrom.h> header file. */
-#undef HAVE_LINUX_CDROM_H
-
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 
@@ -72,9 +69,6 @@
 /* Define if building with OpenGL support */
 #undef RENDER3D
 
-/* Define if HHexen depends on SDL */
-#undef SDLHEXEN
-
 /* Define this to the shared game directory root */
 #undef SHARED_DATAPATH
 
@@ -98,24 +92,11 @@
 # endif
 #endif
 
-/* Define if not want to use assembly language */
-#undef _DISABLE_ASM
-
 /* Define for saved game compatibility with DOS-Hexen (experimental) */
 #undef _DOSSAVE_COMPAT
 
 /* Define if want to disable user directories */
 #undef _NO_USERDIRS
-
-/* For pthread support in OSS audio code. */
-#ifndef _REENTRANT
-# undef _REENTRANT
-#endif
-
-/* For pthread support in OSS audio code. */
-#ifndef _THREAD_SAFE
-# undef _THREAD_SAFE
-#endif
 
 /* Define to 1 if type `char' is unsigned and your compiler does not
    predefine this macro.  */

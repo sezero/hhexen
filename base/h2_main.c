@@ -876,42 +876,6 @@ static void AddWADFile(const char *file)
 //
 //==========================================================================
 
-#if defined(_HAVE_FIXED_ASM)
-
-#if defined(__i386__) || defined(__386__) || defined(_M_IX86)
-#if defined(__GNUC__) && !defined(_INLINE_FIXED_ASM)
-fixed_t	FixedMul (fixed_t a, fixed_t b)
-{
-	fixed_t retval;
-	__asm__ __volatile__(
-		"imull  %%edx			\n\t"
-		"shrdl  $16, %%edx, %%eax	\n\t"
-		: "=a" (retval)
-		: "a" (a), "d" (b)
-		: "cc"
-	);
-	return retval;
-}
-
-fixed_t	FixedDiv2 (fixed_t a, fixed_t b)
-{
-	fixed_t retval;
-	__asm__ __volatile__(
-		"cdq				\n\t"
-		"shldl  $16, %%eax, %%edx	\n\t"
-		"sall   $16, %%eax		\n\t"
-		"idivl  %%ebx			\n\t"
-		: "=a" (retval)
-		: "a" (a), "b" (b)
-		: "%edx", "cc"
-	);
-	return retval;
-}
-#endif	/* GCC and !_INLINE_FIXED_ASM */
-#endif	/* x86 */
-
-#else	/* C-only versions */
-
 fixed_t FixedMul (fixed_t a, fixed_t b)
 {
 	return ((int64_t) a * (int64_t) b) >> 16;
@@ -923,7 +887,6 @@ fixed_t FixedDiv2 (fixed_t a, fixed_t b)
 		return 0;
 	return (fixed_t) (((double) a / (double) b) * FRACUNIT);
 }
-#endif
 
 fixed_t FixedDiv (fixed_t a, fixed_t b)
 {
