@@ -30,12 +30,6 @@
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
 
-/* Define to 1 if you have the <sys/cdio.h> header file. */
-#undef HAVE_SYS_CDIO_H
-
-/* Define to 1 if you have the <sys/soundcard.h> header file. */
-#undef HAVE_SYS_SOUNDCARD_H
-
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #undef HAVE_SYS_STAT_H
 

@@ -108,7 +108,7 @@ AC_PROG_CC
 AC_PROG_CPP
 
 dnl == Checks for header files.
-AC_CHECK_HEADERS(linux/cdrom.h sys/cdio.h sys/soundcard.h stdint.h inttypes.h strings.h)
+AC_CHECK_HEADERS(stdint.h inttypes.h strings.h)
 
 dnl == Checks for typedefs, structures, and compiler characteristics
 AC_C_CONST
@@ -138,17 +138,11 @@ int main(void) {
   fi
 fi
 
-dnl == Checks for library functions.
-AC_PATH_X
-X11_INC="$ac_x_includes"
-X11_LIB="$ac_x_libraries"
-
 AC_CHECK_LIB(m, pow,, AC_MSG_ERROR([*** math library (-lm) appears broken]))
 
 dnl == Check for SDL
 SDL_VERSION="2.0.2"
 AM_PATH_SDL2($SDL_VERSION,[HAVESDL="yes"],[HAVESDL="no"])
-AC_DEFINE(SDLHEXEN, 1, [Define if HHexen depends on SDL])
 if test "$HAVESDL" = "no"; then
     AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
 fi
@@ -182,11 +176,7 @@ dnl     ;;
 esac
 
 saved_libs="$LIBS"
-if test x$ac_x_libraries != x; then
-   LIBS="$LIBS -L$ac_x_libraries $GL_LIBS"
-else
-   LIBS="$LIBS $GL_LIBS"
-fi
+LIBS="$LIBS $GL_LIBS"
 
 AC_MSG_CHECKING(for OpenGL support)
 AC_LINK_IFELSE([AC_LANG_PROGRAM([[

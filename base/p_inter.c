@@ -1985,10 +1985,6 @@ void P_DamageMobj (mobj_t *target, mobj_t *inflictor, mobj_t *source, int damage
 		}
 		if (player == &players[consoleplayer])
 		{
-#if defined(__WATCOMC__) && defined(_DOS)
-			int temp = damage < 100 ? damage : 100;
-			I_Tactile(40, 10, 40 + temp*2);
-#endif	/* externdriver, DOS */
 			SB_PaletteFlash(false);
 		}
 	}

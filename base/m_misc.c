@@ -17,9 +17,6 @@
 #include "p_local.h"
 #include "i_cdmus.h"
 #include "soundst.h"
-#if defined(__WATCOMC__) && defined(_DOS)
-#include "i_sound.h"
-#endif
 #ifdef RENDER3D
 #include "ogl_def.h"
 #endif
@@ -447,14 +444,6 @@ extern int viewwidth, viewheight;
 extern int screenblocks;
 
 extern int snd_Channels;
-#if defined(__WATCOMC__) && defined(_DOS)
-extern int snd_DesiredMusicDevice, snd_DesiredSfxDevice;
-extern int snd_MusicDevice,	// current music card # (index to dmxCodes)
-	   snd_SfxDevice;	// current sfx card # (index to dmxCodes)
-
-extern int snd_SBport, snd_SBirq, snd_SBdma;	// sound blaster variables
-extern int snd_Mport;				// midi variables
-#endif	/* DOS vars */
 
 default_t defaults[] =
 {
@@ -507,16 +496,6 @@ default_t defaults[] =
 	{ "alwaysrun",		&alwaysrun,		0,	0, 1 },
 
 	{ "snd_channels",	&snd_Channels,		3,	3, MAX_CHANNELS },
-#if defined(__WATCOMC__) && defined(_DOS)
-	/* the min/max values I added here are pretty much meaningless.
-	  the values used to be set by the DOS version's setup program. */
-	{ "snd_musicdevice",	&snd_DesiredMusicDevice,0,	0, NUM_SCARDS-1 },
-	{ "snd_sfxdevice",	&snd_DesiredSfxDevice,	0,	0, NUM_SCARDS-1 },
-	{ "snd_sbport",		&snd_SBport,		544,	0, 544 },
-	{ "snd_sbirq",		&snd_SBirq,		-1,	-1, 7 },
-	{ "snd_sbdma",		&snd_SBdma,		-1,	-1, 7 },
-	{ "snd_mport",		&snd_Mport,		-1,	-1, 360 }
-#endif	/* DOS vars */
 };
 
 default_str_t default_strings[] =
