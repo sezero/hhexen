@@ -7,7 +7,9 @@
 #ifndef __H2STDINC_H
 #define __H2STDINC_H
 
+#ifndef _MSC_VER
 #include "config.h"
+#endif
 
 #if defined(_WIN32) && !defined(WIN32_LEAN_AND_MEAN)
 #define WIN32_LEAN_AND_MEAN
@@ -29,11 +31,15 @@
    FIXME: Properly replace certain short and int usage
 	  with int16_t and int32_t.
  */
+#ifndef _MSC_VER 
 #if defined(HAVE_STDINT_H)
 # include <stdint.h>
 #endif
 #if defined(HAVE_INTTYPES_H)
 # include <inttypes.h>
+#endif
+#else
+#include <stdint.h>
 #endif
 
 #include <stdio.h>
@@ -41,8 +47,13 @@
 #include <stdarg.h>
 #include <string.h>
 
+#ifdef _MSC_VER
+#define strncasecmp _strnicmp
+#define strcasecmp _stricmp
+#else
 #ifdef HAVE_STRINGS_H
 #include <strings.h>	/* strcasecmp and strncasecmp	*/
+#endif
 #endif
 
 /*==========================================================================*/

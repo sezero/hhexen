@@ -29,7 +29,9 @@
 
 
 #include "h2stdinc.h"
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 #include <math.h>	/* pow() */
 #include "SDL.h"
 #include "SDL_mixer.h"

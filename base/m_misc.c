@@ -9,7 +9,9 @@
 #include "h2stdinc.h"
 #include <sys/stat.h>
 #include <fcntl.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 #include <ctype.h>
 #include "h2def.h"
 #include "p_local.h"

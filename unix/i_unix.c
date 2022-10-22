@@ -314,6 +314,7 @@ void I_CheckExternDriver (void)
 
 static void CreateBasePath (void)
 {
+#ifndef _WIN32
 #if !defined(_NO_USERDIRS)
 	char* pref_dir = SDL_GetPrefPath (H_USERDIR, H_USERDIR);
 	
@@ -324,11 +325,16 @@ static void CreateBasePath (void)
 
 	basePath = pref_dir;
 #endif	/* !_NO_USERDIRS */
+#else
+	basePath = SDL_GetBasePath();
+#endif	/* !_WIN32 */
 }
 
 static void InitializeWaddir (void)
 {
+#ifndef _WIN32
 	static const char datadir[] = SHARED_DATAPATH; /* defined in config.h */
+#endif	/* !_WIN32 */
 
 	const char *_waddir;
 	int i;
@@ -337,12 +343,14 @@ static void InitializeWaddir (void)
 	i = M_CheckParm("-waddir");
 	if (i && i < myargc - 1)
 		_waddir = myargv[i + 1];
+#ifndef _WIN32
 	if (_waddir == NULL)
 		_waddir = getenv(DATA_ENVVAR);
 	if (_waddir == NULL) {
 		if (datadir[0])
 			_waddir = datadir;
 	}
+#endif	/* !_WIN32 */
 	waddir = _waddir;
 	if (waddir && *waddir)
 		printf ("Shared data path: %s\n", waddir);
