@@ -26,8 +26,8 @@ extern int usemouse, usejoystick;
 
 static SDL_Window	*sdl_window 	= NULL;
 static SDL_Renderer	*sdl_renderer 	= NULL;
-static SDL_Surface	*screen_surface = NULL;
-static SDL_Surface	*buffer_surface = NULL;
+static SDL_Surface	*screen_surface = NULL; /* 8-bit paletted surface */
+static SDL_Surface	*buffer_surface = NULL; /* 32-bit intermediate RGBA buffer */
 static SDL_Texture	*render_texture = NULL;
 static SDL_Rect		blit_rect	= { 0, 0, SCREENWIDTH, SCREENHEIGHT };
 
@@ -98,8 +98,6 @@ void I_SetPalette(byte *palette)
 ============================================================================
 */
 
-byte *pcscreen, *destscreen, *destview;
-
 /*
 ==============
 =
@@ -109,107 +107,30 @@ byte *pcscreen, *destscreen, *destview;
 */
 
 int UpdateState;
-extern int screenblocks;
-
 
 void I_Update (void)
 {
-
-	int i;
-	byte *dest;
-	int tics;
-	static int lasttic;
-
 	if (!vid_initialized)
 		return;
 
-//
-// blit screen to video
-//
-	if (DisplayTicker)
-	{
-		if (screenblocks > 9 || UpdateState & (I_FULLSCRN|I_MESSAGES))
-		{
-			dest = (byte *)screen;
-		}
-		else
-		{
-			dest = (byte *)pcscreen;
-		}
-
-		i = I_GetTime();
-
-		tics = i - lasttic;
-		lasttic = i;
-		if (tics > 20)
-		{
-			tics = 20;
-		}
-		for (i = 0; i < tics; i++)
-		{
-			*dest = 0xff;
-			dest += 2;
-		}
-		for (i = tics; i < 20; i++)
-		{
-			*dest = 0x00;
-			dest += 2;
-		}
-	}
-
-//	memset(pcscreen, 255, SCREENHEIGHT*SCREENWIDTH);
-
 	if (UpdateState == I_NOUPDATE)
-	{
 		return;
-	}
-	if (UpdateState & I_FULLSCRN)
-	{
-		memcpy(pcscreen, screen, SCREENWIDTH*SCREENHEIGHT);
-		UpdateState = I_NOUPDATE; // clear out all draw types
-	}
-	if (UpdateState & I_FULLVIEW)
-	{
-		if (UpdateState & I_MESSAGES && screenblocks > 7)
-		{
-			for (i = 0; i < (viewwindowy + viewheight)*SCREENWIDTH; i += SCREENWIDTH)
-			{
-				memcpy(pcscreen + i, screen + i, SCREENWIDTH);
-			}
-			
-			UpdateState &= ~(I_FULLVIEW|I_MESSAGES);
-		}
-		else
-		{
-			for (i = viewwindowy*SCREENWIDTH + viewwindowx;
-			     i < (viewwindowy+viewheight)*SCREENWIDTH; i += SCREENWIDTH)
-			{
-				memcpy(pcscreen + i, screen + i, viewwidth);
-			}
-			UpdateState &= ~I_FULLVIEW;
-		}
-	}
-	if (UpdateState & I_STATBAR)
-	{
-		memcpy(pcscreen + SCREENWIDTH*(SCREENHEIGHT-SBARHEIGHT),
-			screen + SCREENWIDTH*(SCREENHEIGHT-SBARHEIGHT),
-			SCREENWIDTH*SBARHEIGHT);
-		UpdateState &= ~I_STATBAR;
-	}
-	if (UpdateState & I_MESSAGES)
-	{
-		memcpy(pcscreen, screen, SCREENWIDTH*28);
-		UpdateState &= ~I_MESSAGES;
-	}
-	
+
+	/*
+	 * Blit from paletted 8-bit RGB surface to the intermediate 32-bit 
+	 * RGBA surface 
+	 */
 	SDL_LowerBlit (screen_surface, &blit_rect, buffer_surface, &blit_rect);
 
+	/* Update SDL texture with the contents of our 32-bit RGBA buffer */
 	SDL_UpdateTexture (render_texture, NULL, buffer_surface->pixels,
 		buffer_surface->pitch);
 
 	SDL_RenderClear (sdl_renderer);
 	SDL_RenderCopy (sdl_renderer, render_texture, NULL, NULL);
+	
 	SDL_RenderPresent (sdl_renderer);
+	UpdateState = I_NOUPDATE;
 }
 
 //--------------------------------------------------------------------------
@@ -303,7 +224,7 @@ void I_InitGraphics(void)
 
 	SDL_ShowCursor (SDL_DISABLE);
 
-	pcscreen = destscreen = (byte *) screen_surface->pixels;
+	screen = (byte *) screen_surface->pixels;
 
 	I_SetPalette ((byte *)W_CacheLumpName("PLAYPAL", PU_CACHE));
 }
