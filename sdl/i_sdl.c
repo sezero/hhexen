@@ -136,8 +136,11 @@ void I_Update (void)
 		{
 			dest = (byte *)pcscreen;
 		}
-		tics = ticcount - lasttic;
-		lasttic = ticcount;
+
+		i = I_GetTime();
+
+		tics = i - lasttic;
+		lasttic = i;
 		if (tics > 20)
 		{
 			tics = 20;
