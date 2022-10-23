@@ -24,11 +24,12 @@ extern int usemouse, usejoystick;
 
 // Private Data
 
-static SDL_Window* sdl_window = NULL;
-static SDL_Renderer* sdl_renderer = NULL;
-static SDL_Surface* surface = NULL;
-static SDL_Surface* screen_surface = NULL;
-static SDL_Texture* render_texture = NULL;
+static SDL_Window	*sdl_window 	= NULL;
+static SDL_Renderer	*sdl_renderer 	= NULL;
+static SDL_Surface	*screen_surface = NULL;
+static SDL_Surface	*buffer_surface = NULL;
+static SDL_Texture	*render_texture = NULL;
+static SDL_Rect		blit_rect	= { 0, 0, SCREENWIDTH, SCREENHEIGHT };
 
 static int screenWidth = SCREENWIDTH*2;
 static int screenHeight = SCREENHEIGHT*2;
@@ -86,7 +87,7 @@ void I_SetPalette(byte *palette)
 		colormap[i].b = gammatable[usegamma][*palette++];
 	}
 	
-	SDL_SetPaletteColors(surface->format->palette, colormap, 0, 256);
+	SDL_SetPaletteColors(screen_surface->format->palette, colormap, 0, 256);
 }
 
 /*
@@ -118,7 +119,6 @@ void I_Update (void)
 	byte *dest;
 	int tics;
 	static int lasttic;
-	SDL_Rect rect;
 
 	if (!vid_initialized)
 		return;
@@ -167,9 +167,6 @@ void I_Update (void)
 	{
 		memcpy(pcscreen, screen, SCREENWIDTH*SCREENHEIGHT);
 		UpdateState = I_NOUPDATE; // clear out all draw types
-
-		rect = (SDL_Rect) { .x = 0, .y = 0, .w = SCREENWIDTH, .h = SCREENHEIGHT };
-		SDL_LowerBlit (surface, &rect, screen_surface, &rect);
 	}
 	if (UpdateState & I_FULLVIEW)
 	{
@@ -181,9 +178,6 @@ void I_Update (void)
 			}
 			
 			UpdateState &= ~(I_FULLVIEW|I_MESSAGES);
-
-			rect = (SDL_Rect) { .x = 0, .y = 0, .w = SCREENWIDTH, .h = viewwindowy + viewheight };
-			SDL_LowerBlit (surface, &rect, screen_surface, &rect);
 		}
 		else
 		{
@@ -193,9 +187,6 @@ void I_Update (void)
 				memcpy(pcscreen + i, screen + i, viewwidth);
 			}
 			UpdateState &= ~I_FULLVIEW;
-
-			rect = (SDL_Rect) { .x = viewwindowx, .y = viewwindowy, .w = viewwidth, .h = viewheight };
-			SDL_LowerBlit (surface, &rect, screen_surface, &rect);
 		}
 	}
 	if (UpdateState & I_STATBAR)
@@ -204,21 +195,17 @@ void I_Update (void)
 			screen + SCREENWIDTH*(SCREENHEIGHT-SBARHEIGHT),
 			SCREENWIDTH*SBARHEIGHT);
 		UpdateState &= ~I_STATBAR;
-
-		rect = (SDL_Rect) { .x = 0, .y = SCREENHEIGHT-SBARHEIGHT, .w = SCREENWIDTH, .h = SBARHEIGHT };
-		SDL_LowerBlit (surface, &rect, screen_surface, &rect);
 	}
 	if (UpdateState & I_MESSAGES)
 	{
 		memcpy(pcscreen, screen, SCREENWIDTH*28);
 		UpdateState &= ~I_MESSAGES;
-
-		rect = (SDL_Rect) { .x = 0, .y = 0, .w = SCREENWIDTH, .h = 28 };
-		SDL_LowerBlit (surface, &rect, screen_surface, &rect);
 	}
+	
+	SDL_LowerBlit (screen_surface, &blit_rect, buffer_surface, &blit_rect);
 
-	SDL_UpdateTexture (render_texture, NULL, screen_surface->pixels,
-		screen_surface->pitch);
+	SDL_UpdateTexture (render_texture, NULL, buffer_surface->pixels,
+		buffer_surface->pitch);
 
 	SDL_RenderClear (sdl_renderer);
 	SDL_RenderCopy (sdl_renderer, render_texture, NULL, NULL);
@@ -289,18 +276,18 @@ void I_InitGraphics(void)
 
 	sdl_pixel_format = SDL_GetWindowPixelFormat (sdl_window);
 
-	surface = SDL_CreateRGBSurface (0, SCREENWIDTH, SCREENHEIGHT, 8,
+	screen_surface = SDL_CreateRGBSurface (0, SCREENWIDTH, SCREENHEIGHT, 8,
 		0, 0, 0, 0);
 
-	SDL_FillRect (surface, NULL, 0);
+	SDL_FillRect (screen_surface, NULL, 0);
 
 	SDL_PixelFormatEnumToMasks (sdl_pixel_format, &bpp, &rmask, &gmask, 
 		&bmask, &amask);
 
-	screen_surface = SDL_CreateRGBSurface (0, SCREENWIDTH, SCREENHEIGHT,
+	buffer_surface = SDL_CreateRGBSurface (0, SCREENWIDTH, SCREENHEIGHT,
 		bpp, rmask, gmask, bmask, amask);
 
-	SDL_FillRect (screen_surface, NULL, 0);
+	SDL_FillRect (buffer_surface, NULL, 0);
 
 	render_texture = SDL_CreateTexture (sdl_renderer, sdl_pixel_format,
 		SDL_TEXTUREACCESS_STREAMING, SCREENWIDTH, SCREENHEIGHT);
@@ -316,7 +303,7 @@ void I_InitGraphics(void)
 
 	SDL_ShowCursor (SDL_DISABLE);
 
-	pcscreen = destscreen = (byte *) surface->pixels;
+	pcscreen = destscreen = (byte *) screen_surface->pixels;
 
 	I_SetPalette ((byte *)W_CacheLumpName("PLAYPAL", PU_CACHE));
 }
@@ -332,11 +319,11 @@ void I_ShutdownGraphics(void)
 	if (!vid_initialized)
 		return;
 
-	if (surface != NULL)
-		SDL_FreeSurface (surface);
-
 	if (screen_surface != NULL)
 		SDL_FreeSurface (screen_surface);
+
+	if (buffer_surface != NULL)
+		SDL_FreeSurface (buffer_surface);
 
 	if (render_texture != NULL)
 		SDL_DestroyTexture (render_texture);
