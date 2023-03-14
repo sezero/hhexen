@@ -103,39 +103,32 @@ byte *pcscreen, *destscreen, *destview;
 */
 
 int UpdateState;
-extern int screenblocks;
 
 void I_Update (void)
 {
-/*
-	int i;
-	byte *dest;
-	int tics;
-	static int lasttic;
-*/
 	if (!vid_initialized)
+		return;
+		
+	if (UpdateState == I_NOUPDATE)
 		return;
 
 //
 // blit screen to video
 //
-/*
 	if (DisplayTicker)
 	{
-		if (screenblocks > 9 || UpdateState & (I_FULLSCRN|I_MESSAGES))
-		{
-			dest = (byte *)screen;
-		}
-		else
-		{
-			dest = (byte *)pcscreen;
-		}
-		tics = ticcount - lasttic;
-		lasttic = ticcount;
+		static int lasttic;
+		byte *dest = screen;
+
+		int i = I_GetTime();
+		int tics = i - lasttic;
+		lasttic = i;
+
 		if (tics > 20)
 		{
 			tics = 20;
 		}
+		
 		for (i = 0; i < tics; i++)
 		{
 			*dest = 0xff;
@@ -146,12 +139,6 @@ void I_Update (void)
 			*dest = 0x00;
 			dest += 2;
 		}
-	}
-*/
-
-	if (UpdateState == I_NOUPDATE)
-	{
-		return;
 	}
 
 	SDL_BlitSurface (sdl_screen, NULL, argb_buffer, NULL);
