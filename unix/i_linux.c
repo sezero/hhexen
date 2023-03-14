@@ -24,6 +24,7 @@ extern int startmap;
 ============================================================================
 */
 
+#ifndef SDLHEXEN
 int		ticcount;
 static long	_startSec;
 
@@ -33,6 +34,7 @@ static void I_StartupTimer(void)
 	gettimeofday (&tv, NULL);
 	_startSec = tv.tv_sec;
 }
+#endif
 
 //--------------------------------------------------------------------------
 //
@@ -44,6 +46,7 @@ static void I_StartupTimer(void)
 
 int I_GetTime (void)
 {
+#ifndef SDLHEXEN
 	struct timeval tv;
 	gettimeofday (&tv, NULL);
 
@@ -51,6 +54,14 @@ int I_GetTime (void)
 //	ticcount = ((tv.tv_sec * 1000000) + tv.tv_usec) / 28571;
 	ticcount = ((tv.tv_sec - _startSec) * 35) + (tv.tv_usec / 28571);
 	return ticcount;
+#else
+	static Uint32 basetime = 0;
+
+	if (basetime == 0)
+		basetime = SDL_GetTicks();
+
+	return ((SDL_GetTicks() - basetime) * TICRATE) / 1000;
+#endif
 }
 
 
@@ -121,8 +132,8 @@ void I_StartFrame (void)
 void I_Init (void)
 {
 #ifdef SDLHEXEN
-	if (SDL_Init(0) < 0)
-		I_Error("SDL failed to initialize.");
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		I_Error("Couldn't initialize SDL2: %s\n", SDL_GetError());
 #endif
 	I_StartupMouse();
 	I_StartupJoystick();
@@ -130,7 +141,9 @@ void I_Init (void)
 	S_Init();
 	S_Start();
 
+#ifndef SDLHEXEN
 	I_StartupTimer();
+#endif
 }
 
 
@@ -148,6 +161,10 @@ void I_Shutdown (void)
 {
 	S_ShutDown ();
 	I_ShutdownGraphics ();
+
+#ifdef SDLHEXEN
+	SDL_Quit();
+#endif
 }
 
 
@@ -231,11 +248,13 @@ byte *I_ZoneBase (int *size)
 
 byte *I_AllocLow (int length)
 {
-	byte *ptr;
+	byte *ptr = NULL;
 
+#ifndef SDLHEXEN
 	ptr = (byte *) malloc (length);
 	if (ptr == NULL)
 		I_Error ("I_AllocLow: Insufficient memory!");
+#endif
 
 	return ptr;
 }
@@ -378,10 +397,8 @@ static void PrintHelp (const char *name)
 	printf ("     [ -w | --windowed]       Run the game windowed\n");
 	printf ("     [ -s | --nosound]        Run the game without sound\n");
 	printf ("     [ -g | --nograb]         Disable mouse grabbing\n");
-#ifdef RENDER3D
 	printf ("     [ -width  <width> ]      Set screen width \n");
 	printf ("     [ -height <height> ]     Set screen height\n");
-#endif
 	printf ("     [ -file <wadfile> ]      Load extra wad files\n");
 	printf ("     [ -waddir <path>  ]      Specify shared data path\n");
 	printf ("  You can use the %s environment variable or the\n",
