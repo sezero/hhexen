@@ -47,6 +47,7 @@
 #define SAMPLE_TYPE	short
 #endif
 
+static SDL_AudioDeviceID device;
 
 /*
  *	SOUND HEADER & DATA
@@ -270,7 +271,7 @@ void I_UpdateSoundParams(int handle, int vol, int sep, int pitch)
 
 	if (!snd_initialized)
 		return;
-	SDL_LockAudio();
+	SDL_LockAudioDevice(device);
 	// Set left/right channel volume based on seperation.
 	sep += 1;	// range 1 - 256
 	lvol = vol - ((vol * sep * sep) >> 16);	// (256*256);
@@ -312,7 +313,7 @@ void I_UpdateSoundParams(int handle, int vol, int sep, int pitch)
 	chan->lvol_table = &vol_lookup[lvol * 256];
 	chan->rvol_table = &vol_lookup[rvol * 256];
 
-	SDL_UnlockAudio();
+	SDL_UnlockAudioDevice(device);
 }
 
 
@@ -348,8 +349,11 @@ void I_StartupSound (void)
 	SAMPLECOUNT = 512;
 	desired.samples = SAMPLECOUNT*snd_samplerate/11025;
 	desired.callback = audio_loop;
+	
+	device = SDL_OpenAudioDevice(NULL, 0, &desired, &obtained,
+			SDL_AUDIO_ALLOW_FORMAT_CHANGE);
 
-	if (SDL_OpenAudio(&desired, &obtained) == -1)
+	if (device == 0)
 	{
 		fprintf(stderr, "Couldn't open audio with desired format\n");
 		return;
@@ -358,7 +362,7 @@ void I_StartupSound (void)
 	SAMPLECOUNT = obtained.samples;
 	fprintf(stdout, "Configured audio device with %d samples/slice\n", SAMPLECOUNT);
 	snd_SfxAvail = true;
-	SDL_PauseAudio(0);
+	SDL_PauseAudioDevice(device, 0);
 }
 
 // shuts down all sound stuff
@@ -369,7 +373,7 @@ void I_ShutdownSound (void)
 		snd_initialized = false;
 		snd_SfxAvail = false;
 		snd_MusicAvail = false;
-		SDL_CloseAudio();
+		SDL_CloseAudioDevice(device);
 	}
 }
 
