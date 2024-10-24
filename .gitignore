@@ -5,6 +5,7 @@
 a.out
 Makefile
 aclocal.m4
+config.h
 config.cache
 config.log
 config.status
