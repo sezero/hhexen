@@ -131,7 +131,7 @@ void I_SetPalette(byte *palette)
 ============================================================================
 */
 
-byte *pcscreen, *destscreen, *destview;
+byte *pcscreen;
 
 /*
 ==============
@@ -412,7 +412,7 @@ void I_InitGraphics(void)
 	if (vga_setmode(G320x200x256))
 		I_Error("Can't set video mode 13h");
 
-	pcscreen = destscreen = (byte *) vga_getgraphmem();
+	pcscreen = (byte *) vga_getgraphmem();
 	if (!pcscreen)
 		I_Error("SVGALib vga_getgraphmem failed.");
 	vid_initialized = true;

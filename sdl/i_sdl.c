@@ -94,7 +94,7 @@ void I_SetPalette(byte *palette)
 ============================================================================
 */
 
-byte *pcscreen, *destscreen, *destview;
+byte *pcscreen;
 
 /*
 ==============
@@ -255,7 +255,7 @@ void I_InitGraphics(void)
 		  VERSION_MAJ, VERSION_MIN, VERSION_PATCH);
 	SDL_WM_SetCaption (text, "HHEXEN");
 
-	pcscreen = destscreen = (byte *) sdl_screen->pixels;
+	pcscreen = (byte *) sdl_screen->pixels;
 
 	I_SetPalette ((byte *)W_CacheLumpName("PLAYPAL", PU_CACHE));
 }

@@ -367,7 +367,7 @@ void I_SetPalette(byte *palette)
 ============================================================================
 */
 
-byte *pcscreen, *destscreen, *destview;
+byte *pcscreen;
 
 
 /*
@@ -483,7 +483,7 @@ void I_InitGraphics(void)
 	//grmode = true;
 	regs.w.ax = 0x13;
 	int386(0x10, (const union REGS *)&regs, &regs);
-	pcscreen = destscreen = (byte *)0xa0000;
+	pcscreen = (byte *)0xa0000;
 	I_SetPalette(W_CacheLumpName("PLAYPAL", PU_CACHE));
 }
 
