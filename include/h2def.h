@@ -14,6 +14,9 @@
 #define RANGECHECK	1
 #endif
 
+/* some libraries define these */
+#undef __STRINGIFY
+#undef STRINGIFY
 #define __STRINGIFY(x) #x
 #define STRINGIFY(x) __STRINGIFY(x)
 
@@ -77,6 +80,8 @@
 #define VERSION_PLATFORM "FreeBSD"
 #elif defined (_WIN32)
 #define VERSION_PLATFORM "Windows"
+#elif defined (__MINT__)
+#define VERSION_PLATFORM "FreeMiNT"
 #else
 #define VERSION_PLATFORM "Unknown"
 #endif
