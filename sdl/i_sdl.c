@@ -3,7 +3,7 @@
 #include "h2def.h"
 #include "r_local.h"
 
-#define BASE_WINDOW_FLAGS	(SDL_SWSURFACE|SDL_HWPALETTE)
+#define BASE_WINDOW_FLAGS	(SDL_DOUBLEBUF|SDL_HWPALETTE)
 #ifdef FULLSCREEN_DEFAULT
 #define DEFAULT_FLAGS		(BASE_WINDOW_FLAGS|SDL_FULLSCREEN)
 #else
@@ -94,8 +94,6 @@ void I_SetPalette(byte *palette)
 ============================================================================
 */
 
-byte *pcscreen, *destscreen, *destview;
-
 /*
 ==============
 =
@@ -106,6 +104,36 @@ byte *pcscreen, *destscreen, *destview;
 
 int UpdateState;
 extern int screenblocks;
+
+static void CopyRectToScreen(int x, int y, int w, int h)
+{
+	int i;
+	const byte *src;
+	byte *dst;
+
+	if (SDL_MUSTLOCK(sdl_screen))
+		SDL_LockSurface(sdl_screen);
+
+	src = screen + y*SCREENWIDTH + x;
+	dst = sdl_screen->pixels + y*sdl_screen->pitch + x;
+
+	if (sdl_screen->pitch == SCREENWIDTH && w == SCREENWIDTH)
+	{
+		memcpy(dst, src, w * h);
+	}
+	else
+	{
+		for (i = 0; i < h; i++)
+		{
+			memcpy(dst, src, w);
+			src += SCREENWIDTH;
+			dst += sdl_screen->pitch;
+		}
+	}
+
+	if (SDL_MUSTLOCK(sdl_screen))
+		SDL_UnlockSurface(sdl_screen);
+}
 
 void I_Update (void)
 {
@@ -128,7 +156,7 @@ void I_Update (void)
 		}
 		else
 		{
-			dest = (byte *)pcscreen;
+			dest = (byte *)sdl_screen->pixels;
 		}
 		tics = ticcount - lasttic;
 		lasttic = ticcount;
@@ -148,59 +176,40 @@ void I_Update (void)
 		}
 	}
 
-//	memset(pcscreen, 255, SCREENHEIGHT*SCREENWIDTH);
-
 	if (UpdateState == I_NOUPDATE)
 	{
 		return;
 	}
 	if (UpdateState & I_FULLSCRN)
 	{
-		memcpy(pcscreen, screen, SCREENWIDTH*SCREENHEIGHT);
+		CopyRectToScreen(0, 0, SCREENWIDTH,  SCREENHEIGHT);
 		UpdateState = I_NOUPDATE; // clear out all draw types
-
-		SDL_UpdateRect(sdl_screen, 0, 0, SCREENWIDTH, SCREENHEIGHT);
 	}
 	if (UpdateState & I_FULLVIEW)
 	{
 		if (UpdateState & I_MESSAGES && screenblocks > 7)
 		{
-			for (i = 0; i < (viewwindowy + viewheight)*SCREENWIDTH; i += SCREENWIDTH)
-			{
-				memcpy(pcscreen + i, screen + i, SCREENWIDTH);
-			}
+			CopyRectToScreen(0, 0, SCREENWIDTH, viewwindowy + viewheight);
 			UpdateState &= ~(I_FULLVIEW|I_MESSAGES);
-
-			SDL_UpdateRect (sdl_screen, 0, 0, SCREENWIDTH, viewwindowy + viewheight);
 		}
 		else
 		{
-			for (i = viewwindowy*SCREENWIDTH + viewwindowx;
-			     i < (viewwindowy+viewheight)*SCREENWIDTH; i += SCREENWIDTH)
-			{
-				memcpy(pcscreen + i, screen + i, viewwidth);
-			}
+			CopyRectToScreen(viewwindowx, viewwindowy, viewwidth, viewheight);
 			UpdateState &= ~I_FULLVIEW;
-
-			SDL_UpdateRect (sdl_screen, viewwindowx, viewwindowy, viewwidth, viewheight);
 		}
 	}
 	if (UpdateState & I_STATBAR)
 	{
-		memcpy(pcscreen + SCREENWIDTH*(SCREENHEIGHT-SBARHEIGHT),
-			screen + SCREENWIDTH*(SCREENHEIGHT-SBARHEIGHT),
-			SCREENWIDTH*SBARHEIGHT);
+		CopyRectToScreen(0, SCREENHEIGHT-SBARHEIGHT, SCREENWIDTH, SBARHEIGHT);
 		UpdateState &= ~I_STATBAR;
-
-		SDL_UpdateRect (sdl_screen, 0, SCREENHEIGHT-SBARHEIGHT, SCREENWIDTH, SBARHEIGHT);
 	}
 	if (UpdateState & I_MESSAGES)
 	{
-		memcpy(pcscreen, screen, SCREENWIDTH*28);
+		CopyRectToScreen(0, 0, SCREENWIDTH, 28);
 		UpdateState &= ~I_MESSAGES;
-
-		SDL_UpdateRect (sdl_screen, 0, 0, SCREENWIDTH, 28);
 	}
+
+	SDL_Flip(sdl_screen);
 }
 
 //--------------------------------------------------------------------------
@@ -229,10 +238,6 @@ void I_InitGraphics(void)
 	if (M_CheckParm("-w") || M_CheckParm("--windowed"))
 		flags &= ~SDL_FULLSCREEN;
 
-	// Needs some work to get screenHeight and screenWidth working - S.A.
-
-	// SDL_DOUBLEBUF does not work in full screen mode.  Does not seem to
-	// be necessary anyway.
 	sdl_screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, 8, flags);
 
 	if (sdl_screen == NULL)
@@ -254,8 +259,6 @@ void I_InitGraphics(void)
 	snprintf (text, sizeof(text), "HHexen v%d.%d.%d",
 		  VERSION_MAJ, VERSION_MIN, VERSION_PATCH);
 	SDL_WM_SetCaption (text, "HHEXEN");
-
-	pcscreen = destscreen = (byte *) sdl_screen->pixels;
 
 	I_SetPalette ((byte *)W_CacheLumpName("PLAYPAL", PU_CACHE));
 }
