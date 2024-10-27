@@ -105,11 +105,23 @@ void I_SetPalette(byte *palette)
 int UpdateState;
 extern int screenblocks;
 
+static SDL_Rect rects[4];
+static int numrects = 0;
+
+static int frame = 0;
+static int prevupdatestate[2];
+
 static void CopyRectToScreen(int x, int y, int w, int h)
 {
 	int i;
 	const byte *src;
 	byte *dst;
+
+	rects[numrects].x = x;
+	rects[numrects].y = y;
+	rects[numrects].w = w;
+	rects[numrects].h = h;
+	numrects++;
 
 	if (SDL_MUSTLOCK(sdl_screen))
 		SDL_LockSurface(sdl_screen);
@@ -176,21 +188,24 @@ void I_Update (void)
 		}
 	}
 
-	if (UpdateState == I_NOUPDATE)
+	prevupdatestate[frame ^ 1] |= UpdateState;
+
+	if ((UpdateState | prevupdatestate[frame]) == I_NOUPDATE)
 	{
 		return;
 	}
-	if (UpdateState & I_FULLSCRN)
+	if ((UpdateState | prevupdatestate[frame]) & I_FULLSCRN)
 	{
 		CopyRectToScreen(0, 0, SCREENWIDTH,  SCREENHEIGHT);
-		UpdateState = I_NOUPDATE; // clear out all draw types
+		prevupdatestate[frame] = UpdateState = I_NOUPDATE; // clear out all draw types
 	}
-	if (UpdateState & I_FULLVIEW)
+	if ((UpdateState | prevupdatestate[frame]) & I_FULLVIEW)
 	{
 		if (UpdateState & I_MESSAGES && screenblocks > 7)
 		{
 			CopyRectToScreen(0, 0, SCREENWIDTH, viewwindowy + viewheight);
 			UpdateState &= ~(I_FULLVIEW|I_MESSAGES);
+			prevupdatestate[frame] &= ~I_MESSAGES;
 		}
 		else
 		{
@@ -198,18 +213,23 @@ void I_Update (void)
 			UpdateState &= ~I_FULLVIEW;
 		}
 	}
-	if (UpdateState & I_STATBAR)
+	if ((UpdateState | prevupdatestate[frame]) & I_STATBAR)
 	{
 		CopyRectToScreen(0, SCREENHEIGHT-SBARHEIGHT, SCREENWIDTH, SBARHEIGHT);
 		UpdateState &= ~I_STATBAR;
 	}
-	if (UpdateState & I_MESSAGES)
+	if ((UpdateState | prevupdatestate[frame]) & I_MESSAGES)
 	{
 		CopyRectToScreen(0, 0, SCREENWIDTH, 28);
 		UpdateState &= ~I_MESSAGES;
 	}
 
-	SDL_Flip(sdl_screen);
+	if (numrects > 0)
+		SDL_UpdateRects(sdl_screen, numrects, rects);
+
+	numrects = 0;
+	prevupdatestate[frame] = 0;
+	frame ^= 1;
 }
 
 //--------------------------------------------------------------------------
