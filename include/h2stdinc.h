@@ -85,23 +85,23 @@ COMPILE_TIME_ASSERT(enum, sizeof(THE_DUMMY_ENUM) == sizeof(int));
 
 typedef unsigned char		byte;
 
+/* some structures have boolean members and the x86 asm code expect
+ * those members to be 4 bytes long.  i.e.: boolean must be 32 bits.  */
+typedef int	boolean;
 #undef true
 #undef false
-#if defined(__cplusplus)
-/* some structures have boolean members and the x86 asm code expect
- * those members to be 4 bytes long. therefore, boolean must be 32
- * bits and it can NOT be binary compatible with the 8 bit C++ bool.  */
-typedef int	boolean;
-COMPILE_TIME_ASSERT(falsehood, (0 == false));
-COMPILE_TIME_ASSERT(truth, (1  == true));
+#if !defined(__cplusplus)
+#if defined __STDC_VERSION__ && (__STDC_VERSION__ >= 199901L)
+#include <stdbool.h>
 #else
-typedef enum {
+enum {
 	false = 0,
 	true  = 1
-} boolean;
+};
+#endif
+#endif /* */
 COMPILE_TIME_ASSERT(falsehood, ((1 != 1) == false));
 COMPILE_TIME_ASSERT(truth, ((1 == 1) == true));
-#endif
 COMPILE_TIME_ASSERT(boolean, sizeof(boolean) == 4);
 
 /*==========================================================================*/
