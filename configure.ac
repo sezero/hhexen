@@ -167,6 +167,7 @@ dnl == Check for gcc strength-reduce bug
 if test "x${GCC}" = "xyes"; then
   AC_CACHE_CHECK( [for gcc strength-reduce bug], ac_cv_c_gcc_strength_bug,
                   AC_RUN_IFELSE([AC_LANG_SOURCE([[
+#include <stdlib.h>
 int main(void) {
   static int Array[[3]];
   unsigned int B = 3;
@@ -176,7 +177,8 @@ int main(void) {
 }]])],
     [ac_cv_c_gcc_strength_bug="no"],
     [ac_cv_c_gcc_strength_bug="yes"],
-    [ac_cv_c_gcc_strength_bug="no"]) )
+    [ac_cv_c_gcc_strength_bug="no"] )
+  )
   if test "$ac_cv_c_gcc_strength_bug" = "yes"; then
     CFLAGS="$CFLAGS -fno-strength-reduce"
   fi
