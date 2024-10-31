@@ -168,7 +168,7 @@ boolean P_GiveMana(player_t *player, manatype_t mana, int count)
 	{
 		return false;
 	}
-	if (mana < 0 || mana > NUMMANA)
+	if ((unsigned int)mana > NUMMANA)
 	{
 		I_Error("P_GiveMana: bad type %i", mana);
 	}
@@ -178,7 +178,7 @@ boolean P_GiveMana(player_t *player, manatype_t mana, int count)
 	}
 	if (gameskill == sk_baby || gameskill == sk_nightmare)
 	{ // extra mana in baby mode and nightmare mode
-		count += count>>1;
+		count += count >> 1;
 	}
 	prevMana = player->mana[mana];
 

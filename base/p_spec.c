@@ -445,7 +445,8 @@ static boolean EV_LineSearchForPuzzleItem(line_t *line, byte *args, mobj_t *mo)
 {
 	player_t *player;
 	int i;
-	artitype_t type, arti;
+	int type; // artitype_t
+	artitype_t arti;
 
 	if (!mo)
 		return false;
@@ -457,11 +458,9 @@ static boolean EV_LineSearchForPuzzleItem(line_t *line, byte *args, mobj_t *mo)
 	for (i = 0; i < player->artifactCount; i++)
 	{
 		arti = player->inventory[i].type;
-		if (arti < arti_firstpuzzitem)
-			continue;
 		type = arti - arti_firstpuzzitem;
-		//if (type < 0)
-		//	continue;
+		if (type < 0)
+			continue;
 		if (type == line->arg1)
 		{
 			// A puzzle item was found for the line
