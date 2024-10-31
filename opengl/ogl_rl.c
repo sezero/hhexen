@@ -195,7 +195,7 @@ void RL_AddFlatQuads(rendquad_t *base, /* GLuint */ uintptr_t quadtex,
 	float		*distances, middist;
 	fvertex_t	*vrts;
 
-	if (!numvrts)
+	if (numvrts <= 0)
 		return;	// No data, can't do anything.
 
 	if (base->flags & RQF_SKY_MASK)
