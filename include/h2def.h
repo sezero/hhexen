@@ -286,7 +286,7 @@ extern	byte	*destview, *destscreen;	/* PC direct to screen pointers */
 #define	ANG180		0x80000000
 #define	ANG270		0xc0000000
 
-typedef unsigned angle_t;
+typedef unsigned int angle_t;
 
 typedef enum
 {
