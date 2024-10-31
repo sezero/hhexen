@@ -50,7 +50,7 @@ void OGL_SwitchTo3DState(void);
 void OGL_Restore2DState(int step);	/* Step 1: matrices, 2: attributes. */
 void OGL_UseWhiteFog(int yes);
 
-float PointDist2D(float c[2]);
+float PointDist2D(float*); /* float[2] */
 
 void R_RenderSprite(vissprite_t *spr);
 

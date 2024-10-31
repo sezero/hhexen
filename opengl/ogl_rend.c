@@ -78,7 +78,7 @@ static boolean	firstsubsector;		/* No range checking for the first one. */
 
 
 // How far the point is from the viewside plane?
-float PointDist2D (float c[2])
+float PointDist2D (float* c)	/* float c[2] */
 {
 	/*
 	    (YA-YC)(XB-XA)-(XA-XC)(YB-YA)
