@@ -14,8 +14,9 @@
 //
 //============================================================================
 
-void T_Light(light_t *light)
+void T_Light(void *arg)
 {
+	light_t *light = (light_t *)arg;
 	if (light->count)
 	{
 		light->count--;
@@ -226,8 +227,9 @@ static int PhaseTable[64] =
 	32, 32, 48, 64, 80, 96, 112, 128
 };
 
-void T_Phase(phase_t *phase)
+void T_Phase(void *arg)
 {
+	phase_t *phase = (phase_t *)arg;
 	phase->index = (phase->index + 1) & 63;
 	phase->sector->lightlevel = phase->base + PhaseTable[phase->index];
 }

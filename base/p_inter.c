@@ -919,8 +919,9 @@ static void SetDormantArtifact(mobj_t *arti)
 //
 //---------------------------------------------------------------------------
 
-void A_RestoreArtifact(mobj_t *arti)
+void A_RestoreArtifact(void *arg1, void *arg2)
 {
+	mobj_t *arti = (mobj_t *)arg1;
 	arti->flags |= MF_SPECIAL;
 	P_SetMobjState(arti, arti->info->spawnstate);
 	S_StartSound(arti, SFX_RESPAWN);
@@ -934,8 +935,9 @@ void A_RestoreArtifact(mobj_t *arti)
 //
 //---------------------------------------------------------------------------
 
-void A_RestoreSpecialThing1(mobj_t *thing)
+void A_RestoreSpecialThing1(void *arg1, void *arg2)
 {
+	mobj_t *thing = (mobj_t *)arg1;
 	thing->flags2 &= ~MF2_DONTDRAW;
 	S_StartSound(thing, SFX_RESPAWN);
 }
@@ -946,8 +948,9 @@ void A_RestoreSpecialThing1(mobj_t *thing)
 //
 //---------------------------------------------------------------------------
 
-void A_RestoreSpecialThing2(mobj_t *thing)
+void A_RestoreSpecialThing2(void *arg1, void *arg2)
 {
+	mobj_t *thing = (mobj_t *)arg1;
 	thing->flags |= MF_SPECIAL;
 	P_SetMobjState(thing, thing->info->spawnstate);
 }

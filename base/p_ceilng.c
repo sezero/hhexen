@@ -23,8 +23,9 @@ ceiling_t	*activeceilings[MAXCEILINGS];
 //
 //==================================================================
 
-void T_MoveCeiling (ceiling_t *ceiling)
+void T_MoveCeiling (void *arg)
 {
+	ceiling_t *ceiling = (ceiling_t *)arg;
 	result_e	res;
 
 	switch (ceiling->direction)

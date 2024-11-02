@@ -21,8 +21,9 @@
 //
 //==================================================================
 
-void T_VerticalDoor(vldoor_t *door)
+void T_VerticalDoor(void *arg)
 {
+	vldoor_t *door = (vldoor_t *)arg;
 	result_e res;
 
 	switch (door->direction)

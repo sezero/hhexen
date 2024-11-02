@@ -612,8 +612,9 @@ void P_ACSInitNewGame(void)
 //
 //==========================================================================
 
-void T_InterpretACS(acs_t *script)
+void T_InterpretACS(void *arg)
 {
+	acs_t *script = (acs_t *)arg;
 	int cmd;
 	int action;
 

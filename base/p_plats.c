@@ -17,8 +17,9 @@ plat_t	*activeplats[MAXPLATS];
 //
 //==================================================================
 
-void T_PlatRaise(plat_t *plat)
+void T_PlatRaise(void *arg)
 {
+	plat_t *plat = (plat_t *)arg;
 	result_e res;
 
 	switch (plat->status)
@@ -221,19 +222,16 @@ void EV_StopPlat(line_t *line, byte *args)
 			return;
 		}
 	}
-
 	/*
-	int		j;
-
-	for (j = 0; j < MAXPLATS; j++)
+	for (i = 0; i < MAXPLATS; i++)
 	{
-		if (activeplats[j] && ((activeplats[j])->status != PLAT_IN_STASIS) &&
-			((activeplats[j])->tag == args[0]))
+		if (activeplats[i] && ((activeplats[i])->status != PLAT_IN_STASIS) &&
+			((activeplats[i])->tag == args[0]))
 		{
-			(activeplats[j])->oldstatus = (activeplats[j])->status;
-			(activeplats[j])->status = PLAT_IN_STASIS;
-			(activeplats[j])->thinker.function = NULL;
-			SN_StopSequence((mobj_t *)(void *)&(activeplats[j])->sector->soundorg);
+			(activeplats[i])->oldstatus = (activeplats[i])->status;
+			(activeplats[i])->status = PLAT_IN_STASIS;
+			(activeplats[i])->thinker.function = NULL;
+			SN_StopSequence((mobj_t *)(void *)&(activeplats[i])->sector->soundorg);
 		}
 	}
 	*/

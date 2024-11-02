@@ -174,8 +174,9 @@ result_e T_MovePlane(sector_t *sector,fixed_t speed, fixed_t dest,
 //
 //==================================================================
 
-void T_MoveFloor(floormove_t *floor)
+void T_MoveFloor(void *arg)
 {
+	floormove_t *floor = (floormove_t *)arg;
 	result_e	res;
 
 	if (floor->resetDelayCount)
@@ -640,8 +641,9 @@ int EV_BuildStairs(line_t *line, byte *args, int direction,
 //
 //=========================================================================
 
-void T_BuildPillar(pillar_t *pillar)
+void T_BuildPillar(void *arg)
 {
+	pillar_t	*pillar = (pillar_t *)arg;
 	result_e	res1;
 	result_e	res2;
 
@@ -839,8 +841,9 @@ int EV_FloorCrushStop(line_t *line, byte *args)
 #define WGLSTATE_STABLE		2
 #define WGLSTATE_REDUCE		3
 
-void T_FloorWaggle(floorWaggle_t *waggle)
+void T_FloorWaggle(void *arg)
 {
+	floorWaggle_t *waggle = (floorWaggle_t *)arg;
 	switch (waggle->state)
 	{
 	case WGLSTATE_EXPAND:

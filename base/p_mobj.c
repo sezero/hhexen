@@ -96,7 +96,7 @@ boolean P_SetMobjState(mobj_t *mobj, statenum_t state)
 	mobj->frame = st->frame;
 	if (st->action)
 	{ // Call action function
-		st->action(mobj);
+		st->action(mobj, NULL);
 	}
 	return true;
 }
@@ -908,15 +908,16 @@ static void P_ZMovement(mobj_t *mo)
 //
 //----------------------------------------------------------------------------
 
-void P_BlasterMobjThinker(mobj_t *mobj)
+void P_BlasterMobjThinker(void *arg)
 {
+	mobj_t *mobj = (mobj_t *)arg;
+	mobj_t *mo;
 	int i;
 	fixed_t xfrac;
 	fixed_t yfrac;
 	fixed_t zfrac;
 	fixed_t z;
 	boolean changexy;
-	mobj_t *mo;
 
 	// Handle movement
 	if (mobj->momx || mobj->momy ||
@@ -1053,8 +1054,9 @@ static void PlayerLandedOnThing(mobj_t *mo, mobj_t *onmobj)
 //
 //----------------------------------------------------------------------------
 
-void P_MobjThinker(mobj_t *mobj)
+void P_MobjThinker(void *arg)
 {
+	mobj_t *mobj = (mobj_t *)arg;
 	mobj_t *onmo;
 
 	/*
