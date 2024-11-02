@@ -41,6 +41,7 @@ static void G_DoSingleReborn(void);
 void H2_PageTicker(void);
 void H2_AdvanceDemo(void);
 
+extern boolean MenuActive;
 extern boolean mn_SuicideConsole;
 
 gameaction_t	gameaction;
@@ -51,7 +52,6 @@ int		gamemap;
 int		prevmap;
 
 boolean		paused;
-
 boolean		usergame;		// ok to save / end game
 
 static boolean	sendpause;		// send a pause event next tic
@@ -652,7 +652,6 @@ static void G_DoLoadLevel (void)
 boolean G_Responder(event_t *ev)
 {
 	player_t *plr;
-	extern boolean MenuActive;
 
 	plr = &players[consoleplayer];
 	if (ev->type == ev_keyup && ev->data1 == key_useartifact)

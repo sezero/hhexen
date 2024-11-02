@@ -86,6 +86,7 @@ typedef struct
 
 extern texsize_t *lumptexsizes;		/* Sizes for all the lumps. */
 extern unsigned short *spriteheights;
+extern boolean willRenderSprites;
 
 extern float		texw, texh;
 extern int		texmask;

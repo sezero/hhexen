@@ -52,6 +52,8 @@ static void DrawHubText(void);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
+extern int LeaveMap;
+
 // PUBLIC DATA DECLARATIONS ------------------------------------------------
 
 boolean intermission;
@@ -154,8 +156,6 @@ static void InitStats(void)
 	int posnum;
 	int slaughtercount;
 	int playercount;
-
-	extern int LeaveMap;
 
 	if (!deathmatch)
 	{

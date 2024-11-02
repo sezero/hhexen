@@ -4578,28 +4578,26 @@ nomissile:
 	}
 }
 
+extern void A_FSwordAttack2(mobj_t*);
 void A_FighterAttack(mobj_t *actor)
 {
-	extern void A_FSwordAttack2(mobj_t *actor);
 
 	if (!actor->target)
 		return;
 	A_FSwordAttack2(actor);
 }
 
+extern void A_CHolyAttack3(mobj_t*);
 void A_ClericAttack(mobj_t *actor)
 {
-	extern void A_CHolyAttack3(mobj_t *actor);
-
 	if (!actor->target)
 		return;
 	A_CHolyAttack3(actor);
 }
 
+extern void A_MStaffAttack2(mobj_t*);
 void A_MageAttack(mobj_t *actor)
 {
-	extern void A_MStaffAttack2(mobj_t *actor);
-
 	if (!actor->target)
 		return;
 	A_MStaffAttack2(actor);

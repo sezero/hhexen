@@ -1132,8 +1132,6 @@ void R_DrawMasked (void)
 	vissprite_t		*spr;
 
 #ifdef RENDER3D
-	extern boolean willRenderSprites;
-
 	if (!willRenderSprites)
 		return;
 

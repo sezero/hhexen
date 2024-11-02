@@ -42,6 +42,7 @@ static void DL_Clear(void);
 
 extern fadeout_t	fadeOut[2];	/* For both skies. */
 extern int	skyhemispheres;
+extern int	screenblocks;
 
 extern subsector_t	*currentssec;
 
@@ -222,7 +223,6 @@ void OGL_Restore2DState(int step)
 {
 	if (step == 1)
 	{
-		extern int screenblocks;
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(0, 320, (screenblocks < 11) ? 161 : 200, 0, -1, 1);
@@ -866,12 +866,14 @@ void R_RenderSubsector(int ssecidx)
 			if (sect->special == 200)
 				special200 = true;
 		}
-		curtex = OGL_PrepareFlat(sect->ceilingpic);
-		triangle.texw = texw;
-		triangle.texh = texh;
-		triangle.texoffx = 0;
-		triangle.texoffy = 0;
-		triangle.top = fceil + sect->skyfix;
+		{
+			curtex = OGL_PrepareFlat(sect->ceilingpic);
+			triangle.texw = texw;
+			triangle.texh = texh;
+			triangle.texoffx = 0;
+			triangle.texoffy = 0;
+			triangle.top = fceil + sect->skyfix;
+		}
 		// The first vertex is always the last in the whole list.
 		RL_AddFlatQuads(&triangle, curtex, ssec->numedgeverts, ssec->edgeverts, 1);
 		// Dynamic lights.
@@ -1141,7 +1143,6 @@ void OGL_DrawPSprite(int x, int y, float scale, int flip, int lump)
 
 	glEnd();
 }
-
 
 /*
 ================

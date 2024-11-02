@@ -1411,8 +1411,6 @@ static void SCClass(int option)
 
 static void SCSkill(int option)
 {
-	extern int SB_state;
-
 	PlayerClasses[consoleplayer] = MenuPClass;
 	G_DeferredNewGame(option);
 	SB_SetClassData();
@@ -1569,14 +1567,14 @@ static void SCCDAudio(int option)
 	{
 		cdaudio = 0;
 		I_CDMusStop();
-	// FIXME: start ordinary music here
+		/* FIXME: start ordinary music here */
 	}
 	else
 	{
 		cdaudio = 1;
 		if (i_CDMusic)
 		{
-		// FIXME: start cdaudio here
+			/* FIXME: start cdaudio here */
 		}
 	}
 }
@@ -1587,14 +1585,14 @@ static void SCCDAudio(int option)
 //
 //---------------------------------------------------------------------------
 
+extern void G_CheckDemoStatus(void);
+extern void H2_StartTitle(void);
 boolean MN_Responder(event_t *event)
 {
 	int key;
 	int i;
 	MenuItem_t *item;
 	static boolean shiftdown;
-	extern void H2_StartTitle(void);
-	extern void G_CheckDemoStatus(void);
 	char *textBuffer;
 
 	if (askforkey && event->type == ev_keydown)
@@ -1663,7 +1661,7 @@ boolean MN_Responder(event_t *event)
 				switch (typeofask)
 				{
 				case 1:
-					G_CheckDemoStatus(); 
+					G_CheckDemoStatus();
 					I_Quit();
 					break;
 				case 2:

@@ -98,6 +98,7 @@ static void CheatTrackFunc2(player_t *player, Cheat_t *cheat);
 
 // EXTERNAL DATA DECLARATIONS ----------------------------------------------
 
+extern int DisplayTicker;
 extern byte *screen;
 extern int ArmorIncrement[NUMCLASSES][NUMARMOR];
 extern int AutoArmorSave[NUMCLASSES];
@@ -1929,8 +1930,6 @@ static void CheatSoundFunc(player_t *player, Cheat_t *cheat)
 
 static void CheatTickerFunc(player_t *player, Cheat_t *cheat)
 {
-	extern int DisplayTicker;
-
 	DisplayTicker = !DisplayTicker;
 	if (DisplayTicker)
 	{
