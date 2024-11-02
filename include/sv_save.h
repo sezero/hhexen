@@ -11,7 +11,7 @@
 #ifndef _DOSSAVE_COMPAT
 #define __compat_doshexen
 #else
-#define __compat_doshexen	__attribute__((__packed__))
+#define __compat_doshexen	STRUCT_PACKED
 #endif
 
 typedef struct
@@ -26,6 +26,13 @@ typedef struct
 	int32_t		prev_idx, next_idx;		/* struct thinker_s *prev, *next; */
 	int32_t		function_idx;			/* think_t	function; */
 } save_thinker_t;
+
+#ifdef _DOSSAVE_COMPAT
+#if defined(__GNUC__) || defined(__clang__)
+#elif defined(_MSC_VER) || defined(__WATCOMC__)
+#pragma pack(push,1)
+#endif
+#endif /**/
 
 typedef struct
 {
@@ -163,6 +170,13 @@ COMPILE_TIME_ASSERT(save_floormove_1, sizeof(save_floormove_t) == 72);
 COMPILE_TIME_ASSERT(save_floormove_2, offsetof(save_floormove_t,floordestheight) == 36);
 #endif
 
+#ifdef _DOSSAVE_COMPAT
+#if defined(__GNUC__) || defined(__clang__)
+#elif defined(_MSC_VER) || defined(__WATCOMC__)
+#pragma pack(pop)
+#endif
+#endif /**/
+
 typedef struct
 {
 	save_thinker_t	thinker;			/* thinker_t	thinker; */
@@ -292,4 +306,3 @@ typedef struct
 } save_acs_t;
 
 #endif	/* __SAVE_DEFS */
-

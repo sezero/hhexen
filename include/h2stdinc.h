@@ -124,29 +124,71 @@ typedef int	fixed_t;
 
 /*==========================================================================*/
 
-/* compiler specific definitions */
+/* function attributes, etc */
 
-#if !defined(__GNUC__)
-#define	__attribute__(x)
-#endif	/* __GNUC__ */
+#if defined(__GNUC__)
+#define FUNC_PRINTF(x,y)	__attribute__((__format__(__printf__,x,y)))
+#else
+#define FUNC_PRINTF(x,y)
+#endif
 
-/* argument format attributes for function
- * pointers are supported for gcc >= 3.1
- */
+/* argument format attributes for function pointers are supported for gcc >= 3.1 */
 #if defined(__GNUC__) && (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ > 0))
-#define	__fp_attribute__	__attribute__
+#define FUNCP_PRINTF	FUNC_PRINTF
 #else
-#define	__fp_attribute__(x)
+#define FUNCP_PRINTF(x,y)
 #endif
 
-/* function optimize attribute is added
- * starting with gcc 4.4.0
- */
-#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 3))
-#define	__no_optimize		__attribute__((__optimize__("0")))
+/* llvm's optnone function attribute started with clang-3.5.0 */
+#if defined(__clang__) && \
+           (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 5))
+#define FUNC_NO_OPTIMIZE	__attribute__((__optnone__))
+/* function optimize attribute is added starting with gcc 4.4.0 */
+#elif defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 3))
+#define FUNC_NO_OPTIMIZE	__attribute__((__optimize__("0")))
 #else
-#define	__no_optimize
+#define FUNC_NO_OPTIMIZE
 #endif
+
+#if defined(__GNUC__)
+#define FUNC_NORETURN	__attribute__((__noreturn__))
+#elif defined(_MSC_VER) && (_MSC_VER >= 1200)
+#define FUNC_NORETURN		__declspec(noreturn)
+#elif defined(__WATCOMC__)
+#define FUNC_NORETURN /* use the 'aborts' aux pragma */
+#else
+#define FUNC_NORETURN
+#endif
+
+#if defined(__GNUC__)
+#define FUNC_CONST	__attribute__((__const__))
+#else
+#define FUNC_CONST
+#endif
+
+#if defined(__GNUC__) && ((__GNUC__ > 3) || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1))
+#define FUNC_NOINLINE	__attribute__((__noinline__))
+#elif defined(_MSC_VER) && (_MSC_VER >= 1300)
+#define FUNC_NOINLINE		__declspec(noinline)
+#else
+#define FUNC_NOINLINE
+#endif
+
+#if defined(__GNUC__) && ((__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5))
+#define FUNC_NOCLONE	__attribute__((__noclone__))
+#else
+#define FUNC_NOCLONE
+#endif
+
+#if defined(__GNUC__) || defined(__clang__)
+#define STRUCT_PACKED	__attribute__((__packed__))
+#else
+#define STRUCT_PACKED
+#endif
+
+#if defined(_MSC_VER) && !defined(__cplusplus)
+#define inline __inline
+#endif	/* _MSC_VER */
 
 /*==========================================================================*/
 

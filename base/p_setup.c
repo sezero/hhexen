@@ -665,7 +665,7 @@ static void P_GroupLines (void)
 }
 
 
-#if defined(RENDER3D)
+#ifdef RENDER3D
 
 #define MAX_CC_SIDES	64
 
@@ -675,7 +675,8 @@ static float P_AccurateDistance(fixed_t dx, fixed_t dy)
 	return (float)sqrt(fx*fx + fy*fy);
 }
 
-static int __no_optimize detSideFloat(fvertex_t *pnt, fdivline_t *dline)
+FUNC_NO_OPTIMIZE
+static int detSideFloat(fvertex_t *pnt, fdivline_t *dline)
 {
 	/*
 	    (AY-CY)(BX-AX)-(AX-CX)(BY-AY)
@@ -695,8 +696,9 @@ static int __no_optimize detSideFloat(fvertex_t *pnt, fdivline_t *dline)
 }
 
 // Lines start-end and fdiv must intersect.
-static float __no_optimize findIntersectionVertex(fvertex_t *start, fvertex_t *end,
-						  fdivline_t *fdiv, fvertex_t *inter)
+FUNC_NO_OPTIMIZE
+static float findIntersectionVertex(fvertex_t *start, fvertex_t *end,
+				    fdivline_t *fdiv, fvertex_t *inter)
 {
 	float ax = start->x, ay = start->y, bx = end->x, by = end->y;
 	float cx = fdiv->x, cy = fdiv->y, dx = cx + fdiv->dx, dy = cy + fdiv->dy;
