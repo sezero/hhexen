@@ -74,7 +74,7 @@ static int flush;
 static int fragsize, format, oss_format, channels;
 static int frequency, efrequency, device_buffer_size;
 static int input_bps, input_format, input_frequency, input_channels;
-static char device_name[16];
+static char device_name[32];
 static pthread_t buffer_thread;
 static gboolean realtime = FALSE;
 
@@ -608,7 +608,7 @@ static void oss_init(void)
 static void oss_get_volume(int *l, int *r)
 {
 	int fd, v, cmd, devs;
-	char devname[20];
+	char devname[32];
 
 	if (oss_cfg.mixer_device > 0)
 		snprintf(devname, sizeof(devname), "/dev/mixer%d", oss_cfg.mixer_device);
@@ -641,7 +641,7 @@ static void oss_get_volume(int *l, int *r)
 static void oss_set_volume(int l, int r)
 {
 	int fd, v, cmd, devs;
-	char devname[20];
+	char devname[32];
 
 	if (oss_cfg.mixer_device > 0)
 		snprintf(devname, sizeof(devname), "/dev/mixer%d", oss_cfg.mixer_device);
