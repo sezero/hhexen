@@ -170,7 +170,7 @@ void OGL_ResetLumpTexData(void)
 
 	// Free the raw lumps book keeping table.
 	free(rawlumps);
-	rawlumps = 0;
+	rawlumps = NULL;
 	numrawlumps = 0;
 }
 
@@ -201,11 +201,15 @@ void PalIdxToRGB(byte *pal, int idx, byte *rgb)
 
 unsigned int OGL_BindTexFlat(int lump)
 {
+	byte *flatptr;
+	byte *palette;
+	byte *rgbflat;
 	GLuint name;
 	int	i;
-	byte *flatptr = (byte *) W_CacheLumpNum(lump, PU_STATIC);
-	byte *palette = (byte *) W_CacheLumpNum(pallump = W_GetNumForName("PLAYPAL"), PU_CACHE);
-	byte *rgbflat = (byte *) malloc (3 * lumpinfo[lump].size);
+
+	flatptr = (byte *) W_CacheLumpNum(lump, PU_STATIC);
+	palette = (byte *) W_CacheLumpNum(pallump = W_GetNumForName("PLAYPAL"), PU_CACHE);
+	rgbflat = (byte *) malloc (3 * lumpinfo[lump].size);
 
 	OGL_DEBUG("OGL_SetFlat: Loading flat %d.\n", idx);
 	// Convert the data to RGB.
@@ -255,7 +259,7 @@ void OGL_SetFlat(int idx)
 
 // Return GL_RGB or GL_RGBA.
 static int DrawRealPatch(byte *rgbflat, byte *rgbaflat, byte *palette, int texwidth,
-					int texheight, patch_t *patch, boolean maskZero)
+			 int texheight, int sz, patch_t *patch, boolean maskZero)
 {
 	column_t *column;
 	byte *desttop1, *desttop2;
@@ -263,26 +267,14 @@ static int DrawRealPatch(byte *rgbflat, byte *rgbaflat, byte *palette, int texwi
 	const byte *end1, *end2;
 	byte *source;
 	int count, col, w, i;
-	const int texsize =
-		 texwidth * texheight;
 
-	/*
-	y -= SHORT(patch->topoffset);
-	x -= SHORT(patch->leftoffset);
-	if (x < 0 || x+SHORT(patch->width) > SCREENWIDTH || y < 0
-		|| y+SHORT(patch->height) > SCREENHEIGHT)
-	{
-		I_Error("Bad V_DrawPatch");
-	}
-	*/
-	col = 0;
-	end1 = (rgbflat)  ? rgbflat  + texsize*3 - 3 : NULL;
-	end2 = (rgbaflat) ? rgbaflat + texsize*4 - 4 : NULL;
-	dest1 = NULL; dest2 = NULL;  /* silence compiler. */
+	dest1 = NULL; dest2 = NULL;
+	end1 = (rgbflat)  ? rgbflat  + sz * 3 - 3 : NULL;
+	end2 = (rgbaflat) ? rgbaflat + sz * 4 - 4 : NULL;
 	desttop1 = rgbflat;
 	desttop2 = rgbaflat;
 	w = SHORT(patch->width);
-	for ( ; col < w; col++, desttop1 += 3, desttop2 += 4)
+	for (col = 0; col < w; col++)
 	{
 		column = (column_t *)((byte *)patch + LONG(patch->columnofs[col]));
 		// Step through the posts in a column
@@ -299,14 +291,14 @@ static int DrawRealPatch(byte *rgbflat, byte *rgbaflat, byte *palette, int texwi
 				int palidx = *source++;
 				if (rgbflat)
 				{
-					if (dest1 > end1) continue;
+					if (dest1 > end1) break;
 					if (!maskZero || palidx)
 						PalIdxToRGB(palette, palidx, dest1);
 					dest1 += texwidth*3;
 				}
 				if (rgbaflat)
 				{
-					if (dest2 > end2) continue;
+					if (dest2 > end2) break;
 					if (!maskZero || palidx)
 					{
 						PalIdxToRGB(palette, palidx, dest2);
@@ -317,6 +309,8 @@ static int DrawRealPatch(byte *rgbflat, byte *rgbaflat, byte *palette, int texwi
 			}
 			column = (column_t *)((byte *)column + column->length + 4);
 		}
+		if (desttop1) desttop1 += 3;
+		if (desttop2) desttop2 += 4;
 	}
 	// Scan through the RGBA buffer and check for sub-0xff alpha.
 	if (rgbflat && rgbaflat)	// Which one is it?
@@ -366,8 +360,9 @@ unsigned int OGL_PrepareTexture(int idx)
 		else
 		{
 			// This texture has only only one patch. It might be masked.
-			byte *rgbaflat = (byte *) calloc (1, 4 * tex->width * tex->height);
-			textype = DrawRealPatch(rgbflat, rgbaflat, palette, tex->width, tex->height,
+			int texsize = tex->width * tex->height;
+			byte *rgbaflat = (byte *) calloc (1, 4 * texsize);
+			textype = DrawRealPatch(rgbflat, rgbaflat, palette, tex->width, tex->height, texsize,
 						(patch_t *)W_CacheLumpNum(tex->patches[0].patch, PU_CACHE), false);
 			if (textype == GL_RGBA)
 			{
@@ -471,14 +466,12 @@ unsigned int OGL_PrepareSky(int idx, boolean zeroMask)
 		if (zeroMask)
 		{
 			textype = GL_RGBA;
-			imgdata = (byte *) malloc (4 * numpels);
-			memset(imgdata, 0, 4 * numpels);
+			imgdata = (byte *) calloc (1, 4 * numpels);
 		}
 		else
 		{
 			textype = GL_RGB;
-			imgdata = (byte *) malloc (3 * numpels);
-			memset(imgdata, 0, 3 * numpels);
+			imgdata = (byte *) calloc (1, 3 * numpels);
 		}
 		if (tex->patchcount > 1)
 		{
@@ -502,10 +495,10 @@ unsigned int OGL_PrepareSky(int idx, boolean zeroMask)
 		{
 			// This texture has only only one patch.
 			if (textype == GL_RGB)
-				DrawRealPatch(imgdata, NULL, palette, 256, tex->height,
+				DrawRealPatch(imgdata, NULL, palette, 256, tex->height, numpels,
 					(patch_t *)W_CacheLumpNum(tex->patches[0].patch, PU_CACHE), false);
 			else if (textype == GL_RGBA) // Mask out zeros.
-				DrawRealPatch(NULL, imgdata, palette, 256, tex->height,
+				DrawRealPatch(NULL, imgdata, palette, 256, tex->height, numpels,
 					(patch_t *)W_CacheLumpNum(tex->patches[0].patch, PU_CACHE), true);
 		}
 		if (textype == GL_RGBA)	// For masked data, calculate the alpha-fill color.
@@ -563,14 +556,13 @@ unsigned int OGL_PrepareSprite(int pnum)
 			h = SHORT(patch->height);
 		int	p2width = FindNextPower2(w),
 			p2height = OGL_ValidTexHeight2(w, h);
-		int	flatsize = 4*p2width*p2height;
-		byte	*rgbaflat = (byte *) malloc (flatsize);
+		int	flatsize = p2width*p2height;
+		byte	*rgbaflat = (byte *) calloc (1, 4*flatsize);
 
 		OGL_DEBUG("orig: %d x %d => %d x %d\n", w, h, p2width, p2height);
 
-		memset(rgbaflat, 0, flatsize);
 		DrawRealPatch(NULL, rgbaflat, (byte *)W_CacheLumpNum(pallump,PU_CACHE),
-						p2width, p2height, patch, false);
+						p2width, p2height, flatsize, patch, false);
 
 		// Generate and bind the texture.
 		glGenTextures(1, spritenames + pnum);
@@ -735,13 +727,13 @@ void OGL_SetPatch(int lump)	// No mipmaps are generated.
 		int	p2width = FindNextPower2(w),
 			p2height = OGL_ValidTexHeight2(w, h);
 		int	numpels = p2width*p2height;
-		byte	*rgbflat = (byte *) malloc (3 * numpels),
+		byte	*rgbflat  = (byte *) malloc (3 * numpels),
 			*rgbaflat = (byte *) malloc (4 * numpels);
 		int	ptype;
 
 		memset(rgbaflat, 0, 4 * numpels);
 		ptype = DrawRealPatch(rgbflat, rgbaflat, (byte *)W_CacheLumpNum(pallump,PU_CACHE),
-							p2width, p2height, patch, false);
+							p2width, p2height, numpels, patch, false);
 
 		// See if we have to split the patch into two parts.
 		if (p2width > maxTexSize) // Nothing about the height...
