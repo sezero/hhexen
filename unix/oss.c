@@ -311,7 +311,7 @@ static void oss_write(void *ptr, int length)
 			memcpy((guchar *)buffer + wr_index, (guchar *)ptr + off, cnt);
 			wr_index = (wr_index + cnt) % buffer_size;
 			length -= cnt;
-			off = +cnt;
+			off += cnt;
 		}
 	}
 	else
