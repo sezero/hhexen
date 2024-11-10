@@ -257,13 +257,14 @@ void OGL_SetFlat(int idx)
 static int DrawRealPatch(byte *rgbflat, byte *rgbaflat, byte *palette, int texwidth,
 					int texheight, patch_t *patch, boolean maskZero)
 {
-	int count;
-	int col;
 	column_t *column;
 	byte *desttop1, *desttop2;
-	byte *dest1 = NULL, *dest2 = NULL;
+	byte *dest1, *dest2;
+	const byte *end1, *end2;
 	byte *source;
-	int w, i;
+	int count, col, w, i;
+	const int texsize =
+		 texwidth * texheight;
 
 	/*
 	y -= SHORT(patch->topoffset);
@@ -275,10 +276,13 @@ static int DrawRealPatch(byte *rgbflat, byte *rgbaflat, byte *palette, int texwi
 	}
 	*/
 	col = 0;
-	desttop1 = rgbflat;	// + y*SCREENWIDTH + x;
+	end1 = (rgbflat)  ? rgbflat  + texsize*3 - 3 : NULL;
+	end2 = (rgbaflat) ? rgbaflat + texsize*4 - 4 : NULL;
+	dest1 = NULL; dest2 = NULL;  /* silence compiler. */
+	desttop1 = rgbflat;
 	desttop2 = rgbaflat;
 	w = SHORT(patch->width);
-	for ( ; col < w; /*x++,*/ col++, desttop1 += 3, desttop2 += 4)
+	for ( ; col < w; col++, desttop1 += 3, desttop2 += 4)
 	{
 		column = (column_t *)((byte *)patch + LONG(patch->columnofs[col]));
 		// Step through the posts in a column
@@ -295,12 +299,14 @@ static int DrawRealPatch(byte *rgbflat, byte *rgbaflat, byte *palette, int texwi
 				int palidx = *source++;
 				if (rgbflat)
 				{
+					if (dest1 > end1) continue;
 					if (!maskZero || palidx)
 						PalIdxToRGB(palette, palidx, dest1);
 					dest1 += texwidth*3;
 				}
 				if (rgbaflat)
 				{
+					if (dest2 > end2) continue;
 					if (!maskZero || palidx)
 					{
 						PalIdxToRGB(palette, palidx, dest2);
@@ -360,8 +366,7 @@ unsigned int OGL_PrepareTexture(int idx)
 		else
 		{
 			// This texture has only only one patch. It might be masked.
-			byte *rgbaflat = (byte *) malloc (4 * tex->width * tex->height);
-			memset(rgbaflat, 0, 4 * tex->width * tex->height);
+			byte *rgbaflat = (byte *) calloc (1, 4 * tex->width * tex->height);
 			textype = DrawRealPatch(rgbflat, rgbaflat, palette, tex->width, tex->height,
 						(patch_t *)W_CacheLumpNum(tex->patches[0].patch, PU_CACHE), false);
 			if (textype == GL_RGBA)

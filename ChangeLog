@@ -2,8 +2,9 @@ HHexen ChangeLog
 
 v1.6.4
  - fixed a heap buffer overrun which was introduced back in v1.6.0.
+ - avoid possible buffer overruns in opengl texture code
  - new mus2midi converter code by Bret Curtis.
- - double-buffering support and double-buffered rectangle rendering in 
+ - double-buffering support and double-buffered rectangle rendering in
    software renderer, by Miro Kropacek.
  - Atari (FreeMint) support, by Miro Kropacek.
  - miscellaneous cleanups and build fixes
