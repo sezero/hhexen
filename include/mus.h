@@ -22,8 +22,6 @@
 #ifndef MUSLIB_H
 #define MUSLIB_H
 
-#include <stdint.h>
-
 int mus2midi(const uint8_t *in, uint32_t insize,
 		 uint8_t **out, uint32_t *outsize,
 		 uint16_t frequency);

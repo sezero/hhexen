@@ -19,10 +19,7 @@
 	Boston, MA  02110-1301, USA.
 */
 
-#include <stddef.h>
-#include <stdio.h> /* fprintf */
-#include <stdlib.h>
-#include <string.h>
+#include "h2stdinc.h"
 #include "mus.h"
 
 #define FREQUENCY					140 /* default Hz or BPM */
