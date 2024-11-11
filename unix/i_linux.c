@@ -183,7 +183,7 @@ void I_Error (const char *error, ...)
 
 static void I_ENDTEXT (void)
 {
-// no ENDTEXT lump in Hexen for ANSI output.
+	/* no ENDTEXT lump in Hexen. */
 	printf("\nHexen: Beyond Heretic\n");
 }
 

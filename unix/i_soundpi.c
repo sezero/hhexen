@@ -377,18 +377,15 @@ void I_SetChannels(int channels)
 	// Generate the volume lookup tables.
 	for (v = 0; v < MAX_VOL; v++)
 	{
+		// Turn the unsigned samples into signed samples.
 		for (j = 0; j < 256; j++)
 		{
-		//	vol_lookup[v*256+j] = 128 + ((v * (j-128)) / (MAX_VOL-1));
-
-		// Turn the unsigned samples into signed samples.
-
-#if 0	/* SAMPLE_FORMAT */
+			#if 0	/* SAMPLE_FORMAT */
 			vol_lookup[v*256+j] = (v * (j-128)) / (MAX_VOL-1);
-#else
+			#else
 			vol_lookup[v*256+j] = (v * (j-128) * 256) / (MAX_VOL-1);
-#endif
-		//	printf ("vol_lookup[%d*256+%d] = %d\n", v, j, vol_lookup[v*256+j]);
+			#endif
+			//printf ("vol_lookup[%d*256+%d] = %d\n", v, j, vol_lookup[v*256+j]);
 		}
 	}
 }
@@ -437,4 +434,3 @@ void I_StopSong(int handle)
 void I_PlaySong(int handle, boolean looping)
 {
 }
-

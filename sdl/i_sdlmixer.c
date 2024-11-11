@@ -421,18 +421,15 @@ void I_SetChannels(int channels)
 	// Generate the volume lookup tables.
 	for (v = 0; v < MAX_VOL; v++)
 	{
+		// Turn the unsigned samples into signed samples.
 		for (j = 0; j < 256; j++)
 		{
-		//	vol_lookup[v*256+j] = 128 + ((v * (j-128)) / (MAX_VOL-1));
-
-		// Turn the unsigned samples into signed samples.
-
-#if 0	/* SAMPLE_FORMAT */
+			#if 0	/* SAMPLE_FORMAT */
 			vol_lookup[v*256+j] = (v * (j-128)) / (MAX_VOL-1);
-#else
+			#else
 			vol_lookup[v*256+j] = (v * (j-128) * 256) / (MAX_VOL-1);
-#endif
-		//	printf ("vol_lookup[%d*256+%d] = %d\n", v, j, vol_lookup[v*256+j]);
+			#endif
+			//printf ("vol_lookup[%d*256+%d] = %d\n", v, j, vol_lookup[v*256+j]);
 		}
 	}
 }
@@ -516,14 +513,14 @@ int I_RegisterExternalSong(const char *name)
 				waddir, fixedname, MusicFile[i].ext);
 			ret = access(path, R_OK);
 		}
-#if !defined(_NO_USERDIRS)
+		#ifndef _NO_USERDIRS
 		if (ret == -1)	/* then, try from <userdir>/music */
 		{
 			snprintf (path, sizeof(path), "%smusic/%s.%s",
 				basePath, fixedname, MusicFile[i].ext);
 			ret = access(path, R_OK);
 		}
-#endif	/* !_NO_USERDIRS */
+		#endif
 		if (ret == -1)	/* try from <CWD>/music */
 		{
 			snprintf (path, sizeof(path), "music/%s.%s",

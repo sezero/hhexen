@@ -529,15 +529,9 @@ void I_StartTic (void)
 ============================================================================
 */
 
-
-/*
-================
-=
-= StartupMouse
-=
-================
-*/
-
+//
+// StartupMouse
+//
 void I_StartupMouse (void)
 {
 	mousepresent = 1;
