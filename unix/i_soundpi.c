@@ -13,7 +13,7 @@
 #include "audio_plugin.h"
 
 
-#define SAMPLE_FORMAT	FMT_S16_NE
+#define SAMPLE_FORMAT	FMT_S16
 #define SAMPLE_ZERO	0
 #define SAMPLE_RATE	11025	/* Hz */
 #define SAMPLE_CHANNELS	2
@@ -33,7 +33,7 @@ int snd_Channels;
 int snd_MaxVolume,		/* maximum volume for sound */
 	snd_MusicVolume;	/* maximum volume for music */
 boolean snd_MusicAvail,		/* whether music is available */
-	snd_SfxAvail;		/* whether sfx are available */
+	snd_SfxAvail;		/* whether sfx are available. */
 
 /*
  *	SOUND FX API
@@ -309,8 +309,6 @@ void I_UpdateSoundParams(int handle, int vol, int sep, int pitch)
 // inits all sound stuff
 void I_StartupSound (void)
 {
-	int ok;
-
 	snd_SfxAvail = false;
 
 	if (M_CheckParm("--nosound") || M_CheckParm("-s") || M_CheckParm("-nosound"))
@@ -322,22 +320,20 @@ void I_StartupSound (void)
 	/* Using get_oplugin_info() from oss.c.  In the future this could
 	   load from a real shared library plugin. */
 	audioPI = get_oplugin_info();
-	if (!audioPI)
-		return;
-	audioPI->init();
-	audioPI->about();
+	if (!audioPI) return;
+	fprintf(stdout, "%s\n", audioPI->about());
 
-	ok = audioPI->open_audio(SAMPLE_FORMAT, SAMPLE_RATE, SAMPLE_CHANNELS);
-	if (ok)
+	audioPI->init();
+	if (audioPI->open_audio(SAMPLE_FORMAT, SAMPLE_RATE, SAMPLE_CHANNELS) < 0)
+	{
+		fprintf (stderr, "I_StartupSound: failed\n");
+	}
+	else
 	{
 		audio_exit_thread = 0;
 		pthread_create(&audio_thread, NULL, audio_loop, NULL);
 		fprintf (stdout, "I_StartupSound: success\n");
 		snd_SfxAvail = true;
-	}
-	else
-	{
-		fprintf (stderr, "I_StartupSound: failed\n");
 	}
 }
 
