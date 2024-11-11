@@ -217,9 +217,10 @@ fi
 
 dnl == Check ALSA
 if test "$SND_MODULE" = "alsa";then
-	PKG_CHECK_MODULES([ALSA], [alsa >= 1], AC_CHECK_LIB(asound, snd_pcm_open, [have_alsa=yes]), [have_alsa=no])
+	have_alsa=no
+	PKG_CHECK_MODULES([ALSA], [alsa >= 1], AC_CHECK_LIB(asound, snd_pcm_open, [have_alsa=yes]), [true])
 	if test "$have_alsa" = "no"; then
-	   AC_MSG_ERROR([*** alsa-lib required but not found!])
+	   AC_MSG_ERROR([*** alsa-lib 1.x required but not found!])
 	fi
 fi
 
