@@ -108,12 +108,12 @@
 /* Define if want to disable user directories */
 #undef _NO_USERDIRS
 
-/* For pthread support in OSS audio code. */
+/* For pthread support in ALSA or OSS audio code. */
 #ifndef _REENTRANT
 # undef _REENTRANT
 #endif
 
-/* For pthread support in OSS audio code. */
+/* For pthread support in ALSA or OSS audio code. */
 #ifndef _THREAD_SAFE
 # undef _THREAD_SAFE
 #endif

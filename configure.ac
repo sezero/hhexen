@@ -118,14 +118,14 @@ AC_DEFINE_UNQUOTED(SHARED_DATAPATH, "$datapath", [Define this to the shared game
 SHARED_DATAPATH="$datapath"
 
 if test "$SVGAHEXEN" = "true"; then
-  default_audio="oss"
+  default_audio="alsa"
 else
   default_audio="sdl"
 fi
 
 AC_ARG_WITH([audio],
 [AS_HELP_STRING([--with-audio=<driver>], [If set, will change the audio driver.
-Valid values are oss, sdl and sdlmixer.  sdl is the default.
+Valid values are alsa, oss, sdl and sdlmixer.  sdl is the default.
 sdlmixer adds the ability of midi music playback.])],
   [audio_drv="$withval"], [audio_drv="$default_audio"])
 
@@ -136,7 +136,7 @@ if test "$SVGAHEXEN" = "true"; then
 	SND_MODULE="$default_audio"
 else
   case "$audio_drv" in
-	oss|sdl|sdlmixer)
+	alsa|oss|sdl|sdlmixer)
 		SND_MODULE="$audio_drv"
 		;;
 	*)
@@ -192,13 +192,13 @@ X11_LIB="$ac_x_libraries"
 AC_CHECK_LIB(m, pow,, AC_MSG_ERROR([*** math library (-lm) appears broken]))
 
 AH_VERBATIM([_REENTRANT],
-[/* For pthread support in OSS audio code. */
+[/* For pthread support in ALSA or OSS audio code. */
 #ifndef _REENTRANT
 # undef _REENTRANT
 #endif])
 
 AH_VERBATIM([_THREAD_SAFE],
-[/* For pthread support in OSS audio code. */
+[/* For pthread support in ALSA or OSS audio code. */
 #ifndef _THREAD_SAFE
 # undef _THREAD_SAFE
 #endif])
@@ -207,12 +207,20 @@ dnl == pthreads check: This is linux-centric (see the configure.in of SDL
 dnl == for other systems' pthreads support), but we need this for linux only
 AC_CHECK_LIB(pthread, pthread_join,
 	[HAVE_PTHREADS="yes";THREAD_LIBS="-lpthread";], [HAVE_PTHREADS="no";])
-if test "$SND_MODULE" = "oss";then
+if test "$SND_MODULE" = "oss" || test "$SND_MODULE" = "alsa";then
 	if test "$HAVE_PTHREADS" = "no"; then
 	   AC_MSG_ERROR([*** libpthread not found! (required by sound code.)])
 	fi
 	AC_DEFINE(_REENTRANT)
 	AC_DEFINE(_THREAD_SAFE)
+fi
+
+dnl == Check ALSA
+if test "$SND_MODULE" = "alsa";then
+	PKG_CHECK_MODULES([ALSA], [alsa >= 1], AC_CHECK_LIB(asound, snd_pcm_open, [have_alsa=yes]), [have_alsa=no])
+	if test "$have_alsa" = "no"; then
+	   AC_MSG_ERROR([*** alsa-lib required but not found!])
+	fi
 fi
 
 AC_SUBST(THREAD_LIBS)
