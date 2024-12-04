@@ -130,10 +130,14 @@ sdlmixer adds the ability of midi music playback.])],
   [audio_drv="$withval"], [audio_drv="$default_audio"])
 
 if test "$SVGAHEXEN" = "true"; then
-	if test "$audio_drv" != "$default_audio";then
-		AC_MSG_WARN([Ignoring --with-audio option for svgahexen])
-	fi
-	SND_MODULE="$default_audio"
+  case "$audio_drv" in
+	alsa|oss)
+		SND_MODULE="$audio_drv"
+		;;
+	*)
+		AC_MSG_ERROR([*** only alsa or oss is allowed for svga version])
+		;;
+  esac
 else
   case "$audio_drv" in
 	alsa|oss|sdl|sdlmixer)
