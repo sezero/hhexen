@@ -59,10 +59,10 @@ static int alsa_open(AFormat format, int srate, int nch)
 	snd_pcm_hw_params_set_access(pcm_handle, hwparams,
 						SND_PCM_ACCESS_RW_INTERLEAVED);
 	snd_pcm_hw_params_set_format(pcm_handle, hwparams, fmt);
-	snd_pcm_hw_params_set_rate_near(pcm_handle, hwparams, &rate, 0);
+	snd_pcm_hw_params_set_rate_near(pcm_handle, hwparams, &rate, NULL);
 	snd_pcm_hw_params_set_channels_near(pcm_handle, hwparams, &channels);
-	snd_pcm_hw_params_set_buffer_time_near(pcm_handle, hwparams, &btime, 0);
-	snd_pcm_hw_params_set_period_time_near(pcm_handle, hwparams, &ptime, 0);
+	snd_pcm_hw_params_set_buffer_time_near(pcm_handle, hwparams, &btime, NULL);
+	snd_pcm_hw_params_set_period_time_near(pcm_handle, hwparams, &ptime, NULL);
 	snd_pcm_nonblock(pcm_handle, 0);
 
 	if ((ret = snd_pcm_hw_params(pcm_handle, hwparams)) < 0) {

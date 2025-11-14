@@ -54,7 +54,7 @@ static rendlist_t dlwall_rlist, dlflat_rlist; /* Dynamic lighting for walls/flat
 void RL_Init(void)
 {
 	numrlists = 0;
-	rlists = 0;
+	rlists = NULL;
 	memset(&masked_rlist, 0, sizeof(masked_rlist));
 	memset(&invsky_rlist, 0, sizeof(invsky_rlist));
 	memset(&invskywall_rlist, 0, sizeof(invskywall_rlist));

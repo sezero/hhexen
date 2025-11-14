@@ -17,7 +17,6 @@
 #include "r_local.h"
 #include "m_bams.h"
 #include "ogl_def.h"
-//#include "i_ptimer.h"
 
 // MACROS ------------------------------------------------------------------
 
@@ -222,7 +221,7 @@ static void C_AddRange(binangle startAngle, binangle endAngle)
 	// OPTIMIZE: Why not search this during the last loop?
 
 	OGL_DEBUG("  range doesn't overlap old ones:\n");
-	crange = 0;
+	crange = NULL;
 	for (ci = cliphead; ci; ci = ci->next)
 	{
 		OGL_DEBUG("loop4\n");

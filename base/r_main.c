@@ -759,7 +759,7 @@ void R_SetupFrame(player_t *player)
 	}
 	else
 	{
-		fixedcolormap = 0;
+		fixedcolormap = NULL;
 	}
 	framecount++;
 	validcount++;

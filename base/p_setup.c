@@ -231,7 +231,7 @@ static void P_LoadSegs (int lump)
 		if (ldef-> flags & ML_TWOSIDED)
 			li->backsector = sides[ldef->sidenum[side^1]].sector;
 		else
-			li->backsector = 0;
+			li->backsector = NULL;
 
 #ifdef RENDER3D
 	// Calculate the length of the segment. We need this for
@@ -495,11 +495,11 @@ static void P_LoadLineDefs(int lump)
 		if (ld->sidenum[0] != -1)
 			ld->frontsector = sides[ld->sidenum[0]].sector;
 		else
-			ld->frontsector = 0;
+			ld->frontsector = NULL;
 		if (ld->sidenum[1] != -1)
 			ld->backsector = sides[ld->sidenum[1]].sector;
 		else
-			ld->backsector = 0;
+			ld->backsector = NULL;
 	}
 
 	Z_Free (data);
@@ -835,8 +835,8 @@ static void P_ConvexCarver(subsector_t *ssec, int num, divline_t *list)
 	//	I_Error("All carved away!\n");
 		printf( "All carved away: subsector %p\n", ssec);
 		ssec->numedgeverts = 0;
-		ssec->edgeverts = 0;
-		ssec->origedgeverts = 0;
+		ssec->edgeverts = NULL;
+		ssec->origedgeverts = NULL;
 	}
 	else
 	{
@@ -1048,7 +1048,7 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
 	// We need to carve out the floor/ceiling polygons of each subsector.
 	// Walk the tree to do this.
 	//OGL_DEBUG("Floor/ceiling creation: begin at %d, ", ticcount);
-	P_CreateFloorsAndCeilings(numnodes - 1, 0, 0);
+	P_CreateFloorsAndCeilings(numnodes - 1, 0, NULL);
 	// Also check if the sky needs a fix.
 	P_SkyFix();
 #endif

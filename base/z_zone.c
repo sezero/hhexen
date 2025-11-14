@@ -108,7 +108,7 @@ void Z_Free (void *ptr)
 		I_Error ("Z_Free: freed a pointer without ZONEID");
 
 	if (block->user > (void **)0x100)	// smaller values are not pointers
-		*block->user = 0;		// clear the user's mark
+		*block->user = NULL;		// clear the user's mark
 	block->user = NULL;	// mark as free
 	block->tag = 0;
 	block->id = 0;

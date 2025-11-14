@@ -985,7 +985,7 @@ void R_SortVisSprites (void)
 //
 // pull the vissprites out by scale
 //
-	best = 0;		// shut up the compiler warning
+	best = NULL;		// shut up the compiler warning
 	vsprsortedhead.next = vsprsortedhead.prev = &vsprsortedhead;
 	for (i = 0; i < count; i++)
 	{

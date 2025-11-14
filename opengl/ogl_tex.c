@@ -125,7 +125,7 @@ void OGL_TexInit(void)
 	memset(lumptexsizes, 0, numlumps * sizeof(texsize_t));
 
 	// Raw screen lump book keeping.
-	rawlumps = 0;
+	rawlumps = NULL;
 	numrawlumps = 0;
 
 	// The dynamic light map.
