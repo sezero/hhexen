@@ -152,6 +152,7 @@ fi
 AC_SUBST(SND_MODULE)
 
 dnl == Checks for programs.
+PKG_PROG_PKG_CONFIG
 AC_PROG_CC
 AC_PROG_CPP
 
@@ -249,7 +250,7 @@ if test "$SND_MODULE" = "sdlmixer";then
   if test $HAVE_SDLMIXER = "no";then
 	AC_MSG_ERROR([*** SDL_mixer not found!])
   else
-	SDL_LIBS="$SDL_LIBS -lSDL_mixer"
+	SDL_LIBS="-lSDL_mixer $SDL_LIBS"
   fi
 fi
 
